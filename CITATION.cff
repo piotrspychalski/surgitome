@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use SURGITOME in teaching, research or publications, please cite it as below."
+title: "SURGITOME — interactive 3D postoperative gastrointestinal anatomy"
+type: software
+authors:
+  - family-names: Spychalski
+    given-names: Piotr
+    email: piotr.spychalski@gumed.edu.pl
+    orcid: "https://orcid.org/0000-0001-7111-4660"
+    affiliation: "Department of Surgical Oncology, Transplant Surgery and General Surgery, Medical University of Gdańsk (Gdański Uniwersytet Medyczny), Gdańsk, Poland"
+version: "2026.9.26"
+date-released: "2026-09-26"
+license: CC-BY-NC-4.0
+url: "https://bit.ly/surgitome"
+abstract: >-
+  SURGITOME is an interactive, schematic 3D atlas of postoperative gastrointestinal anatomy
+  created by Piotr Spychalski, MD, PhD, colorectal surgeon at the Medical University of Gdańsk.
+  For 23 procedures (46 variants) in oesophageal, gastric, bariatric, hepatopancreatobiliary,
+  small-bowel and colorectal surgery it shows the extent of resection, animated stapled and
+  hand-sewn anastomoses, first-person postoperative endoscopy with route choice at forks, and
+  schematic cross-sectional CT. Intended for medical students, physicians of other specialties
+  (endoscopists, radiologists), surgical trainees and for explaining the extent of resection to patients.
+keywords:
+  - postoperative anatomy
+  - colorectal surgery
+  - gastrointestinal surgery
+  - surgical anastomosis
+  - surgical education
+  - endoscopy after surgery
+  - 3D anatomy
+  - medical education

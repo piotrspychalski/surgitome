@@ -1,0 +1,40 @@
+// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · CC BY-NC 4.0
+const {JSDOM}=require('jsdom'); const fs=require('fs');
+const html=fs.readFileSync(require('path').join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
+const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true}); const w=dom.window;
+w.matchMedia=(q)=>({matches:/max-width: 760px/.test(q)?true:false,addEventListener(){}});
+w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
+const T=Object.assign({},require('three'));
+let pr=0; T.WebGLRenderer=function(){return {clearDepth(){},setPixelRatio(p){pr=p},setSize(){},capabilities:{getMaxAnisotropy:()=>8},setScissorTest(){},setViewport(){},setClearColor(){},clear(){},render(){},setScissor(){},getPixelRatio:()=>1}};
+w.devicePixelRatio=3;
+w.THREE=T; w.eval(fs.readFileSync(require('path').join(require('path').dirname(require.resolve('three')),'../examples/js/controls/OrbitControls.js'),'utf8'));
+const errs=[]; w.addEventListener('error',e=>errs.push(e.message||String(e.error)));
+const sc=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]); w.eval(sc[0]); w.eval(sc[1]);
+const $=id=>w.document.getElementById(id); const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const touch=(el,type,x,y)=>{ const e=new w.Event(type,{bubbles:true,cancelable:true}); const t={clientX:x,clientY:y}; e.touches=type==='touchend'?[]:[t]; e.changedTouches=[t]; el.dispatchEvent(e); };
+(async()=>{ await sleep(400);
+  console.log('klasa mobile:',w.document.documentElement.classList.contains('mobile'),'| pixelRatio:',pr,'| etykiety domyślnie:',$('btnLabels').getAttribute('aria-pressed'));
+  console.log('pasek:',$('mProcName').textContent,'|',$('mFrameTxt').textContent,'| kropki:',$('mDots').children.length);
+  $('mNext').click(); await sleep(900); console.log('po ›:',$('mFrameTxt').textContent);
+  touch($('mDock'),'touchstart',300,10); touch($('mDock'),'touchend',200,10); await sleep(900); console.log('po przesunięciu w lewo:',$('mFrameTxt').textContent);
+  touch($('mDock'),'touchstart',100,10); touch($('mDock'),'touchend',220,10); await sleep(900); console.log('po przesunięciu w prawo:',$('mFrameTxt').textContent);
+  $('cap').click(); console.log('podpis rozwinięty:',$('cap').classList.contains('open'));
+  $('mMenuBtn').click(); console.log('menu otwarte:',!$('mMenu').hidden,'| sekcje:',[...$('mMenuBody').querySelectorAll('h4')].map(h=>h.textContent).join(', '));
+  [...$('mMenuBody').querySelectorAll('.mchip')].find(b=>b.textContent==='Żołądek').click(); await sleep(700);
+  console.log('zabiegi w menu:',[...$('mMenuBody').querySelectorAll('.mrow')[1].children].map(b=>b.textContent).join(' | '));
+  [...$('mMenuBody').querySelectorAll('.mchip')].find(b=>b.textContent==='Resekcja dystalna').click(); await sleep(700);
+  console.log('po wyborze: menu zamknięte:',$('mMenu').hidden,'| pasek:',$('mProcName').textContent);
+  $('mMenuBtn').click(); [...$('mMenuBody').querySelectorAll('.mchip')].find(b=>b.textContent==='Roux-en-Y').click(); await sleep(800);
+  console.log('wariant:',$('mProcName').textContent);
+  $('fLang').click(); await sleep(200); $('mMenuBtn').click();
+  console.log('EN pasek:',$('mProcName').textContent,'|',$('mFrameTxt').textContent,'| sekcje:',[...$('mMenuBody').querySelectorAll('h4')].map(h=>h.textContent).join(', '));
+  $('mMenuClose').click();
+  // endoskopia: tap przełącza mapę
+  const st=$('strip').querySelectorAll('.step'); st[5].click(); await sleep(900);
+  const pe=(t,x,y)=>{ const e=new w.Event(t,{bubbles:true}); e.clientX=x; e.clientY=y; $('c').dispatchEvent(e); };
+  pe('pointerdown',50,50); pe('pointerup',50,50); console.log('endo: mapa ukryta po stuknięciu:',$('viewport').classList.contains('hidemap'));
+  // TK: przesunięcie w pionie
+  st[6].click(); await sleep(900); const before=$('ctLvlTxt').textContent;
+  touch($('ctCv'),'touchstart',100,100); touch($('ctCv'),'touchmove',100,40); touch($('ctCv'),'touchend',100,40);
+  console.log('TK przed/po przesunięciu:',before,'→',$('ctLvlTxt').textContent);
+  console.log('errors',errs.filter(e=>!/setPointerCapture/.test(e)).slice(0,4)); process.exit(0); })();
