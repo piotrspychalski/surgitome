@@ -1,6 +1,6 @@
-# Symbol QR (SVG <symbol id="qrSym">): bezpośredni link do artefaktu, styl jak dotychczas
+# Symbol QR (SVG <symbol id="qrSym">): bezpośredni link do strony na GitHub Pages, styl jak dotychczas
 import qrcode, io, cairosvg, cv2, numpy as np
-URL = 'https://claude.ai/artifact/Xn7FmukFFaCGVVwjuT3fiq'
+URL = 'https://piotrspychalski.github.io/surgitome/'
 qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_Q, border=4, box_size=1)
 qr.add_data(URL); qr.make(fit=True)
 M = qr.get_matrix(); N = len(M); n = N - 8; B = 4

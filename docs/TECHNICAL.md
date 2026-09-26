@@ -74,4 +74,4 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 
 Narzędzie pomocnicze: `node tools/dumpgeo.js dist/core.js <id wariantu> > g.json && python3 tools/plotgeo.py g.json rzut.png post` — rzuty geometrii z przodu i z boku.
 
-Kod QR: `python3 tools/make_qr.py` — symbol `qrSym` z bezpośrednim linkiem do artefaktu (claude.ai, korekcja błędów Q, weryfikacja odczytu OpenCV); podpis pod kodem pozostaje „bit.ly/surgitome”. Wynik (`qrsym.txt`) wkleja się w `src/shell.html` w miejsce istniejącego `<symbol id="qrSym">`.
+Kod QR: `python3 tools/make_qr.py` — symbol `qrSym` z bezpośrednim linkiem do strony na GitHub Pages (https://piotrspychalski.github.io/surgitome/, korekcja błędów Q, weryfikacja odczytu OpenCV; wymaga bibliotek qrcode, cairosvg z systemowym cairo, opencv-python); podpis pod kodem pozostaje „bit.ly/surgitome”. Wynik (`qrsym.txt`) wkleja się w `src/shell.html` w miejsce istniejącego `<symbol id="qrSym">`.
