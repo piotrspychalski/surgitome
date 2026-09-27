@@ -144,6 +144,7 @@
     try { localStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
   }
   $('introOk').onclick = introClose;
+  $('intro').onclick = function (e) { if (e.target === this) introClose(); };
   $('introLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
   try { if (localStorage.getItem(INTRO_KEY) !== '1') { $('intro').hidden = false; setTimeout(function () { $('introOk').focus(); }, 0); } } catch (e) {}
 

@@ -17,20 +17,24 @@ function boot(seen){
 }
 (async()=>{
   let w=boot(false); const $=id=>w.document.getElementById(id); await sleep(300);
-  console.log('pierwsze wejście, okno widoczne:',!$('intro').hidden,'| tytuł:',$('introTitle').textContent);
+  const shown=el=>w.getComputedStyle(el).display!=='none';
+  console.log('pierwsze wejście, okno widoczne:',shown($('intro')),'| tytuł:',$('introTitle').textContent);
   const cap0=$('capTitle').textContent;
   w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true})); await sleep(50);
   console.log('strzałka nie przewija kadru pod oknem:',$('capTitle').textContent===cap0,'| okno nadal widoczne:',!$('intro').hidden);
   $('introLang').click(); console.log('EN:',$('introTitle').textContent,'|',$('introOk').textContent,'| przycisk języka:',$('introLang').textContent);
   $('introLang').click(); console.log('PL:',$('introTitle').textContent);
-  $('introOk').click(); console.log('po „Rozumiem”: ukryte:',$('intro').hidden,'| zapis:',w.localStorage.getItem('surgitome-intro'));
+  $('introOk').click(); const vis1=shown($('intro')); console.log('po „Rozumiem”: widoczne:',vis1,'| zapis:',w.localStorage.getItem('surgitome-intro'));
   w=boot(true); await sleep(300);
   console.log('kolejne wejście, okno ukryte:',w.document.getElementById('intro').hidden);
+  const bd=boot(false); await sleep(300); bd.document.querySelector('.introbox').click(); const inBox=bd.getComputedStyle(bd.document.getElementById('intro')).display;
+  bd.document.getElementById('intro').click(); const outBox=bd.getComputedStyle(bd.document.getElementById('intro')).display;
+  console.log('klik w okno nie zamyka:',inBox!=='none','| klik obok zamyka:',outBox==='none');
   const esc=boot(false); await sleep(300); esc.document.dispatchEvent(new esc.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
-  console.log('Esc zamyka i zapisuje:',esc.document.getElementById('intro').hidden,esc.localStorage.getItem('surgitome-intro'));
+  const escGone=esc.getComputedStyle(esc.document.getElementById('intro')).display==='none'; console.log('Esc zamyka i zapisuje:',escGone,esc.localStorage.getItem('surgitome-intro'));
   const links=[...w.document.querySelectorAll('a[href="https://piotrspychalski.github.io/"]')].map(a=>a.closest('#mCred,.bcred,.credit').id||a.closest('#mCred,.bcred,.credit').className);
   console.log('link pod nazwiskiem:',links.length,links.join(', '));
-  const ok=!errs.length && links.length===4;
-  console.log('errors',JSON.stringify(ok?[]:errs.concat(links.length===4?[]:['linki: '+links.length])));
+  const ok=!errs.length && links.length===4 && !vis1 && escGone && inBox!=='none' && outBox==='none';
+  console.log('errors',JSON.stringify(ok?[]:errs.concat(links.length===4?[]:['linki: '+links.length], vis1?['okno widoczne po Rozumiem']:[], escGone?[]:['Esc nie zamyka'], outBox==='none'?[]:['klik obok nie zamyka'])));
   process.exit(0);
 })();
