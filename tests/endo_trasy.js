@@ -7,7 +7,7 @@ function state(o,f){ const pre=o.pre, post=o.post||o.pre; const a=A.curveOf(pre.
   const c=new THREE.CatmullRomCurve3(pts,false,'centripetal'); const r=t=>{const x=t*(K-1),i=Math.floor(x); return i>=K-1?rs[K-1]:rs[i]+(rs[i+1]-rs[i])*(x-i);};
   const op=o.open||[false,false]; return {curve:c,r,len:c.getLength(),caps:[!op[0],!op[1]]}; }
 const only=process.argv[2]; const quick=process.argv[3]==='q';
-for (const an of [].concat(...A.PROCS.map(p=>p.variants))) for (const [rk,f,m] of [['routePre',0,0],['routePost',1,an.mEnd]]) {
+for (const an of [].concat(...A.PROCS.map(p => p.variants), ...(A.TRIALS || []).filter(t => !A.PROCS.includes(t)).map(t => t.variants))) for (const [rk,f,m] of [['routePre',0,0],['routePost',1,an.mEnd]]) {
   if(only && !an.id.startsWith(only)) continue;
   const S={}; for(const o of an.objects){ if(o.solid||o.organ||o.noEndo||kf(o.opacity,m,1)<0.5) continue; S[o.id]=state(o,o.morph?f:0); }
   const ids=Object.keys(S); const geos=A.endoGeometries(ids.map(id=>S[id]));

@@ -5,6 +5,8 @@
     if (SIDX) return SIDX;
     SIDX = [];
     A.PROCS.forEach(function (p, i) {
+      // badania: wyłącznie po nazwie (akronim, tytuł angielski, słowa kluczowe, numer rejestracji)
+      if (p.split) { var tn = fold([p.short, p.trial.full, p.keys, p.trial.nct].join(' ')); SIDX.push({ i: i, k: 0, multi: false, head: tn, vname: '', text: tn }); return; }
       var base = [p.short, p.title, DICT[p.short], DICT[p.title]].join(' ');
       p.variants.forEach(function (v, k) {
         var vt = p.variants.length > 1 ? [v.vshort, v.title, v.sub, DICT[v.vshort], DICT[v.title], DICT[v.sub]].join(' ') : [v.sub, DICT[v.sub]].join(' ');

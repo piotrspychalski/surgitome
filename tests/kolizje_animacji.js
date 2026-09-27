@@ -29,7 +29,7 @@ function pen(a, b) { let mm = 1e9; for (const [p, r] of a) for (const [q, r2] of
 const only = process.argv[2]; let total = 0;
 module.exports = { state, pen, kf };
 if (require.main !== module) return;
-for (const an of [].concat(...A.PROCS.map(p => p.variants))) {
+for (const an of [].concat(...A.PROCS.map(p => p.variants), ...(A.TRIALS || []).filter(t => !A.PROCS.includes(t)).map(t => t.variants))) {
   if (only && !an.id.startsWith(only)) continue;
   const m0 = 0, m1 = an.mEnd, S0 = state(an, m0), S1 = state(an, m1), worst = {};
   for (let i = 1; i < 40; i++) {

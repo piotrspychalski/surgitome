@@ -50,16 +50,17 @@ button,select,input{ font:inherit; color:inherit; }
 #app{ display:grid; grid-template-rows:auto auto 1fr auto; grid-template-columns:minmax(0,1fr); width:100%; max-width:100%; height:100%; overflow:hidden; }
 #app > *{ min-width:0; max-width:100%; }
 
-.bar{ display:flex; align-items:center; gap:14px 20px; padding:10px 16px; background:var(--surface); border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.bar{ display:flex; align-items:center; gap:10px 20px; padding:8px 16px; background:var(--surface); border-bottom:1px solid var(--line); flex-wrap:wrap; }
 .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
 .mark{ width:30px; height:30px; flex:none; color:var(--accent); }
 .brand h1{ margin:0; font-size:18px; line-height:1.2; font-weight:700; letter-spacing:0.08em; }
 .brand p{ margin:0; font-size:13px; color:var(--muted); }
-#cats{ display:flex; gap:3px; padding:3px; background:var(--surface-2); border-radius:10px; }
+#cats{ display:flex; flex-wrap:wrap; gap:3px; padding:3px; background:var(--surface-2); border-radius:10px; align-self:flex-start; max-width:100%; }
+.navline{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 18px; min-width:0; }
 .cat{ border:0; background:transparent; color:var(--muted); padding:8px 13px; border-radius:8px; white-space:nowrap; cursor:pointer; font-weight:700; font-size:14px; }
 .cat:hover{ color:var(--text); }
 .cat[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
-.subbar{ background:var(--surface); border-bottom:1px solid var(--line); padding:6px 16px; display:flex; flex-direction:column; gap:6px; }
+.subbar{ background:var(--surface); border-bottom:1px solid var(--line); padding:6px 16px 7px; display:flex; flex-direction:column; gap:5px; }
 #variants{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
 #variants[hidden]{ display:none; }
 .vlabel{ font-size:13px; color:var(--muted); margin-right:4px; }
@@ -87,7 +88,8 @@ button,select,input{ font:inherit; color:inherit; }
 #c{ position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; }
 #viewport{ height:100%; }
 
-#labels{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+#labels, #labelsB{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+#labelsB[hidden]{ display:none; }
 .lbl{ position:absolute; left:0; top:0; will-change:transform; }
 .lbl > *{ }
 .lbl{ display:flex; align-items:flex-start; gap:6px; }
@@ -154,7 +156,7 @@ select{ border:1px solid var(--line); background:var(--surface); padding:8px 10p
 
 
 #labels, #cap{ transition:opacity .25s ease; }
-#viewport.dragging #labels, #viewport.dragging #cap{ opacity:0; transition:opacity .12s ease; }
+#viewport.dragging #labels, #viewport.dragging #labelsB, #viewport.dragging #cap{ opacity:0; transition:opacity .12s ease; }
 #choice{ position:absolute; z-index:4; left:50%; top:50%; transform:translate(-50%,-50%); width:min(560px, calc(100% - 32px)); padding:16px 16px 12px;
   background:rgba(12,8,8,.86); color:#f3ece8; border-radius:14px; box-shadow:0 12px 40px rgba(0,0,0,.6); text-align:center; }
 #choice[hidden]{ display:none; }
@@ -287,7 +289,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .mfoot{ margin-top:16px; padding-top:10px; border-top:1px solid var(--line); }
 .lbl span{ transition:none; }
 .lbl-moved span{ box-shadow:0 2px 8px rgba(0,0,0,.18), -3px 0 0 -1px var(--accent); }
-.qbox{ position:relative; flex:1 1 180px; max-width:280px; min-width:140px; }
+.qbox{ position:relative; flex:1 1 220px; max-width:420px; min-width:140px; }
 .qbox input{ width:100%; box-sizing:border-box; border:1px solid var(--line); background:var(--surface-2); color:var(--text); border-radius:9px; padding:8px 11px; font:inherit; font-size:14px; }
 .qbox input:focus{ outline:2px solid var(--accent); outline-offset:0; background:var(--surface); }
 .qres{ position:absolute; z-index:40; left:0; right:0; top:calc(100% + 4px); background:var(--surface); border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.22); max-height:60vh; overflow:auto; padding:4px; }
@@ -311,6 +313,30 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .credit a:hover, .bcred a:hover, #mCred a:hover{ text-decoration:underline; }
 #intro{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.55); }
 #intro[hidden]{ display:none; }
+/* ---------- badania: widok podzielony ---------- */
+#splitHdr{ position:absolute; inset:0; z-index:3; pointer-events:none; }
+#splitHdr[hidden]{ display:none; }
+.sh{ position:absolute; box-sizing:border-box; padding:10px 14px 0; display:flex; flex-direction:column; align-items:flex-start; gap:5px; }
+.sh1{ padding-right:64px; }
+.sh b{ color:#fff; font-size:14px; padding:4px 10px; border-radius:8px; letter-spacing:.02em; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+.sh0 b{ background:#0f8f8a; } .sh1 b{ background:#cf6417; }
+.sh span{ max-width:min(440px, 100%); font-size:13px; line-height:1.35; background:var(--pill); color:var(--text); padding:5px 9px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.sh span:empty{ display:none; }
+#splitDiv{ position:absolute; background:var(--line); opacity:.9; }
+#splitSync{ position:absolute; pointer-events:auto; }
+#splitSync[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+#viewport.split #hud, #viewport.split #inset{ display:none !important; }
+html:not(.mobile) #viewport.split #hud{ right:auto; }
+.armtag{ font-weight:700; font-size:13.5px; padding:5px 11px; border-radius:999px; color:#fff; }
+.armtag.arm0{ background:#0f8f8a; } .armtag.arm1{ background:#cf6417; }
+.armvs{ color:var(--muted); font-size:13px; font-weight:700; padding:0 2px; }
+#pNotes li.trialnote{ list-style:none; margin-left:-18px; color:var(--muted); font-size:13px; font-style:italic; }
+#pSub a{ color:var(--accent); }
+.mobile .sh{ padding:6px 10px 0; gap:3px; }
+.mobile .sh0{ padding-right:62px; }
+.mobile .sh b{ font-size:12.5px; padding:3px 8px; }
+.mobile .sh span{ font-size:11.5px; padding:3px 7px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.mobile #viewport.split #cap{ bottom:6px; }
 .introbox{ width:100%; max-width:480px; max-height:100%; overflow:auto; box-sizing:border-box; background:var(--surface); color:var(--text); border:1px solid var(--line); border-radius:16px; padding:22px 22px 18px; box-shadow:0 20px 60px rgba(0,0,0,.45); display:flex; flex-direction:column; gap:12px; }
 .introhead{ display:flex; align-items:center; gap:10px; color:var(--accent); }
 .introhead .mark{ width:28px; height:28px; }
@@ -377,7 +403,6 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".55"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg>
       <div><h1>SURGITOME</h1><span class="bcred"><a href="https://piotrspychalski.github.io/" target="_blank" rel="noopener">Spychalski P MD PhD</a> <span class="csep">|</span> <a href="mailto:piotr.spychalski@gumed.edu.pl">piotr.spychalski@gumed.edu.pl</a></span></div>
     </div>
-    <div id="cats" role="group" aria-label="Kategoria"></div>
     <div class="qbox"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Szukaj zabiegu… ( / )" aria-label="Szukaj zabiegu"><div id="qres" class="qres" role="listbox" hidden></div></div>
     <div class="actions">
       <button class="langsw" id="btnLang" role="switch" aria-checked="false" aria-label="Język: PL / EN" title="PL / EN"><span class="knob"></span><span class="lopt">PL</span><span class="lopt">EN</span></button>
@@ -387,11 +412,11 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
       <button class="ghostbtn" id="btnFs">Pełny ekran</button>
     </div>
   </header>
-  <div class="subbar"><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><div id="variants" role="group" aria-label="Wariant" hidden></div></div>
+  <div class="subbar"><div id="cats" role="group" aria-label="Kategoria"></div><div class="navline"><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><div id="variants" role="group" aria-label="Wariant" hidden></div></div></div>
   <main id="main">
     <div id="viewport">
       <canvas id="c" aria-label="Interaktywny model 3D anatomii"></canvas>
-      <div id="labels"></div>
+      <div id="labels"></div><div id="labelsB" hidden></div>
       <div id="mFloat">
         <button id="fInfo" class="fbtn" aria-label="Opis zabiegu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/><rect x="10.9" y="10.4" width="2.2" height="7" rx="1" fill="currentColor"/></svg></button>
         <button id="fLang" class="fbtn ftext" aria-label="Język">PL</button>

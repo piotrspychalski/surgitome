@@ -1,7 +1,9 @@
   /* ---------- budowa anatomii ---------- */
-  function build(an) {
-    if (M) { M.endoTrash.forEach(function (x) { x.dispose(); }); scene.remove(M.group); if (M.toolOv) toolScene.remove(M.toolOv); M.objs.forEach(function (o) { if (o.geo) o.geo.dispose(); }); ['pre', 'post'].forEach(function (k) { if (M.routes[k]) M.routes[k].list.forEach(function (R) { R.geo.dispose(); }); }); }
-    trash.forEach(function (x) { x.dispose(); }); trash = []; labelsEl.innerHTML = '';
+  // keep: drugie ramię badania (widok podzielony) — bez sprzątania pierwszego
+  function build(an, keep) {
+    if (!keep) splitTeardown();
+    if (M && !keep) { M.endoTrash.forEach(function (x) { x.dispose(); }); scene.remove(M.group); if (M.toolOv) toolScene.remove(M.toolOv); M.objs.forEach(function (o) { if (o.geo) o.geo.dispose(); }); ['pre', 'post'].forEach(function (k) { if (M.routes[k]) M.routes[k].list.forEach(function (R) { R.geo.dispose(); }); }); }
+    if (!keep) { trash.forEach(function (x) { x.dispose(); }); trash = []; labelsEl.innerHTML = ''; }
     var group = new THREE.Group(), objG = new THREE.Group(), markG = new THREE.Group(), routeG = new THREE.Group();
     group.add(objG, markG, routeG);
     var objs = an.objects.map(makeObj), byId = {};
@@ -43,7 +45,7 @@
       scope: scope, box: box, routes: {}, endoG: {}, endoTrash: [], endoMarkG: endoMarkG, toolG: toolG };
     var toolOv = new THREE.Group(); toolScene.add(toolOv); M.toolOv = toolOv;
     M.tools = buildTools(an); M.tools.forEach(function (t) { (t.overlay ? toolOv : toolG).add(t.grp); if (t.ov) toolOv.add(t.ov); });
-    renderPanel(an);
+    if (!keep) renderPanel(an);
   }
 
   function routeFromSteps(steps, f, nPrefix) {
@@ -82,6 +84,7 @@
   /* ---------- kadry ---------- */
   // lista kadrów jednego wariantu: prawidłowa, zakres, [stapler], usunięcie, [rekonstrukcja], endoskopia, TK
   function framesFor(Pr, vi) {
+    if (Pr.split) return trialFrames(Pr);
     var an = Pr.variants[vi || 0], fx = an.frames, tx = an.text || {}, v = vi || 0;
     var cut = an.focus ? 'focus' : an.id === 'sleeve' ? 'stomach' : 'upper';
     var F = [
@@ -107,7 +110,8 @@
 
   /* ---------- zastosowanie osi czasu m ---------- */
   var tmpV = new V3(), tmpC = new THREE.Color();
-  function applyM() {
+  function applyM() { if (SPLIT.on) splitApplyM(); else applyMOne(); }
+  function applyMOne() {
     var m = S.m, frc = FR[S.frame];
     if (frc && frc.caps) { var want = frc.cap; frc.caps.forEach(function (c) { if (m >= c[0] - 1e-4) want = c[1]; }); want = tr(want); if ($('capText').textContent !== want) $('capText').textContent = want; }
     M.objs.forEach(function (o) {

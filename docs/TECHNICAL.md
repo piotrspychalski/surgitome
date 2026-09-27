@@ -20,12 +20,17 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `05-trzustka-drogi-zolciowe.js` — Whipple, PPPD, hepatikojejunostomia, pankreatektomia dystalna, Puestow i Frey, choledochoduodenostomia
 - `06-przelyk.js` — esofagektomie (Ivor Lewis i McKeown także z zespoleniem bok-do-boku i ślepym kikutem przełyku; rura żołądkowa z krzywizny większej), kontekst klatki piersiowej (w tym żyła nieparzysta)
 - `07-gastroenterostomia-bpd-ds.js` — gastroenterostomia omijająca, BPD (Scopinaro), SADI-S, BPD-DS
-- `08-narzedzia-os-czasu-lista.js` — staplery i szwy na osi czasu, łuki ruchu (LIFT), przygotowanie danych, lista zabiegów
+- `08-narzedzia-os-czasu-lista.js` — staplery i szwy na osi czasu, łuki ruchu (LIFT), przygotowanie danych, lista zabiegów; `ANAT._lib` — klocki dla modułu badań
+- `09-badania.js` — badania ECOPOP (`ANAT.TRIALS`): ETHOS, SCAR, T-REX (`published: false`, widoczne tylko przy `window.__SG_PREVIEW`); zmiana T1, tatuaże, blizna, klips OTSC, krezka z naczyniami i węzłami, narzędzie EFTR, pole napromieniania
 
 **src/app — aplikacja**
 - `01` słownik PL→EN i pomocnicze · `02` motyw i renderer · `03` TK · `04` tekstury, stan, obiekty
 - `05` narzędzia · `06` anatomia, kadry, oś czasu · `07` kamera i endoskop · `08` nawigacja i UI
-- `09` wyszukiwarka zabiegów · `10` tryb telefonu · `11` rozmiar, etykiety (z rozsuwaniem), pętla renderowania
+- `09` wyszukiwarka zabiegów (badania — tylko po nazwie) · `10` tryb telefonu · `11` rozmiar, etykiety (z rozsuwaniem), pętla renderowania
+- `12` badania: widok podzielony — dwa ramiona w jednej scenie, przy każdym przebiegu podmiana modelu `M`, kamery, obszaru widoku i warstwy etykiet (`withArm`); wspólny postęp kadru p ∈ [0, 1], ramię liczy m = p × mEnd; synchronizacja kamer; słownik `DICT_TRIALS`
+- `13` start aplikacji (po wszystkich modułach)
+
+Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kolejką „Dalej”); dostępne z wyszukiwarki, po oznaczeniu gwiazdką — w Ulubionych (`localStorage`, klucz `surgitome-fav`). Kadry badań: punkt wyjścia → interwencja → stan po (bez endoskopii i TK).
 
 ## Konwencje danych
 - Współrzędne: x+ = lewa strona pacjenta, y+ = dogłowowo, z+ = do przodu; 1 jednostka ≈ 1 cm (schemat).
@@ -46,6 +51,8 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `ui_28.js` — ulubione (start w zakładce, gwiazdki, zapis w localStorage, nawigacja po ulubionych, klawisz F); `node tests/ui_28.js stored` — wczytanie zapisanej listy
 - `ui_30.js` — usunięcie wszystkich ulubionych: znika wiersz wariantów i sekcja wariantów w menu telefonu; ponowne dodanie klawiszem F
 - `ui_29.js` — TK: pierwsze „Dalej” uruchamia przejazd, drugie przechodzi dalej
+- `ui_31.js` — informacja przy pierwszym wejściu; `ui_32.js [mobile] [preview]` — badania: ukrycie w nawigacji, wyszukiwarka, widok podzielony, synchronizacja kamer, ulubione, „Dalej”, EN
+- `klikany_chromium.py trials [ethos,scar,t-rex]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
 - `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`

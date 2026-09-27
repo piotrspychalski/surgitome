@@ -146,7 +146,7 @@
   function buildTools(an) {
     var list = [];
     (an.cutTools || []).concat(an.anastTools || []).forEach(function (d) {
-      list.push(d.type === 'gia' ? makeGia(d) : d.type === 'eea' ? makeEea(d) : makeVloc(d));
+      list.push(d.type === 'gia' ? makeGia(d) : d.type === 'eea' ? makeEea(d) : TOOL_EXT[d.type] ? TOOL_EXT[d.type](d) : makeVloc(d));
     });
     return list;
   }

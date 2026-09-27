@@ -190,6 +190,10 @@
     })(),
     PANC: PANC, PANC_R: PANC_R,
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
-    COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries
+    COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
+    // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
+    _lib: { prepare: prepare, rhAnat: rhAnat, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
+      C_COL: C_COL, COL_R: COL_R, colT: ct, colors: function () { return { COL: COL, COLC: COLC, MUC: MUC, MUC_C: MUC_C, STAPLE: STAPLE, SUT: SUT }; },
+      windows: function () { return { PRE: PRE, POST: POST, ALL: ALL, SPEC_OP: SPEC_OP, RH_OFF: RH_OFF, COL_TEXT: COL_TEXT }; } }
   };
 })(typeof window !== 'undefined' ? window : globalThis);

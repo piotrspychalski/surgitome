@@ -1,0 +1,311 @@
+  /* =====================================================================
+     BADANIA: dwa ramiona obok siebie (split screen) ze wspólną osią czasu
+     Oba ramiona w tej samej scenie; przy każdym przebiegu podmieniamy model (M), kamerę i obszar widoku,
+     drugie ramię jest wtedy ukryte. Postęp kadru p ∈ [0, 1]; ramię przelicza go na własne m = p × mEnd.
+     ===================================================================== */
+  // słownik PL→EN badań (dołączany do DICT; tests/i18n.js czyta obie linie)
+  var DICT_TRIALS = {"Badania": "Trials", "Punkt wyjścia": "Starting point", "Punkt wyjścia — oba ramiona": "Starting point — both arms", "Interwencja": "Intervention", "Interwencja: ramię A i ramię B": "Intervention: arm A and arm B", "Obie strategie w tym samym tempie, na wspólnej osi czasu.": "Both strategies at the same pace, on a shared timeline.", "Stan po": "After", "Stan po leczeniu": "After treatment", "Kamery zsynchronizowane — kliknij, aby rozłączyć": "Cameras linked — click to unlink", "Kamery niezależne — kliknij, aby połączyć": "Cameras independent — click to link", "Frakcja": "Fraction", "Kierownik badania (PI)": "Principal investigator (PI)", "Rola autora (P. Spychalski)": "Author's role (P. Spychalski)", "Populacja": "Population", "Randomizacja": "Randomisation", "Ramiona": "Arms", "Pierwszorzędowy punkt końcowy": "Primary endpoint", "Drugorzędowy punkt końcowy": "Secondary endpoint", "Obserwacja": "Follow-up", "Finansowanie": "Funding", "ECOPOP — Horizon Europe, grant nr 101156165": "ECOPOP — Horizon Europe, grant no. 101156165", "Schemat edukacyjny; szczegóły wg aktualnej wersji protokołu.": "Educational schematic; details per the current protocol version.", "limfadenektomia": "lymphadenectomy", "bez limfadenektomii": "no lymphadenectomy", "Kolonoskop z nasadką FTRD": "Colonoscope with FTRD cap", "Pole napromieniania (mezorektum i miednica)": "Radiation field (mesorectum and pelvis)", "Rak wczesny (T1)": "Early cancer (T1)", "Klips OTSC": "OTSC clip", "Blizna po polipektomii": "Post-polypectomy scar", "Blizna po ESD / IMD": "Scar after ESD / IMD", "Blizna po miejscowym wycięciu": "Scar after local excision", "Tatuaż tuszem": "Ink tattoo", "Tatuaż (znakowanie tuszem)": "Tattoo (ink marking)", "Krezka z węzłami chłonnymi — pozostaje": "Mesentery with lymph nodes — preserved", "Krezka z węzłami chłonnymi — usuwana": "Mesentery with lymph nodes — removed", "Jelito grube": "Large bowel", "B: Resekcja segmentarna": "B: Segmental resection", "A: eFTR blizny": "A: eFTR of the scar", "A: Aktywny nadzór": "A: Active surveillance", "B: Chemioradioterapia": "B: Chemoradiotherapy", "ETHOS — leczenie endoskopowe czy operacja we wczesnym raku okrężnicy": "ETHOS — Endoscopic THerapy Or Surgery for early colon cancer", "współkierownik badania (co-PI), Gdańsk": "co-principal investigator (co-PI), Gdańsk", "Wiek ≥ 40 lat; nowo rozpoznany rak okrężnicy (bez odbytnicy), makroskopowo podejrzenie naciekania podśluzówki, średnica ≤ 20 mm; w biopsji bez cech wysokiego ryzyka (G3, pączkowanie 2–3, naciek naczyń); w obrazowaniu cT1–2N0M0.": "Age ≥ 40; newly diagnosed colon cancer (rectum excluded), macroscopically suspected submucosal invasion, diameter ≤ 20 mm; no high-risk features on biopsy (G3, budding 2–3, lymphovascular invasion); cT1–2N0M0 on imaging.", "Randomizacja 1:1.": "1:1 randomisation.", "A: pełnościenna resekcja endoskopowa (EFTR) — nasadka FTRD, klips OTSC, odcięcie pętlą; narząd zachowany.": "A: endoscopic full-thickness resection (EFTR) — FTRD cap, OTSC clip, snare resection; organ preserved.", "B: standardowa resekcja segmentarna okrężnicy z limfadenektomią (otwarta, laparoskopowa lub robotowa); tu: hemikolektomia prawa przy zmianie w okrężnicy wstępującej.": "B: standard segmental colectomy with lymphadenectomy (open, laparoscopic or robotic); shown here: right hemicolectomy for a lesion in the ascending colon.", "Nawrót raka lub przerzuty (węzłowe albo odległe) w ciągu 3 lat — nie gorsza skuteczność (non-inferiority).": "Cancer recurrence or metastases (nodal or distant) within 3 years — non-inferiority.", "Poważne zdarzenia niepożądane i powikłania (Clavien-Dindo ≥ III) w ciągu 30 dni.": "Serious adverse events and complications (Clavien-Dindo ≥ III) within 30 days.", "Oba ramiona (ESMO, stopień I): wizyta i CEA co 6 mies. przez 3 lata, potem co 12 mies.; TK klatki piersiowej, brzucha i miednicy po 6 mies. i co rok do 5 lat; kolonoskopia po 1, 3 i 5 latach (w ramieniu A ocena blizny i klipsa).": "Both arms (ESMO, stage I): visit and CEA every 6 months for 3 years, then every 12 months; chest, abdomen and pelvis CT at 6 months and yearly to 5 years; colonoscopy at 1, 3 and 5 years (arm A: assessment of the scar and clip).", "Rak okrężnicy wstępującej do 2 cm, uniesiony z zagłębieniem (Paris IIa+c), z podejrzeniem naciekania podśluzówki; dystalnie dwa tatuaże tuszem.": "Ascending colon cancer up to 2 cm, elevated with a depression (Paris IIa+c), suspected submucosal invasion; two ink tattoos distally.", "A: okrężnica z krezką i węzłami chłonnymi zachowana, w ścianie klips OTSC. B: odcinek okrężnicy usunięty razem z krezką i węzłami chłonnymi, zespolenie krętniczo-poprzeczne.": "A: colon with its mesentery and lymph nodes preserved, OTSC clip in the wall. B: colon segment removed with its mesentery and lymph nodes, ileotransverse anastomosis.", "ETHOS — ramię A": "ETHOS — arm A", "ETHOS, ramię A: pełnościenna resekcja endoskopowa (EFTR)": "ETHOS, arm A: endoscopic full-thickness resection (EFTR)", "Nasadka FTRD na kolonoskopie, klips OTSC, odcięcie pętlą; narząd zachowany": "FTRD cap on the colonoscope, OTSC clip, snare resection; organ preserved", "Kolonoskop z nasadką FTRD (full-thickness resection device) prowadzony do zmiany.": "Colonoscope with an FTRD (full-thickness resection device) cap advanced to the lesion.", "Ściana ze zmianą wciągnięta do nasadki na całą grubość.": "Full-thickness wall with the lesion pulled into the cap.", "Klips OTSC (over-the-scope clip) zaciśnięty u podstawy — zamyka ścianę.": "OTSC (over-the-scope clip) deployed at the base — closes the wall.", "Odcięcie pętlą nad klipsem; preparat w nasadce.": "Snare resection above the clip; specimen in the cap.", "Okrężnica zachowana; krezka i węzły chłonne pozostają; w ścianie zostaje klips OTSC.": "Colon preserved; mesentery and lymph nodes remain; the OTSC clip stays in the wall.", "ETHOS — ramię B": "ETHOS — arm B", "ETHOS, ramię B: resekcja segmentarna okrężnicy z limfadenektomią": "ETHOS, arm B: segmental colectomy with lymphadenectomy", "Tu: hemikolektomia prawa (zmiana w okrężnicy wstępującej)": "Shown here: right hemicolectomy (lesion in the ascending colon)", "Zakres resekcji: prawa połowa okrężnicy razem ze zmianą i krezką z węzłami chłonnymi (limfadenektomia).": "Extent of resection: right colon with the lesion and its mesentery with lymph nodes (lymphadenectomy).", "Podwiązanie naczyń u nasady krezki; przecięcie jelita krętego i poprzecznicy staplerem liniowym.": "Vessels ligated at the mesenteric root; ileum and transverse colon divided with a linear stapler.", "Preparat usunięty razem z krezką i węzłami chłonnymi.": "Specimen removed with its mesentery and lymph nodes.", "Zespolenie krętniczo-poprzeczne bok-do-boku staplerem liniowym.": "Side-to-side ileotransverse anastomosis with a linear stapler.", "Ciągłość przewodu odtworzona; odcinek okrężnicy usunięty.": "Bowel continuity restored; colon segment removed.", "SCAR — operacja czy resekcja endoskopowa po niedoszczętnym usunięciu wczesnego raka okrężnicy": "SCAR — Surgery versus Endoscopic Resection for incompletely removed early colon CAnceR", "ośrodek GUMed w konsorcjum (main investigator: Jarosław Kobiela)": "Medical University of Gdańsk site in the consortium (main investigator: Jarosław Kobiela)", "Wiek ≥ 40 lat; rak okrężnicy pT1 usunięty endoskopowo niedoszczętnie (R1) lub z niepewnym marginesem (Rx), bez cech wysokiego ryzyka; blizna rozpoznawalna (tatuaż); w TK bez choroby poza T1N0M0.": "Age ≥ 40; pT1 colon cancer removed endoscopically with a positive (R1) or indeterminate (Rx) margin, without high-risk features; scar identifiable (tattoo); no disease beyond T1N0M0 on CT.", "Randomizacja 1:1 (stratyfikacja: R1 vs Rx, ASA).": "1:1 randomisation (stratified by R1 vs Rx and ASA).", "A: pełnościenne wycięcie endoskopowe (eFTR) miejsca po polipektomii z klipsem.": "A: endoscopic full-thickness resection (eFTR) of the polypectomy site with a clip.", "B: resekcja segmentarna okrężnicy (jak w ETHOS); tu: hemikolektomia prawa.": "B: segmental colectomy (as in ETHOS); shown here: right hemicolectomy.", "Współpierwszorzędowe: poważne zdarzenia niepożądane (Clavien-Dindo III–V) w ciągu 30 dni; nawrót lub przerzuty w ciągu 3 lat.": "Co-primary: serious adverse events (Clavien-Dindo III–V) within 30 days; recurrence or metastases within 3 years.", "Wizyty kontrolne wg protokołu; punkty końcowe po 30 dniach i 3 latach.": "Follow-up visits per protocol; endpoints at 30 days and 3 years.", "Blizna po niedoszczętnym endoskopowym usunięciu raka pT1 (R1 lub Rx), oznaczona tatuażem.": "Scar after incomplete endoscopic removal of a pT1 cancer (R1 or Rx), marked with a tattoo.", "A: miejsce po polipektomii wycięte na całą grubość, krezka i węzły chłonne zachowane, klips w ścianie. B: odcinek okrężnicy usunięty razem z krezką i węzłami chłonnymi.": "A: polypectomy site excised full-thickness, mesentery and lymph nodes preserved, clip in the wall. B: colon segment removed with its mesentery and lymph nodes.", "SCAR — ramię A": "SCAR — arm A", "SCAR, ramię A: pełnościenne wycięcie blizny (eFTR)": "SCAR, arm A: full-thickness resection of the scar (eFTR)", "Nasadka FTRD, klips OTSC, odcięcie pętlą; narząd zachowany": "FTRD cap, OTSC clip, snare resection; organ preserved", "Kolonoskop z nasadką FTRD (full-thickness resection device) prowadzony do blizny.": "Colonoscope with an FTRD (full-thickness resection device) cap advanced to the scar.", "Ściana z blizną wciągnięta do nasadki na całą grubość.": "Full-thickness wall with the scar pulled into the cap.", "SCAR — ramię B": "SCAR — arm B", "SCAR, ramię B: resekcja segmentarna okrężnicy": "SCAR, arm B: segmental colectomy", "Tu: hemikolektomia prawa": "Shown here: right hemicolectomy", "Zakres resekcji: prawa połowa okrężnicy razem z blizną i krezką z węzłami chłonnymi (limfadenektomia).": "Extent of resection: right colon with the scar and its mesentery with lymph nodes (lymphadenectomy).", "T-REX — aktywny nadzór czy chemioradioterapia uzupełniająca po miejscowym wycięciu raka odbytnicy T1": "T-REX — active surveillance vs adjuvant chemoradiotherapy for locally resected intermediate-risk T1 rectal cancer", "rejestracja w przygotowaniu": "registration in preparation", "Michał F. Kamiński (Warszawa); współkierownicy: Jérémie Jacques, Antonino Spinelli": "Michał F. Kamiński (Warsaw); co-PIs: Jérémie Jacques, Antonino Spinelli", "Dorośli; rak odbytnicy pozaotrzewnowej pT1 po miejscowym wycięciu R0 (ESD — endoskopowa dyssekcja podśluzówkowa, lub IMD — dyssekcja międzymięśniowa, endoskopowo albo TAMIS); ≥ 1 cecha pośredniego ryzyka (G3, naciek naczyń, pączkowanie 2–3, sm2/sm3); średnica ≤ 30 mm; cN0 w MRI miednicy, cM0.": "Adults; extraperitoneal pT1 rectal cancer after R0 local excision (ESD — endoscopic submucosal dissection, or IMD — intermuscular dissection, endoscopic or TAMIS); ≥ 1 intermediate-risk feature (G3, lymphovascular invasion, budding 2–3, sm2/sm3); diameter ≤ 30 mm; cN0 on pelvic MRI, cM0.", "A: aktywny nadzór, bez leczenia uzupełniającego.": "A: active surveillance, no adjuvant treatment.", "B: uzupełniająca chemioradioterapia długoterminowa — 45 Gy w 25 frakcjach (1,8 Gy, 5 tygodni) z kapecytabiną 825 mg/m² 2 × dziennie w dni napromieniania (albo 5-FU we wlewie ciągłym); start do 12 tygodni po wycięciu.": "B: adjuvant long-course chemoradiotherapy — 45 Gy in 25 fractions (1.8 Gy, 5 weeks) with capecitabine 825 mg/m² twice daily on radiotherapy days (or continuous-infusion 5-FU); starting within 12 weeks of excision.", "Złożona ciężka chorobowość związana z leczeniem po 3 latach (stomia, duży LARS ≥ 30 pkt, Clavien-Dindo ≥ 3b, CTCAE ≥ 3) — przewaga (superiority); niepowodzenie leczenia związane z chorobą po 3 latach — nie gorsza skuteczność (non-inferiority).": "3-year composite severe treatment-related morbidity (stoma, major LARS ≥ 30 points, Clavien-Dindo ≥ 3b, CTCAE ≥ 3) — superiority; 3-year disease-related treatment failure — non-inferiority.", "Ramię A: badanie i CEA co 3 mies. przez 2 lata, potem co 6 mies. do 5 lat; rektoskopia co 3 mies. przez 2 lata, potem co 6 mies.; MRI miednicy lub EUS co 6 mies.; TK klatki piersiowej i brzucha co rok; kolonoskopia po roku.": "Arm A: examination and CEA every 3 months for 2 years, then every 6 months to 5 years; proctoscopy every 3 months for 2 years, then every 6 months; pelvic MRI or EUS every 6 months; chest and abdomen CT yearly; colonoscopy at 1 year.", "Odbytnica po miejscowym wycięciu R0 raka pT1 (ESD lub IMD): blizna z klipsem; MRI miednicy: cN0.": "Rectum after R0 local excision of a pT1 cancer (ESD or IMD): scar with a clip; pelvic MRI: cN0.", "A: bez leczenia, ścisły nadzór. B: po 25 frakcjach (45 Gy) z kapecytabiną.": "A: no treatment, close surveillance. B: after 25 fractions (45 Gy) with capecitabine.", "ECOPOP TREX T1 nadzór chemioradioterapia": "ECOPOP TREX T1 surveillance chemoradiotherapy", "T-REX — ramię A": "T-REX — arm A", "T-REX, ramię A: aktywny nadzór": "T-REX, arm A: active surveillance", "Bez leczenia uzupełniającego": "No adjuvant treatment", "Bez leczenia uzupełniającego. Nadzór: badanie i CEA co 3 mies. przez 2 lata, rektoskopia co 3 mies., MRI miednicy lub EUS co 6 mies.": "No adjuvant treatment. Surveillance: examination and CEA every 3 months for 2 years, proctoscopy every 3 months, pelvic MRI or EUS every 6 months.", "T-REX — ramię B": "T-REX — arm B", "T-REX, ramię B: chemioradioterapia uzupełniająca": "T-REX, arm B: adjuvant chemoradiotherapy", "45 Gy w 25 frakcjach z kapecytabiną": "45 Gy in 25 fractions with capecitabine", "Pole napromieniania: mezorektum i miednica; 45 Gy w 25 frakcjach po 1,8 Gy, 5 tygodni, z kapecytabiną.": "Radiation field: mesorectum and pelvis; 45 Gy in 25 fractions of 1.8 Gy over 5 weeks, with capecitabine.", "main investigator": "main investigator"};
+  Object.assign(DICT, DICT_TRIALS);
+  var SPLIT = { on: false, proc: null, MA: null, MB: null, sync: true, views: [null, null] };
+  // etykiety ramienia B w osobnej warstwie; każda warstwa przycięta do swojej połowy
+  var labelsA = labelsEl, labelsB = $('labelsB');
+  var camA = orbitCam, camB = new THREE.PerspectiveCamera(34, 1, 0.1, 800), controlsB = null;
+  window.__sgTest.split = function () { return SPLIT; }; window.__sgTest.camB = camB;
+
+  function trialFrames(Pr) {
+    var T = Pr.trial;
+    var F = [
+      { k: 'start', kind: 'orbit', m0: 0, m1: 0, cam: 'focusVar', short: 'Punkt wyjścia', title: 'Punkt wyjścia — oba ramiona', cap: T.startCap },
+      { k: 'interv', kind: 'orbit', m0: 0, m1: 1, dur: 22, cam: 'focus', short: 'Interwencja', title: 'Interwencja: ramię A i ramię B', cap: 'Obie strategie w tym samym tempie, na wspólnej osi czasu.' },
+      { k: 'post', kind: 'orbit', m0: 1, m1: 1, cam: 'focus', short: 'Stan po', title: 'Stan po leczeniu', cap: T.postCap }
+    ];
+    F.forEach(function (f, i) { f.num = String(i + 1); f.vi = 0; });
+    return F;
+  }
+
+  /* ---------- budowa i sprzątanie ---------- */
+  function splitBuild(Pr) {
+    build(Pr.variants[0]); var MA = M;
+    labelsB.innerHTML = ''; labelsEl = labelsB;
+    try { build(Pr.variants[1], true); } finally { labelsEl = labelsA; }
+    var MB = M; M = MA; labelsB.hidden = false;
+    SPLIT.on = true; SPLIT.proc = Pr; SPLIT.MA = MA; SPLIT.MB = MB;
+    viewport.classList.add('split'); $('splitHdr').hidden = false;
+    renderPanel(MA.an); splitHeaders();
+  }
+  function splitTeardown() {
+    if (!SPLIT.on && !SPLIT.MB) return;
+    if (SPLIT.MB) {
+      var MB = SPLIT.MB;
+      scene.remove(MB.group); if (MB.toolOv) toolScene.remove(MB.toolOv);
+      MB.objs.forEach(function (o) { if (o.geo) o.geo.dispose(); });
+      MB.endoTrash.forEach(function (x) { x.dispose(); });
+    }
+    if (SPLIT.MA) SPLIT.MA.group.visible = true;
+    SPLIT.on = false; SPLIT.proc = null; SPLIT.MA = SPLIT.MB = null;
+    if (controlsB) controlsB.enabled = false;
+    if (!tw) controls.enabled = true;
+    viewport.classList.remove('split'); $('splitHdr').hidden = true;
+    labelsB.innerHTML = ''; labelsB.hidden = true; labelsA.style.clipPath = ''; hdrKey = '';
+  }
+
+  /* ---------- podmiana ramienia ---------- */
+  function withArm(k, fn) {
+    var sv = { M: M, cam: orbitCam, view: view, m: S.m, lb: labelsEl }, MM = k ? SPLIT.MB : SPLIT.MA;
+    M = MM; orbitCam = k ? camB : camA; view = SPLIT.views[k] || view; S.m = sv.m * MM.an.mEnd; labelsEl = k ? labelsB : labelsA;
+    try { fn(MM); } finally { M = sv.M; orbitCam = sv.cam; view = sv.view; S.m = sv.m; labelsEl = sv.lb; }
+  }
+  function splitApplyM() { withArm(0, applyMOne); withArm(1, applyMOne); splitHeaders(); }
+
+  function splitViews() {
+    var stacked = MOBILE && H > W * 1.05;
+    SPLIT.stacked = stacked;
+    SPLIT.views = stacked
+      ? [{ x: 0, y: 0, w: W, h: Math.round(H / 2) }, { x: 0, y: Math.round(H / 2), w: W, h: H - Math.round(H / 2) }]
+      : [{ x: 0, y: 0, w: Math.round(W / 2), h: H }, { x: Math.round(W / 2), y: 0, w: W - Math.round(W / 2), h: H }];
+    var a = SPLIT.views[0].w / SPLIT.views[0].h;
+    if (Math.abs(camA.aspect - a) > 1e-3) { camA.aspect = a; camA.updateProjectionMatrix(); }
+    var b = SPLIT.views[1].w / SPLIT.views[1].h;
+    if (Math.abs(camB.aspect - b) > 1e-3) { camB.aspect = b; camB.updateProjectionMatrix(); }
+    layoutHeaders();
+  }
+
+  function splitApplyFrame(i, snap) {
+    var Pr = curProc();
+    if (!SPLIT.on || SPLIT.proc !== Pr) splitBuild(Pr);
+    var fr = FR[i];
+    S.frame = i; S.m = fr.m0; S.playing = true;
+    setEndo(false); setCT(false);
+    splitViews();
+    capHead();
+    var p = preset(fr.cam, SPLIT.views[0].w / SPLIT.views[0].h);
+    camTo(p, snap ? 0 : 1.6);
+    if (snap || !SPLIT.sync) placeB(p);
+    updateStrip(); updateDock();
+  }
+  function placeB(p) {
+    placeCam(camB, p.t, p.az, p.el, p.d);
+    if (controlsB) { controlsB.target.copy(p.t); controlsB.update(); }
+  }
+
+  /* ---------- synchronizacja kamer; bez niej każda połowa ma własne sterowanie ---------- */
+  function ensureControlsB() {
+    if (controlsB) return;
+    controlsB = new THREE.OrbitControls(camB, canvas);
+    controlsB.enableDamping = true; controlsB.dampingFactor = 0.08; controlsB.enabled = false;
+    controlsB.target.copy(controls.target);
+    controlsB.addEventListener('start', function () { viewport.classList.add('dragging'); });
+    controlsB.addEventListener('end', function () { viewport.classList.remove('dragging'); });
+  }
+  function pickSide(e) {
+    if (!SPLIT.on || SPLIT.sync) return;
+    var r = viewport.getBoundingClientRect(), v = SPLIT.views[1], x = e.clientX - r.left, y = e.clientY - r.top;
+    var inB = !!v && x >= v.x && y >= v.y;
+    ensureControlsB(); controlsB.enabled = inB; if (!tw) controls.enabled = !inB;
+  }
+  viewport.addEventListener('pointerdown', pickSide, true);
+  viewport.addEventListener('wheel', pickSide, true);
+  function setSync(on) {
+    SPLIT.sync = on;
+    var b = $('splitSync'); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.title = tr(on ? 'Kamery zsynchronizowane — kliknij, aby rozłączyć' : 'Kamery niezależne — kliknij, aby połączyć');
+    b.setAttribute('aria-label', b.title);
+    if (on) { if (controlsB) controlsB.enabled = false; if (!tw) controls.enabled = true; }
+    else { ensureControlsB(); controlsB.target.copy(controls.target); controlsB.update(); }
+  }
+
+  /* ---------- nagłówki ramion ---------- */
+  (function () {
+    var h = document.createElement('div'); h.id = 'splitHdr'; h.hidden = true;
+    h.innerHTML = '<div class="sh sh0"><b></b><span></span></div><div class="sh sh1"><b></b><span></span></div><div id="splitDiv"></div>' +
+      '<button id="splitSync" class="fbtn" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+    viewport.insertBefore(h, $('mFloat'));
+    $('splitSync').onclick = function () { setSync(!SPLIT.sync); };
+    setSync(true);
+  })();
+  function armCap(an, m) {
+    var fr = FR[S.frame]; if (fr && fr.k === 'start') return tr(an.sub); // kadr startowy: opis ramienia
+    var t = '';
+    (an.trialCaps || []).forEach(function (c) { if (m >= c[0] - 1e-4) t = c[1]; });
+    t = tr(t);
+    (an.cutTools || []).forEach(function (d) {
+      if (d.type !== 'rtfield') return;
+      var n = Math.max(0, Math.min(d.fx, Math.floor(clamp01((m - d.w[0]) / (d.w[1] - d.w[0])) * d.fx + 1e-6)));
+      var gy = (n * d.dose).toFixed(1); if (LANG === 'pl') gy = gy.replace('.', ',');
+      t += ' ' + tr('Frakcja') + ' ' + n + '/' + d.fx + ' · ' + gy + ' Gy.';
+    });
+    return t;
+  }
+  function splitHeaders() {
+    if (!SPLIT.on) return;
+    [SPLIT.MA, SPLIT.MB].forEach(function (MM, k) {
+      var el = document.querySelector('.sh' + k), txt = tr(MM.an.vshort), cap = armCap(MM.an, S.m * MM.an.mEnd);
+      var b = el.querySelector('b'), s = el.querySelector('span');
+      if (b.textContent !== txt) b.textContent = txt;
+      if (s.textContent !== cap) s.textContent = cap;
+    });
+  }
+  var hdrKey = '';
+  function layoutHeaders() {
+    var v = SPLIT.views, key = JSON.stringify(v); if (key === hdrKey || !v[0]) return; hdrKey = key;
+    [0, 1].forEach(function (k) {
+      var el = document.querySelector('.sh' + k), st = el.style;
+      st.left = v[k].x + 'px'; st.top = v[k].y + 'px'; st.width = v[k].w + 'px';
+      (k ? labelsB : labelsA).style.clipPath = 'inset(' + v[k].y + 'px ' + (W - v[k].x - v[k].w) + 'px ' + (H - v[k].y - v[k].h) + 'px ' + v[k].x + 'px)';
+    });
+    var d = $('splitDiv').style, sb = $('splitSync').style;
+    if (SPLIT.stacked) { d.left = '0'; d.width = '100%'; d.top = (v[1].y - 1) + 'px'; d.height = '2px'; sb.left = 'auto'; sb.right = '10px'; sb.top = (v[1].y - 21) + 'px'; }
+    else { d.top = '0'; d.height = '100%'; d.left = (v[1].x - 1) + 'px'; d.width = '2px'; sb.right = 'auto'; sb.left = (v[1].x - 21) + 'px'; sb.top = 'auto'; sb.bottom = '96px'; }
+  }
+
+  /* ---------- panel „Opis” badania ---------- */
+  function renderTrialPanel() {
+    var P = curProc(), T = P.trial;
+    $('pTitle').textContent = tr(P.title);
+    var sub = $('pSub'); sub.textContent = T.full + ' · ';
+    if (/^NCT\d+$/.test(T.nct)) {
+      var a = document.createElement('a'); a.href = 'https://clinicaltrials.gov/study/' + T.nct; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'ClinicalTrials.gov ' + T.nct;
+      sub.appendChild(a);
+    } else sub.appendChild(document.createTextNode(tr(T.nct)));
+    var ul = $('pNotes'); ul.innerHTML = '';
+    [['Kierownik badania (PI)', T.pi], ['Rola autora (P. Spychalski)', T.role], ['Populacja', T.population], ['Randomizacja', T.randomisation],
+      ['Ramiona', T.armsLong[0] + ' ' + T.armsLong[1]], ['Pierwszorzędowy punkt końcowy', T.primary], ['Drugorzędowy punkt końcowy', T.secondary],
+      ['Obserwacja', T.followUp], ['Finansowanie', A.TRIAL_FUND]].forEach(function (row) {
+      if (!row[1]) return;
+      var li = document.createElement('li'), b = document.createElement('b');
+      b.textContent = tr(row[0]) + ': ';
+      li.appendChild(b);
+      var body = row[0] === 'Ramiona' ? tr(T.armsLong[0]) + ' ' + tr(T.armsLong[1]) : tr(row[1]);
+      li.appendChild(document.createTextNode(body)); ul.appendChild(li);
+    });
+    var li2 = document.createElement('li'); li2.className = 'trialnote'; li2.textContent = tr(A.TRIAL_NOTE); ul.appendChild(li2);
+  }
+
+  /* ---------- pętla renderowania w trybie podzielonym ---------- */
+  function splitFrame(dt, now) {
+    var fr = FR[S.frame];
+    if (fr && fr.kind === 'orbit' && S.playing && S.m < fr.m1) {
+      S.m = Math.min(fr.m1, S.m + (fr.m1 - fr.m0) * dt / fr.dur); applyM();
+      if (S.m >= fr.m1) updateDock();
+    }
+    if (tw) camStep(dt);
+    else {
+      if (controls.autoRotate) { driftT += dt; if (driftT > 14) controls.autoRotate = false; }
+      controls.update();
+    }
+    if (controlsB && !SPLIT.sync) controlsB.update();
+    splitViews();
+    if (SPLIT.sync) { camB.position.copy(camA.position); camB.quaternion.copy(camA.quaternion); if (controlsB) controlsB.target.copy(controls.target); }
+    var MA = SPLIT.MA, MB = SPLIT.MB;
+    renderer.setScissorTest(true); renderer.setClearColor(sceneBg, 1);
+    [0, 1].forEach(function (k) {
+      var own = k ? MB : MA, other = k ? MA : MB, v = SPLIT.views[k], gy = H - v.y - v.h;
+      other.group.visible = false; if (other.toolOv) other.toolOv.visible = false; own.group.visible = true;
+      withArm(k, function () {
+        passOrbit(false);
+        renderer.setViewport(v.x, gy, v.w, v.h); renderer.setScissor(v.x, gy, v.w, v.h);
+        renderer.clear(); renderer.render(scene, orbitCam);
+        if (M.toolOv && M.toolOv.children.some(function (c) { return c.visible; })) { renderer.clearDepth(); renderer.render(toolScene, orbitCam); }
+      });
+    });
+    MA.group.visible = MB.group.visible = true;
+    renderer.setScissorTest(false);
+    withArm(0, function () { updateLabels(now); });
+    withArm(1, function () { updateLabels(now); });
+  }
+
+  /* ---------- nowe elementy 3D: krezka z węzłami, EFTR (nasadka FTRD, klips OTSC), pole napromieniania ---------- */
+  function v3(a) { return new V3().fromArray(a); }
+  function makeMeso(d) {
+    var all = new THREE.Group(), grp = new THREE.Group(), stat = new THREE.Group(); all.add(grp, stat);
+    var E = d.edge.map(v3), B = d.base.map(v3), N = E.length - 1, ROWS = 6, pos = [], idx = [];
+    for (var i = 0; i <= N; i++) for (var j = 0; j <= ROWS; j++) {
+      var f = j / ROWS, p = B[i].clone().lerp(E[i], f); p.z -= 0.35 * Math.sin(Math.PI * f); pos.push(p.x, p.y, p.z);
+    }
+    for (var i2 = 0; i2 < N; i2++) for (var j2 = 0; j2 < ROWS; j2++) {
+      var a = i2 * (ROWS + 1) + j2, b = a + ROWS + 1; idx.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+    var g = track(new THREE.BufferGeometry()); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
+    var mSheet = track(new THREE.MeshStandardMaterial({ color: '#e8c25e', roughness: 0.7, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
+    var mVes = track(new THREE.MeshStandardMaterial({ color: '#b83227', roughness: 0.45, transparent: true }));
+    var mNode = track(new THREE.MeshStandardMaterial({ color: '#4f9a6a', roughness: 0.5, transparent: true }));
+    grp.add(new THREE.Mesh(g, mSheet));
+    d.vessels.forEach(function (vs) {
+      var a0 = v3(vs[0]), b0 = v3(vs[1]), mid = a0.clone().lerp(b0, 0.5).add(new V3(0, 0, -0.25));
+      grp.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([a0, mid, b0]), 24, 0.075, 6, false)), mVes));
+      if (d.removed) {
+        var tie = new THREE.Mesh(track(new THREE.TorusGeometry(0.16, 0.06, 6, 16)), track(new THREE.MeshStandardMaterial({ color: '#3b4148', roughness: 0.4 })));
+        tie.position.copy(a0.clone().lerp(b0, 0.06)); tie.quaternion.setFromUnitVectors(new V3(0, 0, 1), b0.clone().sub(a0).normalize());
+        stat.add(tie);
+      }
+    });
+    var sph = track(new THREE.SphereGeometry(0.22, 14, 10));
+    d.nodes.forEach(function (q) { var s = new THREE.Mesh(sph, mNode); s.position.fromArray(q); grp.add(s); });
+    var k = Math.round(N / 2), mid0 = B[k].clone().lerp(E[k], 0.45);
+    var el = mkLabel(d.name, d.removed ? 'limfadenektomia' : 'bez limfadenektomii', '#e8c25e', 'seg');
+    return { d: d, grp: all, overlay: false, el: el,
+      update: function (m) {
+        var op = d.opacity ? kfNum(d.opacity, m, 1) : 1;
+        if (d.offset) kfVec(d.offset, m, grp.position); else grp.position.set(0, 0, 0);
+        grp.visible = op > 0.01; mSheet.opacity = 0.5 * op; mVes.opacity = op; mNode.opacity = op;
+        stat.visible = d.tieT !== null && m >= d.tieT;
+        this.alpha = op; this.anchor = mid0.clone().add(grp.position);
+      } };
+  }
+  function makeEftr(d) {
+    var col = M.byId.colon, cc = stateAt(col, 0).curve, n = v3(d.n), P = v3(d.at), tL = A.nearestT(cc, P.clone().addScaledVector(n, d.r));
+    var pts = [];
+    for (var u = 1; u > tL + 0.03; u -= 0.004) pts.push(cc.getPointAt(u));
+    pts.push(P.clone().addScaledVector(n, 0.3), P.clone().addScaledVector(n, d.r - 1.05));
+    var curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), TS = 500, RS = 8;
+    var mScope = metal('#2d3339', 0.5), geo = track(new THREE.TubeGeometry(curve, TS, 0.3, RS, false));
+    var scopeM = new THREE.Mesh(geo, mScope);
+    var capG = new THREE.Group(), mCap = track(new THREE.MeshStandardMaterial({ color: '#bfe3f2', roughness: 0.2, transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false }));
+    var cap = new THREE.Mesh(track(new THREE.CylinderGeometry(0.62, 0.62, 0.9, 28, 1, true)), mCap); cap.position.y = 0.45;
+    var mClip = metal('#aeb6be', 0.3), clip = new THREE.Mesh(track(new THREE.TorusGeometry(0.58, 0.1, 8, 36)), mClip); clip.rotation.x = Math.PI / 2; clip.position.y = 0.72;
+    var mSn = track(new THREE.MeshStandardMaterial({ color: '#ff3b30', emissive: '#7a0d08', transparent: true })), snare = new THREE.Mesh(track(new THREE.TorusGeometry(0.5, 0.04, 6, 36)), mSn);
+    snare.rotation.x = Math.PI / 2; snare.position.y = 0.95;
+    capG.add(cap, clip, snare);
+    var grp = new THREE.Group(); grp.add(scopeM, capG);
+    var mats = [mScope, mClip, mSn], tipEnd = curve.getPointAt(1), Y = new V3(0, 1, 0), target = M.byId[d.target];
+    var el = mkLabel('Kolonoskop z nasadką FTRD', '', '#bfe3f2', 'seg');
+    return { d: d, grp: grp, overlay: true, el: el,
+      update: function (m) {
+        var tau = (m - d.w[0]) / (d.w[1] - d.w[0]), on = tau > 0 && tau < 1;
+        grp.visible = on; this.alpha = on ? 1 : 0;
+        if (target && on) {
+          var suck = sm((tau - 0.42) / 0.16) * 0.55;
+          target.grp.position.copy(n).multiplyScalar(-suck);
+        }
+        if (!on) return;
+        var q, fade = 1;
+        if (tau < 0.3) q = sm(tau / 0.3); else if (tau < 0.72) q = 1; else { q = 1 - 0.45 * sm((tau - 0.72) / 0.28); fade = 1 - sm((tau - 0.86) / 0.14); }
+        q = Math.max(0.004, q);
+        geo.setDrawRange(0, Math.round(q * TS) * RS * 6);
+        var tip = curve.getPointAt(q), tg = curve.getTangentAt(q);
+        capG.position.copy(tip); capG.quaternion.setFromUnitVectors(Y, tg);
+        clip.visible = m < d.clipT; snare.visible = tau > 0.6 && tau < 0.74;
+        mClip.emissive.setScalar(tau > 0.56 && tau < 0.6 ? 0.6 : 0);
+        if (target && tau > 0.72) target.grp.position.add(tip.clone().sub(tipEnd));
+        mats.forEach(function (mm) { mm.opacity = fade; }); mCap.opacity = 0.5 * fade;
+        this.alpha = fade; this.anchor = curve.getPointAt(Math.max(0.004, q - 0.08)).add(new V3(0.8, 0.6, 0.6));
+      } };
+  }
+  function makeRtField(d) {
+    var grp = new THREE.Group(), mF = track(new THREE.MeshStandardMaterial({ color: d.color, emissive: d.color, emissiveIntensity: 0.25, roughness: 0.6, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
+    var mesh = new THREE.Mesh(track(new THREE.SphereGeometry(1, 40, 28)), mF); mesh.scale.fromArray(d.rad); grp.add(mesh); grp.position.fromArray(d.c);
+    var mE = track(new THREE.MeshBasicMaterial({ color: d.color, transparent: true, opacity: 0.8 }));
+    [[1, 0, 0], [0, 1, 0]].forEach(function (ax, i) {
+      var ring = new THREE.Mesh(track(new THREE.TorusGeometry(1, 0.012, 6, 80)), mE);
+      if (i === 0) ring.rotation.y = Math.PI / 2; else ring.rotation.x = Math.PI / 2;
+      ring.scale.set(i === 0 ? d.rad[2] : d.rad[0], i === 0 ? d.rad[1] : d.rad[2], 1); grp.add(ring);
+    });
+    var el = mkLabel('Pole napromieniania (mezorektum i miednica)', '', d.color, 'seg');
+    return { d: d, grp: grp, overlay: false, el: el,
+      update: function (m) {
+        var tau = (m - d.w[0]) / (d.w[1] - d.w[0]); grp.visible = tau > 0;
+        var k = tau >= 1 ? 0.6 : sm(tau / 0.08); mF.opacity = 0.22 * k; mE.opacity = 0.8 * k;
+        this.alpha = tau > 0 ? 1 : 0; this.anchor = new V3(d.c[0] + d.rad[0] * 0.75, d.c[1] + d.rad[1] * 0.75, d.c[2] + 0.5);
+      } };
+  }
+  var TOOL_EXT = { meso: makeMeso, eftr: makeEftr, rtfield: makeRtField };

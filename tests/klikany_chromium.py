@@ -14,8 +14,10 @@ def route(r):
         if u.endswith(k): return r.fulfill(path=p, content_type='application/javascript')
     if 'fonts.g' in u: return r.abort()
     return r.continue_()
-def page_for(b, mobile):
-    ctx = b.new_context(viewport={'width': 390, 'height': 844} if mobile else {'width': 1440, 'height': 900}, device_scale_factor=2 if mobile else 1, is_mobile=mobile, has_touch=mobile)
+def page_for(b, mobile, size=None, preview=False):
+    vp = size or ({'width': 390, 'height': 844} if mobile else {'width': 1440, 'height': 900})
+    ctx = b.new_context(viewport=vp, device_scale_factor=2 if mobile else 1, is_mobile=mobile, has_touch=mobile)
+    ctx.add_init_script("try { localStorage.setItem('surgitome-intro', '1'); } catch (e) {}" + (" window.__SG_PREVIEW = true;" if preview else ''))
     p = ctx.new_page(); p.route('**/*', route)
     p.on('console', lambda m: log.append(('console.' + m.type, m.text)) if m.type in ('error', 'warning') else None)
     p.on('pageerror', lambda e: log.append(('pageerror', str(e))))
@@ -60,5 +62,16 @@ with sync_playwright() as pw:
         pick(p, 'hartmann', True); settle(p, 0); shot(p, 'm06_hartmann'); stepclick(p, 3); settle(p); shot(p, 'm07_hartmann_post')
         pick(p, 'frey', True); stepclick(p, 4); p.wait_for_timeout(8000); shot(p, 'm08_frey_endo')
         log.append(('state', p.evaluate("() => document.getElementById('mProcName').textContent")))
+    elif scen == 'trials':
+        # widok podzielony badań: komputer, telefon pionowo i poziomo; T-REX tylko w podglądzie (__SG_PREVIEW)
+        for dev, mob, size in [('d', False, None), ('mp', True, {'width': 390, 'height': 844}), ('ml', True, {'width': 844, 'height': 390})]:
+            p = page_for(b, mob, size, preview=True)
+            for q in (sys.argv[2].split(',') if len(sys.argv) > 2 else ['ethos', 'scar', 't-rex']):
+                pick(p, q, mob); p.wait_for_timeout(1500); settle(p, 0); shot(p, 'tr_%s_%s_1start' % (q, dev))
+                stepclick(p, 1)
+                for frac in (0.3, 0.55, 0.8):
+                    settle(p, frac); shot(p, 'tr_%s_%s_2int%02d' % (q, dev, int(frac * 100)))
+                stepclick(p, 2); p.wait_for_timeout(2200); shot(p, 'tr_%s_%s_3post' % (q, dev))
+                log.append(('state', dev + ' ' + q + ' | ' + p.evaluate("() => [...document.querySelectorAll('.sh b')].map(x=>x.textContent).join(' / ')")))
     print(json.dumps([l for l in log if 'fonts' not in l[1] and 'ERR_FAILED' not in l[1]], ensure_ascii=False, indent=0)[:3000])
     b.close()

@@ -115,6 +115,7 @@
   var last = performance.now();
   function frame(now) {
     var dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (M && SPLIT.on) { splitFrame(dt, now); requestAnimationFrame(frame); return; }
     if (M) {
       var fr = FR[S.frame];
       if (fr && fr.kind === 'orbit' && S.playing && S.m < fr.m1) {
@@ -184,10 +185,6 @@
     renderTabs(); renderStrip(); updateStrip(); renderPanel(M.an); capHead(); updateDock(); updateMobile();
     hudKey = null; if (endo.active && endo.set) { $('hudEnd').textContent = tr(endo.endText); if (!$('choice').hidden) showChoice(true); if (endo.set.branched && endo.choice !== null) $('btnOther').textContent = tr('Druga droga: ') + tr(endo.set.meta[1 - endo.choice].label); }
     if (ct.on) { $('ctSweep').textContent = tr(ct.sweep ? 'Pauza' : 'Przejazd'); drawCT(); }
+    if (SPLIT.on) { splitHeaders(); setSync(SPLIT.sync); }
   }
   $('btnLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
-  applyTheme(); resize();
-  var F0 = favIdx(); if (F0.length) S.an = F0[0]; else S.cat = A.PROCS[S.an].cat;
-  S.vi = 0; FR = framesFor(curProc(), 0); renderTabs(); renderStrip(); applyFrame(0, true); setLang(LANG);
-  requestAnimationFrame(frame);
-})();

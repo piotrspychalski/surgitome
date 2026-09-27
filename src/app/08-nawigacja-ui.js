@@ -18,6 +18,7 @@
   }
   function applyFrame(i, snap) {
     i = Math.max(0, Math.min(FR.length - 1, i));
+    if (curProc().split) return splitApplyFrame(i, snap);
     var fr = FR[i], need = curVar();
     if (!M || M.an !== need) build(need);
     S.frame = i;
@@ -30,7 +31,7 @@
   }
   function capHead() {
     var fr = FR[S.frame]; if (!fr) return;
-    $('capNum').textContent = tr('Kadr ') + fr.num + (curProc().variants.length > 1 ? tr(' — wariant: ') + tr(curVar().vshort) : '');
+    $('capNum').textContent = tr('Kadr ') + fr.num + (curProc().variants.length > 1 && !curProc().split ? tr(' — wariant: ') + tr(curVar().vshort) : '');
     $('capTitle').textContent = tr(fr.title); $('capText').textContent = tr(fr.cap); applyM();
   }
   function next() {
@@ -38,12 +39,12 @@
     if (fr.kind === 'ct' && ct.on && !ct.started) { ct.y = ct.yMax; toggleSweep(); updateDock(); return; }
     if (fr.kind === 'orbit' && S.m < fr.m1 - 1e-4) { S.m = fr.m1; applyM(); if (tw) { tw.time = tw.dur; camStep(0); } updateDock(); return; }
     if (S.frame < FR.length - 1) goTo(S.frame + 1);
-    else if ((S.vi || 0) < curProc().variants.length - 1) switchVariant((S.vi || 0) + 1, curProc().distinct ? 'first' : 'firstVar');
+    else if (!curProc().split && (S.vi || 0) < curProc().variants.length - 1) switchVariant((S.vi || 0) + 1, curProc().distinct ? 'first' : 'firstVar');
     else { var L = navList(), p = L.indexOf(S.an); if (p >= 0 && p < L.length - 1) switchAn(L[p + 1], 0); }
   }
   function prev() {
     if (S.frame > 0) goTo(S.frame - 1);
-    else if ((S.vi || 0) > 0) switchVariant(S.vi - 1, 'last');
+    else if (!curProc().split && (S.vi || 0) > 0) switchVariant(S.vi - 1, 'last');
     else { var L = navList(), p = L.indexOf(S.an); if (p > 0) switchAn(L[p - 1], 'last'); }
   }
   /* ---------- ulubione (localStorage): osobna zakładka, zabieg zostaje też w swojej kategorii ---------- */
@@ -60,9 +61,13 @@
     renderTabs(); if (!$('mMenu').hidden) renderMobileMenu();
   }
   // lista zabiegów do „dalej/wstecz” po ostatnim kadrze: w zakładce Ulubione — kolejne ulubione, inaczej wszystkie
-  function navList() { if (S.cat === 'fav') return favIdx(); return A.PROCS.map(function (p, i) { return i; }); }
-  function uiCats() { return [{ id: 'fav', name: 'Ulubione' }].concat(A.CATS); }
-  function catProcs(cat) { return cat === 'fav' ? favIdx() : A.PROCS.map(function (p, i) { return p.cat === cat ? i : -1; }).filter(function (i) { return i >= 0; }); }
+  // badania (kategoria „trials”) są ukryte: nie ma ich w pasku kategorii ani w kolejce „dalej”; dostępne z wyszukiwarki, po oznaczeniu gwiazdką — w Ulubionych
+  function navList() { if (S.cat === 'fav' || S.cat === 'trials') return catProcs(S.cat); return A.PROCS.map(function (p, i) { return p.split ? -1 : i; }).filter(function (i) { return i >= 0; }); }
+  function uiCats() { return [{ id: 'fav', name: 'Ulubione' }].concat(A.CATS.filter(function (c) { return c.id !== 'trials'; })); }
+  function catProcs(cat) {
+    if (cat === 'fav') return favIdx();
+    return A.PROCS.map(function (p, i) { return p.cat === cat && (cat !== 'trials' || i === S.an || isFav(i)) ? i : -1; }).filter(function (i) { return i >= 0; });
+  }
   function pickCat(id) {
     S.cat = id; var L = catProcs(id);
     if (L.length && L.indexOf(S.an) < 0) switchAn(L[0], 0); else renderTabs();
@@ -125,7 +130,13 @@
     // warianty tylko dla zabiegu widocznego w bieżącej zakładce (np. po odgwiazdkowaniu go w Ulubionych — ukryte)
     var showV = P.variants.length > 1 && L.indexOf(S.an) >= 0;
     vb.hidden = !showV;
-    if (showV) {
+    if (showV && P.split) {
+      // badanie: zamiast wariantów — nazwy ramion
+      P.variants.forEach(function (v, k) {
+        if (k) { var vs = document.createElement('span'); vs.className = 'armvs'; vs.textContent = 'vs'; vb.appendChild(vs); }
+        var t = document.createElement('span'); t.className = 'armtag arm' + k; setT(t, v.vshort); vb.appendChild(t);
+      });
+    } else if (showV) {
       var lb = document.createElement('span'); lb.className = 'vlabel'; setT(lb, 'Wariant:'); vb.appendChild(lb);
       P.variants.forEach(function (v, k) {
         var b = document.createElement('button'); b.className = 'vbtn'; setT(b, v.vshort);
