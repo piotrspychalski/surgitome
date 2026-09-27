@@ -1,6 +1,6 @@
 # Symbol QR (SVG <symbol id="qrSym">): bezpośredni link do strony na GitHub Pages, styl jak dotychczas
 import qrcode, io, cairosvg, cv2, numpy as np
-URL = 'https://piotrspychalski.github.io/surgitome/'
+URL = 'https://piotrspychalski.github.io/surgitome/?ref=qr'
 qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_Q, border=4, box_size=1)
 qr.add_data(URL); qr.make(fit=True)
 M = qr.get_matrix(); N = len(M); n = N - 8; B = 4
