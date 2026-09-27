@@ -27,9 +27,9 @@ function pick(q){ const inp=MOB?$('mq'):$('q'); search(q); inp.dispatchEvent(new
   console.log('szukaj „ethos”:',hitEthos.join(' ; '),'| „eftr”:',hitEftr.join(' ; '),'| „rak”:',hitRak.filter(x=>/ETHOS|SCAR|T-REX/.test(x)).length,'badań');
   ok(hitEthos.some(x=>/ETHOS/.test(x)),'wyszukiwarka nie znajduje ETHOS'); ok(hitEftr.some(x=>/ETHOS/.test(x))&&hitEftr.some(x=>/SCAR/.test(x)),'„eftr” nie znajduje ETHOS i SCAR');
   ok(!hitRak.some(x=>/ETHOS|SCAR|T-REX/.test(x)),'badania widoczne w wynikach „rak”');
-  ok(PREVIEW===search('t-rex').some(x=>/T-REX/.test(x)),'T-REX: widoczność niezgodna z flagą published');
+  ok(search('t-rex').some(x=>/T-REX/.test(x)),'wyszukiwarka nie znajduje T-REX');
   if(MOB) $('mMenuClose').click();
-  const trials=PREVIEW?['ethos','scar','t-rex']:['ethos','scar'];
+  const trials=['ethos','scar','t-rex'];
   for(const q of trials){
     pick(q); await sleep(700);
     const S=w.__sgTest.state(), SP=w.__sgTest.split();
