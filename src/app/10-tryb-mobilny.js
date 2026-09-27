@@ -137,10 +137,21 @@
   var toastT;
   function fsFail() { var t = $('toast'); t.textContent = tr('Pełny ekran jest tu zablokowany. Użyj F11 lub pełnego ekranu przeglądarki.'); t.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 3800); }
 
+  /* ---------- informacja przy pierwszym wejściu (raz na urządzenie, localStorage) ---------- */
+  var INTRO_KEY = 'surgitome-intro';
+  function introClose() {
+    $('intro').hidden = true;
+    try { localStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
+  }
+  $('introOk').onclick = introClose;
+  $('introLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
+  try { if (localStorage.getItem(INTRO_KEY) !== '1') { $('intro').hidden = false; setTimeout(function () { $('introOk').focus(); }, 0); } } catch (e) {}
+
   function qrShow(on) { $('qrOverlay').hidden = !on; }
   $('qrBtn').onclick = function () { qrShow(true); };
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
+    if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
     var tg = e.target, tag = tg && tg.tagName;
     if (tag === 'INPUT' && tg.type === 'search') return;
