@@ -1,5 +1,5 @@
 /* =====================================================================
-   BADANIA RANDOMIZOWANE (projekt ECOPOP): ETHOS, SCAR, T-REX
+   BADANIA RANDOMIZOWANE (projekt ECOPOP): ETHOS, SCAR
    Każde badanie = dwa ramiona (A, B) w formacie zabiegu, pokazywane obok siebie (split screen).
    Treść wyłącznie na poziomie rejestru badań; szczegóły wg aktualnej wersji protokołu.
    ===================================================================== */
@@ -7,7 +7,7 @@
   'use strict';
   var A = root.ANAT, K = A._lib, THREE = root.THREE, V3 = THREE.Vector3;
   var C = K.colors(), W = K.windows(), COL = C.COL, COLC = C.COLC, C_COL = K.C_COL, COL_R = K.COL_R;
-  var LESION = '#7d1a26', TATTOO = '#1d2433', SCAR = '#ece6dc', CLIP = '#aeb6be', RTF = '#f08a2c';
+  var LESION = '#7d1a26', TATTOO = '#1d2433', SCAR = '#ece6dc', CLIP = '#aeb6be';
 
   // punkt na ścianie okrężnicy: oś, kierunek do ściany (prostopadły do osi, możliwie bliski pref), promień
   function wallAt(t, pref, rot) {
@@ -105,26 +105,10 @@
     return an;
   }
 
-  /* ---------- T-REX: miejscowe wycięcie raka odbytnicy pT1 ---------- */
-  function trexArm(o) {
-    var w = o.w, objs = wholeColon().concat([scar(w, 'Blizna po ESD / IMD')]);
-    var an = K.prepare({
-      cat: 'colon', id: o.id, short: o.short, title: o.title, sub: o.sub, notes: o.notes, text: W.COL_TEXT,
-      focus: { t: [0, -13.5, -0.5], k: 0.62 }, focusVar: { t: [0, -16.0, -0.6], k: 0.45 },
-      frames: { resect: ['', '', ''], remove: ['', '', ''], post: '', endoPost: '' },
-      objects: objs, marks: [clipMark(w, [[0, 1]])]
-    });
-    an.objects.forEach(function (ob) { if (ob.id === 'scar') ob.labels = [K.L('Blizna po miejscowym wycięciu', 0.5, W.ALL)]; });
-    if (o.rt) an.cutTools = an.cutTools.concat([{ type: 'rtfield', w: [0.2, 2.9], c: [0, -15.4, -1.8], rad: [4.4, 5.0, 3.7], fx: 25, dose: 1.8, color: RTF }]);
-    an.trialCaps = o.caps;
-    return an;
-  }
-
   /* ---------- położenie zmian ---------- */
   var tL = K.colT([-7.45, -1.8, 0.05]), PREF = [0.55, 0, 1];
   var W_L = wallAt(tL, PREF); W_L.t = tL;
   var TAT = { t: K.colT([-7.25, 1.6, 0]), pref: PREF };
-  var tS = K.colT([0, -17.0, -1.35]), W_S = wallAt(tS, [0, 0, 1]);
 
   var FUND = 'ECOPOP — Horizon Europe, grant nr 101156165';
   var NOTE = 'Schemat edukacyjny; szczegóły wg aktualnej wersji protokołu.';
@@ -175,28 +159,7 @@
       notes: [], w: W_L, tat: TAT, target: function (w, ex) { var o = scar(w, 'Blizna po polipektomii', ex); o.labels = [K.L('Blizna po polipektomii', 0.5, [-9, 2.4])]; return o; }, withWhat: 'z blizną' })
   ]);
 
-  var TREX = trial({
-    id: 'trex', acronym: 'T-REX', title: 'T-REX — aktywny nadzór czy chemioradioterapia uzupełniająca po miejscowym wycięciu raka odbytnicy T1',
-    full: 'Active surveillance vs adjuvant chemoradiotherapy for locally resected intermediate-risk T1 REctal cancer', nct: 'rejestracja w przygotowaniu',
-    pi: 'Michał F. Kamiński (Warszawa); współkierownicy: Jérémie Jacques, Antonino Spinelli', role: 'main investigator',
-    population: 'Dorośli; rak odbytnicy pozaotrzewnowej pT1 po miejscowym wycięciu R0 (ESD — endoskopowa dyssekcja podśluzówkowa, lub IMD — dyssekcja międzymięśniowa, endoskopowo albo TAMIS); ≥ 1 cecha pośredniego ryzyka (G3, naciek naczyń, pączkowanie 2–3, sm2/sm3); średnica ≤ 30 mm; cN0 w MRI miednicy, cM0.',
-    randomisation: '',
-    arms: ['A: Aktywny nadzór', 'B: Chemioradioterapia'],
-    armsLong: ['A: aktywny nadzór, bez leczenia uzupełniającego.', 'B: uzupełniająca chemioradioterapia długoterminowa — 45 Gy w 25 frakcjach (1,8 Gy, 5 tygodni) z kapecytabiną 825 mg/m² 2 × dziennie w dni napromieniania (albo 5-FU we wlewie ciągłym); start do 12 tygodni po wycięciu.'],
-    primary: 'Złożona ciężka chorobowość związana z leczeniem po 3 latach (stomia, duży LARS ≥ 30 pkt, Clavien-Dindo ≥ 3b, CTCAE ≥ 3) — przewaga (superiority); niepowodzenie leczenia związane z chorobą po 3 latach — nie gorsza skuteczność (non-inferiority).',
-    secondary: '',
-    followUp: 'Ramię A: badanie i CEA co 3 mies. przez 2 lata, potem co 6 mies. do 5 lat; rektoskopia co 3 mies. przez 2 lata, potem co 6 mies.; MRI miednicy lub EUS co 6 mies.; TK klatki piersiowej i brzucha co rok; kolonoskopia po roku.',
-    startCap: 'Odbytnica po miejscowym wycięciu R0 raka pT1 (ESD lub IMD): blizna z klipsem; MRI miednicy: cN0.',
-    postCap: 'A: bez leczenia, ścisły nadzór. B: po 25 frakcjach (45 Gy) z kapecytabiną.',
-    keys: 'ECOPOP TREX T1 nadzór chemioradioterapia'
-  }, [
-    trexArm({ id: 'trex-a', short: 'T-REX — ramię A', title: 'T-REX, ramię A: aktywny nadzór', sub: 'Bez leczenia uzupełniającego', notes: [], w: W_S,
-      caps: [[0, 'Bez leczenia uzupełniającego. Nadzór: badanie i CEA co 3 mies. przez 2 lata, rektoskopia co 3 mies., MRI miednicy lub EUS co 6 mies.']] }),
-    trexArm({ id: 'trex-b', short: 'T-REX — ramię B', title: 'T-REX, ramię B: chemioradioterapia uzupełniająca', sub: '45 Gy w 25 frakcjach z kapecytabiną', notes: [], w: W_S, rt: true,
-      caps: [[0, 'Pole napromieniania: mezorektum i miednica; 45 Gy w 25 frakcjach po 1,8 Gy, 5 tygodni, z kapecytabiną.']] })
-  ]);
-
-  var ALL_TRIALS = [ETHOS, SCAR_T, TREX];
+  var ALL_TRIALS = [ETHOS, SCAR_T];
   A.TRIALS = ALL_TRIALS;
   A.CATS.push({ id: 'trials', name: 'Badania' });
   ALL_TRIALS.forEach(function (t) { if (t.published || root.__SG_PREVIEW) A.PROCS.push(t); });

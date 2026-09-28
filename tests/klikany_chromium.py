@@ -63,10 +63,10 @@ with sync_playwright() as pw:
         pick(p, 'frey', True); stepclick(p, 4); p.wait_for_timeout(8000); shot(p, 'm08_frey_endo')
         log.append(('state', p.evaluate("() => document.getElementById('mProcName').textContent")))
     elif scen == 'trials':
-        # widok podzielony badań: komputer, telefon pionowo i poziomo; T-REX tylko w podglądzie (__SG_PREVIEW)
+        # widok podzielony badań: komputer, telefon pionowo i poziomo
         for dev, mob, size in [('d', False, None), ('mp', True, {'width': 390, 'height': 844}), ('ml', True, {'width': 844, 'height': 390})]:
             p = page_for(b, mob, size, preview=True)
-            for q in (sys.argv[2].split(',') if len(sys.argv) > 2 else ['ethos', 'scar', 't-rex']):
+            for q in (sys.argv[2].split(',') if len(sys.argv) > 2 else ['ethos', 'scar']):
                 pick(p, q, mob); p.wait_for_timeout(1500); settle(p, 0); shot(p, 'tr_%s_%s_1start' % (q, dev))
                 stepclick(p, 1)
                 for frac in (0.3, 0.55, 0.8):

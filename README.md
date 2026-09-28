@@ -47,7 +47,6 @@ A separate, hidden view shows the randomised trials of the **ECOPOP** project si
 
 - **ETHOS** — *Endoscopic THerapy Or Surgery for early colon cancer* (NCT06940947): **A** endoscopic full-thickness resection (EFTR: FTRD cap, OTSC clip, snare resection; organ, mesentery and lymph nodes preserved) vs **B** segmental colectomy with lymphadenectomy (shown as right hemicolectomy: vessels ligated at the root, mesentery with lymph nodes removed with the specimen).
 - **SCAR** — *Surgery versus Endoscopic Resection for incompletely removed early colon CAnceR* (NCT06057350): **A** eFTR of the post-polypectomy scar vs **B** segmental colectomy.
-- **T-REX** — active surveillance vs adjuvant chemoradiotherapy (45 Gy in 25 fractions with capecitabine; radiation field and fraction counter) after local excision of intermediate-risk T1 rectal cancer; registration in preparation.
 
 Frames: starting point (both halves identical: lesion or scar, ink tattoos) → intervention → state after treatment. The description panel lists population, arms, endpoints, follow-up, the author's role and funding — information at the level of trial registries only; details follow the current protocol version.
 
@@ -130,7 +129,6 @@ Osobny, ukryty widok pokazuje badania randomizowane projektu **ECOPOP**: dwa ram
 
 - **ETHOS** (NCT06940947): **A** pełnościenna resekcja endoskopowa (EFTR: nasadka FTRD, klips OTSC, odcięcie pętlą; narząd, krezka i węzły chłonne zachowane) vs **B** resekcja segmentarna z limfadenektomią (tu: hemikolektomia prawa — podwiązanie naczyń u nasady, krezka z węzłami usuwana z preparatem).
 - **SCAR** (NCT06057350): **A** eFTR blizny po polipektomii vs **B** resekcja segmentarna.
-- **T-REX** — aktywny nadzór vs uzupełniająca chemioradioterapia (45 Gy w 25 frakcjach z kapecytabiną; pole napromieniania i licznik frakcji) po miejscowym wycięciu raka odbytnicy T1; rejestracja w przygotowaniu.
 
 Kadry: punkt wyjścia (obie połowy identyczne: zmiana lub blizna, tatuaże) → interwencja → stan po leczeniu. Panel „Opis” zawiera populację, ramiona, punkty końcowe, obserwację, rolę autora i finansowanie — wyłącznie informacje na poziomie rejestrów badań; szczegóły wg aktualnej wersji protokołu.
 

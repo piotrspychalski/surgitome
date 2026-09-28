@@ -21,7 +21,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `06-przelyk.js` — esofagektomie (Ivor Lewis i McKeown także z zespoleniem bok-do-boku i ślepym kikutem przełyku; rura żołądkowa z krzywizny większej), kontekst klatki piersiowej (w tym żyła nieparzysta)
 - `07-gastroenterostomia-bpd-ds.js` — gastroenterostomia omijająca, BPD (Scopinaro), SADI-S, BPD-DS
 - `08-narzedzia-os-czasu-lista.js` — staplery i szwy na osi czasu, łuki ruchu (LIFT), przygotowanie danych, lista zabiegów; `ANAT._lib` — klocki dla modułu badań
-- `09-badania.js` — badania ECOPOP (`ANAT.TRIALS`): ETHOS, SCAR, T-REX (flaga `published: false` ukrywa badanie; wtedy widoczne tylko przy `window.__SG_PREVIEW`); zmiana T1, tatuaże, blizna, klips OTSC, krezka z naczyniami i węzłami, narzędzie EFTR, pole napromieniania
+- `09-badania.js` — badania ECOPOP (`ANAT.TRIALS`): ETHOS, SCAR (flaga `published: false` ukrywa badanie; wtedy widoczne tylko przy `window.__SG_PREVIEW`); zmiana T1, tatuaże, blizna, klips OTSC, krezka z naczyniami i węzłami, narzędzie EFTR
 
 **src/app — aplikacja**
 - `01` słownik PL→EN i pomocnicze · `02` motyw i renderer · `03` TK · `04` tekstury, stan, obiekty
@@ -52,7 +52,7 @@ Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kole
 - `ui_30.js` — usunięcie wszystkich ulubionych: znika wiersz wariantów i sekcja wariantów w menu telefonu; ponowne dodanie klawiszem F
 - `ui_29.js` — TK: pierwsze „Dalej” uruchamia przejazd, drugie przechodzi dalej
 - `ui_31.js` — informacja przy pierwszym wejściu; `ui_32.js [mobile] [preview]` — badania: ukrycie w nawigacji, wyszukiwarka, widok podzielony, synchronizacja kamer, ulubione, „Dalej”, EN
-- `klikany_chromium.py trials [ethos,scar,t-rex]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
+- `klikany_chromium.py trials [ethos,scar]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
 - `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`

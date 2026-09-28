@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · CC BY-NC 4.0
-// Badania (ETHOS, SCAR; T-REX tylko w podglądzie): ukryte w nawigacji, wyszukiwarka, widok podzielony, synchronizacja kamer, ulubione, „Dalej”, EN
+// Badania ECOPOP (ETHOS, SCAR): ukryte w nawigacji, wyszukiwarka, widok podzielony, synchronizacja kamer, ulubione, „Dalej”, EN
 // node tests/ui_32.js [mobile] [preview]
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const MOB=process.argv.includes('mobile'), PREVIEW=process.argv.includes('preview');
@@ -24,12 +24,11 @@ function pick(q){ const inp=MOB?$('mq'):$('q'); search(q); inp.dispatchEvent(new
   ok(!cats.some(c=>/Badania|Trials/.test(c)),'kategoria Badania widoczna w pasku');
   console.log('kategorie:',cats.join(' | '));
   const hitEthos=search('ethos'), hitEftr=search('eftr'), hitRak=search('rak');
-  console.log('szukaj „ethos”:',hitEthos.join(' ; '),'| „eftr”:',hitEftr.join(' ; '),'| „rak”:',hitRak.filter(x=>/ETHOS|SCAR|T-REX/.test(x)).length,'badań');
+  console.log('szukaj „ethos”:',hitEthos.join(' ; '),'| „eftr”:',hitEftr.join(' ; '),'| „rak”:',hitRak.filter(x=>/ETHOS|SCAR/.test(x)).length,'badań');
   ok(hitEthos.some(x=>/ETHOS/.test(x)),'wyszukiwarka nie znajduje ETHOS'); ok(hitEftr.some(x=>/ETHOS/.test(x))&&hitEftr.some(x=>/SCAR/.test(x)),'„eftr” nie znajduje ETHOS i SCAR');
-  ok(!hitRak.some(x=>/ETHOS|SCAR|T-REX/.test(x)),'badania widoczne w wynikach „rak”');
-  ok(search('t-rex').some(x=>/T-REX/.test(x)),'wyszukiwarka nie znajduje T-REX');
+  ok(!hitRak.some(x=>/ETHOS|SCAR/.test(x)),'badania widoczne w wynikach „rak”');
   if(MOB) $('mMenuClose').click();
-  const trials=['ethos','scar','t-rex'];
+  const trials=['ethos','scar'];
   for(const q of trials){
     pick(q); await sleep(700);
     const S=w.__sgTest.state(), SP=w.__sgTest.split();
@@ -54,7 +53,6 @@ function pick(q){ const inp=MOB?$('mq'):$('q'); search(q); inp.dispatchEvent(new
     ok(SP.MA.tools.every(t=>typeof t.update==='function')&&SP.MB.tools.length>0,q+': brak narzędzi ramion');
     ok(!/[.]{3}|undefined/.test(document_q('.sh0 span')+document_q('.sh1 span')),q+': pusty podpis ramienia');
     console.log(q,'| A:',document_q('.sh0 span').slice(0,90),'| B:',document_q('.sh1 span').slice(0,90));
-    if(q==='t-rex') ok(/25\/25/.test(document_q('.sh1 span')),'T-REX: licznik frakcji nie doszedł do 25/25');
   }
   // gwiazdka: badanie trafia do Ulubionych (zapis w localStorage), kategoria Badania nadal niewidoczna
   pick('ethos'); await sleep(600);
@@ -70,7 +68,7 @@ function pick(q){ const inp=MOB?$('mq'):$('q'); search(q); inp.dispatchEvent(new
   for(const q of trials){ pick(q); await sleep(600);
     for(let f=0;f<3;f++){ $('strip').querySelectorAll('.step')[f].click(); await sleep(260); if(f===1){ $('btnNext').click(); await sleep(80); }
       $('fInfo').click(); await sleep(30);
-      for(const s of ['#capTitle','#capText','#labels','#tabs','#variants','#strip','#splitHdr','#pTitle','#pSub','#pNotes','#mFrameTxt','#mProcName']){ const el=w.document.querySelector(s); if(!el) continue; const tw=w.document.createTreeWalker(el,4); let t; while((t=tw.nextNode())){ const x=t.textContent.trim(), xn=x.replace(/Gdańsk|Jarosław|Michał|Kamiński|Jérémie|Nastazja/g,""); if(x&&PL.test(xn)) bad.add(q+': '+x.slice(0,80)); } }
+      for(const s of ['#capTitle','#capText','#labels','#tabs','#variants','#strip','#splitHdr','#pTitle','#pSub','#pNotes','#mFrameTxt','#mProcName']){ const el=w.document.querySelector(s); if(!el) continue; const tw=w.document.createTreeWalker(el,4); let t; while((t=tw.nextNode())){ const x=t.textContent.trim(), xn=x.replace(/Gdańsk|Jarosław|Nastazja/g,""); if(x&&PL.test(xn)) bad.add(q+': '+x.slice(0,80)); } }
       $('fInfo').click(); } }
   console.log('Polskie teksty w EN:',bad.size,[...bad].slice(0,12));
   ok(!bad.size,'polskie teksty w wersji EN');
