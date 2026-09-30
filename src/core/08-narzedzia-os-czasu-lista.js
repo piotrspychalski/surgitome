@@ -176,6 +176,20 @@
         multi('hpb', 'drain', 'Operacje drenujące (Puestow, Frey)', 'Przewlekłe zapalenie trzustki — operacje drenujące', [P(drainAnat(false), 'Puestow (Partington–Rochelle)'), P(drainAnat(true), 'Frey')]),
         one(CDD, 'Choledochoduodenostomia', 'Choledochoduodenostomia bok-do-boku'),
         multi('sb', 'sb', 'Resekcja jelita cienkiego', 'Resekcja jelita cienkiego — warianty zespolenia', [P(sbAnat('e2e'), 'Koniec-do-końca (szew)'), P(sbAnat('iso'), 'Izoperystaltyczne'), P(sbAnat('anti'), 'Antyperystaltyczne (FEEA)')]),
+        (function () {
+          // wybór zakresu resekcji: jeden kadr, całe jelito grube z krezką i naczyniami, przesuwalny guz
+          var z = prepare({ cat: 'colon', id: 'zakres', short: 'Wybór zakresu resekcji', title: 'Wybór zakresu resekcji w raku jelita grubego',
+            sub: 'Przesuń guz — podświetla się typowy zakres resekcji z krezką i naczyniami do podwiązania',
+            notes: ['Zakres resekcji odpowiada drenażowi chłonnemu: usuwa się odcinek jelita z krezką do odejścia naczynia zaopatrującego (ASCRS 2022).',
+              'Kątnica i wstępnica: hemikolektomia prawa (IC, RC, RBMC). Zagięcie wątrobowe i poprzecznica: zwykle poszerzona hemikolektomia prawa (pień MC).',
+              'Zagięcie śledzionowe: resekcja segmentarna (LC, LBMC) lub rozszerzone hemikolektomie. Zstępnica: hemikolektomia lewa (LC, gałęzie esicze). Esica: resekcja esicy (SRA, LC).',
+              'Odbytnica: górna część — przednia resekcja z częściowym wycięciem mezorektum (PME); środkowa i dolna — TME; guz przy zwieraczach — amputacja brzuszno-kroczowa.',
+              'Schemat edukacyjny: granice między odcinkami są umowne, a zakres ustala się indywidualnie (m.in. naczynia zaopatrujące guz, stan chorego, wyniki obrazowania).'],
+            text: COL_TEXT, frames: { resect: ['', '', ''], remove: ['', '', ''], post: '', endoPost: '' },
+            objects: [tiObj({}), appObj({}), colObj('colon', 0, 1, { name: 'Jelito grube' })], marks: [] });
+          z.single = true; z.tumour = true; z.cutTools = z.cutTools.concat([{ type: 'zakres', map: colonMap() }]);
+          return { cat: 'colon', id: 'zakres', short: z.short, title: z.title, variants: [z] };
+        })(),
         multi('colon', 'rh', 'Hemikolektomia prawa', 'Prawostronna hemikolektomia — warianty zespolenia', [P(rhAnat(true), 'Izoperystaltyczne'), P(rhAnat(false), 'Antyperystaltyczne (FEEA)'), P(RHX, 'Poszerzona — izoperystaltyczne')]),
         multi('colon', 'lh', 'Hemikolektomia lewa', 'Lewostronna hemikolektomia — warianty zespolenia', [P(LH, 'Koniec-do-końca (EEA)'), P(lhSide(true), 'Izoperystaltyczne'), P(lhSide(false), 'Antyperystaltyczne (FEEA)')]),
         multi('colon', 'ar', 'Resekcja odbytnicy', 'Resekcja odbytnicy — warianty zespolenia EEA', [P(arVariant('center'), 'Linia przez środek'), P(arVariant('racket'), 'Rakieta tenisowa'), P(arVariant('side'), 'Przednia ściana')]),
@@ -188,12 +202,12 @@
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
-        'sb', 'rh', 'lh', 'ar', 'ira', 'ipaa', 'hartmann', 'ileo'];
+        'sb', 'zakres', 'rh', 'lh', 'ar', 'ira', 'ipaa', 'hartmann', 'ileo'];
       return LIST.map(function (p, i) { var s = SEQ.indexOf(p.id); return [ORDER.indexOf(p.cat) * 100 + (s < 0 ? 90 + i : s), p]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; });
     })(),
     PANC: PANC, PANC_R: PANC_R,
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
-    COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
+    resectionFor: resectionFor, COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
     // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
     _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
       C_COL: C_COL, COL_R: COL_R, colT: ct, colors: function () { return { COL: COL, COLC: COLC, MUC: MUC, MUC_C: MUC_C, STAPLE: STAPLE, SUT: SUT }; },

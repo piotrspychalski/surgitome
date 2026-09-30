@@ -108,7 +108,7 @@
       if (mk.el2) placeLabel(mk.el2, mk.anchor, post ? mk.op : 0);
     });
     (M.tools || []).forEach(function (t) {
-      placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? t.alpha : 0);
+      if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? t.alpha : 0);
       if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? t.alpha : 0);
       (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? L.alpha || 0 : 0); });
     });

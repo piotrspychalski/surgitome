@@ -28,9 +28,10 @@
         var st = o.st, P = st.curve.getPointAt(b.t);
         mesh.position.copy(P).addScaledVector(b.n, st.r(b.t) * 0.88).add(o.grp.position);
         mesh.quaternion.setFromUnitVectors(new V3(0, 0, 1), b.n);
-        mesh.visible = o.grp.visible && o.op > 0.05; mat.opacity = o.op;
+        var op = M.an.single ? 1 : o.op; // na slajdzie wyboru zakresu jelito przygasa, guz nie
+        mesh.visible = o.grp.visible && op > 0.05; mat.opacity = op;
         var drag = m < 1e-3 && !endo.active && !ct.on;
-        this.alpha = mesh.visible ? o.op : 0;
+        this.alpha = mesh.visible ? op : 0;
         this.anchor = drag ? mesh.position.clone().addScaledVector(b.n, 0.5) : null;
         this.anchor2 = drag ? null : mesh.position.clone().addScaledVector(b.n, 0.5);
       } };

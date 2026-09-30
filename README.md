@@ -32,14 +32,14 @@ For every procedure and variant a fixed sequence of frames:
 
 Other features: rotatable 3D models, labels, Polish/English interface, favourites for teaching sessions, procedure search, mobile version, keyboard and presentation-clicker control.
 
-### Procedures (23 procedures, 47 variants)
+### Procedures (24 procedures, 48 variants)
 
 - **Oesophagus:** Oesophagectomy (Ivor Lewis; Ivor Lewis — side-to-side; McKeown; McKeown — side-to-side; Transhiatal (Orringer); Akiyama; Colon interposition)
 - **Stomach:** Distal gastrectomy (Billroth I; Billroth II; Billroth II + Braun; Roux-en-Y), Total gastrectomy, Bypass gastroenterostomy
 - **Bariatric surgery:** Sleeve gastrectomy, Roux-en-Y bypass (RYGB), One-anastomosis bypass (OAGB), Duodenal switch (SADI-S; BPD-DS), BPD (Scopinaro)
 - **Pancreas and bile ducts:** Whipple (classic) (PJ + HJ + GJ; PG + HJ + GJ), Traverso-Longmire (PPPD) (PJ + HJ + DJ; PG + HJ + DJ), Distal pancreatectomy, Hepaticojejunostomy (Roux-en-Y), Choledochoduodenostomy, Drainage procedures (Puestow, Frey) (Puestow (Partington–Rochelle); Frey)
 - **Small bowel:** Small bowel resection (End-to-end (sutured); Isoperistaltic; Antiperistaltic (FEEA))
-- **Large bowel:** Right hemicolectomy (Isoperistaltic; Antiperistaltic (FEEA); Extended — isoperistaltic), Left hemicolectomy (End-to-end (EEA); Isoperistaltic; Antiperistaltic (FEEA)), Rectal resection (Line through the centre; Tennis racket; Anterior wall), Total colectomy (IRA), J-pouch (IPAA), Hartmann, Ileostomy (Loop — functioning upper; Loop — functioning lower; Double-barrel — functioning upper; Double-barrel — functioning lower)
+- **Large bowel:** Choosing the extent of resection (drag the tumour: the resection, mesentery and vessels to ligate are highlighted; ASCRS 2022, rectum PME/TME/APR), Right hemicolectomy (Isoperistaltic; Antiperistaltic (FEEA); Extended — isoperistaltic), Left hemicolectomy (End-to-end (EEA); Isoperistaltic; Antiperistaltic (FEEA)), Rectal resection (Line through the centre; Tennis racket; Anterior wall), Total colectomy (IRA), J-pouch (IPAA), Hartmann, Ileostomy (Loop — functioning upper; Loop — functioning lower; Double-barrel — functioning upper; Double-barrel — functioning lower)
 
 ## Trials view
 
@@ -114,14 +114,14 @@ SURGITOME to interaktywny, schematyczny atlas 3D **anatomii przewodu pokarmowego
 - **Lekarze w trakcie specjalizacji chirurgicznej** — konfiguracje zespoleń (izo- i antyperystaltyczne, koniec-do-końca, bok-do-boku, podwójne staplowanie).
 - **Pacjenci**, razem z lekarzem — wyjaśnienie zakresu resekcji i rekonstrukcji w zrozumiały, obrazowy sposób.
 
-## Zabiegi (23 zabiegi, 47 wariantów)
+## Zabiegi (24 zabiegi, 48 wariantów)
 
 - **Przełyk:** Esofagektomia (Ivor Lewis; Ivor Lewis — bok-do-boku; McKeown; McKeown — bok-do-boku; Przezrozworowa (Orringer); Akiyama; Interpozycja okrężnicy)
 - **Żołądek:** Resekcja dystalna (Billroth I; Billroth II; Billroth II + Braun; Roux-en-Y), Gastrektomia całkowita, Gastroenterostomia omijająca
 - **Bariatria:** Rękawowa resekcja (sleeve), Bypass Roux-en-Y (RYGB), Bypass jednozespoleniowy (OAGB), Przełączenie dwunastnicze (SADI-S; BPD-DS), BPD (Scopinaro)
 - **Trzustka i drogi żółciowe:** Whipple (klasyczny) (PJ + HJ + GJ; PG + HJ + GJ), Traverso-Longmire (PPPD) (PJ + HJ + DJ; PG + HJ + DJ), Pankreatektomia dystalna, Hepatikojejunostomia (Roux-en-Y), Choledochoduodenostomia, Operacje drenujące (Puestow, Frey) (Puestow (Partington–Rochelle); Frey)
 - **Jelito cienkie:** Resekcja jelita cienkiego (Koniec-do-końca (szew); Izoperystaltyczne; Antyperystaltyczne (FEEA))
-- **Jelito grube:** Hemikolektomia prawa (Izoperystaltyczne; Antyperystaltyczne (FEEA); Poszerzona — izoperystaltyczne), Hemikolektomia lewa (Koniec-do-końca (EEA); Izoperystaltyczne; Antyperystaltyczne (FEEA)), Resekcja odbytnicy (Linia przez środek; Rakieta tenisowa; Przednia ściana), Kolektomia całkowita (IRA), Zbiornik J (IPAA), Hartmann, Ileostomia (Pętlowa — wydzielnicza górna; Pętlowa — wydzielnicza dolna; Dwulufowa — wydzielnicza górna; Dwulufowa — wydzielnicza dolna)
+- **Jelito grube:** Wybór zakresu resekcji (przesuwany guz podświetla zakres resekcji, krezkę i naczynia do podwiązania; ASCRS 2022, odbytnica PME/TME/APR), Hemikolektomia prawa (Izoperystaltyczne; Antyperystaltyczne (FEEA); Poszerzona — izoperystaltyczne), Hemikolektomia lewa (Koniec-do-końca (EEA); Izoperystaltyczne; Antyperystaltyczne (FEEA)), Resekcja odbytnicy (Linia przez środek; Rakieta tenisowa; Przednia ściana), Kolektomia całkowita (IRA), Zbiornik J (IPAA), Hartmann, Ileostomia (Pętlowa — wydzielnicza górna; Pętlowa — wydzielnicza dolna; Dwulufowa — wydzielnicza górna; Dwulufowa — wydzielnicza dolna)
 
 ## Widok badań
 

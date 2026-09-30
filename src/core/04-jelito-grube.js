@@ -197,6 +197,71 @@
       offset: [[2.15, [0, 0, 0]], [2.9, [-7, -1, 5]]], opacity: [[2.55, 1], [2.9, 0]], tieT: 1.25 };
   }
 
+  /* ---------- Wybór zakresu resekcji: całe jelito grube z krezką i naczyniami; reguła „położenie guza → operacja”
+     Źródła: ASCRS Clinical Practice Guidelines for the Management of Colon Cancer (Dis Colon Rectum 2022) — zakres resekcji zgodny
+     z drenażem chłonnym, krezka do odejścia naczynia zaopatrującego; kątnica/wstępnica: IC i RBMC u odejścia (1B); zagięcie wątrobowe
+     i poprzecznica: decyzja indywidualna, zwykle poszerzona hemikolektomia prawa z MC; zagięcie śledzionowe: resekcja segmentarna (LC
+     i LBMC) równoważna rozszerzonym; zstępnica: hemikolektomia lewa (LC, gałęzie esicze); esica: SRA i LC u odejścia. Odbytnica:
+     górna tercja — przednia resekcja z częściowym wycięciem mezorektum (PME, ≥ 5 cm poniżej guza), środkowa i dolna — TME,
+     guz przy zwieraczach — amputacja brzuszno-kroczowa. Schemat: granice umowne, decyzja zawsze indywidualna. ---------- */
+  function colonSheet(t0, t1, rootPts, n) {
+    var root = curveOf(rootPts), rows = [];
+    for (var i = 0; i <= n; i++) {
+      var tc = t0 + (t1 - t0) * i / n, P = C_COL.getPointAt(tc), R = root.getPointAt(i / n), T = C_COL.getTangentAt(tc);
+      var d = R.clone().sub(P); d.sub(T.multiplyScalar(d.dot(T))).normalize();
+      rows.push([P.clone().addScaledVector(d, COL_R(tc) * 0.92).toArray(), R.toArray(), tc]);
+    }
+    return rows;
+  }
+  function leftEdge(tc, rootPts, t0, t1) { var root = curveOf(rootPts), s = (tc - t0) / (t1 - t0);
+    var P = C_COL.getPointAt(tc), R = root.getPointAt(Math.max(0, Math.min(1, s))), T = C_COL.getTangentAt(tc), d = R.clone().sub(P); d.sub(T.multiplyScalar(d.dot(T))).normalize();
+    return P.addScaledVector(d, COL_R(tc) * 0.92).toArray(); }
+  var LROOT = [[1.2, 3.0, -2.0], [1.6, 0.0, -2.3], [1.7, -3.5, -2.4], [1.5, -6.0, -2.2]], LT = [0.48, 0.735];
+  var SROOT = [[1.5, -6.0, -2.2], [1.2, -8.0, -2.2], [0.9, -10.0, -2.0], [0.6, -11.8, -1.8]], ST = [0.735, 0.865];
+  var RROOT = [[0.6, -11.8, -2.6], [0.3, -14.0, -3.1], [0.1, -16.4, -3.2], [0.0, -18.4, -2.5]], RT = [0.865, 0.985];
+  function colonMap() {
+    var R = mesoRight('keep'), sheets = [{ rows: colonSheet(MESO_T0, MESO_T1, [[-1.6, -6.6, -1.4], [-1.2, -3.0, -1.7], [-0.9, 0.0, -1.6], [-0.5, 1.6, -1.0], [1.6, 2.0, -0.6], [3.8, 3.2, -0.8], [5.4, 4.8, -1.2]], 40) },
+      { rows: colonSheet(LT[0], LT[1], LROOT, 24) }, { rows: colonSheet(ST[0], ST[1], SROOT, 16) }, { rows: colonSheet(RT[0], RT[1], RROOT, 16), meso: true }];
+    var le = function (tc) { return tc < ST[0] ? leftEdge(tc, LROOT, LT[0], LT[1]) : tc < RT[0] ? leftEdge(tc, SROOT, ST[0], ST[1]) : leftEdge(tc, RROOT, RT[0], RT[1]); };
+    var IMA_O = [0.6, -3.4, -2.7], LC_O = [0.8, -4.3, -2.6], LCB = [3.6, -2.4, -1.9], SB1_O = [1.0, -6.2, -2.4], SB2_O = [0.95, -7.4, -2.4], SRA_O = [0.9, -8.2, -2.5];
+    var V = R.vessels.filter(function (v) { return v.id !== 'arcK' && v.id !== 'arcR'; }).map(function (v) { var w = {}; for (var k in v) w[k] = v[k]; w.removed = false; w.tie = null; return w; });
+    V = V.concat([
+      { id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: [IMA_O, LC_O, [1.0, -6.0, -2.4], SRA_O], at: 0.3 },
+      { id: 'lc', name: 'LC — tętnica lewa okrężnicy', kind: 'a', pts: [LC_O, via3(LC_O, LCB, 0.2), LCB, le(0.575)], at: 0.55 },
+      { id: 'lca', name: '', kind: 'a', pts: [LCB, [5.4, 1.8, -1.6], le(0.50)] },
+      { id: 'sb', name: 'SB — gałęzie esicze', kind: 'a', pts: [SB1_O, via3(SB1_O, le(0.76), 0.3), le(0.76)], at: 0.6 },
+      { id: 'sb2', name: '', kind: 'a', pts: [SB2_O, via3(SB2_O, le(0.82), 0.3), le(0.82)] },
+      { id: 'sra', name: 'SRA — tętnica odbytnicza górna', kind: 'a', pts: [SRA_O, [0.6, -11.0, -2.5], [0.25, -14.0, -2.9], [0.1, -16.6, -3.0]], at: 0.5 }
+    ]);
+    var arc = []; for (var j = 0; j <= 50; j++) { var ta = 0.03 + (0.86 - 0.03) * j / 50; arc.push(ta < MESO_T1 ? mesoEdge(ta, 0.08).toArray() : new THREE.Vector3().fromArray(le(ta)).lerp(curveOf(ta < ST[0] ? LROOT : SROOT).getPointAt(Math.max(0, Math.min(1, ta < ST[0] ? (ta - LT[0]) / (LT[1] - LT[0]) : (ta - ST[0]) / (ST[1] - ST[0])))), 0.08).toArray()); }
+    V.push({ id: 'arc', name: '', kind: 'm', pts: arc });
+    var nodes = [];
+    V.forEach(function (v) { if (v.kind !== 'a' || v.id === 'sma') return; var c = curveOf(v.pts); [0.25, 0.6, 0.9].forEach(function (f) { nodes.push({ p: c.getPointAt(f).add(new THREE.Vector3(0, 0.2, 0.18)).toArray(), v: v.id }); }); });
+    return { sheets: sheets, vessels: V, nodes: nodes };
+  }
+  function via3(a, b, lift) { var m = new THREE.Vector3().fromArray(a).lerp(new THREE.Vector3().fromArray(b), 0.5); m.z += lift || 0; return m.toArray(); }
+  // reguła: t — położenie guza na okrężnicy (0 kątnica … 1 odbyt); obj — odcinek z guzem ('colon', 'ti', 'app')
+  var RS_T = { tr: ct([-2.0, 4.2, 2.6]), trx: ct([3.2, 4.4, 2.4]) };
+  function resectionFor(t, obj) {
+    if (obj === 'ti' || obj === 'app' || t < 0.20) return { id: 'rh', name: 'Hemikolektomia prawa', where: obj === 'app' ? 'Wyrostek robaczkowy / kątnica' : t < 0.035 || obj === 'ti' ? 'Kątnica' : 'Okrężnica wstępująca',
+      desc: 'Usuwa się końcowy odcinek jelita krętego, kątnicę, okrężnicę wstępującą i prawą część poprzecznicy z krezką; IC i RC podwiązane u odejścia z SMA, RBMC przy pniu MC.', range: [0, RS_T.tr], ti: true, ties: ['ic', 'rc', 'rbmc'], removed: ['ic', 'rc', 'rbmc'] };
+    if (t < 0.40) return { id: 'rhx', name: 'Poszerzona hemikolektomia prawa', where: t < 0.26 ? 'Zagięcie wątrobowe' : t < 0.33 ? 'Prawa część poprzecznicy' : 'Środkowa część poprzecznicy',
+      desc: 'Zakres hemikolektomii prawej poszerzony o większą część poprzecznicy; pień MC podwiązany u odejścia z SMA (w środkowej części poprzecznicy alternatywnie resekcja poprzecznicy).', range: [0, t < 0.33 ? RS_T.trx : 0.435], ti: true, ties: ['ic', 'rc', 'mc'], removed: ['ic', 'rc', 'mc', 'rbmc', 'lbmc'] };
+    if (t < 0.52) return { id: 'sf', name: 'Resekcja segmentarna zagięcia śledzionowego', where: t < 0.45 ? 'Lewa część poprzecznicy' : 'Zagięcie śledzionowe',
+      desc: 'Usuwa się lewą część poprzecznicy, zagięcie śledzionowe i górną część zstępnicy z krezką; LC i gałąź lewa MC (LBMC) podwiązane u odejścia. Alternatywnie poszerzona hemikolektomia lewa lub prawa.', range: [0.395, 0.60], ties: ['lc', 'lbmc'], removed: ['lc', 'lca', 'lbmc'] };
+    if (t < 0.70) return { id: 'lh', name: 'Hemikolektomia lewa', where: 'Okrężnica zstępująca',
+      desc: 'Usuwa się lewą część poprzecznicy, zagięcie śledzionowe, zstępnicę i początek esicy z krezką; LC i pierwsze gałęzie esicze podwiązane u odejścia z IMA.', range: [0.40, 0.785], ties: ['lc', 'sb'], removed: ['lc', 'lca', 'sb'] };
+    if (t < 0.865) return { id: 'sig', name: 'Resekcja esicy', where: 'Esica',
+      desc: 'Usuwa się esicę z krezką; naczynia podwiązane u odejścia: SRA i LC (odpowiada podwiązaniu IMA), gałęzie esicze z preparatem; zespolenie zstępniczo-odbytnicze.', range: [0.70, 0.905], ties: ['sra', 'lc'], removed: ['sb', 'sb2', 'lc', 'lca'] };
+    var third = (t - 0.865) / (0.985 - 0.865);
+    if (third < 1 / 3) return { id: 'pme', name: 'Przednia resekcja odbytnicy z częściowym wycięciem mezorektum (PME)', where: 'Górna część odbytnicy',
+      desc: 'Usuwa się esicę i górną część odbytnicy z mezorektum do co najmniej 5 cm poniżej guza; IMA podwiązana u odejścia (lub poniżej odejścia LC).', range: [0.70, Math.min(0.985, t + 0.045)], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+    if (t < 0.975) return { id: 'tme', name: 'Niska przednia resekcja odbytnicy z całkowitym wycięciem mezorektum (TME)', where: third < 2 / 3 ? 'Środkowa część odbytnicy' : 'Dolna część odbytnicy',
+      desc: 'Usuwa się esicę i odbytnicę z całym mezorektum; IMA podwiązana u odejścia; zespolenie nisko w miednicy, zwykle z ileostomią protekcyjną.', range: [0.70, 0.985], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+    return { id: 'apr', name: 'Amputacja brzuszno-kroczowa odbytnicy (APR)', where: 'Dolna część odbytnicy przy zwieraczach',
+      desc: 'Gdy nie da się zachować zwieraczy: usuwa się odbytnicę z mezorektum i kanałem odbytu; IMA podwiązana u odejścia; stała kolostomia.', range: [0.70, 1], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+  }
+
   var tA = ct([7.4, -6.0, -0.3]), tPJ = ct([7.9, -2.0, -0.6]);
   /* ---------- Kikut odbytnicy: kopuła zamknięcia i punkty na jej powierzchni ---------- */
   function stumpDome(t0, R, H) {

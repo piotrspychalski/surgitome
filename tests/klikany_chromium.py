@@ -99,5 +99,15 @@ with sync_playwright() as pw:
                 stepclick(p, i); settle(p); shot(p, 'gz_2%s_%s' % (name, fr))
             stepclick(p, 0); settle(p, 0); p.wait_for_timeout(800)
             a0 = p.evaluate(scr, p.evaluate("() => __sgTest.tumour()"))
+    elif scen == 'zakres':
+        # wybór zakresu resekcji: guz przeciągany kolejno wzdłuż jelita grubego, zrzut przy każdym położeniu
+        p = page_for(b, False); pick(p, 'wybór zakresu'); p.wait_for_timeout(1500)
+        scr = "(w) => { const v=new THREE.Vector3(...w).project(__sgTest.cam), r=document.getElementById('viewport').getBoundingClientRect(); return [r.left+(v.x+1)/2*r.width, r.top+(1-v.y)/2*r.height]; }"
+        surf = "(t) => { const L=ANAT._lib, P=L.C_COL.getPointAt(t), T=L.C_COL.getTangentAt(t), n=new THREE.Vector3(0.2,0,1); n.sub(T.clone().multiplyScalar(n.dot(T))).normalize(); return P.addScaledVector(n, L.COL_R(t)*0.97).toArray(); }"
+        for tt, name in [(0.02, 'katnica'), (0.25, 'watrobowe'), (0.35, 'poprzecznica'), (0.49, 'sledzionowe'), (0.6, 'zstepnica'), (0.8, 'esica'), (0.88, 'odbytnica_gorna'), (0.93, 'odbytnica_srodkowa'), (0.98, 'odbytnica_dolna')]:
+            a0 = p.evaluate(scr, p.evaluate("() => __sgTest.tumour()")); a1 = p.evaluate(scr, p.evaluate(surf, tt))
+            p.mouse.move(a0[0], a0[1]); p.mouse.down(); p.mouse.move((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2, steps=6); p.mouse.move(a1[0], a1[1], steps=6); p.mouse.up(); p.wait_for_timeout(500)
+            log.append(('state', name + ' | ' + p.evaluate("() => document.getElementById('capTitle').textContent")))
+            shot(p, 'zk_%s' % name)
     print(json.dumps([l for l in log if 'fonts' not in l[1] and 'ERR_FAILED' not in l[1]], ensure_ascii=False, indent=0)[:3000])
     b.close()
