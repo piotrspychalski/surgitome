@@ -104,6 +104,7 @@
     (M.tools || []).forEach(function (t) {
       placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? t.alpha : 0);
       if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? t.alpha : 0);
+      (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? L.alpha || 0 : 0); });
     });
     if (M.papLbl) {
       var pa = Math.max(winAlpha([-9, 0.4], m), winAlpha([2.7, 99], m)) * (M.byId[M.an.papilla.obj].op > 0.5 ? 1 : 0);

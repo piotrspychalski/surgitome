@@ -16,7 +16,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `01-podstawy-zoladek.js` — geometria rur, łączenie świateł (unionCut), górny odcinek, gastrektomia, RYGB, OAGB, rękaw
 - `02-resekcje-dystalne.js` — Billroth I/II, Braun, Roux-en-Y
 - `03-jelito-cienkie.js` — resekcja jelita cienkiego i warianty zespolenia
-- `04-jelito-grube.js` — hemikolektomie, wspólny moduł EEA (`eeaJoin`, `colonEEA`), hemikolektomia lewa (EEA, izo, FEEA), resekcja odbytnicy, kolektomia z IRA, zbiornik J (IPAA), Hartmann, ileostomie
+- `04-jelito-grube.js` — hemikolektomie (prawa: izo, FEEA, poszerzona z 2/3 poprzecznicy; `mesoRight` — krezka z naczyniami SMA/SMV, IC, RC, MC z gałęziami i węzłami: podwiązania zależnie od techniki), wspólny moduł EEA (`eeaJoin`, `colonEEA`), hemikolektomia lewa (EEA, izo, FEEA), resekcja odbytnicy, kolektomia z IRA, zbiornik J (IPAA), Hartmann, ileostomie
 - `05-trzustka-drogi-zolciowe.js` — Whipple, PPPD, hepatikojejunostomia, pankreatektomia dystalna, Puestow i Frey, choledochoduodenostomia
 - `06-przelyk.js` — esofagektomie (Ivor Lewis i McKeown także z zespoleniem bok-do-boku i ślepym kikutem przełyku; rura żołądkowa z krzywizny większej), kontekst klatki piersiowej (w tym żyła nieparzysta)
 - `07-gastroenterostomia-bpd-ds.js` — gastroenterostomia omijająca, BPD (Scopinaro), SADI-S, BPD-DS

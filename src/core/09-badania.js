@@ -37,28 +37,8 @@
   function clipMark(w, opacity) {
     return { kind: 'ring', name: 'Klips OTSC', color: CLIP, pos: w.P.clone().addScaledVector(w.n, w.r - 0.05).toArray(), tan: w.n.toArray(), r: 0.5, opacity: opacity };
   }
-  /* ---------- krezka prawej połowy okrężnicy z naczyniami i węzłami chłonnymi ----------
-     brzeg przy ścianie okrężnicy (od kątnicy do prawej części poprzecznicy) i nasada przy naczyniach krezkowych górnych;
-     w ramieniu chirurgicznym usuwana z preparatem (limfadenektomia), w endoskopowym zostaje */
-  var MESO_T = [0.015, K.colT([-2.0, 4.2, 2.6]) - 0.01];
-  var MESO_ROOT = [[-1.6, -6.4, -1.4], [-1.2, -3.0, -1.6], [-0.9, 0.2, -1.6], [-0.8, 2.6, -1.2]];
-  function mesoDef(removed) {
-    var rootC = A.curveOf(MESO_ROOT);
-    var N = 28, edge = [], base = [];
-    for (var i = 0; i <= N; i++) {
-      var s = i / N, tc = MESO_T[0] + (MESO_T[1] - MESO_T[0]) * s, P = C_COL.getPointAt(tc), R = rootC.getPointAt(s);
-      var d = R.clone().sub(P); d.sub(C_COL.getTangentAt(tc).multiplyScalar(d.dot(C_COL.getTangentAt(tc)))).normalize();
-      edge.push(P.clone().addScaledVector(d, COL_R(tc) * 0.92).toArray()); base.push(R.toArray());
-    }
-    // naczynia: krętniczo-okrężnicze, prawe okrężnicze, prawa gałąź środkowych okrężniczych; węzły: przyokrężnicze, pośrednie, centralne
-    var vessels = [0.08, 0.5, 0.93].map(function (s) { var k = Math.round(s * N); return [base[k], edge[k]]; });
-    var nodes = [];
-    vessels.forEach(function (v) { [0.15, 0.5, 0.82].forEach(function (f) { var a = new V3().fromArray(v[0]), b = new V3().fromArray(v[1]); nodes.push(a.lerp(b, f).add(new V3(0, 0.25, 0.2)).toArray()); }); });
-    return { type: 'meso', edge: edge, base: base, vessels: vessels, nodes: nodes, removed: removed,
-      name: removed ? 'Krezka z węzłami chłonnymi — usuwana' : 'Krezka z węzłami chłonnymi — pozostaje',
-      // klatki kluczowe w skali po przygotowaniu (resekcja: podwiązanie u nasady ok. 1,2; usunięcie z preparatem 2,15–2,9)
-      offset: removed ? [[2.15, [0, 0, 0]], [2.9, [-7, -1, 5]]] : null, opacity: removed ? [[2.55, 1], [2.9, 0]] : null, tieT: removed ? 1.25 : null };
-  }
+  // krezka z naczyniami i węzłami: wspólny generator (04-jelito-grube.js); w badaniach zawsze widoczna
+  function mesoDef(removed) { var d = K.mesoRight(removed ? 'rh' : 'keep'); d.always = true; return d; }
   function wholeColon() {
     return [K.tiObj({}), K.appObj({}), K.colObj('colon', 0, 1, { name: 'Jelito grube' })];
   }

@@ -64,6 +64,7 @@
     $('btnPlay').textContent = tr(t || '');
   }
   function renderPanel(an) {
+    $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     if (curProc().split) renderTrialPanel();
     else {
       $('pTitle').textContent = tr(an.title); $('pSub').textContent = tr(an.sub);
@@ -114,6 +115,8 @@
   var lp = null; try { lp = localStorage.getItem('surgitome-labels'); } catch (e) {}
   if (lp === '0' || (lp === null && MOBILE)) setLabels(false);
   $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !this.checked; };
+  $('optMeso').checked = S.meso;
+  $('optMeso').onchange = function () { S.meso = this.checked; try { localStorage.setItem('surgitome-meso', S.meso ? '1' : '0'); } catch (e) {} applyM(); };
   $('optDrift').onchange = function () { S.drift = this.checked; controls.autoRotate = S.drift && !reduced && !endo.active && !tw; };
 
   var panel = $('panel');

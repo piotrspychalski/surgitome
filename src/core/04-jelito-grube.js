@@ -53,6 +53,7 @@
     ];
     if (iso) marks.push({ kind: 'line', name: 'Zamknięcie otworu po staplerze', color: SUT, opacity: ANAST_OP, pts: [[1.9, 4.6, 3.7], [2.0, 3.4, 4.5], [2.1, 2.0, 4.4]] });
     else marks.push({ kind: 'line', name: 'Zamknięcie poprzeczne końców (TA)', color: STAPLE, opacity: ANAST_OP, pts: [[-3.5, 5.7, 2.9], [-3.6, 4.3, 3.9], [-3.6, 2.8, 4.2]] });
+    var VES = 'Naczynia podwiązane u odejścia: krętniczo-okrężnicza (IC) i prawa okrężnicy (RC) z tętnicy krezkowej górnej (SMA) oraz gałąź prawa tętnicy środkowej okrężnicy (RBMC); pień MC i jej gałąź lewa zostają.';
     return {
       cat: 'colon', id: iso ? 'rh-iso' : 'rh-anti', short: iso ? 'Hemikolektomia prawa (izo)' : 'Hemikolektomia prawa (FEEA)',
       title: 'Prawostronna hemikolektomia: zespolenie krętniczo-poprzeczne ' + (iso ? 'izoperystaltyczne' : 'antyperystaltyczne (FEEA)'),
@@ -60,16 +61,16 @@
       notes: iso ? [
         'Usunięte: końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca, zagięcie wątrobowe i część poprzecznicy.',
         'Jelito kręte ułożone wzdłuż poprzecznicy zgodnie z kierunkiem perystaltyki; kikuty po przeciwnych stronach zespolenia.',
-        'W kolonoskopii z poprzecznicy bokiem do jelita krętego, bez zawracania aparatu; kikut okrężnicy za zespoleniem.'
+        'W kolonoskopii z poprzecznicy bokiem do jelita krętego, bez zawracania aparatu; kikut okrężnicy za zespoleniem.', VES
       ] : [
         'Usunięte: końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca, zagięcie wątrobowe i część poprzecznicy.',
         'Końce jelita krętego i poprzecznicy ułożone obok siebie w tę samą stronę, zamknięte poprzeczną linią zszywek.',
-        'W kolonoskopii wejście do jelita krętego wymaga zawrócenia o 180° we wspólnym świetle.'
+        'W kolonoskopii wejście do jelita krętego wymaga zawrócenia o 180° we wspólnym świetle.', VES
       ],
       focus: { t: [-3, 0, 2], k: 0.72 },
       text: COL_TEXT,
       frames: {
-        resect: ['Zakres resekcji', 'Końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca i prawa część poprzecznicy.', 'Zakres resekcji'],
+        resect: ['Zakres resekcji', 'Końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca i prawa część poprzecznicy z krezką. Naczynia podwiązane u odejścia: IC, RC i gałąź prawa MC (RBMC); pień MC zostaje.', 'Zakres resekcji'],
         remove: ['Usunięcie preparatu', 'Preparat usunięty; pozostaje koniec jelita krętego i poprzecznicy.', 'Usunięcie'],
         recon: iso ? ['Zespolenie izoperystaltyczne', 'Jelito kręte ułożone wzdłuż poprzecznicy zgodnie z perystaltyką; stapler liniowy tworzy wspólne światło, otwór po staplerze zamknięty.', 'Zespolenie']
           : ['Zespolenie antyperystaltyczne (FEEA)', 'Końce ułożone obok siebie w tę samą stronę; stapler liniowy tworzy wspólne światło, końce zamknięte poprzecznie.', 'Zespolenie'],
@@ -90,6 +91,107 @@
       routePost: iso ? [{ obj: 'colon', from: [5.6, 6.6, 1.0], to: [0.2, 3.5, 2.8], note: 'Poprzecznica w stronę zespolenia' }, { obj: 'ti', from: [-0.2, 2.5, 4.0], to: [-3.6, 0.6, 3.4], note: 'Bokiem do jelita krętego — bez zawracania' }]
         : [{ obj: 'colon', from: [5.6, 6.6, 1.0], to: [-2.4, 4.3, 2.6], note: 'Poprzecznica w stronę zespolenia' }, { obj: 'ti', from: [-2.4, 3.1, 3.9], to: [3.0, 0.4, 3.4], note: 'Zawrócenie o 180° do jelita krętego' }]
     };
+  }
+
+  /* ---------- Poszerzona prawostronna hemikolektomia (z 2/3 poprzecznicy), zespolenie izoperystaltyczne ---------- */
+  var RHX = (function () {
+    var tX = ct([3.2, 4.4, 2.4]), keep = sub(C_COL, COL_R, tX, 1, 70);
+    var colPost = { path: keep.path, r: function (t) { return t < 0.02 ? 0.06 + (keep.r(t) - 0.06) * sm01(t / 0.02) : keep.r(t); } };
+    // jelito kręte przed pozostałą częścią poprzecznicy, w kierunku perystaltyki (koniec ślepy dalej niż początek okrężnicy)
+    var V3 = THREE.Vector3, up = new V3(0, 0.15, 1).normalize();
+    function along(dt, lift) { var tt = tX + dt, P = C_COL.getPointAt(tt), T = C_COL.getTangentAt(tt), n = up.clone().sub(T.clone().multiplyScalar(up.dot(T))).normalize(); return P.addScaledVector(n, lift); }
+    var ile = [[4.0, -5.2, 0.8], [3.4, -2.6, 2.2], [2.4, 0.4, 3.3], [2.0, 2.6, 3.9]].concat([-0.012, 0.004, 0.02, 0.036, 0.05].map(function (d) { return along(d, 1.72).toArray(); }));
+    var seam = [0.006, 0.024, 0.042].map(function (d) { return along(d, 1.72 * 1.33 / 2.23).addScaledVector(up, 0.95).toArray(); });
+    var g0 = along(0.024, 1.72 * 1.33 / 2.23), gT = C_COL.getTangentAt(tX + 0.024);
+    var gS = up.clone().sub(gT.clone().multiplyScalar(up.dot(gT))).normalize();
+    var endI = new V3().fromArray(ile[ile.length - 1]), sut = [endI.clone().add(new V3(0.5, 0.9, -0.6)), along(0.05, 0.86).addScaledVector(up, 0.9), endI.clone().add(new V3(-0.3, -0.9, 0.5))].map(function (v) { return v.toArray(); });
+    return {
+      cat: 'colon', id: 'rh-ext', short: 'Hemikolektomia prawa poszerzona',
+      title: 'Poszerzona prawostronna hemikolektomia: zespolenie krętniczo-poprzeczne izoperystaltyczne',
+      sub: 'Z usunięciem ok. 2/3 poprzecznicy; bok-do-boku, stapler liniowy',
+      notes: ['Usunięte: końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca, zagięcie wątrobowe i ok. 2/3 poprzecznicy (prawa i środkowa część).',
+        'Typowo przy guzach zagięcia wątrobowego i prawej lub środkowej części poprzecznicy; zespolenie z pozostałą lewą częścią poprzecznicy blisko zagięcia śledzionowego.',
+        'Jelito kręte ułożone wzdłuż poprzecznicy zgodnie z kierunkiem perystaltyki; kikuty po przeciwnych stronach zespolenia.',
+        'Naczynia podwiązane u odejścia z tętnicy krezkowej górnej (SMA): krętniczo-okrężnicza (IC), prawa okrężnicy (RC) i pień środkowej okrężnicy (MC) z obiema gałęziami; lewa część poprzecznicy ukrwiona przez łuk brzeżny z tętnicy lewej okrężnicy.'],
+      focus: { t: [2.2, 1.8, 2.4], k: 0.78 },
+      text: COL_TEXT,
+      frames: {
+        resect: ['Zakres resekcji', 'Końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca, zagięcie wątrobowe i ok. 2/3 poprzecznicy z krezką. Naczynia podwiązane u odejścia z SMA: IC, RC i pień MC.', 'Zakres resekcji'],
+        remove: ['Usunięcie preparatu', 'Preparat usunięty; pozostaje koniec jelita krętego i lewa część poprzecznicy.', 'Usunięcie'],
+        recon: ['Zespolenie izoperystaltyczne', 'Jelito kręte sprowadzone do lewej części poprzecznicy i ułożone wzdłuż niej zgodnie z perystaltyką; stapler liniowy tworzy wspólne światło, otwór po staplerze zamknięty.', 'Zespolenie'],
+        post: 'Zespolenie w lewej części poprzecznicy, blisko zagięcia śledzionowego; kikuty jelita krętego i poprzecznicy po przeciwnych stronach.',
+        endoPost: 'Fragment kolonoskopii: z krótkiej lewej części poprzecznicy bokiem do jelita krętego, bez zawracania aparatu.'
+      },
+      endoTitles: ['Kolonoskopia: anatomia prawidłowa', 'Kolonoskopia po operacji'],
+      objects: [
+        tiObj({ pre: TI_KEEP, post: { path: ile, r: STUMP_END }, morph: [2, 2.9], labels: [L('Jelito kręte', 0.3, ALL)] }),
+        { id: 'tiCut', name: 'Jelito kręte (usuwane)', pre: TI_CUT, colors: [[0, COLC.ti], [0.7, COL.spec]], opacity: SPEC_OP, offset: RH_OFF, mucosa: 'circular', tint: MUC.bowel },
+        colObj('specR', 0, tX, { name: 'Prawa połowa okrężnicy i 2/3 poprzecznicy', colors: [[0, COLC.colon], [0.7, COL.spec]], opacity: SPEC_OP, offset: RH_OFF, win: [-9, 1.4] }),
+        appObj({ colors: [[0, COLC.app], [0.7, COL.spec]], opacity: SPEC_OP, offset: RH_OFF }),
+        colObj('colon', tX, 1, { name: 'Okrężnica', post: colPost, morph: [2, 2.9] })
+      ],
+      marks: [
+        ringOn(C_COL, COL_R, tX, { name: 'Przecięcie poprzecznicy', color: COL.cut, opacity: CUT_OP_JEJ }),
+        ringOn(C_TI, flat(0.9), tI, { name: 'Przecięcie jelita krętego', color: COL.cut, opacity: CUT_OP_JEJ }),
+        { kind: 'line', name: 'Linia zszywek (stapler liniowy)', color: STAPLE, opacity: ANAST_OP, pts: seam },
+        { kind: 'line', name: 'Zamknięcie otworu po staplerze', color: SUT, opacity: ANAST_OP, pts: sut }
+      ],
+      sideGia: { at: g0.toArray(), j: gT.clone().negate().toArray(), s: gS.toArray() },
+      sideSut: { pts: sut, n: up.toArray() },
+      endTarget: { pre: ICV },
+      endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
+      routePost: [{ obj: 'colon', from: [7.2, 7.4, -0.4], to: along(0.012, 0).toArray(), note: 'Lewa część poprzecznicy w stronę zespolenia' },
+        { obj: 'ti', from: along(0.02, 1.72).toArray(), to: [2.4, 0.4, 3.3], note: 'Bokiem do jelita krętego — bez zawracania' }]
+    };
+  })();
+
+  /* ---------- Krezka prawej połowy okrężnicy i poprzecznicy: naczynia i węzły chłonne ----------
+     SMA/SMV; od SMA: IC (krętniczo-okrężnicza), RC (prawa okrężnicy), MC (środkowa okrężnicy) z gałęzią prawą (RBMC) i lewą (LBMC); łuk brzeżny.
+     mode: 'keep' — nic nie usuwane (np. leczenie endoskopowe); 'rh' — hemikolektomia prawa: podwiązanie IC, RC i RBMC (pień MC i LBMC zostają);
+     'ext' — poszerzona: IC, RC i pień MC u odejścia z SMA. Czasy w skali po przygotowaniu (podwiązanie 1,25; preparat odjeżdża 2,15–2,9). */
+  var MESO_T0 = 0.015, MESO_T1 = ct([7.2, 7.4, -0.4]) - 0.012;
+  var C_ROOT = curveOf([[-1.6, -6.6, -1.4], [-1.2, -3.0, -1.7], [-0.9, 0.0, -1.6], [-0.5, 1.6, -1.0], [1.6, 2.0, -0.6], [3.8, 3.2, -0.8], [5.4, 4.8, -1.2]]);
+  function mesoEdge(tc, k) {
+    var s = Math.max(0, Math.min(1, (tc - MESO_T0) / (MESO_T1 - MESO_T0))), P = C_COL.getPointAt(tc), R = C_ROOT.getPointAt(s), T = C_COL.getTangentAt(tc);
+    var d = R.clone().sub(P); d.sub(T.multiplyScalar(d.dot(T))).normalize();
+    var E = P.addScaledVector(d, COL_R(tc) * 0.92);
+    return k ? E.lerp(R, k) : E;
+  }
+  function mesoRight(mode) {
+    var V3 = THREE.Vector3, rm = mode !== 'keep', ext = mode === 'ext';
+    var tCut = ext ? ct([3.2, 4.4, 2.4]) : ct([-2.0, 4.2, 2.6]);
+    var N = 40, sheetK = [], sheetR = [];
+    for (var i = 0; i <= N; i++) {
+      var tc = MESO_T0 + (MESO_T1 - MESO_T0) * i / N, row = [mesoEdge(tc).toArray(), mesoEdge(tc, 1).toArray()];
+      if (rm && tc <= tCut + 0.004) sheetR.push(row);
+      if (!rm || tc >= tCut - 0.004) sheetK.push(row);
+    }
+    function via(a, b, lift) { var m = new V3().fromArray(a).lerp(new V3().fromArray(b), 0.5); m.z += lift || 0; return m.toArray(); }
+    // MC odchodzi od SMA pod trzustką i biegnie do przodu w krezce poprzecznicy; rozwidlenie poniżej poprzecznicy (widoczne od przodu)
+    var MC_O = [-0.5, 1.8, -2.15], RC_O = [-0.7, -1.0, -2.0], IC_O = [-1.05, -3.8, -1.8], BIF = [-0.4, 1.4, 1.0];
+    var eIC = mesoEdge(0.035).toArray(), eRC = mesoEdge(ct([-7.4, -0.5, 0])).toArray(), eRB = mesoEdge(ct([-4.4, 5.8, 1.6])).toArray(), eLB = mesoEdge(ct([2.2, 4.0, 2.6])).toArray();
+    var V = [
+      { id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: [[-0.4, 3.2, -2.3], [-0.5, 1.0, -2.1], [-0.8, -2.0, -1.9], [-1.2, -5.0, -1.7], [-1.7, -8.0, -1.3]], at: 0.12 },
+      { id: 'smv', name: '', kind: 'v', pts: [[-1.3, 3.0, -2.0], [-1.4, 1.0, -1.9], [-1.7, -2.0, -1.7], [-2.1, -5.0, -1.5], [-2.6, -8.0, -1.1]] },
+      { id: 'ic', name: 'IC — tętnica krętniczo-okrężnicza', kind: 'a', pts: [IC_O, via(IC_O, eIC, 0.3), eIC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
+      { id: 'rc', name: 'RC — tętnica prawa okrężnicy', kind: 'a', pts: [RC_O, via(RC_O, eRC, 0.3), eRC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
+      { id: 'mc', name: 'MC — tętnica środkowa okrężnicy', kind: 'a', pts: [MC_O, via(MC_O, BIF, 0.2), BIF], removed: ext, tie: ext ? 0.12 : null, at: 0.5, nodes: 'central' },
+      { id: 'rbmc', name: 'RBMC — gałąź prawa MC', kind: 'a', pts: [BIF, via(BIF, eRB, 0.3), eRB], removed: rm, tie: mode === 'rh' ? 0.05 : null, at: 0.6, nodes: 'outer' },
+      { id: 'lbmc', name: 'LBMC — gałąź lewa MC', kind: 'a', pts: [BIF, via(BIF, eLB, 0.3), eLB], removed: ext, at: 0.6, nodes: 'outer' }
+    ];
+    var arcR = [], arcK = [];
+    for (var j = 0; j <= 30; j++) { var ta = 0.03 + (MESO_T1 - 0.03) * j / 30, q = mesoEdge(ta, 0.08).toArray(); if (rm && ta <= tCut + 0.01) arcR.push(q); if (!rm || ta >= tCut - 0.01) arcK.push(q); }
+    if (arcR.length > 1) V.push({ id: 'arcR', name: '', kind: 'm', pts: arcR, removed: true });
+    if (arcK.length > 1) V.push({ id: 'arcK', name: '', kind: 'm', pts: arcK });
+    var nodes = [];
+    V.forEach(function (v) {
+      if (!v.nodes) return;
+      var c = curveOf(v.pts), fs = v.nodes === 'central' ? [0.35] : v.nodes === 'outer' ? [0.5, 0.86] : [0.15, 0.5, 0.86];
+      fs.forEach(function (f) { nodes.push({ p: c.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed }); });
+    });
+    return { type: 'meso', sheets: [{ rows: sheetK }, { rows: sheetR, removed: true }].filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes,
+      name: 'Krezka z węzłami chłonnymi', sub: rm ? 'usuwana z preparatem' : 'pozostaje',
+      offset: [[2.15, [0, 0, 0]], [2.9, [-7, -1, 5]]], opacity: [[2.55, 1], [2.9, 0]], tieT: 1.25 };
   }
 
   var tA = ct([7.4, -6.0, -0.3]), tPJ = ct([7.9, -2.0, -0.6]);

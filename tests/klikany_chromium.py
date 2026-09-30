@@ -73,5 +73,17 @@ with sync_playwright() as pw:
                     settle(p, frac); shot(p, 'tr_%s_%s_2int%02d' % (q, dev, int(frac * 100)))
                 stepclick(p, 2); p.wait_for_timeout(2200); shot(p, 'tr_%s_%s_3post' % (q, dev))
                 log.append(('state', dev + ' ' + q + ' | ' + p.evaluate("() => [...document.querySelectorAll('.sh b')].map(x=>x.textContent).join(' / ')")))
+    elif scen == 'meso':
+        # krezka, naczynia i węzły w hemikolektomiach prawych: zakres resekcji, podwiązanie, usunięcie, stan po
+        p = page_for(b, False)
+        pick(p, 'hemikolektomia prawa')
+        for v in range(3):
+            p.evaluate("(v) => document.querySelectorAll('#variants .vbtn')[v].click()", v); p.wait_for_timeout(1500)
+            steps = p.evaluate("() => [...document.querySelectorAll('.srow1 .step')].map(b=>b.textContent)")
+            stepclick(p, 1); settle(p); shot(p, 'me_v%d_1resect' % v)
+            stepclick(p, 2); settle(p, 1.55); shot(p, 'me_v%d_2tie' % v)
+            stepclick(p, 3); settle(p); shot(p, 'me_v%d_3remove' % v)
+            stepclick(p, 4); settle(p); shot(p, 'me_v%d_4post' % v)
+            log.append(('state', p.evaluate("() => document.getElementById('pTitle').textContent")))
     print(json.dumps([l for l in log if 'fonts' not in l[1] and 'ERR_FAILED' not in l[1]], ensure_ascii=False, indent=0)[:3000])
     b.close()

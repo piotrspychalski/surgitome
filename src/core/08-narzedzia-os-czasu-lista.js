@@ -77,6 +77,7 @@
     'sb-e2e': 'Szew ciągły nicią z haczykami (typu V-Loc) na całym obwodzie.',
     'rh-iso': 'Branże staplera w jelicie krętym i poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'rh-anti': 'Branże staplera w obu końcach — wspólne światło; końce zamknięte poprzecznie drugim staplerem liniowym.',
+    'rh-ext': 'Branże staplera w jelicie krętym i lewej części poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'b2br': 'Branże staplera w pętli doprowadzającej i odprowadzającej — wspólne światło; otwór zamknięty szwem ciągłym (typu V-Loc).'
   };
   // uniesienie w trakcie przenoszenia: punkt wędruje łukiem w kierunku dir, o k × długość drogi (maks. max) — omija narządy po drodze
@@ -175,13 +176,15 @@
         multi('hpb', 'drain', 'Operacje drenujące (Puestow, Frey)', 'Przewlekłe zapalenie trzustki — operacje drenujące', [P(drainAnat(false), 'Puestow (Partington–Rochelle)'), P(drainAnat(true), 'Frey')]),
         one(CDD, 'Choledochoduodenostomia', 'Choledochoduodenostomia bok-do-boku'),
         multi('sb', 'sb', 'Resekcja jelita cienkiego', 'Resekcja jelita cienkiego — warianty zespolenia', [P(sbAnat('e2e'), 'Koniec-do-końca (szew)'), P(sbAnat('iso'), 'Izoperystaltyczne'), P(sbAnat('anti'), 'Antyperystaltyczne (FEEA)')]),
-        multi('colon', 'rh', 'Hemikolektomia prawa', 'Prawostronna hemikolektomia — warianty zespolenia', [P(rhAnat(true), 'Izoperystaltyczne'), P(rhAnat(false), 'Antyperystaltyczne (FEEA)')]),
+        multi('colon', 'rh', 'Hemikolektomia prawa', 'Prawostronna hemikolektomia — warianty zespolenia', [P(rhAnat(true), 'Izoperystaltyczne'), P(rhAnat(false), 'Antyperystaltyczne (FEEA)'), P(RHX, 'Poszerzona — izoperystaltyczne')]),
         multi('colon', 'lh', 'Hemikolektomia lewa', 'Lewostronna hemikolektomia — warianty zespolenia', [P(LH, 'Koniec-do-końca (EEA)'), P(lhSide(true), 'Izoperystaltyczne'), P(lhSide(false), 'Antyperystaltyczne (FEEA)')]),
         multi('colon', 'ar', 'Resekcja odbytnicy', 'Resekcja odbytnicy — warianty zespolenia EEA', [P(arVariant('center'), 'Linia przez środek'), P(arVariant('racket'), 'Rakieta tenisowa'), P(arVariant('side'), 'Przednia ściana')]),
         one(IRA, 'Kolektomia całkowita (IRA)', 'Kolektomia całkowita z zespoleniem krętniczo-odbytniczym'),
         one(IPAA, 'Zbiornik J (IPAA)', 'Proktokolektomia ze zbiornikiem J (IPAA)'),
         one(HART),
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
+      // krezka z naczyniami i węzłami (na razie testowo: hemikolektomie prawe)
+      LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
@@ -192,7 +195,7 @@
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
     COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
     // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
-    _lib: { prepare: prepare, rhAnat: rhAnat, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
+    _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
       C_COL: C_COL, COL_R: COL_R, colT: ct, colors: function () { return { COL: COL, COLC: COLC, MUC: MUC, MUC_C: MUC_C, STAPLE: STAPLE, SUT: SUT }; },
       windows: function () { return { PRE: PRE, POST: POST, ALL: ALL, SPEC_OP: SPEC_OP, RH_OFF: RH_OFF, COL_TEXT: COL_TEXT }; } }
   };

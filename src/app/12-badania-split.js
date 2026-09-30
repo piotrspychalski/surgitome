@@ -210,40 +210,47 @@
 
   /* ---------- nowe elementy 3D: krezka z węzłami, EFTR (nasadka FTRD, klips OTSC) ---------- */
   function v3(a) { return new V3().fromArray(a); }
+  // krezka z naczyniami i węzłami chłonnymi: część usuwana (z preparatem: przesunięcie i zanikanie) i część pozostająca; podwiązania u odejścia naczyń
+  var MESO_COL = { a: '#b83227', v: '#3867b5', m: '#c9564b' };
   function makeMeso(d) {
-    var all = new THREE.Group(), grp = new THREE.Group(), stat = new THREE.Group(); all.add(grp, stat);
-    var E = d.edge.map(v3), B = d.base.map(v3), N = E.length - 1, ROWS = 6, pos = [], idx = [];
-    for (var i = 0; i <= N; i++) for (var j = 0; j <= ROWS; j++) {
-      var f = j / ROWS, p = B[i].clone().lerp(E[i], f); p.z -= 0.35 * Math.sin(Math.PI * f); pos.push(p.x, p.y, p.z);
-    }
-    for (var i2 = 0; i2 < N; i2++) for (var j2 = 0; j2 < ROWS; j2++) {
-      var a = i2 * (ROWS + 1) + j2, b = a + ROWS + 1; idx.push(a, b, a + 1, b, b + 1, a + 1);
-    }
-    var g = track(new THREE.BufferGeometry()); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
-    var mSheet = track(new THREE.MeshStandardMaterial({ color: '#e8c25e', roughness: 0.7, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
-    var mVes = track(new THREE.MeshStandardMaterial({ color: '#b83227', roughness: 0.45, transparent: true }));
-    var mNode = track(new THREE.MeshStandardMaterial({ color: '#4f9a6a', roughness: 0.5, transparent: true }));
-    grp.add(new THREE.Mesh(g, mSheet));
-    d.vessels.forEach(function (vs) {
-      var a0 = v3(vs[0]), b0 = v3(vs[1]), mid = a0.clone().lerp(b0, 0.5).add(new V3(0, 0, -0.25));
-      grp.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([a0, mid, b0]), 24, 0.075, 6, false)), mVes));
-      if (d.removed) {
-        var tie = new THREE.Mesh(track(new THREE.TorusGeometry(0.16, 0.06, 6, 16)), track(new THREE.MeshStandardMaterial({ color: '#3b4148', roughness: 0.4 })));
-        tie.position.copy(a0.clone().lerp(b0, 0.06)); tie.quaternion.setFromUnitVectors(new V3(0, 0, 1), b0.clone().sub(a0).normalize());
-        stat.add(tie);
-      }
+    var all = new THREE.Group(), mov = new THREE.Group(), stay = new THREE.Group(), ties = new THREE.Group(); all.add(mov, stay, ties);
+    var mSheet = track(new THREE.MeshStandardMaterial({ color: '#e8c25e', roughness: 0.7, transparent: true, opacity: 0.45, depthWrite: false, side: THREE.DoubleSide }));
+    var mSheetR = mSheet.clone(); track(mSheetR);
+    var mats = {}, matsR = {};
+    Object.keys(MESO_COL).forEach(function (k) { mats[k] = track(new THREE.MeshStandardMaterial({ color: MESO_COL[k], roughness: 0.45, transparent: true })); matsR[k] = track(mats[k].clone()); });
+    var mNode = track(new THREE.MeshStandardMaterial({ color: '#4f9a6a', roughness: 0.5, transparent: true })), mNodeR = track(mNode.clone());
+    d.sheets.forEach(function (sh) {
+      var rows = sh.rows, R = 6, pos = [], idx = [];
+      rows.forEach(function (row) { var e = v3(row[0]), b = v3(row[1]); for (var j = 0; j <= R; j++) { var f = j / R, p = b.clone().lerp(e, f), sg = Math.sin(Math.PI * f); p.z -= 0.25 * sg; p.y -= 0.5 * sg; pos.push(p.x, p.y, p.z); } });
+      for (var i = 0; i < rows.length - 1; i++) for (var j = 0; j < R; j++) { var a0 = i * (R + 1) + j, b0 = a0 + R + 1; idx.push(a0, b0, a0 + 1, b0, b0 + 1, a0 + 1); }
+      var g = track(new THREE.BufferGeometry()); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
+      (sh.removed ? mov : stay).add(new THREE.Mesh(g, sh.removed ? mSheetR : mSheet));
     });
-    var sph = track(new THREE.SphereGeometry(0.22, 14, 10));
-    d.nodes.forEach(function (q) { var s = new THREE.Mesh(sph, mNode); s.position.fromArray(q); grp.add(s); });
-    var k = Math.round(N / 2), mid0 = B[k].clone().lerp(E[k], 0.45);
-    var el = mkLabel(d.name, d.removed ? 'limfadenektomia' : 'bez limfadenektomii', '#e8c25e', 'seg');
-    return { d: d, grp: all, overlay: false, el: el,
+    var labels = [];
+    d.vessels.forEach(function (v) {
+      var c = new THREE.CatmullRomCurve3(v.pts.map(v3), false, 'centripetal'), r = v.kind === 'a' ? (v.id === 'sma' ? 0.16 : 0.085) : v.kind === 'v' ? 0.2 : 0.05;
+      (v.removed ? mov : stay).add(new THREE.Mesh(track(new THREE.TubeGeometry(c, v.pts.length * 12, r, 7, false)), (v.removed ? matsR : mats)[v.kind]));
+      if (v.tie != null) {
+        var tp = c.getPointAt(v.tie), tie = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.1, 0.06, 6, 16)), track(new THREE.MeshStandardMaterial({ color: '#2b3036', roughness: 0.4 })));
+        tie.position.copy(tp); tie.quaternion.setFromUnitVectors(new V3(0, 0, 1), c.getTangentAt(v.tie)); ties.add(tie);
+      }
+      if (v.name) labels.push({ el: mkLabel(v.name, '', MESO_COL[v.kind], 'seg'), p: c.getPointAt(v.at || 0.5), removed: !!v.removed });
+    });
+    var sph = track(new THREE.SphereGeometry(0.2, 14, 10));
+    d.nodes.forEach(function (n) { var s = new THREE.Mesh(sph, n.removed ? mNodeR : mNode); s.position.fromArray(n.p); (n.removed ? mov : stay).add(s); });
+    // podpis krezki przy części usuwanej (znika z preparatem), inaczej przy pozostającej
+    var shR = d.sheets.filter(function (s) { return s.removed; })[0], ref = (shR || d.sheets[0]).rows, mid = ref[Math.round(ref.length / 2)], anchor0 = v3(mid[1]).lerp(v3(mid[0]), 0.55);
+    var el = mkLabel(d.name, d.sub, '#e8c25e', 'seg');
+    var removedMats = [mSheetR, mNodeR].concat(Object.keys(matsR).map(function (k) { return matsR[k]; }));
+    return { d: d, grp: all, overlay: false, el: el, labels: labels,
       update: function (m) {
-        var op = d.opacity ? kfNum(d.opacity, m, 1) : 1;
-        if (d.offset) kfVec(d.offset, m, grp.position); else grp.position.set(0, 0, 0);
-        grp.visible = op > 0.01; mSheet.opacity = 0.5 * op; mVes.opacity = op; mNode.opacity = op;
-        stat.visible = d.tieT !== null && m >= d.tieT;
-        this.alpha = op; this.anchor = mid0.clone().add(grp.position);
+        var on = d.always || S.meso, op = kfNum(d.opacity, m, 1);
+        all.visible = on;
+        kfVec(d.offset, m, mov.position); mov.visible = op > 0.01;
+        removedMats.forEach(function (mm) { mm.opacity = (mm === mSheetR ? 0.45 : 1) * op; });
+        ties.visible = m >= d.tieT && d.vessels.some(function (v) { return v.tie != null; });
+        this.alpha = on ? (shR ? op : 1) : 0; this.anchor = shR ? anchor0.clone().add(mov.position) : anchor0;
+        var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed ? op : 1) : 0; });
       } };
   }
   function makeEftr(d) {
