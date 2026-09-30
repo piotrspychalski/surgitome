@@ -28,7 +28,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `05` narzędzia · `06` anatomia, kadry, oś czasu · `07` kamera i endoskop · `08` nawigacja i UI
 - `09` wyszukiwarka zabiegów (badania — tylko po nazwie) · `10` tryb telefonu · `11` rozmiar, etykiety (z rozsuwaniem), pętla renderowania
 - `12` badania: widok podzielony — dwa ramiona w jednej scenie, przy każdym przebiegu podmiana modelu `M`, kamery, obszaru widoku i warstwy etykiet (`withArm`); wspólny postęp kadru p ∈ [0, 1], ramię liczy m = p × mEnd; synchronizacja kamer; słownik `DICT_TRIALS`
-- `12-guz` przesuwalny guz (hemikolektomie prawe, testowo): przeciąganie w kadrze „Prawidłowa”, położenie w localStorage (`surgitome-guz-pos`) we współrzędnych anatomii prawidłowej, przypinane do najbliższego odcinka · `12-uwagi` formularz uwag → e-mail do autora przez FormSubmit (zapasowo mailto), z kontekstem: zabieg, wariant, kadr, język, urządzenie
+- `12-guz` przesuwalny guz (hemikolektomie prawe, testowo): przeciąganie w kadrze „Prawidłowa”, położenie w localStorage (`surgitome-guz-pos`) we współrzędnych anatomii prawidłowej, przypinane do najbliższego odcinka · `12-uwagi` formularz uwag → e-mail do autora przez Web3Forms (klucz publiczny z założenia; zapasowo mailto), z kontekstem: zabieg, wariant, kadr, język, urządzenie
 - `13` start aplikacji (po wszystkich modułach)
 
 Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kolejką „Dalej”); dostępne z wyszukiwarki, po oznaczeniu gwiazdką — w Ulubionych (`localStorage`, klucz `surgitome-fav`). Kadry badań: punkt wyjścia → interwencja → stan po (bez endoskopii i TK).
