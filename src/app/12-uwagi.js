@@ -31,7 +31,12 @@
       'Uwaga': msg, 'Zabieg / wariant / kadr': c.wherePl, 'Identyfikatory': c.ids, 'Język': c.lang, 'Urządzenie': c.device, 'Adres strony': c.url, 'Czas (UTC)': c.time };
     if (mail) data.email = mail;
     $('fbSend').disabled = true; fbStatus(tr('Wysyłanie…'));
-    var fail = function () { $('fbSend').disabled = false; fbStatus(tr('Nie udało się wysłać.'), 'err', fbMailto(msg, c)); };
+    // błąd: komunikat serwisu (np. formularz czeka na aktywację przez autora) i zapasowy link do programu pocztowego
+    var fail = function (m) {
+      $('fbSend').disabled = false;
+      var act = /activat/i.test(m || '');
+      fbStatus(act ? tr('Formularz czeka na aktywację przez autora — uwaga nie została jeszcze dostarczona.') : tr('Nie udało się wysłać.') + (m ? ' (' + String(m).slice(0, 120) + ')' : ''), 'err', fbMailto(msg, c));
+    };
     try {
       fetch(FB_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
@@ -39,7 +44,7 @@
           if (res.ok && res.j && String(res.j.success) === 'true') {
             fbStatus(tr('Dziękuję — uwaga wysłana.'), 'ok'); $('fbMsg').value = '';
             setTimeout(function () { if (!$('fb').hidden) fbShow(false); }, 1800);
-          } else fail();
-        }, fail);
+          } else fail(res.j && res.j.message);
+        }, function () { fail(); });
     } catch (err) { fail(); }
   });

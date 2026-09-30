@@ -42,6 +42,9 @@ const key=(k,el)=>(el||w.document).dispatchEvent(new w.KeyboardEvent('keydown',{
   mode='fail'; $('fbBtn').click(); $('fbMsg').value='Druga uwaga'; $('fbForm').dispatchEvent(new w.Event('submit',{cancelable:true})); await sleep(80);
   const a=$('fbStatus').querySelector('a'); console.log('po błędzie:',$('fbStatus').textContent.slice(0,60),'|',a&&a.href.slice(0,70));
   ok(a&&/^mailto:piotr\.spychalski@gumed\.edu\.pl\?subject=/.test(a.href)&&/Druga%20uwaga/.test(a.href),'brak zapasowego linku mailto');
+  mode='act'; w.fetch=(url,opt)=>{ sent.push({url,body:JSON.parse(opt.body)}); return Promise.resolve({ok:true,json:()=>Promise.resolve({success:'false',message:"This form needs Activation. We've sent you an email"})}); };
+  $('fbForm').dispatchEvent(new w.Event('submit',{cancelable:true})); await sleep(80);
+  console.log('aktywacja:',$('fbStatus').textContent.slice(0,70)); ok(/aktywację/.test($('fbStatus').textContent)&&$('fbStatus').querySelector('a'),'brak komunikatu o aktywacji');
   key('Escape'); await sleep(20); ok($('fb').hidden,'Esc nie zamyka formularza');
   // EN
   $('btnLang').click(); await sleep(50); $('fbBtn').click(); await sleep(30);
