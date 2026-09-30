@@ -92,12 +92,14 @@ button,select,input{ font:inherit; color:inherit; }
 #labelsB[hidden]{ display:none; }
 .lbl{ position:absolute; left:0; top:0; will-change:transform; }
 .lbl > *{ }
-.lbl{ display:flex; align-items:flex-start; gap:6px; }
-.lbl i{ width:9px; height:9px; border-radius:50%; margin-top:5px; flex:none; box-shadow:0 0 0 2px var(--pill); }
-.lbl span{ display:flex; flex-direction:column; background:var(--pill); padding:3px 8px 4px; border-radius:7px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
-.lbl b{ font-size:13px; line-height:1.25; white-space:nowrap; }
-.lbl small{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
-.lbl{ margin:-8px 0 0 -4px; }
+.lbl{ display:flex; align-items:flex-start; gap:5px; }
+.lbl i{ width:7px; height:7px; border-radius:50%; margin-top:4px; flex:none; box-shadow:0 0 0 2px var(--pill); }
+.lbl span{ display:flex; flex-direction:column; background:var(--pill); padding:2px 6px 3px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.lbl b{ font-size:11.5px; line-height:1.25; white-space:nowrap; }
+.lbl small{ font-size:10px; color:var(--muted); white-space:nowrap; }
+.lbl{ margin:-7px 0 0 -3.5px; }
+/* etykiety po lewej stronie modelu: dymek na lewo od punktu */
+.lbl.lbl-left{ flex-direction:row-reverse; margin:-7px -3.5px 0 0; }
 .lbl-anast b{ font-weight:400; font-style:italic; }
 .lbl-anast i{ background:transparent !important; border:2px solid var(--text); }
 .lbl-ghost b{ font-weight:400; color:var(--muted); }
@@ -257,7 +259,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .mobile #cap.open::after{ content:"▴"; }
 .mobile #viewport.endo #cap{ max-width:none; }
 .mobile .lbl-cut, .mobile .lbl-ghost{ display:none !important; }
-.mobile .lbl b{ font-size:11.5px; } .mobile .lbl small{ display:none; }
+.mobile .lbl b{ font-size:10.5px; } .mobile .lbl small{ display:none; }
 .mobile #hud{ top:8px; left:10px; right:10px; }
 .mobile #hud strong{ font-size:14px; } .mobile #hud #hudNote{ font-size:12.5px; }
 .mobile #inset{ width:34vw; max-width:170px; top:auto; bottom:64px; right:10px; }
@@ -289,6 +291,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .mfoot{ margin-top:16px; padding-top:10px; border-top:1px solid var(--line); }
 .lbl span{ transition:none; }
 .lbl-moved span{ box-shadow:0 2px 8px rgba(0,0,0,.18), -3px 0 0 -1px var(--accent); }
+.lbl-left.lbl-moved span{ box-shadow:0 2px 8px rgba(0,0,0,.18), 3px 0 0 -1px var(--accent); }
 .qbox{ position:relative; flex:1 1 220px; max-width:420px; min-width:140px; }
 .qbox input{ width:100%; box-sizing:border-box; border:1px solid var(--line); background:var(--surface-2); color:var(--text); border-radius:9px; padding:8px 11px; font:inherit; font-size:14px; }
 .qbox input:focus{ outline:2px solid var(--accent); outline-offset:0; background:var(--surface); }

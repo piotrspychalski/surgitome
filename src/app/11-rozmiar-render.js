@@ -56,15 +56,19 @@
   }
 
   var projV = new V3();
-  var lblVis = [];
+  var lblVis = [], lblCx = 0;
   function placeLabel(el, pos, alpha) {
     if (alpha < 0.02) { el.style.display = 'none'; return; }
     projV.copy(pos).project(orbitCam);
     if (projV.z > 1 || projV.z < -1 || Math.abs(projV.x) > 1.05 || Math.abs(projV.y) > 1.05) { el.style.display = 'none'; return; }
     el.style.display = ''; el.style.opacity = alpha.toFixed(2);
     var x = view.x + (projV.x + 1) / 2 * view.w, y = view.y + (1 - projV.y) / 2 * view.h;
-    el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-    if (alpha > 0.25) lblVis.push({ el: el, x: x, y: y });
+    // strona dymka: na lewo od środka modelu — w lewo, na prawo — w prawo (z histerezą, bez przeskakiwania przy obrocie)
+    var left = el._left;
+    if (left === undefined) left = x < lblCx; else if (left && x > lblCx + 24) left = false; else if (!left && x < lblCx - 24) left = true;
+    if (left !== el._left) { el._left = left; el.classList.toggle('lbl-left', left); el._sw = 0; }
+    el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)' + (left ? ' translateX(-100%)' : '');
+    if (alpha > 0.25) lblVis.push({ el: el, x: x, y: y, left: left });
   }
   // rozsuwanie nachodzących dymków: od góry do dołu, kolejny dymek zsuwany pod poprzedni, jeśli zachodzą w poziomie
   function declutter() {
@@ -72,7 +76,8 @@
     list.forEach(function (it) {
       var sp = it.el.lastElementChild; it.sp = sp;
       if (!it.el._sw) { it.el._sw = sp.offsetWidth || 80; it.el._sh = sp.offsetHeight || 22; }
-      it.l = it.x + 11; it.r = it.l + it.el._sw; it.t = it.y - 8; it.h = it.el._sh;
+      if (it.left) { it.r = it.x - 9; it.l = it.r - it.el._sw; } else { it.l = it.x + 9; it.r = it.l + it.el._sw; }
+      it.t = it.y - 7; it.h = it.el._sh;
     });
     list.sort(function (p, q) { return p.t - q.t; });
     for (var i = 0; i < list.length; i++) {
@@ -90,6 +95,7 @@
     labelsEl.style.display = show ? '' : 'none';
     if (!show) return;
     var m = S.m;
+    projV.copy(M.box.getCenter(tmpV)).project(orbitCam); lblCx = view.x + (projV.x + 1) / 2 * view.w; // środek modelu na ekranie
     M.objs.forEach(function (o) {
       o.labels.forEach(function (x) {
         var a = winAlpha(x.L.win, m) * (o.op > 0.3 ? 1 : 0) * (o.faded ? 0.3 : 1);
