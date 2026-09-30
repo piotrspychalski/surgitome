@@ -177,6 +177,7 @@
     LANG = l; try { localStorage.setItem('surgitome-lang', l); } catch (e) {}
     root.lang = l; $('btnLang').setAttribute('aria-checked', l === 'en' ? 'true' : 'false');
     [].forEach.call(labelsEl.children, function (e) { e._sw = 0; }); $('fLang').textContent = l.toUpperCase();
+    $('fbBtn').setAttribute('aria-label', tr('Zgłoś uwagę')); $('fbBtn').title = tr('Zgłoś uwagę'); if (!$('fb').hidden) $('fbCtx').textContent = fbContext().whereUi;
     $('fInfo').setAttribute('aria-label', tr('Opis zabiegu')); $('fLbl').setAttribute('aria-label', tr('Etykiety')); $('fLang').setAttribute('aria-label', tr('Język'));
     document.querySelectorAll('[data-pl]').forEach(function (el) { el.textContent = tr(el.dataset.pl); });
     $('finePrint').innerHTML = FINE[l];

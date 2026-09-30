@@ -65,6 +65,7 @@
   }
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
+    $('togGuz').hidden = !an.tumour;
     if (curProc().split) renderTrialPanel();
     else {
       $('pTitle').textContent = tr(an.title); $('pSub').textContent = tr(an.sub);
@@ -116,6 +117,8 @@
   if (lp === '0' || (lp === null && MOBILE)) setLabels(false);
   $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !this.checked; };
   $('optMeso').checked = S.meso;
+  $('optGuz').checked = S.tumour;
+  $('optGuz').onchange = function () { S.tumour = this.checked; try { localStorage.setItem('surgitome-guz', S.tumour ? '1' : '0'); } catch (e) {} applyM(); };
   $('optMeso').onchange = function () { S.meso = this.checked; try { localStorage.setItem('surgitome-meso', S.meso ? '1' : '0'); } catch (e) {} applyM(); };
   $('optDrift').onchange = function () { S.drift = this.checked; controls.autoRotate = S.drift && !reduced && !endo.active && !tw; };
 
@@ -159,6 +162,7 @@
   $('qrBtn').onclick = function () { qrShow(true); };
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
+    if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
     var tg = e.target, tag = tg && tg.tagName;

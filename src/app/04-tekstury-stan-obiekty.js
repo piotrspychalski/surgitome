@@ -26,7 +26,8 @@
 
   /* ---------- stan ---------- */
   var S = { cat: 'fav', an: 0, frame: 0, m: 0, playing: true, labels: true, captions: true, drift: true, highlight: null, meso: true };
-  try { if (localStorage.getItem('surgitome-meso') === '0') S.meso = false; } catch (e) {}
+  S.tumour = true;
+  try { if (localStorage.getItem('surgitome-meso') === '0') S.meso = false; if (localStorage.getItem('surgitome-guz') === '0') S.tumour = false; } catch (e) {}
   var M = null, FR = [];
   var endo = { active: false, playing: false, s: 0, rate: 1, base: 3.2, route: null };
   var trash = [];

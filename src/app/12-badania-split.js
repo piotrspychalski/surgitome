@@ -213,11 +213,11 @@
   // krezka z naczyniami i węzłami chłonnymi: część usuwana (z preparatem: przesunięcie i zanikanie) i część pozostająca; podwiązania u odejścia naczyń
   var MESO_COL = { a: '#b83227', v: '#3867b5', m: '#c9564b' };
   function makeMeso(d) {
-    var all = new THREE.Group(), mov = new THREE.Group(), stay = new THREE.Group(), ties = new THREE.Group(); all.add(mov, stay, ties);
+    var all = new THREE.Group(), mov = new THREE.Group(), stay = new THREE.Group(), ties = new THREE.Group(), fadeG = new THREE.Group(); all.add(mov, stay, ties, fadeG);
     var mSheet = track(new THREE.MeshStandardMaterial({ color: '#e8c25e', roughness: 0.7, transparent: true, opacity: 0.45, depthWrite: false, side: THREE.DoubleSide }));
     var mSheetR = mSheet.clone(); track(mSheetR);
-    var mats = {}, matsR = {};
-    Object.keys(MESO_COL).forEach(function (k) { mats[k] = track(new THREE.MeshStandardMaterial({ color: MESO_COL[k], roughness: 0.45, transparent: true })); matsR[k] = track(mats[k].clone()); });
+    var mats = {}, matsR = {}, matsF = {};
+    Object.keys(MESO_COL).forEach(function (k) { mats[k] = track(new THREE.MeshStandardMaterial({ color: MESO_COL[k], roughness: 0.45, transparent: true })); matsR[k] = track(mats[k].clone()); matsF[k] = track(mats[k].clone()); });
     var mNode = track(new THREE.MeshStandardMaterial({ color: '#4f9a6a', roughness: 0.5, transparent: true })), mNodeR = track(mNode.clone());
     d.sheets.forEach(function (sh) {
       var rows = sh.rows, R = 6, pos = [], idx = [];
@@ -229,12 +229,12 @@
     var labels = [];
     d.vessels.forEach(function (v) {
       var c = new THREE.CatmullRomCurve3(v.pts.map(v3), false, 'centripetal'), r = v.kind === 'a' ? (v.id === 'sma' ? 0.16 : 0.085) : v.kind === 'v' ? 0.2 : 0.05;
-      (v.removed ? mov : stay).add(new THREE.Mesh(track(new THREE.TubeGeometry(c, v.pts.length * 12, r, 7, false)), (v.removed ? matsR : mats)[v.kind]));
+      (v.removed ? mov : v.fade ? fadeG : stay).add(new THREE.Mesh(track(new THREE.TubeGeometry(c, v.pts.length * 12, r, 7, false)), (v.removed ? matsR : v.fade ? matsF : mats)[v.kind]));
       if (v.tie != null) {
         var tp = c.getPointAt(v.tie), tie = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.1, 0.06, 6, 16)), track(new THREE.MeshStandardMaterial({ color: '#2b3036', roughness: 0.4 })));
         tie.position.copy(tp); tie.quaternion.setFromUnitVectors(new V3(0, 0, 1), c.getTangentAt(v.tie)); ties.add(tie);
       }
-      if (v.name) labels.push({ el: mkLabel(v.name, '', MESO_COL[v.kind], 'seg'), p: c.getPointAt(v.at || 0.5), removed: !!v.removed });
+      if (v.name) labels.push({ el: mkLabel(v.name, '', MESO_COL[v.kind], 'seg'), p: c.getPointAt(v.at || 0.5), removed: !!v.removed, fade: !!v.fade });
     });
     var sph = track(new THREE.SphereGeometry(0.2, 14, 10));
     d.nodes.forEach(function (n) { var s = new THREE.Mesh(sph, n.removed ? mNodeR : mNode); s.position.fromArray(n.p); (n.removed ? mov : stay).add(s); });
@@ -248,9 +248,10 @@
         all.visible = on;
         kfVec(d.offset, m, mov.position); mov.visible = op > 0.01;
         removedMats.forEach(function (mm) { mm.opacity = (mm === mSheetR ? 0.45 : 1) * op; });
-        ties.visible = m >= d.tieT && d.vessels.some(function (v) { return v.tie != null; });
+        Object.keys(matsF).forEach(function (k) { matsF[k].opacity = op; }); fadeG.visible = op > 0.01;
+        ties.visible = m >= d.tieT && op > 0.01 && d.vessels.some(function (v) { return v.tie != null; }); // podwiązania znikają razem z SMA/SMV
         this.alpha = on ? (shR ? op : 1) : 0; this.anchor = shR ? anchor0.clone().add(mov.position) : anchor0;
-        var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed ? op : 1) : 0; });
+        var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed || L.fade ? op : 1) : 0; });
       } };
   }
   function makeEftr(d) {

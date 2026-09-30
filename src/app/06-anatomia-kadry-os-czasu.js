@@ -45,6 +45,7 @@
       scope: scope, box: box, routes: {}, endoG: {}, endoTrash: [], endoMarkG: endoMarkG, toolG: toolG };
     var toolOv = new THREE.Group(); toolScene.add(toolOv); M.toolOv = toolOv;
     M.tools = buildTools(an); M.tools.forEach(function (t) { (t.overlay ? toolOv : toolG).add(t.grp); if (t.ov) toolOv.add(t.ov); });
+    if (!keep && an.tumour) tumourAttach();
     if (!keep) renderPanel(an);
   }
 

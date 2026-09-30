@@ -148,7 +148,8 @@
   /* ---------- Krezka prawej połowy okrężnicy i poprzecznicy: naczynia i węzły chłonne ----------
      SMA/SMV; od SMA: IC (krętniczo-okrężnicza), RC (prawa okrężnicy), MC (środkowa okrężnicy) z gałęzią prawą (RBMC) i lewą (LBMC); łuk brzeżny.
      mode: 'keep' — nic nie usuwane (np. leczenie endoskopowe); 'rh' — hemikolektomia prawa: podwiązanie IC, RC i RBMC (pień MC i LBMC zostają);
-     'ext' — poszerzona: IC, RC i pień MC u odejścia z SMA. Czasy w skali po przygotowaniu (podwiązanie 1,25; preparat odjeżdża 2,15–2,9). */
+     'ext' — poszerzona: IC, RC i pień MC u odejścia z SMA. Czasy w skali po przygotowaniu (podwiązanie 1,25; preparat odjeżdża 2,15–2,9).
+     fade: SMA i SMV znikają po etapie resekcji (razem z preparatem), bez przesuwania. */
   var MESO_T0 = 0.015, MESO_T1 = ct([7.2, 7.4, -0.4]) - 0.012;
   var C_ROOT = curveOf([[-1.6, -6.6, -1.4], [-1.2, -3.0, -1.7], [-0.9, 0.0, -1.6], [-0.5, 1.6, -1.0], [1.6, 2.0, -0.6], [3.8, 3.2, -0.8], [5.4, 4.8, -1.2]]);
   function mesoEdge(tc, k) {
@@ -167,17 +168,19 @@
       if (!rm || tc >= tCut - 0.004) sheetK.push(row);
     }
     function via(a, b, lift) { var m = new V3().fromArray(a).lerp(new V3().fromArray(b), 0.5); m.z += lift || 0; return m.toArray(); }
-    // MC odchodzi od SMA pod trzustką i biegnie do przodu w krezce poprzecznicy; rozwidlenie poniżej poprzecznicy (widoczne od przodu)
-    var MC_O = [-0.5, 1.8, -2.15], RC_O = [-0.7, -1.0, -2.0], IC_O = [-1.05, -3.8, -1.8], BIF = [-0.4, 1.4, 1.0];
+    // MC: krótki pień od SMA pod trzustką, rozwidlenie przed SMV (Andersen i wsp., Surg Endosc 2022: mediana 3,2 cm);
+    // długie gałęzie prawa (RBMC) i lewa (LBMC) w krezce poprzecznicy
+    var MC_O = [-0.45, 2.4, -2.2], RC_O = [-0.7, -1.0, -2.0], IC_O = [-1.05, -3.8, -1.8], BIF = [-1.2, 2.3, -0.6];
     var eIC = mesoEdge(0.035).toArray(), eRC = mesoEdge(ct([-7.4, -0.5, 0])).toArray(), eRB = mesoEdge(ct([-4.4, 5.8, 1.6])).toArray(), eLB = mesoEdge(ct([2.2, 4.0, 2.6])).toArray();
     var V = [
-      { id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: [[-0.4, 3.2, -2.3], [-0.5, 1.0, -2.1], [-0.8, -2.0, -1.9], [-1.2, -5.0, -1.7], [-1.7, -8.0, -1.3]], at: 0.12 },
-      { id: 'smv', name: '', kind: 'v', pts: [[-1.3, 3.0, -2.0], [-1.4, 1.0, -1.9], [-1.7, -2.0, -1.7], [-2.1, -5.0, -1.5], [-2.6, -8.0, -1.1]] },
+      { id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: [[-0.4, 3.2, -2.3], [-0.5, 1.0, -2.1], [-0.8, -2.0, -1.9], [-1.2, -5.0, -1.7], [-1.7, -8.0, -1.3]], at: 0.12, fade: rm },
+      { id: 'smv', name: '', kind: 'v', pts: [[-1.3, 3.0, -2.0], [-1.4, 1.0, -1.9], [-1.7, -2.0, -1.7], [-2.1, -5.0, -1.5], [-2.6, -8.0, -1.1]], fade: rm },
       { id: 'ic', name: 'IC — tętnica krętniczo-okrężnicza', kind: 'a', pts: [IC_O, via(IC_O, eIC, 0.3), eIC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
       { id: 'rc', name: 'RC — tętnica prawa okrężnicy', kind: 'a', pts: [RC_O, via(RC_O, eRC, 0.3), eRC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
-      { id: 'mc', name: 'MC — tętnica środkowa okrężnicy', kind: 'a', pts: [MC_O, via(MC_O, BIF, 0.2), BIF], removed: ext, tie: ext ? 0.12 : null, at: 0.5, nodes: 'central' },
-      { id: 'rbmc', name: 'RBMC — gałąź prawa MC', kind: 'a', pts: [BIF, via(BIF, eRB, 0.3), eRB], removed: rm, tie: mode === 'rh' ? 0.05 : null, at: 0.6, nodes: 'outer' },
-      { id: 'lbmc', name: 'LBMC — gałąź lewa MC', kind: 'a', pts: [BIF, via(BIF, eLB, 0.3), eLB], removed: ext, at: 0.6, nodes: 'outer' }
+      { id: 'mc', name: 'MC — pień tętnicy środkowej okrężnicy', kind: 'a', pts: [MC_O, via(MC_O, BIF, 0.1), BIF], removed: ext, tie: ext ? 0.25 : null, at: 0.5, nodes: 'central' },
+      // hemikolektomia prawa: RBMC podwiązana wysoko, tuż przy pniu MC
+      { id: 'rbmc', name: 'RBMC — gałąź prawa MC', kind: 'a', pts: [BIF, [-2.6, 3.4, 0.2], via([-2.6, 3.4, 0.2], eRB, 0.3), eRB], removed: rm, tie: mode === 'rh' ? 0.035 : null, at: 0.55, nodes: 'outer' },
+      { id: 'lbmc', name: 'LBMC — gałąź lewa MC', kind: 'a', pts: [BIF, [0.4, 2.9, 0.2], via([0.4, 2.9, 0.2], eLB, 0.3), eLB], removed: ext, at: 0.6, nodes: 'outer' }
     ];
     var arcR = [], arcK = [];
     for (var j = 0; j <= 30; j++) { var ta = 0.03 + (MESO_T1 - 0.03) * j / 30, q = mesoEdge(ta, 0.08).toArray(); if (rm && ta <= tCut + 0.01) arcR.push(q); if (!rm || ta >= tCut - 0.01) arcK.push(q); }

@@ -85,5 +85,19 @@ with sync_playwright() as pw:
             stepclick(p, 3); settle(p); shot(p, 'me_v%d_3remove' % v)
             stepclick(p, 4); settle(p); shot(p, 'me_v%d_4post' % v)
             log.append(('state', p.evaluate("() => document.getElementById('pTitle').textContent")))
+    elif scen == 'guz':
+        # przesuwalny guz: przeciągnięcie myszą w kadrze „Prawidłowa”, potem przebieg kadrów (guz zostaje przy swoim odcinku)
+        p = page_for(b, False); pick(p, 'hemikolektomia prawa'); settle(p, 0); p.wait_for_timeout(800); shot(p, 'gz_0start')
+        scr = "(w) => { const v=new THREE.Vector3(...w).project(__sgTest.cam), r=document.getElementById('viewport').getBoundingClientRect(); return [r.left+(v.x+1)/2*r.width, r.top+(1-v.y)/2*r.height]; }"
+        a0 = p.evaluate(scr, p.evaluate("() => __sgTest.tumour()"))
+        for target, name in [([8.9, 1.0, 0.4], 'desc'), ([-6.4, 0.5, 1.6], 'asc')]:
+            a1 = p.evaluate(scr, target)
+            p.mouse.move(a0[0], a0[1]); p.mouse.down(); p.mouse.move((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2, steps=8); p.mouse.move(a1[0], a1[1], steps=8); p.mouse.up(); p.wait_for_timeout(600)
+            log.append(('state', name + ' guz: ' + json.dumps(p.evaluate("() => __sgTest.tumour()")) + ' | zapis: ' + str(p.evaluate("() => localStorage.getItem('surgitome-guz-pos')"))))
+            shot(p, 'gz_1moved_' + name)
+            for i, fr in [(1, 'resect'), (3, 'remove'), (4, 'post')]:
+                stepclick(p, i); settle(p); shot(p, 'gz_2%s_%s' % (name, fr))
+            stepclick(p, 0); settle(p, 0); p.wait_for_timeout(800)
+            a0 = p.evaluate(scr, p.evaluate("() => __sgTest.tumour()"))
     print(json.dumps([l for l in log if 'fonts' not in l[1] and 'ERR_FAILED' not in l[1]], ensure_ascii=False, indent=0)[:3000])
     b.close()

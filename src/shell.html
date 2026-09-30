@@ -313,6 +313,27 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .credit a:hover, .bcred a:hover, #mCred a:hover{ text-decoration:underline; }
 #intro{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.55); }
 #intro[hidden]{ display:none; }
+/* ---------- zgłaszanie uwag ---------- */
+#fbBtn{ position:absolute; right:14px; bottom:14px; z-index:4; }
+#viewport.endo #fbBtn{ bottom:calc(min(26vw, 240px) * 4 / 3 + 26px); }
+#viewport.ctmode #fbBtn{ bottom:64px; }
+.mobile #fbBtn{ top:160px; bottom:auto; right:10px; }
+.mobile #viewport.endo #fbBtn, .mobile #viewport.ctmode #fbBtn{ top:160px; bottom:auto; }
+#fb{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.55); }
+#fb[hidden]{ display:none; }
+#fb .introbox{ max-width:520px; gap:8px; }
+#fbTitle{ margin:0 0 4px; font-size:21px; line-height:1.25; }
+.fbl{ font-size:13.5px; font-weight:700; color:var(--text); }
+#fbMsg, #fbMail{ width:100%; box-sizing:border-box; border:1px solid var(--line); background:var(--surface-2); color:var(--text); border-radius:9px; padding:9px 11px; font:inherit; font-size:15px; }
+#fbMsg{ resize:vertical; min-height:110px; }
+#fbMsg:focus, #fbMail:focus{ outline:2px solid var(--accent); outline-offset:0; background:var(--surface); }
+.fbhoney{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+.fbctx{ margin:2px 0 0; font-size:12.5px; color:var(--muted); }
+#fbCtx{ color:var(--text); }
+.fbstatus{ margin:0; font-size:14px; min-height:1.2em; }
+.fbstatus.ok{ color:var(--accent); font-weight:700; } .fbstatus.err{ color:#c0392b; }
+.fbstatus a{ color:var(--accent); }
+.fbrow{ display:flex; justify-content:flex-end; gap:8px; margin-top:2px; }
 /* ---------- badania: widok podzielony ---------- */
 #splitHdr{ position:absolute; inset:0; z-index:3; pointer-events:none; }
 #splitHdr[hidden]{ display:none; }
@@ -417,6 +438,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     <div id="viewport">
       <canvas id="c" aria-label="Interaktywny model 3D anatomii"></canvas>
       <div id="labels"></div><div id="labelsB" hidden></div>
+      <button id="fbBtn" class="fbtn" type="button" aria-label="Zgłoś uwagę" title="Zgłoś uwagę"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8.5h8M8 12h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       <div id="mFloat">
         <button id="fInfo" class="fbtn" aria-label="Opis zabiegu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/><rect x="10.9" y="10.4" width="2.2" height="7" rx="1" fill="currentColor"/></svg></button>
         <button id="fLang" class="fbtn ftext" aria-label="Język">PL</button>
@@ -455,6 +477,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <label class="tog"><input type="checkbox" id="optCaps" checked> <span>Podpisy kadrów</span></label>
       <label class="tog"><input type="checkbox" id="optDrift" checked> <span>Powolny ruch kamery</span></label>
       <label class="tog" id="togMeso" hidden><input type="checkbox" id="optMeso" checked> <span>Krezka, naczynia i węzły chłonne</span></label>
+      <label class="tog" id="togGuz" hidden><input type="checkbox" id="optGuz" checked> <span>Guz (przesuń w kadrze „Prawidłowa”)</span></label>
       <p class="fine" id="finePrint"></p>
           <div class="pfoot"><span class="credit"><span><a href="https://piotrspychalski.github.io/" target="_blank" rel="noopener">Spychalski P MD PhD</a></span><span class="csep">|</span><span><a href="mailto:piotr.spychalski@gumed.edu.pl">piotr.spychalski@gumed.edu.pl</a></span></span></div>
     </aside>
@@ -487,6 +510,19 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   <p class="introfine" data-pl="Długości pętli i proporcje są umowne. SURGITOME jest narzędziem edukacyjnym, nie wyrobem medycznym.">Długości pętli i proporcje są umowne. SURGITOME jest narzędziem edukacyjnym, nie wyrobem medycznym.</p>
   <button class="btn primary" id="introOk" type="button" data-pl="Rozumiem">Rozumiem</button>
 </div></div>
+<div id="fb" hidden role="dialog" aria-modal="true" aria-labelledby="fbTitle"><form class="introbox" id="fbForm" novalidate>
+  <div class="introhead"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".55"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg><b>SURGITOME</b><button class="ghostbtn" id="fbClose" type="button" aria-label="Zamknij">✕</button></div>
+  <h2 id="fbTitle" data-pl="Zgłoś uwagę">Zgłoś uwagę</h2>
+  <label class="fbl" for="fbMsg" data-pl="Twoja uwaga (błąd, nieścisłość, pomysł)">Twoja uwaga (błąd, nieścisłość, pomysł)</label>
+  <textarea id="fbMsg" rows="5" maxlength="4000" required></textarea>
+  <label class="fbl" for="fbMail" data-pl="E-mail do odpowiedzi (opcjonalnie)">E-mail do odpowiedzi (opcjonalnie)</label>
+  <input id="fbMail" type="email" autocomplete="email" maxlength="200">
+  <input id="fbHoney" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" class="fbhoney">
+  <p class="fbctx"><span data-pl="Dołączony kontekst:">Dołączony kontekst:</span> <span id="fbCtx"></span></p>
+  <p class="introfine" data-pl="Wiadomość trafi do autora przez serwis FormSubmit. Nie wpisuj danych pacjentów.">Wiadomość trafi do autora przez serwis FormSubmit. Nie wpisuj danych pacjentów.</p>
+  <p id="fbStatus" class="fbstatus" role="status" aria-live="polite"></p>
+  <div class="fbrow"><button class="btn" id="fbCancel" type="button" data-pl="Anuluj">Anuluj</button><button class="btn primary" id="fbSend" type="submit" data-pl="Wyślij">Wyślij</button></div>
+</form></div>
 <div id="qrOverlay" hidden role="dialog" aria-label="bit.ly/surgitome"><div class="qrbox"><div class="qrbrand"><span>SURGITOME</span></div><svg viewBox="0 0 45 45" role="img" aria-label="QR: bit.ly/surgitome"><use href="#qrSym"/></svg><p class="qrurl">bit.ly/surgitome</p><p class="qrcred">Spychalski P MD PhD | piotr.spychalski@gumed.edu.pl</p><p class="qrhint">Kliknij, aby zamknąć</p></div></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
