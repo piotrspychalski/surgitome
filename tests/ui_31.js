@@ -9,7 +9,7 @@ const sc=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 const errs=[], sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function boot(seen){
   const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); const w=dom.window;
-  if(seen) w.localStorage.setItem('surgitome-intro','1');
+  if(seen) w.localStorage.setItem('surgitome-intro','1'); w.localStorage.setItem('surgitome-tour','1');
   w.matchMedia=()=>({matches:false,addEventListener(){}});
   w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error)));

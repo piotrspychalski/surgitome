@@ -27,6 +27,7 @@
     if (P.variants.length > 1 && !P.split && L.indexOf(S.an) >= 0) { var rv = sec('Wariant'); P.variants.forEach(function (v, k) { btn(rv, tr(v.vshort), k === (S.vi || 0), function () { if (k !== (S.vi || 0)) switchVariant(k); mMenu(false); }); }); }
     var rs = sec('Ustawienia');
     btn(rs, tr(isDark() ? 'Jasny' : 'Ciemny'), false, function () { $('btnTheme').click(); renderMobileMenu(); });
+    btn(rs, tr('Samouczek'), false, function () { tourStart(); });
   }
   $('fInfo').onclick = function () { setPanel(panel.classList.contains('closed')); };
   $('fLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
@@ -162,6 +163,7 @@
   function introClose() {
     $('intro').hidden = true;
     try { localStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
+    tourAuto(250); // samouczek zaraz po informacji (raz na urządzenie)
   }
   $('introOk').onclick = introClose;
   $('intro').onclick = function (e) { if (e.target === this) introClose(); };
@@ -172,6 +174,7 @@
   $('qrBtn').onclick = function () { qrShow(true); };
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
+    if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }

@@ -14,11 +14,11 @@ jobs:
         with: { node-version: 20 }
       - run: npm install --no-audit --no-fund
       - run: node build.js && cp dist/surgitome.html dist/index.html
-      - name: Testy szybkie (tłumaczenia, kolizje, interfejs, wyszukiwarka, ulubione, TK, informacja startowa, badania, wątroba)
+      - name: Testy szybkie (tłumaczenia, kolizje, interfejs, wyszukiwarka, ulubione, TK, informacja startowa, samouczek, badania, wątroba)
         run: |
           node tests/i18n.js
           node tests/kolizje_animacji.js | tail -1 | grep -q ': 0' 
-          for t in tests/ui_18.js tests/ui_19.js tests/ui_26.js tests/ui_27.js tests/ui_28.js tests/ui_29.js tests/ui_30.js tests/ui_31.js tests/ui_32.js tests/ui_33.js tests/ui_34.js tests/ui_35.js; do node "$t" | tail -1 | grep -q 'errors \[\]' || { echo "BŁĄD: $t"; exit 1; }; done
+          for t in tests/ui_18.js tests/ui_19.js tests/ui_26.js tests/ui_27.js tests/ui_28.js tests/ui_29.js tests/ui_30.js tests/ui_31.js tests/ui_32.js tests/ui_33.js tests/ui_34.js tests/ui_35.js tests/ui_36.js; do node "$t" | tail -1 | grep -q 'errors \[\]' || { echo "BŁĄD: $t"; exit 1; }; done
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:
