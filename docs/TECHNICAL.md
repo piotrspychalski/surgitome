@@ -98,8 +98,11 @@ Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) tra
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
 - `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
+- `ui_40.js` — statystyki wyboru zabiegu (zdarzenia GoatCounter)
 - `ui_18…26.js` — kod QR, warianty, menu i gesty na telefonie, przyciski, panel, rampa endoskopu po rozwidleniu
 
 Narzędzie pomocnicze: `node tools/dumpgeo.js dist/core.js <id wariantu> > g.json && python3 tools/plotgeo.py g.json rzut.png post` — rzuty geometrii z przodu i z boku.
 
 Kod QR: `python3 tools/make_qr.py` — symbol `qrSym` z bezpośrednim linkiem do strony na GitHub Pages (https://piotrspychalski.github.io/surgitome/?ref=qr — źródło „qr” w statystykach GoatCounter, korekcja błędów Q, weryfikacja odczytu OpenCV; wymaga bibliotek qrcode, cairosvg z systemowym cairo, opencv-python); podpis pod kodem pozostaje „bit.ly/surgitome”. Wynik (`qrsym.txt`) wkleja się w `src/shell.html` w miejsce istniejącego `<symbol id="qrSym">`.
+
+Statystyki zabiegów (od 5.10.2026): `gcView()` w `src/app/08-nawigacja-ui.js` — po każdej zmianie zakładki lub wariantu, jeśli widok trwa ≥ 2 s, wysyła do GoatCounter zdarzenie (`event: true`) o ścieżce `zabieg/<id zabiegu>` albo `zabieg/<id zabiegu>/<id wariantu>`. Domyślny zabieg przy starcie nie jest liczony (liczy się tylko wejście na stronę). Działa tylko tam, gdzie załadowano skrypt GoatCounter (GitHub Pages); w panelu GoatCounter zdarzenia są osobną sekcją obok odsłon stron.

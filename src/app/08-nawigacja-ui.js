@@ -79,6 +79,18 @@
     FR = framesFor(curProc(), S.vi);
     renderTabs(); renderStrip();
     goTo(frame === 'last' ? FR.length - 1 : (frame || 0), { fade: true });
+    gcView();
+  }
+  // Statystyki wyboru zabiegu/wariantu (GoatCounter, tylko gdy skrypt załadowany — GitHub Pages). Liczone dopiero po 2 s
+  // na tym samym widoku, żeby szybkie przewijanie zakładek nie dawało fałszywych wyświetleń. Ścieżka: zabieg/<id>[/<wariant>].
+  var gcT = null;
+  function gcView() {
+    clearTimeout(gcT);
+    gcT = setTimeout(function () {
+      var g = window.goatcounter; if (!g || typeof g.count !== 'function') return;
+      var P = curProc(), v = P.variants[S.vi || 0], multi = P.variants.length > 1;
+      try { g.count({ path: 'zabieg/' + P.id + (multi ? '/' + (v.id || S.vi) : ''), title: !multi || !v.short ? P.short : v.short.indexOf(P.short) === 0 ? v.short : P.short + ' — ' + v.short, event: true }); } catch (e) {}
+    }, 2000);
   }
   function switchVariant(k, frame) {
     S.vi = k; S.highlight = null;
@@ -87,6 +99,7 @@
     renderTabs(); renderStrip();
     var target = frame === 'first' ? 0 : frame === 'last' ? FR.length - 1 : frame === 'firstVar' ? Math.max(0, FR.findIndex(function (f) { return f.k === 'var' || f.k === 'endo'; })) : Math.min(keep, FR.length - 1);
     goTo(target, { fade: true });
+    gcView();
   }
   function togglePlay() {
     var fr = FR[S.frame];
