@@ -79,7 +79,7 @@
       sub: braun ? 'Pętla żołądkowo-jelitowa z zespoleniem jelitowo-jelitowym bok-do-boku' : 'Zamknięty kikut dwunastnicy, zespolenie żołądkowo-jelitowe z pętlą',
       notes: braun ? [
         'Jak Billroth II, a dodatkowo zespolenie bok-do-boku między pętlą doprowadzającą a odprowadzającą poniżej zespolenia żołądkowo-jelitowego.',
-        'Cel: odprowadzenie żółci z pominięciem kikuta żołądka — mniej refluksu żółciowego i mniejsze ryzyko zespołu pętli doprowadzającej.',
+        'Cel: odbarczenie pętli doprowadzającej i częściowe odprowadzenie żółci z pominięciem kikuta żołądka; wpływ na refluks żółciowy niepewny, mniejszy niż po Roux-en-Y.',
         'W endoskopii dodatkowy otwór w obu pętlach: łatwo pomylić drogę do brodawki.'
       ] : [
         'Kikut dwunastnicy zamknięty; kikut żołądka zespolony z pętlą jelita czczego (pętla doprowadzająca i odprowadzająca).',

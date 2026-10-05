@@ -61,7 +61,7 @@
       t.push(giaAt(an.pouchGia.at, va(an.pouchGia.j), va(an.pouchGia.s), 3.6, 0.7, { side: true, reveal: [LZ] }));
     }
     if (an.eea) {
-      t.push({ type: 'eea', face: an.eea.face, dir: an.eea.dir, anvil: an.eea.anvil, path: an.eea.path, reveal: [markIdx(an, 'Zespolenie okrężne staplerem (EEA)'), markIdx(an, 'Zespolenie EEA na przedniej ścianie odbytnicy')].filter(function (x) { return x >= 0; }) });
+      t.push({ type: 'eea', face: an.eea.face, dir: an.eea.dir, anvil: an.eea.anvil, path: an.eea.path, reveal: [markIdx(an, 'Zespolenie okrężne staplerem (EEA)'), markIdx(an, 'Zespolenie staplerem okrężnym na przedniej ścianie odbytnicy')].filter(function (x) { return x >= 0; }) });
     }
     return t.filter(function (x) { return !x.reveal || x.reveal.every(function (r) { return r >= 0; }); });
   }
@@ -71,10 +71,10 @@
     'lh-iso': 'Branże staplera w poprzecznicy i esicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'lh-anti': 'Branże staplera w obu końcach — wspólne światło; końce zamknięte poprzecznie drugim staplerem liniowym.',
     'gebp': 'Branże staplera liniowego w żołądku i pętli jelita — wspólne światło; otwór po staplerze zamknięty szwem.',
-    'ipaa': 'Stapler liniowy przez szczyt pętli łączy oba ramiona we wspólny zbiornik; kowadełko w szczycie zbiornika, stapler okrężny przez odbyt.',
-    'sb-iso': 'Branże staplera liniowego w obu ramionach — po odpaleniu wspólne światło. Otwór po staplerze zamknięty szwem ciągłym nicią z haczykami (typu V-Loc).',
+    'ipaa': 'Stapler liniowy przez otwór w zagięciu pętli łączy oba ramiona we wspólny zbiornik; kowadełko w dnie zbiornika, stapler okrężny przez odbyt.',
+    'sb-iso': 'Branże staplera liniowego w obu ramionach — po odpaleniu wspólne światło. Otwór po staplerze zamknięty szwem ciągłym nicią z zadziorami (typu V-Loc).',
     'sb-anti': 'Branże staplera w obu końcach — po odpaleniu wspólne światło; wspólny otwór końców zamknięty poprzecznie drugim staplerem liniowym.',
-    'sb-e2e': 'Szew ciągły nicią z haczykami (typu V-Loc) na całym obwodzie.',
+    'sb-e2e': 'Szew ciągły nicią z zadziorami (typu V-Loc) na całym obwodzie.',
     'rh-iso': 'Branże staplera w jelicie krętym i poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'rh-anti': 'Branże staplera w obu końcach — wspólne światło; końce zamknięte poprzecznie drugim staplerem liniowym.',
     'rh-ext': 'Branże staplera w jelicie krętym i lewej części poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
@@ -180,10 +180,10 @@
           // wybór zakresu resekcji: jeden kadr, całe jelito grube z krezką i naczyniami, przesuwalny guz
           var z = prepare({ cat: 'colon', id: 'zakres', short: 'Wybór zakresu resekcji', title: 'Wybór zakresu resekcji w raku jelita grubego',
             sub: 'Przesuń guz — podświetla się typowy zakres resekcji z krezką i naczyniami do podwiązania',
-            notes: ['Zakres resekcji odpowiada drenażowi chłonnemu: usuwa się odcinek jelita z krezką do odejścia naczynia zaopatrującego (ASCRS 2022).',
-              'Kątnica i wstępnica: hemikolektomia prawa (IC, RC, RBMC). Zagięcie wątrobowe i poprzecznica: zwykle poszerzona hemikolektomia prawa (pień MC).',
-              'Zagięcie śledzionowe: resekcja segmentarna (LC, LBMC) lub rozszerzone hemikolektomie. Zstępnica: hemikolektomia lewa (LC, gałęzie esicze). Esica: resekcja esicy (SRA, LC).',
-              'Odbytnica: górna część — przednia resekcja z częściowym wycięciem mezorektum (PME); środkowa i dolna — TME; guz przy zwieraczach — amputacja brzuszno-kroczowa.',
+            notes: ['Zakres resekcji odpowiada drenażowi chłonnemu: usuwa się odcinek jelita z krezką do odejścia naczynia zaopatrującego, z marginesem 5–7 cm od guza (ASCRS 2022).',
+              'Kątnica i wstępnica: hemikolektomia prawa (IC, RC — jeśli obecna, RBMC). Zagięcie wątrobowe i poprzecznica: zakres ustalany indywidualnie — najczęściej poszerzona hemikolektomia prawa (pień MC), w środkowej części także resekcja poprzecznicy.',
+              'Zagięcie śledzionowe: resekcja segmentarna (LC, LBMC) lub poszerzone hemikolektomie. Zstępnica: hemikolektomia lewa (LC, gałęzie esicze). Esica: resekcja esicy (SRA, LC).',
+              'Odbytnica: górna część — przednia resekcja z częściowym wycięciem mezorektum (PME); środkowa i dolna — TME; guz naciekający zwieracze lub gdy nie da się ich zachować — amputacja brzuszno-kroczowa.',
               'Schemat edukacyjny: granice między odcinkami są umowne, a zakres ustala się indywidualnie (m.in. naczynia zaopatrujące guz, stan chorego, wyniki obrazowania).'],
             text: COL_TEXT, frames: { resect: ['', '', ''], remove: ['', '', ''], post: '', endoPost: '' },
             objects: [tiObj({}), appObj({}), colObj('colon', 0, 1, { name: 'Jelito grube' })], marks: [] });

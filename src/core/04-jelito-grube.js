@@ -57,7 +57,7 @@
     return {
       cat: 'colon', id: iso ? 'rh-iso' : 'rh-anti', short: iso ? 'Hemikolektomia prawa (izo)' : 'Hemikolektomia prawa (FEEA)',
       title: 'Prawostronna hemikolektomia: zespolenie krętniczo-poprzeczne ' + (iso ? 'izoperystaltyczne' : 'antyperystaltyczne (FEEA)'),
-      sub: iso ? 'Bok-do-boku, stapler liniowy; typowe przy zespoleniu wewnątrzotrzewnowym' : 'FEEA (functional end-to-end), stapler liniowy + zamknięcie poprzeczne; typowe przy zespoleniu zewnątrzotrzewnowym',
+      sub: iso ? 'Bok-do-boku, stapler liniowy; typowe przy zespoleniu wewnątrzustrojowym (wewnątrzbrzusznym)' : 'FEEA (functional end-to-end), stapler liniowy + zamknięcie poprzeczne; typowe przy zespoleniu zewnątrzustrojowym (zewnątrzbrzusznym)',
       notes: iso ? [
         'Usunięte: końcowy odcinek jelita krętego, kątnica z wyrostkiem, okrężnica wstępująca, zagięcie wątrobowe i część poprzecznicy.',
         'Jelito kręte ułożone wzdłuż poprzecznicy zgodnie z kierunkiem perystaltyki; kikuty po przeciwnych stronach zespolenia.',
@@ -200,10 +200,12 @@
   /* ---------- Wybór zakresu resekcji: całe jelito grube z krezką i naczyniami; reguła „położenie guza → operacja”
      Źródła: ASCRS Clinical Practice Guidelines for the Management of Colon Cancer (Dis Colon Rectum 2022) — zakres resekcji zgodny
      z drenażem chłonnym, krezka do odejścia naczynia zaopatrującego; kątnica/wstępnica: IC i RBMC u odejścia (1B); zagięcie wątrobowe
-     i poprzecznica: decyzja indywidualna, zwykle poszerzona hemikolektomia prawa z MC; zagięcie śledzionowe: resekcja segmentarna (LC
+     i poprzecznica: decyzja indywidualna (najczęściej poszerzona hemikolektomia prawa z MC, w środkowej części także resekcja poprzecznicy); zagięcie śledzionowe: resekcja segmentarna (LC
      i LBMC) równoważna rozszerzonym; zstępnica: hemikolektomia lewa (LC, gałęzie esicze); esica: SRA i LC u odejścia. Odbytnica:
      górna tercja — przednia resekcja z częściowym wycięciem mezorektum (PME, ≥ 5 cm poniżej guza), środkowa i dolna — TME,
-     guz przy zwieraczach — amputacja brzuszno-kroczowa. Schemat: granice umowne, decyzja zawsze indywidualna. ---------- */
+     guz naciekający zwieracze lub gdy nie da się ich zachować — amputacja brzuszno-kroczowa. IMA podwiązana u odejścia lub poniżej odejścia LC
+     (bez różnicy w przeżyciu). Marginesy 5–7 cm od guza: przy guzie blisko granicy odcinka zakres poszerzany.
+     Schemat: granice umowne, decyzja zawsze indywidualna. ---------- */
   function colonSheet(t0, t1, rootPts, n) {
     var root = curveOf(rootPts), rows = [];
     for (var i = 0; i <= n; i++) {
@@ -242,9 +244,9 @@
   function via3(a, b, lift) { var m = new THREE.Vector3().fromArray(a).lerp(new THREE.Vector3().fromArray(b), 0.5); m.z += lift || 0; return m.toArray(); }
   // reguła: t — położenie guza na okrężnicy (0 kątnica … 1 odbyt); obj — odcinek z guzem ('colon', 'ti', 'app')
   var RS_T = { tr: ct([-2.0, 4.2, 2.6]), trx: ct([3.2, 4.4, 2.4]) };
-  function resectionFor(t, obj) {
-    if (obj === 'ti' || obj === 'app' || t < 0.20) return { id: 'rh', name: 'Hemikolektomia prawa', where: obj === 'app' ? 'Wyrostek robaczkowy / kątnica' : t < 0.035 || obj === 'ti' ? 'Kątnica' : 'Okrężnica wstępująca',
-      desc: 'Usuwa się końcowy odcinek jelita krętego, kątnicę, okrężnicę wstępującą i prawą część poprzecznicy z krezką; IC i RC podwiązane u odejścia z SMA, RBMC przy pniu MC.', range: [0, RS_T.tr], ti: true, ties: ['ic', 'rc', 'rbmc'], removed: ['ic', 'rc', 'rbmc'] };
+  function resectionRule(t, obj) {
+    if (obj === 'ti' || obj === 'app' || t < 0.20) return { id: 'rh', name: 'Hemikolektomia prawa', where: obj === 'app' ? 'Wyrostek robaczkowy / kątnica' : obj === 'ti' ? 'Końcowy odcinek jelita krętego' : t < 0.035 ? 'Kątnica' : 'Okrężnica wstępująca',
+      desc: 'Usuwa się końcowy odcinek jelita krętego, kątnicę, okrężnicę wstępującą i prawą część poprzecznicy z krezką; IC i RC (jeśli obecna; często odchodzi od IC lub MC) podwiązane u odejścia, RBMC przy pniu MC.', range: [0, RS_T.tr], ti: true, ties: ['ic', 'rc', 'rbmc'], removed: ['ic', 'rc', 'rbmc'] };
     if (t < 0.40) return { id: 'rhx', name: 'Poszerzona hemikolektomia prawa', where: t < 0.26 ? 'Zagięcie wątrobowe' : t < 0.33 ? 'Prawa część poprzecznicy' : 'Środkowa część poprzecznicy',
       desc: 'Zakres hemikolektomii prawej poszerzony o większą część poprzecznicy; pień MC podwiązany u odejścia z SMA (w środkowej części poprzecznicy alternatywnie resekcja poprzecznicy).', range: [0, t < 0.33 ? RS_T.trx : 0.435], ti: true, ties: ['ic', 'rc', 'mc'], removed: ['ic', 'rc', 'mc', 'rbmc', 'lbmc'] };
     if (t < 0.52) return { id: 'sf', name: 'Resekcja segmentarna zagięcia śledzionowego', where: t < 0.45 ? 'Lewa część poprzecznicy' : 'Zagięcie śledzionowe',
@@ -255,11 +257,18 @@
       desc: 'Usuwa się esicę z krezką; naczynia podwiązane u odejścia: SRA i LC (odpowiada podwiązaniu IMA), gałęzie esicze z preparatem; zespolenie zstępniczo-odbytnicze.', range: [0.70, 0.905], ties: ['sra', 'lc'], removed: ['sb', 'sb2', 'lc', 'lca'] };
     var third = (t - 0.865) / (0.985 - 0.865);
     if (third < 1 / 3) return { id: 'pme', name: 'Przednia resekcja odbytnicy z częściowym wycięciem mezorektum (PME)', where: 'Górna część odbytnicy',
-      desc: 'Usuwa się esicę i górną część odbytnicy z mezorektum do co najmniej 5 cm poniżej guza; IMA podwiązana u odejścia (lub poniżej odejścia LC).', range: [0.70, Math.min(0.985, t + 0.045)], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+      desc: 'Usuwa się esicę i górną część odbytnicy z mezorektum do co najmniej 5 cm poniżej guza; IMA podwiązana u odejścia lub poniżej odejścia LC (z usunięciem węzłów u korzenia IMA).', range: [0.70, Math.min(0.985, t + 0.045)], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
     if (t < 0.975) return { id: 'tme', name: 'Niska przednia resekcja odbytnicy z całkowitym wycięciem mezorektum (TME)', where: third < 2 / 3 ? 'Środkowa część odbytnicy' : 'Dolna część odbytnicy',
-      desc: 'Usuwa się esicę i odbytnicę z całym mezorektum; IMA podwiązana u odejścia; zespolenie nisko w miednicy, zwykle z ileostomią protekcyjną.', range: [0.70, 0.985], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+      desc: 'Usuwa się esicę i odbytnicę z całym mezorektum; IMA podwiązana u odejścia lub poniżej odejścia LC (z usunięciem węzłów u korzenia IMA); zespolenie nisko w miednicy, zwykle z ileostomią protekcyjną.', range: [0.70, 0.985], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
     return { id: 'apr', name: 'Amputacja brzuszno-kroczowa odbytnicy (APR)', where: 'Dolna część odbytnicy przy zwieraczach',
-      desc: 'Gdy nie da się zachować zwieraczy: usuwa się odbytnicę z mezorektum i kanałem odbytu; IMA podwiązana u odejścia; stała kolostomia.', range: [0.70, 1], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+      desc: 'Gdy nie da się zachować zwieraczy: usuwa się odbytnicę z mezorektum i kanałem odbytu; IMA podwiązana u odejścia lub poniżej odejścia LC (z usunięciem węzłów u korzenia IMA); stała kolostomia.', range: [0.70, 1], ties: ['ima'], removed: ['ima', 'sb', 'sb2', 'sra'], meso: true };
+  }
+  // marginesy 5–7 cm od guza (ASCRS 2022; 0,045 t ≈ 5 cm): przy guzie blisko granicy odcinka okrężnicy zakres poszerzany
+  var MARGIN = 0.055;
+  function resectionFor(t, obj) {
+    var r = resectionRule(t, obj);
+    if (obj === 'colon' && /^(rh|rhx|sf|lh|sig)$/.test(r.id)) r.range = [Math.max(0, Math.min(r.range[0], t - MARGIN)), Math.min(1, Math.max(r.range[1], t + MARGIN))];
+    return r;
   }
 
   var tA = ct([7.4, -6.0, -0.3]), tPJ = ct([7.9, -2.0, -0.6]);
@@ -364,7 +373,7 @@
         ringPts.push(hit.ax.clone().addScaledVector(hit.dir, hit.r * 1.03).toArray()); ringEndo.push(hit.ax.clone().addScaledVector(hit.dir, hit.r * 0.975).toArray());
       }
     }
-    var marks = lines.concat([{ kind: 'loop', name: kind === 'side' ? 'Zespolenie EEA na przedniej ścianie odbytnicy' : 'Zespolenie okrężne staplerem (EEA)', color: STAPLE, opacity: RING_OP, endo: true, dash: 0.14, pts: ringPts, endoPts: ringEndo }]);
+    var marks = lines.concat([{ kind: 'loop', name: kind === 'side' ? 'Zespolenie staplerem okrężnym na przedniej ścianie odbytnicy' : 'Zespolenie okrężne staplerem (EEA)', color: STAPLE, opacity: RING_OP, endo: true, dash: 0.14, pts: ringPts, endoPts: ringEndo }]);
     var off = kind === 'side' ? (o.sideX || SIDE_X) : 1.2;
     var eeaPath = [stapTop.toArray()].concat(sub(C_COL, COL_R, o.tD + off / D.len * (1 - o.tD), 1, 14).path).concat([[0, -20.8, 1.4], [0, -22.6, 2.6]]);
     var eea = { face: stapTop.toArray(), dir: (cfg ? T0.clone().negate() : dIn.clone().negate()).toArray(), anvil: Ea, path: eeaPath.slice(1) };
@@ -396,11 +405,11 @@
     };
   }
   var AR_TXT = {
-    center: ['Linia zszywek kikuta przez środek pierścienia', 'Kolec staplera przebija środek linii zszywek kikuta; linia przecina pierścień, po obu stronach zostają „uszy”.',
-      'Pierścień zszywek przecięty linią zamknięcia kikuta; po obu stronach dwa „uszy”.'],
-    racket: ['Pierścień obejmuje jeden koniec linii zszywek', 'Kolec przebija kikut przy końcu linii zszywek; pierścień obejmuje ten koniec, linia wychodzi z pierścienia tylko z jednej strony — kształt rakiety tenisowej.',
+    center: ['Linia zszywek kikuta przez środek pierścienia', 'Kolec staplera przebija środek linii zszywek kikuta; środek linii wycina się z pierścieniem tkanki, a linia dochodzi do pierścienia z obu stron — zostają dwa „uszy”.',
+      'Pierścień zszywek, do którego z obu stron dochodzi linia zamknięcia kikuta; dwa „uszy”.'],
+    racket: ['Pierścień obejmuje jeden koniec linii zszywek', 'Kolec przebija kikut przy końcu linii zszywek; pierścień obejmuje ten koniec, linia wychodzi z pierścienia tylko z jednej strony — kształt rakiety tenisowej (trzpień w rogu linii zszywek).',
       'Pierścień z jedną „rączką” linii zszywek; jedno „ucho”.'],
-    side: ['Koniec okrężnicy do przedniej ściany odbytnicy', 'Kolec przebija przednią ścianę kikuta poniżej linii zszywek; zespolenie koniec (okrężnicy) do boku (odbytnicy), powyżej ślepy szczyt kikuta.',
+    side: ['Koniec okrężnicy do przedniej ściany odbytnicy', 'Kolec przebija przednią ścianę kikuta poniżej linii zszywek; zespolenie koniec (okrężnicy) do boku (odbytnicy), tzw. odwrócone zespolenie Bakera — bez krzyżowania linii zszywek; powyżej ślepy szczyt kikuta.',
       'Zespolenie na przedniej ścianie odbytnicy, nad nim ślepo zakończony szczyt kikuta z linią zszywek.']
   };
   function arVariant(kind) {
@@ -408,7 +417,7 @@
     return colonEEA({
       id: 'ar-' + kind, short: 'Resekcja odbytnicy', title: 'Resekcja odbytnicy — ' + T[0].charAt(0).toLowerCase() + T[0].slice(1),
       sub: 'Przednia resekcja odbytnicy (wysoka lub niska — zależnie od poziomu zespolenia); EEA (end-to-end anastomosis) — stapler okrężny, technika podwójnego staplowania',
-      notes: ['Usunięta esica z górną i środkową częścią odbytnicy oraz mezorektum (TME, całkowite wycięcie mezorektum); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.',
+      notes: ['Usunięta esica z górną i środkową częścią odbytnicy oraz mezorektum (w resekcji niskiej całkowite wycięcie mezorektum — TME; w wysokiej częściowe — PME, co najmniej 5 cm poniżej guza); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.',
         'Resekcja wysoka i niska różnią się poziomem przecięcia odbytnicy (odległością zespolenia od odbytu); geometria zespolenia jest taka sama.',
         'Kikut odbytnicy zamknięty poprzecznie staplerem liniowym; stapler okrężny przez odbyt, kowadełko w końcu okrężnicy.', T[1]],
       frames: {
@@ -453,7 +462,7 @@
       proxObj: function (J) { return colObj('prox', 0, tt, { name: 'Okrężnica', post: { path: J.proxPath, r: J.proxR }, morph: [2, 2.7] }); },
       specs: [colSpec('specS', tt, tSg2, 'Lewa połowa okrężnicy (preparat)', [[1.15, [0, 0, 0]], [1.9, [7, 1, 5]]])],
       stumpName: 'Esica i odbytnica', stumpPost: 'Kikut esicy',
-      routeNotes: ['Odbytnica i esica — pierścień zszywek przecięty linią kikuta', 'Za zespoleniem — poprzecznica'], routeTo: 0.9, endoTitle: 'Kolonoskopia po operacji'
+      routeNotes: ['Odbytnica i esica — pierścień zszywek z linią kikuta po obu stronach', 'Za zespoleniem — poprzecznica'], routeTo: 0.9, endoTitle: 'Kolonoskopia po operacji'
     });
   })();
 
@@ -486,7 +495,7 @@
       notes: ['Usunięte: lewa część poprzecznicy, zagięcie śledzionowe, okrężnica zstępująca i początkowa część esicy.',
         iso ? 'Poprzecznica sprowadzona wzdłuż lewej ściany brzucha i ułożona wzdłuż esicy zgodnie z kierunkiem perystaltyki; kikuty po przeciwnych stronach zespolenia.'
           : 'Końce poprzecznicy i esicy ułożone obok siebie w tę samą stronę; wspólny otwór zamknięty poprzeczną linią zszywek.',
-        iso ? 'W kolonoskopii z esicy bokiem do poprzecznicy, bez zawracania aparatu; za zespoleniem ślepy kikut poprzecznicy.'
+        iso ? 'W kolonoskopii z esicy bokiem do poprzecznicy, bez zawracania aparatu; za zespoleniem ślepy kikut esicy.'
           : 'W kolonoskopii wejście do poprzecznicy wymaga zawrócenia o 180° we wspólnym świetle.'],
       focus: { t: [2.4, -6.5, 2.4], k: 0.6 }, text: COL_TEXT,
       frames: {
@@ -536,7 +545,7 @@
       specs: [colSpec('specC', 0, tSig, 'Okrężnica (preparat)', [[1.15, [0, 0, 0]], [1.9, [0, 3, 7]]]),
         { id: 'tiCut', name: 'Jelito kręte (usuwane)', pre: sub(C_TI, flat(0.9), tI2, 1, 8), colors: [[0, COLC.ti], [0.7, COL.spec]], opacity: SPEC_OP, offset: [[1.15, [0, 0, 0]], [1.9, [0, 3, 7]]], mucosa: 'circular', tint: MUC.bowel },
         appObj({ colors: [[0, COLC.app], [0.7, COL.spec]], opacity: SPEC_OP, offset: [[1.15, [0, 0, 0]], [1.9, [0, 3, 7]]] })],
-      routeNotes: ['Odbytnica — pierścień zszywek przecięty linią kikuta', 'Za zespoleniem — jelito kręte'], routeTo: 0.8
+      routeNotes: ['Odbytnica — pierścień zszywek z linią kikuta po obu stronach', 'Za zespoleniem — jelito kręte'], routeTo: 0.8
     });
   })();
 
@@ -561,13 +570,13 @@
       notes: ['Usunięta cała okrężnica i odbytnica; zachowany kanał odbytu ze zwieraczami (przy staplowaniu krótki mankiet strefy przejściowej).',
         'Zbiornik J: dwa ramiona końcowego odcinka jelita krętego (po ok. 15–20 cm) zespolone bok-do-boku staplerem liniowym; szczyt J to ślepy koniec jelita.',
         'Najczęściej z ochronną ileostomią pętlową. Wskazania: wrzodziejące zapalenie jelita grubego, rodzinna polipowatość gruczolakowata.',
-        'W endoskopii zbiornika (pouchoskopii): zespolenie, wspólne światło zbiornika, wlot pętli doprowadzającej i ślepy szczyt J; ocena zapalenia zbiornika i mankietu.'],
+        'W endoskopii zbiornika (pouchoskopii): zespolenie, wspólne światło zbiornika, wlot pętli doprowadzającej i ślepy szczyt J; ocena zapalenia zbiornika, mankietu i jelita krętego nad zbiornikiem.'],
       focus: { t: [0.5, -14, 0.5], k: 0.55 }, text: COL_TEXT,
       frames: {
         resect: ['Zakres resekcji', 'Cała okrężnica i odbytnica; jelito kręte przecięte przy zastawce, odbytnica tuż nad kanałem odbytu.', 'Zakres resekcji'],
-        remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; kanał odbytu zamknięty poprzecznie staplerem liniowym.', 'Usunięcie'],
-        recon: ['Zbiornik J i zespolenie', 'Końcowy odcinek jelita krętego złożony w J; ramiona zespolone staplerem liniowym we wspólny zbiornik, szczyt zbiornika zespolony staplerem okrężnym z kanałem odbytu.', 'Zbiornik J'],
-        post: 'Zbiornik J w miednicy nad kanałem odbytu: wlot jelita krętego z boku, u góry ślepy szczyt J.',
+        remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; odbytnica zamknięta poprzecznie staplerem liniowym na wysokości połączenia odbytniczo-odbytowego (mankiet ok. 1–2 cm nad linią zębatą).', 'Usunięcie'],
+        recon: ['Zbiornik J i zespolenie', 'Końcowy odcinek jelita krętego złożony w J; ramiona zespolone staplerem liniowym we wspólny zbiornik, dno zbiornika (zagięcie pętli) zespolone staplerem okrężnym z kanałem odbytu.', 'Zbiornik J'],
+        post: 'Zbiornik J w miednicy nad kanałem odbytu: u góry, obok siebie, wlot pętli doprowadzającej i ślepy szczyt J (w pouchoskopii obraz „oczu sowy”).',
         endoPost: 'Od odbytu przez zespolenie do zbiornika; wybór: wlot pętli doprowadzającej albo ślepy szczyt J.'
       },
       endoTitles: ['Kolonoskopia: anatomia prawidłowa', 'Endoskopia zbiornika (pouchoskopia)'],
@@ -588,7 +597,7 @@
       ].concat(J.marks),
       pouchGia: { at: qa(0, 2.6), j: up.clone().negate().toArray(), s: s.toArray() },
       endTarget: { pre: ICV }, endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
-      routePost: { prefix: [{ obj: 'rect', from: 1, to: J.stumpTo, note: 'Kanał odbytu — pierścień zszywek przecięty linią zamknięcia' }], branches: [
+      routePost: { prefix: [{ obj: 'rect', from: 1, to: J.stumpTo, note: 'Kanał odbytu — pierścień zszywek z linią zamknięcia po obu stronach' }], branches: [
         { label: 'Pętla doprowadzająca', sub: 'wlot jelita krętego do zbiornika', steps: [{ obj: 'aff', from: 1, to: 0.62, note: 'Zbiornik, dalej wlot pętli doprowadzającej' }] },
         { label: 'Szczyt J', sub: 'ślepy koniec zbiornika', steps: [{ obj: 'jl', from: 0.02, to: 0.93, note: 'Ślepy szczyt J — miejsce możliwej nieszczelności' }], target: JL[JL.length - 1], endText: 'Ślepy szczyt J z linią zszywek' }
       ] }
@@ -682,7 +691,7 @@
       sub: loop ? 'Pętla jelita krętego nieprzecięta: wyprowadzona przez powłoki, otwarta od strony przeciwkrezkowej i wszyta jako jedna stomia'
         : 'Jelito kręte przecięte; oba końce wyprowadzone osobno, obok siebie, z mostkiem skóry między nimi',
       notes: (loop ? [
-        'Najczęściej ochronna, np. przy niskim zespoleniu odbytnicy lub zbiorniku J; zamykana po wygojeniu zespolenia.',
+        'Najczęściej ochronna, np. przy niskim zespoleniu odbytnicy lub zbiorniku J; zamykana po wygojeniu zespolenia. Schemat pokazuje stomię przy zachowanej okrężnicy; przy zbiorniku J ramię odprowadzające prowadzi do zbiornika.',
         'Jelito nie jest przecięte: tylna (krezkowa) ściana pętli zostaje ciągła i tworzy ostrogę między dwoma światłami jednej stomii.',
         'Ramię wydzielnicze (proksymalne) wywinięte, odprowadzające (dystalne) płaskie.'
       ] : [
@@ -693,7 +702,7 @@
       focus: { t: [-3.5, -4.5, 3], k: 0.6 }, text: COL_TEXT,
       frames: loop ? {
         resect: ['Wybór pętli', 'Pętla końcowego odcinka jelita krętego, ok. 20–30 cm od zastawki; otwór w powłokach w prawym dole biodrowym.', 'Wybór pętli'],
-        remove: ['Wyprowadzenie pętli', 'Nieprzecięta pętla przeciągnięta przez powłoki; ramię wydzielnicze w ' + posG + ' części otworu, często podparta pręcikiem.', 'Wyprowadzenie'],
+        remove: ['Wyprowadzenie pętli', 'Nieprzecięta pętla przeciągnięta przez powłoki; ramię wydzielnicze w ' + posG + ' części otworu, czasem (np. u otyłych) podparta pręcikiem — rutynowo niekonieczne.', 'Wyprowadzenie'],
         recon: ['Otwarcie i wszycie', 'Pętla otwarta poprzecznie od strony przeciwkrezkowej; ramię wydzielnicze wywinięte, oba światła wszyte w skórę jako jedna stomia.', 'Wszycie'],
         post: 'Jedna stomia, dwa światła rozdzielone ostrogą: wydzielnicze (' + pos + ', wywinięte) i odprowadzające (płaskie).',
         endoPost: 'Wybierz światło: wydzielnicze (jelito kręte w górę strumienia) albo odprowadzające (do zastawki i jelita grubego).'

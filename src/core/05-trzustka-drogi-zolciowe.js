@@ -73,13 +73,13 @@
       ctOverride: pppd ? { stom: 'contrast', cuff: 'contrast' } : {},
       notes: (pppd ? [
         'Zachowany cały żołądek z odźwiernikiem i 2–3 cm opuszki; zespolenie dwunastniczo-jelitowe (DJ) zamiast żołądkowo-jelitowego.',
-        'Opóźnione opróżnianie żołądka opisywano częściej niż po klasycznym Whipple’u; nowsze metaanalizy nie potwierdzają istotnej różnicy.'
+        'Opóźnione opróżnianie żołądka (DGE): w metaanalizie Cochrane (2016, dowody niskiej jakości) częstsze niż po klasycznym Whipple’u; w badaniu randomizowanym PPPD vs resekcja samego odźwiernika (PROPP, 2018) bez istotnej różnicy.'
       ] : [
         'Usunięte en bloc: głowa trzustki, dwunastnica, dystalna część żołądka, dystalny odcinek przewodu żółciowego wspólnego z pęcherzykiem i początek jelita czczego.'
       ]).concat([
         pg ? 'Kikut trzustki wszyty w tylną ścianę żołądka (PG, zespolenie trzustkowo-żołądkowe); w endoskopii widoczny od strony światła żołądka.'
           : 'Zespolenie trzustkowo-jelitowe (PJ) przy ślepym końcu pętli, wyżej zespolenie żółciowo-jelitowe (HJ).',
-        'Rekonstrukcja na jednej pętli (sposobem Childa). Do HJ endoskopem prostym lub enteroskopem przez pętlę doprowadzającą.'
+        (pg ? 'Rekonstrukcja na jednej pętli: HJ, dalej ' + (pppd ? 'DJ' : 'GJ') + '.' : 'Rekonstrukcja na jednej pętli (sposobem Childa).') + ' Do HJ endoskopem prostym lub enteroskopem przez pętlę doprowadzającą.'
       ]),
       text: { normal: ['Anatomia prawidłowa', 'Żołądek, dwunastnica z brodawką, głowa trzustki, drogi żółciowe z pęcherzykiem i początek jelita czczego.'] },
       frames: {
@@ -87,7 +87,7 @@
           : 'Głowa trzustki z dwunastnicą, dystalna część żołądka, dystalny odcinek przewodu żółciowego wspólnego z pęcherzykiem i początek jelita czczego.', 'Zakres resekcji'],
         remove: ['Usunięcie preparatu', pppd ? 'Preparat usunięty en bloc; pozostaje cały żołądek z odźwiernikiem, trzon i ogon trzustki, przewód wątrobowy wspólny.'
           : 'Preparat usunięty en bloc; pozostaje kikut żołądka, trzon i ogon trzustki, przewód wątrobowy wspólny.', 'Usunięcie'],
-        recon: ['Rekonstrukcja: ' + trio, (pg ? 'Kikut trzustki wszyty w tylną ścianę żołądka; pętla jelita czczego do przewodu wątrobowego (HJ), dalej ' : 'Pętla jelita czczego zaokrężniczo (przez krezkę poprzecznicy): zespolenie trzustkowo-jelitowe, wyżej żółciowo-jelitowe, dalej ')
+        recon: ['Rekonstrukcja: ' + trio, (pg ? 'Kikut trzustki wszyty w tylną ścianę żołądka; pętla jelita czczego do przewodu wątrobowego (HJ), dalej ' : 'Pętla jelita czczego zaokrężniczo (przez krezkę poprzecznicy): zespolenie trzustkowo-jelitowe, wyżej żółciowo-jelitowe, dalej (przed- lub zaokrężniczo) ')
           + (pppd ? 'dwunastniczo-jelitowe.' : 'żołądkowo-jelitowe.'), 'Rekonstrukcja'],
         post: 'Żółta pętla doprowadzająca (żółć' + (pg ? '' : ' i sok trzustkowy') + '), niebieska pętla odprowadzająca.',
         endoPost: (pppd ? 'Przez odźwiernik i mankiet dwunastnicy do DJ' : 'Z kikuta żołądka przez GJ') + ': wybór pętli doprowadzającej (do HJ) albo odprowadzającej.'
@@ -108,19 +108,19 @@
     var sp = jejSplit([BP, ROUX_HJ, CC]);
     return {
       cat: 'hpb', id: 'hj', short: 'Hepatikojejunostomia',
-      title: 'Hepatikojejunostomia na pętli Roux', sub: 'Resekcja zewnątrzwątrobowych dróg żółciowych z cholecystektomią; HJ (hepaticojejunostomy)',
+      title: 'Hepatikojejunostomia na pętli Roux', sub: 'Tu: resekcja zewnątrzwątrobowych dróg żółciowych z cholecystektomią (np. torbiel przewodu żółciowego wspólnego); HJ (hepaticojejunostomy)',
       ctOverride: { stom: 'contrast', duo: 'contrast' },
       notes: [
-        'Np. po uszkodzeniu dróg żółciowych, przy torbieli przewodu żółciowego wspólnego lub łagodnym zwężeniu.',
+        'Np. po uszkodzeniu dróg żółciowych, przy torbieli przewodu żółciowego wspólnego lub łagodnym zwężeniu. Po uszkodzeniu lub w zwężeniu zwykle bez resekcji przewodu: HJ powyżej zwężenia, często na wysokości konfluencji (Hepp–Couinaud); pęcherzyk zwykle już usunięty.',
         'Pętla Roux (typowo 40–60 cm) do przewodu wątrobowego wspólnego; zespolenie jelitowo-jelitowe (JJ) niżej.',
-        'Brodawka Vatera pozostaje, ale dystalny kikut przewodu jest zamknięty. Do HJ endoskopowo tylko enteroskopem przez pętlę Roux, wstecznie od JJ.'
+        'Brodawka Vatera pozostaje, ale dystalny kikut przewodu jest zamknięty. Do HJ endoskopowo przez pętlę Roux, wstecznie od JJ — zwykle enteroskopem wspomaganym, przy krótszej pętli także kolonoskopem pediatrycznym; alternatywnie dostęp EUS lub przezskórny.'
       ],
       text: { normal: ['Anatomia prawidłowa', 'Żołądek, dwunastnica z brodawką, drogi żółciowe z pęcherzykiem, trzustka i jelito czcze.'] },
       frames: {
-        resect: ['Zakres resekcji', 'Zewnątrzwątrobowe drogi żółciowe od przewodu wątrobowego wspólnego do górnego brzegu trzustki, z pęcherzykiem żółciowym; jelito czcze przecięte na pętlę Roux.', 'Zakres resekcji'],
+        resect: ['Zakres resekcji', 'Zewnątrzwątrobowe drogi żółciowe od przewodu wątrobowego wspólnego do górnego brzegu trzustki, z pęcherzykiem żółciowym (przy torbieli wycięcie sięga też części wewnątrztrzustkowej przewodu); jelito czcze przecięte na pętlę Roux.', 'Zakres resekcji'],
         remove: ['Usunięcie preparatu', 'Drogi żółciowe usunięte; dystalny kikut przewodu zamknięty.', 'Usunięcie'],
         recon: ['Rekonstrukcja Roux-en-Y', 'Pętla Roux do przewodu wątrobowego wspólnego (HJ, koniec-do-boku); niżej zespolenie jelitowo-jelitowe (JJ).', 'Rekonstrukcja'],
-        post: 'Zielona pętla Roux prowadzi żółć z HJ, żółta pętla biliopankreatyczna — sok trzustkowy i treść z dwunastnicy, niebieski kanał wspólny.',
+        post: 'Zielona pętla Roux prowadzi żółć z HJ, żółta pętla doprowadzająca (dwunastniczo-czcza) — pokarm i sok trzustkowy, niebieski kanał wspólny.',
         endoPost: 'Przez żołądek i dwunastnicę do zespolenia JJ: wybór pętli Roux (wstecznie do HJ) albo kanału wspólnego.'
       },
       objects: [
@@ -133,8 +133,8 @@
         { id: 'cbdLow', name: 'Kikut przewodu żółciowego', pre: sub(C_CBD, CBD_R, tLow, 1, 12), post: { path: sub(C_CBD, CBD_R, tLow, 1, 12).path, r: profile([[0, 0.05], [0.12, 0.4], [1, 0.4]]) }, morph: [2.0, 2.3],
           color: COL_H.bile, mucosa: 'smooth', tint: '#d8c07a' },
         specOf(gbObj()),
-        { id: 'bp', name: 'Jelito czcze', postName: 'Pętla biliopankreatyczna', pre: sp.parts[0], post: { path: BP, r: flat(1.0) }, morph: [2.35, 3],
-          colors: [[2.35, COL.bowel], [2.95, COL.bp]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Pętla biliopankreatyczna', 0.45, POST)] },
+        { id: 'bp', name: 'Jelito czcze', postName: 'Pętla doprowadzająca (dwunastniczo-czcza)', pre: sp.parts[0], post: { path: BP, r: flat(1.0) }, morph: [2.35, 3],
+          colors: [[2.35, COL.bowel], [2.95, COL.bp]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Pętla doprowadzająca (dwunastniczo-czcza)', 0.45, POST)] },
         { id: 'roux', name: 'Jelito czcze', postName: 'Pętla Roux', lenPost: 'typowo 40–60 cm', pre: sp.parts[1], post: { path: ROUX_HJ, r: BLIND }, morph: [2.35, 3],
           colors: [[2.35, COL.bowel], [2.95, COL.roux]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Jelito czcze', 0.5, PRE), L('Pętla Roux', 0.5, POST, 'typowo 40–60 cm')] },
         { id: 'cc', name: 'Jelito czcze', postName: 'Kanał wspólny', pre: sp.parts[2], post: { path: CC, r: flat(1.0) }, morph: [2.35, 3],
@@ -148,7 +148,7 @@
         ringAt(CC, flat(1.0), [3.6, -9.9, 1.2], { name: 'Zespolenie jelitowo-jelitowe (JJ)', color: COL.anast, opacity: ANAST_OP })
       ],
       papilla: { obj: 'duo', near: PAP.near, dir: PAP.dir },
-      routePost: { prefix: [{ obj: 'eso' }, { obj: 'stom', from: GEJ_IN, note: 'Żołądek' }, { obj: 'duo', note: 'Dwunastnica — brodawka pozostaje, przewód za nią zamknięty' },
+      routePost: { prefix: [{ obj: 'eso' }, { obj: 'stom', from: GEJ_IN, note: 'Żołądek' }, { obj: 'duo', note: 'Dwunastnica — brodawka pozostaje, kikut przewodu nad nią zamknięty' },
         { obj: 'bp', note: 'Jelito czcze do zespolenia jelitowo-jelitowego' }], branches: [
         { label: 'Pętla Roux', sub: 'wstecznie do HJ', steps: [{ obj: 'roux', from: 1, to: [-2.95, 5.0, -0.6], note: 'Pętla Roux wstecznie — do zespolenia żółciowo-jelitowego' }], target: CHD_END, endText: 'Zespolenie żółciowo-jelitowe (HJ) w polu widzenia' },
         { label: 'Kanał wspólny', sub: 'dalej w dół', steps: [{ obj: 'cc', note: 'Kanał wspólny' }] }
@@ -196,14 +196,14 @@
   function pancOn(t, dy, dz) { var p = C_PANC.getPointAt(t); return [p.x, p.y + dy, p.z + dz]; }
   function drainAnat(frey) {
     var tail = [0.94, 0.8, 0.65, 0.5, 0.38].map(function (t) { return pancOn(t, 0, 1.3); });
-    var ROUXP = frey ? tail.concat([pancOn(0.26, -0.3, 1.35), pancOn(0.14, -0.3, 1.45), pancOn(0.05, -0.4, 1.55), [-1.6, -5.6, 1.9], [0.0, -6.9, 2.9], [0.8, -8.2, 2.6], [2.6, -9.4, 1.9], [3.4, -9.9, 1.4]])
-      : tail.concat([pancOn(0.3, -0.5, 1.5), [0.2, -4.4, 1.9], [0.6, -6.2, 3.0], [0.8, -8.2, 2.6], [2.6, -9.4, 1.9], [3.4, -9.9, 1.4]]);
+    // w obu operacjach przewód otwarty aż do głowy (Partington–Rochelle: bez wydrążenia), więc pętla Roux sięga głowy
+    var ROUXP = tail.concat([pancOn(0.26, -0.3, 1.35), pancOn(0.14, -0.3, 1.45), pancOn(0.05, -0.4, 1.55), [-1.6, -5.6, 1.9], [0.0, -6.9, 2.9], [0.8, -8.2, 2.6], [2.6, -9.4, 1.9], [3.4, -9.9, 1.4]]);
     var sp = jejSplit([BP, ROUXP, CC]);
-    var tEnd = nearestT(curveOf(ROUXP), frey ? pancOn(0.05, -0.4, 1.55) : pancOn(0.3, -0.5, 1.5));
+    var tEnd = nearestT(curveOf(ROUXP), pancOn(0.05, -0.4, 1.55));
     var ROUXP_R = function (t) { var r = t < tEnd ? 0.8 : t < tEnd + 0.08 ? 0.8 + 0.2 * sm01((t - tEnd) / 0.08) : 1.0; return t < 0.03 ? Math.max(0.06, r * sm01(t / 0.03)) : r; };
     // żołądek uniesiony (dostęp przez torbę sieciową), połączenia z przełykiem i odźwiernikiem bez zmian
     var STOM_UP = STOMACH.map(function (p, i) { var k = [0, 0.3, 0.8, 1, 1, 0.7, 0.2, 0][i] || 0; return [p[0], p[1] + 0.9 * k, p[2] + 0.5 * k]; });
-    var duct = []; for (var t = frey ? 0.04 : 0.34; t <= 0.945; t += 0.05) duct.push(pancOn(t, -0.1, frey && t < 0.3 ? 1.2 : 0.95));
+    var duct = []; for (var t = frey ? 0.04 : 0.08; t <= 0.945; t += 0.05) duct.push(pancOn(t, -0.1, frey && t < 0.3 ? 1.2 : 0.95));
     var marks = [
       { kind: 'line', name: 'Otwarcie przewodu trzustkowego' + (frey ? ' (z wydrążeniem głowy)' : ''), noStapler: true, color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [2.3, 1], [2.6, 0]], pts: duct },
       ringOn(C.JEJ, flat(1.0), sp.cuts[0], { name: 'Przecięcie jelita czczego', color: COL.cut, opacity: CUT_OP_JEJ }),
@@ -217,15 +217,15 @@
       title: frey ? 'Operacja Freya: wydrążenie głowy trzustki i podłużne zespolenie trzustkowo-jelitowe' : 'Operacja Puestowa (modyfikacja Partingtona–Rochelle’a): podłużne zespolenie trzustkowo-jelitowe',
       sub: 'Przewlekłe zapalenie trzustki z poszerzonym przewodem trzustkowym; zespolenie bok-do-boku z pętlą Roux',
       notes: [frey ? 'Frey: miejscowe wydrążenie głowy trzustki (usunięcie zwapnień i tkanki zapalnej) i otwarcie przewodu na całej długości; jedno zespolenie z pętlą Roux obejmujące głowę, trzon i ogon.'
-          : 'Puestow w modyfikacji Partingtona–Rochelle’a: przewód trzustkowy otwarty podłużnie od szyi do ogona (≥ 6–8 cm) i zespolony bok-do-boku z pętlą Roux; bez resekcji miąższu.',
+          : 'Puestow w modyfikacji Partingtona–Rochelle’a: przewód trzustkowy otwarty podłużnie od ogona przez trzon do głowy (do ok. 1 cm od dwunastnicy) i zespolony bok-do-boku z pętlą Roux; bez wydrążenia głowy i bez resekcji miąższu.',
         frey ? 'Leczy też ból z głowy trzustki (zwykle „rozrusznik” zapalenia), przy mniejszym zakresie niż resekcja głowy.' : 'Warunek: poszerzony przewód trzustkowy (zwykle ≥ 7 mm); nie usuwa zmian w głowie trzustki.',
         'Przewód pokarmowy do brodawki bez zmian; pętla Roux dostępna endoskopowo tylko wstecznie od zespolenia jelitowo-jelitowego (JJ).'],
       text: { normal: ['Przewlekłe zapalenie trzustki', 'Trzustka z poszerzonym przewodem trzustkowym (schemat); żołądek, dwunastnica, drogi żółciowe i jelito czcze.'] },
       frames: {
-        resect: [frey ? 'Wydrążenie głowy i otwarcie przewodu' : 'Otwarcie przewodu', frey ? 'Przewód trzustkowy otwarty podłużnie od głowy do ogona, głowa trzustki miejscowo wydrążona; jelito czcze przecięte na pętlę Roux.' : 'Przewód trzustkowy otwarty podłużnie od szyi do ogona; jelito czcze przecięte na pętlę Roux.', 'Otwarcie'],
+        resect: [frey ? 'Wydrążenie głowy i otwarcie przewodu' : 'Otwarcie przewodu', frey ? 'Przewód trzustkowy otwarty podłużnie od głowy do ogona, głowa trzustki miejscowo wydrążona; jelito czcze przecięte na pętlę Roux.' : 'Przewód trzustkowy otwarty podłużnie od ogona do głowy; jelito czcze przecięte na pętlę Roux.', 'Otwarcie'],
         remove: ['Ułożenie pętli Roux', 'Pętla Roux przeprowadzona zaokrężniczo i ułożona wzdłuż otwartego przewodu.', 'Ułożenie'],
         recon: ['Zespolenie bok-do-boku', 'Pętla otwarta na tej samej długości i zespolona z brzegami otwartej trzustki; niżej zespolenie jelitowo-jelitowe.', 'Zespolenie'],
-        post: 'Zielona pętla Roux wzdłuż trzustki (ślepy koniec przy ogonie), żółta pętla biliopankreatyczna, niebieski kanał wspólny.',
+        post: 'Zielona pętla Roux wzdłuż trzustki (ślepy koniec przy ogonie), żółta pętla doprowadzająca (dwunastniczo-czcza), niebieski kanał wspólny.',
         endoPost: 'Przez żołądek i dwunastnicę do zespolenia JJ: wybór pętli Roux (wstecznie wzdłuż trzustki) albo kanału wspólnego.'
       },
       objects: [eso(),
@@ -234,8 +234,8 @@
         pancAllObj(),
         { id: 'chd', name: 'Drogi żółciowe', pre: { path: CBD, r: CBD_R }, color: COL_H.bile, mucosa: 'smooth', tint: '#d8c07a', labels: [L('Przewód żółciowy wspólny', 0.45, ALL)] },
         { id: 'gb', name: 'Pęcherzyk żółciowy', pre: { path: GB, r: GB_R }, color: COL_H.gb, mucosa: 'smooth', tint: '#9fae6a' },
-        { id: 'bp', name: 'Jelito czcze', postName: 'Pętla biliopankreatyczna', pre: sp.parts[0], post: { path: BP, r: flat(1.0) }, morph: [2.0, 3],
-          colors: [[2.35, COL.bowel], [2.95, COL.bp]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Pętla biliopankreatyczna', 0.45, POST)] },
+        { id: 'bp', name: 'Jelito czcze', postName: 'Pętla doprowadzająca (dwunastniczo-czcza)', pre: sp.parts[0], post: { path: BP, r: flat(1.0) }, morph: [2.0, 3],
+          colors: [[2.35, COL.bowel], [2.95, COL.bp]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Pętla doprowadzająca (dwunastniczo-czcza)', 0.45, POST)] },
         { id: 'roux', name: 'Jelito czcze', postName: 'Pętla Roux', lenPost: 'typowo 40–60 cm', pre: sp.parts[1], post: { path: ROUXP, r: ROUXP_R }, morph: [2.0, 3],
           colors: [[2.35, COL.bowel], [2.95, COL.roux]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Jelito czcze', 0.5, PRE), L('Pętla Roux', 0.3, POST, 'wzdłuż otwartego przewodu')] },
         { id: 'cc', name: 'Jelito czcze', postName: 'Kanał wspólny', pre: sp.parts[2], post: { path: CC, r: flat(1.0) }, morph: [2.0, 3],
@@ -261,7 +261,7 @@
       sub: 'Zespolenie przewodu żółciowego wspólnego z opuszką dwunastnicy powyżej jej górnego brzegu; zwykle z cholecystektomią',
       notes: ['Wskazania: poszerzony przewód żółciowy wspólny (zwykle ≥ 1,5 cm) z nawracającą kamicą przewodową lub łagodnym zwężeniem dystalnym, zwłaszcza u starszych chorych.',
         'Zespolenie szerokie (≥ 1,5–2 cm), jednowarstwowe; brodawka Vatera pozostaje.',
-        'Zespół ślepego worka (sump syndrome): odcinek przewodu między zespoleniem a brodawką gromadzi złogi i resztki pokarmu — zapalenie dróg żółciowych, zapalenie trzustki.',
+        'Zespół ślepego worka (sump syndrome): odcinek przewodu między zespoleniem a brodawką gromadzi złogi i resztki pokarmu — zapalenie dróg żółciowych, zapalenie trzustki. Leczenie z wyboru: ECPW ze sfinkterotomią i oczyszczeniem odcinka dystalnego.',
         'Endoskopowo: przez zespolenie w opuszce do dróg żółciowych (cholangioskopia, usuwanie złogów) albo standardowo do brodawki.'],
       text: { normal: ['Anatomia wyjściowa', 'Poszerzony przewód żółciowy wspólny za opuszką dwunastnicy; pęcherzyk żółciowy, trzustka, żołądek.'] },
       frames: {

@@ -236,7 +236,7 @@
   var TG = {
     cat: 'upper', id: 'tg', short: 'Gastrektomia + Roux-en-Y',
     title: 'Gastrektomia całkowita z rekonstrukcją Roux-en-Y',
-    sub: 'Zespolenie przełykowo-jelitowe (EJ, esophagojejunostomy) na pętli Roux',
+    sub: 'Zespolenie przełykowo-jelitowe (EJ) na pętli Roux',
     notes: [
       'Brak żołądka. Zespolenie przełykowo-jelitowe koniec-do-boku, obok ślepy koniec pętli („candy cane”).',
       'Pętla Roux typowo ≥40 cm, żeby ograniczyć refluks żółciowy do przełyku.',
@@ -342,7 +342,7 @@
     frames: {
       resect: ['Linie przecięcia', 'Długi, wąski zbiornik wzdłuż krzywizny mniejszej, od okolicy wcięcia kątowego do kąta Hisa. Jelito nie jest przecinane: wybrana pętla 150–200 cm od więzadła Treitza.', 'Linie przecięcia'],
       remove: ['Wyłączenie żołądka', 'Pozostała część żołądka wyłączona; zostaje w jamie brzusznej.', 'Wyłączenie'],
-      recon: ['Pętla omega', 'Pętla jelita czczego podciągnięta do zbiornika: jedno zespolenie żołądkowo-jelitowe. Ramię doprowadzające niesie żółć i sok trzustkowy, odprowadzające — treść pokarmową.', 'Rekonstrukcja'],
+      recon: ['Pętla omega', 'Pętla jelita czczego podciągnięta do zbiornika: jedno zespolenie żołądkowo-jelitowe. Ramię doprowadzające (biliopankreatyczne) doprowadza żółć i sok trzustkowy; ramię odprowadzające to już kanał wspólny — pokarm razem z żółcią i sokiem trzustkowym.', 'Rekonstrukcja'],
       post: 'Żółta pętla doprowadzająca (biliopankreatyczna), niebieska pętla odprowadzająca (kanał wspólny).',
       endoPost: 'Za zespoleniem wybór wylotu doprowadzającego; długa pętla wstecznie do więzadła Treitza i dwunastnicy. Brodawka od strony dystalnej.'
     },
@@ -388,8 +388,8 @@
     ],
     frames: {
       resect: ['Zakres resekcji', 'Resekcja wzdłuż krzywizny większej, od 2–6 cm przed odźwiernikiem do kąta Hisa, na sondzie kalibracyjnej przy krzywiźnie mniejszej.', 'Zakres resekcji'],
-      remove: ['Usunięcie preparatu', 'Usunięta większość żołądka z dnem; zostaje wąski rękaw z linią zszywek, odźwiernik i antrum zachowane.', 'Usunięcie'],
-      post: 'Rękaw wzdłuż krzywizny mniejszej; odźwiernik, antrum i jelito bez zmian.',
+      remove: ['Usunięcie preparatu', 'Usunięta większość żołądka z dnem; zostaje wąski rękaw z linią zszywek; zachowany odźwiernik i przedodźwiernikowa część antrum (2–6 cm), antrum zwężone.', 'Usunięcie'],
+      post: 'Rękaw wzdłuż krzywizny mniejszej; odźwiernik zachowany, antrum zwężone, jelito bez zmian.',
       endoPost: 'Anatomia ciągła. Uwaga na wcięcie kątowe (zwężenie, skręcenie). Brodawka w typowej orientacji.'
     },
     objects: [

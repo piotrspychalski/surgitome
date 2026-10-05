@@ -61,7 +61,7 @@
     var mats = [mBody, mDark, mFace];
     var anvilStart = face.clone().addScaledVector(dir, 1.5), anvilDock = face.clone().addScaledVector(dir, 0.28);
     var down = new V3().fromArray(d.path[d.path.length - 1]).sub(face).normalize();
-    var el = mkLabel('Stapler okrężny (EEA)', '', '#aeb6be', 'seg'), el2 = mkLabel('Kowadełko', '', '#4a525a', 'seg');
+    var el = mkLabel('Stapler okrężny (typu EEA)', '', '#aeb6be', 'seg'), el2 = mkLabel('Kowadełko', '', '#4a525a', 'seg');
     return { d: d, grp: grp, overlay: true, mats: mats, el: el, el2: el2,
       update: function (m) {
         var tau = (m - d.w[0]) / (d.w[1] - d.w[0]), on = tau > 0 && tau < 1;
@@ -142,7 +142,7 @@
         this.anchor = needle.position.clone().add(new V3(0.6, 0.6, 0.4));
       } };
   }
-  var VLOC = 'Szew ciągły nicią z haczykami (typu V-Loc)';
+  var VLOC = 'Szew ciągły nicią z zadziorami (typu V-Loc)';
   function buildTools(an) {
     var list = [];
     (an.cutTools || []).concat(an.anastTools || []).forEach(function (d) {

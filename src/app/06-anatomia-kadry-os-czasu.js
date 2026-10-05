@@ -96,7 +96,7 @@
       { k: 'resect', vi: v, kind: 'orbit', m0: 0, m1: 1, dur: 3.2, cam: cut, short: fx.resect[2], title: fx.resect[0], cap: fx.resect[1] }
     ];
     if (an.commonCuts) F.push({ k: 'cut', vi: v, kind: 'orbit', m0: 1, m1: 2, dur: 1 + 2.6 * an.commonCuts, cam: cut, short: 'Stapler', title: 'Przecięcie staplerem liniowym',
-      cap: 'Stapler liniowy (typu Endo GIA) zaciska tkankę, zszywa ją podwójnymi rzędami zszywek i przecina nożem między nimi.' });
+      cap: 'Stapler liniowy (typu Endo GIA) zaciska tkankę, zakłada po obu stronach linii cięcia rzędy zszywek (Endo GIA: po 3) i przecina tkankę nożem między nimi.' });
     F.push({ k: 'remove', vi: v, kind: 'orbit', m0: 2, m1: 3, dur: 3.6, cam: cut, short: fx.remove[2], title: fx.remove[0], cap: fx.remove[1] });
     if (an.mEnd > 3) {
       var nT = (an.anastTools || []).length, caps = [[3, fx.recon[1]]];

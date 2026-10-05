@@ -228,7 +228,7 @@
     'Żyły wątrobowe biegną między segmentami: pośrodkowa w płaszczyźnie Cantliego (od dołu pęcherzyka do IVC) dzieli wątrobę na prawą (V–VIII) i lewą (II–IV), prawa oddziela sektor przedni (V, VIII) od tylnego (VI, VII), lewa — segment II od III.',
     'Szczelina pępkowa (więzadło obłe) oddziela segment IV od sekcji bocznej lewej (II, III). Płaszczyzna wrotna dzieli segmenty na górne (VII, VIII, IVa) i dolne (VI, V, IVb).',
     'Segment I (płat ogoniasty) leży między IVC a wnęką; ma szypuły z obu gałęzi żyły wrotnej i drenaż żylny bezpośrednio do IVC.',
-    'We wnęce: przewód żółciowy wspólny z przodu i po prawej, tętnica wątrobowa właściwa z przodu i po lewej, żyła wrotna z tyłu. Przewody wątrobowe łączą się najwyżej, żyła wrotna dzieli się niżej, tętnica — najniżej.',
+    'W więzadle wątrobowo-dwunastniczym: przewód żółciowy wspólny z przodu i po prawej, tętnica wątrobowa właściwa z przodu i po lewej, żyła wrotna z tyłu. We wnęce przewody wątrobowe łączą się najwyżej, żyła wrotna dzieli się niżej, tętnica — najniżej.',
     'Nazewnictwo wg Brisbane 2000 (IHPBA; Strasberg, J Hepatobiliary Pancreat Surg 2005). Schemat: kształt i granice segmentów uproszczone; w rzeczywistości płaszczyzny są pofałdowane, a odmiany naczyń częste.'];
   var LIVER_AN = { cat: 'liver', id: 'liver', short: 'Anatomia wątroby', title: 'Anatomia wątroby i segmenty Couinauda',
     sub: 'Wnęka wątroby (PV, HA, drogi żółciowe), żyły wątrobowe i IVC; segmenty I–VIII z rozsuwaniem',

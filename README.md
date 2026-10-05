@@ -46,10 +46,10 @@ Other features: rotatable 3D models, labels, Polish/English interface, favourite
 
 A separate, hidden view shows the randomised trials of the **ECOPOP** project side by side: two treatment arms in a **split screen**, on a shared timeline (same frames, same animation speed) and with linked cameras (the link can be switched off, so each half can be rotated on its own). It is not listed in the main navigation: search for a trial by name (e.g. *ETHOS*, *SCAR*, *EFTR*, *ECOPOP*) and star it to keep it in Favourites.
 
-- **ETHOS** — *Endoscopic THerapy Or Surgery for early colon cancer* (NCT06940947): **A** endoscopic full-thickness resection (EFTR: FTRD cap, OTSC clip, snare resection; organ, mesentery and lymph nodes preserved) vs **B** segmental colectomy with lymphadenectomy (shown as right hemicolectomy: vessels ligated at the root, mesentery with lymph nodes removed with the specimen).
-- **SCAR** — *Surgery versus Endoscopic Resection for incompletely removed early colon CAnceR* (NCT06057350): **A** eFTR of the post-polypectomy scar vs **B** segmental colectomy.
+- **ETHOS** — *Endoscopic THerapy Or Surgery for early colon cancer* (NCT06940947): **A** endoscopic full-thickness resection (eFTR: FTRD cap, OTSC clip, snare resection; organ, mesentery and lymph nodes preserved) vs **B** segmental colectomy with lymphadenectomy (shown as right hemicolectomy: vessels ligated at their origin, mesentery with lymph nodes removed with the specimen).
+- **SCAR** — *Surgery versus Endoscopic Resection for incompletely removed early colon CAnceR* (NCT06057350): **A** eFTR of the scar after endoscopic resection vs **B** segmental colectomy.
 
-Frames: starting point (both halves identical: lesion or scar, ink tattoos) → intervention → state after treatment. The description panel lists population, arms, endpoints, follow-up, the author's role and funding — information at the level of trial registries only; details follow the current protocol version.
+Frames: starting point (both halves identical: lesion or scar, ink tattoos) → intervention → state after treatment. The description panel lists population, arms, endpoints, follow-up, the author's role and funding — information from trial registries and project materials; details follow the current protocol version.
 
 ## Important disclaimer
 
@@ -70,7 +70,7 @@ SURGITOME is a **schematic educational tool**. Limb lengths are shortened and pr
 ### Research projects
 
 - **CORAL trial — *COlon resections: Assessing Robotic And Laparoscopic approach in textbook outcomes*.** Principal Investigator. Funded by the Polish Medical Research Agency (Agencja Badań Medycznych, ABM; call ABM/2025/2), approx. PLN 12 million (≈ EUR 2.8 million). The trial compares robotic and laparoscopic colon resection, with textbook outcome as the measure of surgical quality.
-- **ECOPOP — *Early COlorectal cancer: Patient-targeted and Organ Preserving treatment*.** Horizon Europe (HORIZON-HLTH-2024-DISEASE; grant no. 101156165), coordinated by the University of Oslo (project leader Prof. Michael Bretthauer); five-year project started in 2025. ECOPOP runs three international randomised trials — **ETHOS, SCAR and T-REX** — comparing organ-preserving local endoscopic removal of early colorectal cancer with standard surgery, together with satellite studies on biomarkers, carbon footprint (environmental impact) and computer-aided diagnosis. Piotr Spychalski is a lead co-author of the application, co-applicant and site investigator in Gdańsk; **co-PI of ETHOS** and **main investigator of T-REX**; the Medical University of Gdańsk is a site of SCAR. Project website: ecopop.gumed.edu.pl
+- **ECOPOP — *Early COlorectal cancer: Patient-targeted and Organ Preserving treatment*.** Horizon Europe (HORIZON-HLTH-2024-DISEASE; grant no. 101156165), coordinated by the University of Oslo (project leader Prof. Michael Bretthauer); five-year project started in 2025. ECOPOP runs three international randomised trials — **ETHOS, SCAR and T-REX** — comparing organ-preserving strategies for early colorectal cancer (endoscopic resection, active surveillance) with standard treatment (surgery, chemoradiotherapy), together with satellite studies on biomarkers, carbon footprint (environmental impact) and computer-aided diagnosis. Piotr Spychalski is a lead co-author of the application, co-applicant and site investigator in Gdańsk; **co-PI of ETHOS** and **main investigator of T-REX**; the Medical University of Gdańsk is a site of SCAR. Project website: ecopop.gumed.edu.pl
 - Other: randomised health-services study of preventive subcutaneous negative-pressure wound therapy vs primary closure after emergency laparotomy (NCT05684198, PI); STOP-HOS-1 randomised trial of intensified omeprazole to prevent high-output ileostomy (protocol published 2026).
 
 ### Selected publications
@@ -129,10 +129,10 @@ SURGITOME to interaktywny, schematyczny atlas 3D **anatomii przewodu pokarmowego
 
 Osobny, ukryty widok pokazuje badania randomizowane projektu **ECOPOP**: dwa ramiona obok siebie (**split screen**), na wspólnej osi czasu (te same kadry, to samo tempo animacji) i ze zsynchronizowaną kamerą (synchronizację można wyłączyć). Widoku nie ma w głównej nawigacji: badanie wyszukuje się po nazwie (np. *ETHOS*, *SCAR*, *EFTR*, *ECOPOP*), a gwiazdka dodaje je do Ulubionych.
 
-- **ETHOS** (NCT06940947): **A** pełnościenna resekcja endoskopowa (EFTR: nasadka FTRD, klips OTSC, odcięcie pętlą; narząd, krezka i węzły chłonne zachowane) vs **B** resekcja segmentarna z limfadenektomią (tu: hemikolektomia prawa — podwiązanie naczyń u nasady, krezka z węzłami usuwana z preparatem).
-- **SCAR** (NCT06057350): **A** eFTR blizny po polipektomii vs **B** resekcja segmentarna.
+- **ETHOS** (NCT06940947): **A** pełnościenna resekcja endoskopowa (eFTR: nasadka FTRD, klips OTSC, odcięcie pętlą; narząd, krezka i węzły chłonne zachowane) vs **B** resekcja segmentarna z limfadenektomią (tu: hemikolektomia prawa — podwiązanie naczyń u odejścia, krezka z węzłami usuwana z preparatem).
+- **SCAR** (NCT06057350): **A** eFTR blizny po resekcji endoskopowej vs **B** resekcja segmentarna.
 
-Kadry: punkt wyjścia (obie połowy identyczne: zmiana lub blizna, tatuaże) → interwencja → stan po leczeniu. Panel „Opis” zawiera populację, ramiona, punkty końcowe, obserwację, rolę autora i finansowanie — wyłącznie informacje na poziomie rejestrów badań; szczegóły wg aktualnej wersji protokołu.
+Kadry: punkt wyjścia (obie połowy identyczne: zmiana lub blizna, tatuaże) → interwencja → stan po leczeniu. Panel „Opis” zawiera populację, ramiona, punkty końcowe, obserwację, rolę autora i finansowanie — informacje z rejestrów badań i materiałów projektu; szczegóły wg aktualnej wersji protokołu.
 
 ## Zastrzeżenie
 
@@ -143,7 +143,7 @@ Narzędzie **schematyczne i edukacyjne**: długości pętli skrócone, proporcje
 **Dr n. med. Piotr Spychalski** — specjalista chirurgii ogólnej w oddziale chirurgii kolorektalnej Kliniki Chirurgii Onkologicznej, Transplantacyjnej i Ogólnej UCK w Gdańsku, adiunkt Gdańskiego Uniwersytetu Medycznego i koordynator naukowy Laboratorium Badań Medycyny Narządowej; doktorat z wyróżnieniem (*Epidemiologia raka jelita grubego i jego zmian prekursorowych*). Szkolenia: Harvard Medical School (Clinical Scholars Research Training), Uniwersytet w Mediolanie (visiting professor), Uniwersytet w Oslo, Uniwersytet w Aarhus, European Institute of Oncology w Mediolanie; certyfikowany chirurg konsoli da Vinci; studia podyplomowe z proktologii praktycznej (UJ).
 
 - **CORAL** — randomizowane porównanie resekcji okrężnicy robotycznej i laparoskopowej z oceną jakości przez *textbook outcome*; kierownik badania (PI); finansowanie Agencji Badań Medycznych (ABM/2025/2), ok. 12 mln zł.
-- **ECOPOP** — Horizon Europe (grant nr 101156165, koordynator Uniwersytet w Oslo): trzy międzynarodowe badania randomizowane (ETHOS, SCAR, T-REX) porównujące miejscowe endoskopowe usunięcie wczesnego raka jelita grubego z leczeniem operacyjnym; współautor wniosku, współwnioskodawca i badacz ośrodka w Gdańsku; **współkierownik badania ETHOS (co-PI)** i **main investigator badania T-REX**; GUMed jest ośrodkiem badania SCAR.
+- **ECOPOP** — Horizon Europe (grant nr 101156165, koordynator Uniwersytet w Oslo): trzy międzynarodowe badania randomizowane (ETHOS, SCAR, T-REX) porównujące strategie oszczędzające narząd we wczesnym raku jelita grubego (resekcja endoskopowa, aktywna obserwacja) z leczeniem standardowym (operacja, chemioradioterapia); współautor wniosku, współwnioskodawca i badacz ośrodka w Gdańsku; **współkierownik badania ETHOS (co-PI)** i **główny badacz (main investigator) badania T-REX**; GUMed jest ośrodkiem badania SCAR.
 - Publikacje m.in. w *JAMA*, *The Lancet*, *Clinical Gastroenterology and Hepatology*; indeks h = 13 (Web of Science, maj 2026). Pełna lista: `docs/PUBLICATIONS.md`.
 - Prowadzi kursy symulacyjne z chirurgii kolorektalnej w Centrum Symulacji Medycznej GUMed i UCK (techniki laparoskopowe; zespolenia jelitowe ręczne i staplerowe).
 

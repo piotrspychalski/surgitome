@@ -30,7 +30,7 @@
     var D = kind === 'e2e' ? { path: dPath, r: flat(1.0) } : { path: dPath, r: STUMP_START(lenOf(dPath)) };
     var t = {
       e2e: { id: 'sb-e2e', title: 'Resekcja jelita cienkiego: zespolenie koniec-do-końca', sub: 'Szew ręczny ciągły na całym obwodzie',
-        notes: ['Oba końce zespolone bezpośrednio — ciągłość i kierunek perystaltyki zachowane.', 'Przy różnicy średnic końców pomaga nacięcie brzegu przeciwkrezkowego (Cheatle).', 'W endoskopii: okrężna linia szwu, bez ślepych kikutów.'],
+        notes: ['Oba końce zespolone bezpośrednio — ciągłość i kierunek perystaltyki zachowane.', 'Przy różnicy średnic końców pomaga nacięcie brzegu przeciwkrezkowego węższego końca (Cheatle).', 'W endoskopii: okrężna linia szwu, bez ślepych kikutów.'],
         recon: ['Zespolenie koniec-do-końca', 'Końce zbliżone do siebie bez napięcia; szew na całym obwodzie.'],
         post: 'Jedna linia szwu na obwodzie; brak ślepych końców.', endo: 'Przez linię szwu na wprost — światło ciągłe.' },
       iso: { id: 'sb-iso', title: 'Resekcja jelita cienkiego: zespolenie bok-do-boku izoperystaltyczne', sub: 'Stapler liniowy, ramiona ułożone zgodnie z kierunkiem perystaltyki',

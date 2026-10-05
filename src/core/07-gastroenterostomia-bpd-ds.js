@@ -52,20 +52,32 @@
       notes: ['Resekcja dystalna żołądka (zostaje ok. 200–500 ml) z zamknięciem kikuta dwunastnicy.',
         'Jelito kręte przecięte ok. 250 cm od zastawki: dalszy koniec (pętla alimentacyjna) do kikuta żołądka, bliższy (biliopankreatyczny) wszyty ok. 50 cm od zastawki — krótki kanał wspólny.',
         'Poprzednik przełączenia dwunastniczego (BPD-DS); bez odźwiernika częstsze owrzodzenia brzeżne i zespół poposiłkowy. Silne niedobory — obowiązkowa suplementacja.',
-        'Do brodawki: przez GJ, bardzo długą pętlę alimentacyjną, wstecznie pętlą biliopankreatyczną — w praktyce enteroskopia lub dostęp chirurgiczny.',
+        'Do brodawki: przez zespolenie żołądkowo-krętnicze, pętlą alimentacyjną (ok. 200 cm) do zespolenia krętniczo-krętniczego, dalej wstecznie bardzo długą pętlą biliopankreatyczną — w praktyce enteroskopia lub dostęp chirurgiczny.',
         'Długości pętli na schemacie skrócone.'],
       frames: Object.assign({}, DGRY.frames, {
         resect: ['Zakres resekcji', 'Dystalna część żołądka z odźwiernikiem; jelito kręte przecięte ok. 250 cm od zastawki.', 'Zakres resekcji'],
-        recon: ['Rekonstrukcja', 'Pętla alimentacyjna do kikuta żołądka (GJ); pętla biliopankreatyczna wszyta ok. 50 cm od zastawki — krótki kanał wspólny.', 'Rekonstrukcja'],
-        post: 'Zielona pętla alimentacyjna (ok. 200 cm), żółta biliopankreatyczna (długa), niebieski kanał wspólny (ok. 50 cm).'
+        recon: ['Rekonstrukcja', 'Pętla alimentacyjna (jelito kręte) do kikuta żołądka — zespolenie żołądkowo-krętnicze; pętla biliopankreatyczna wszyta ok. 50 cm od zastawki — krótki kanał wspólny.', 'Rekonstrukcja'],
+        post: 'Zielona pętla alimentacyjna (ok. 200 cm), żółta biliopankreatyczna (długa), niebieski kanał wspólny (ok. 50 cm).',
+        endoPost: 'Z kikuta przez zespolenie żołądkowo-krętnicze w pętlę alimentacyjną, przy zespoleniu krętniczo-krętniczym wstecznie pętlą biliopankreatyczną. Brodawka od strony dystalnej.'
       })
     });
     o.objects = DGRY.objects.map(function (x) {
-      if (x.id === 'roux') return Object.assign({}, x, { postName: 'Pętla alimentacyjna', lenPost: 'ok. 200 cm', labels: [L('Jelito cienkie', 0.5, PRE), L('Pętla alimentacyjna', 0.5, POST, 'ok. 200 cm')] });
+      if (x.id === 'roux') return Object.assign({}, x, { name: 'Jelito kręte', postName: 'Pętla alimentacyjna', lenPost: 'ok. 200 cm', labels: [L('Jelito cienkie', 0.5, PRE), L('Pętla alimentacyjna', 0.5, POST, 'ok. 200 cm')] });
       if (x.id === 'cc') return Object.assign({}, x, { name: 'Jelito kręte', labels: [L('Kanał wspólny', 0.5, POST, 'ok. 50 cm do zastawki')] });
       if (x.id === 'bp') return Object.assign({}, x, { name: 'Jelito cienkie', labels: [L('Pętla biliopankreatyczna', 0.45, POST, 'jelito czcze i większość krętego')] });
       return x;
     });
+    // znaczniki i trasa z DGRY opisują jelito czcze (GJ, JJ); w BPD przecina się jelito kręte
+    var REN = { 'Przecięcie jelita czczego': 'Przecięcie jelita krętego', 'Zespolenie żołądkowo-jelitowe (GJ)': 'Zespolenie żołądkowo-krętnicze', 'Zespolenie jelitowo-jelitowe (JJ)': 'Zespolenie krętniczo-krętnicze' };
+    o.marks = DGRY.marks.map(function (m) { return REN[m.name] ? Object.assign({}, m, { name: REN[m.name] }) : m; });
+    var RN = { 'Za GJ w dół pętlą Roux': 'Za zespoleniem żołądkowo-krętniczym w dół pętlą alimentacyjną', 'Przy zespoleniu JJ zawróć wstecznie w pętlę biliopankreatyczną': 'Przy zespoleniu krętniczo-krętniczym zawróć wstecznie w pętlę biliopankreatyczną' };
+    function renNotes(x) {   // routePost z DGRY jest już rozgałęziona (prefix / branches / steps)
+      if (Array.isArray(x)) return x.map(renNotes);
+      if (!x || typeof x !== 'object' || x.isVector3) return x;
+      var y = {}; for (var k in x) y[k] = k === 'note' && RN[x[k]] ? RN[x[k]] : k === 'prefix' || k === 'branches' || k === 'steps' ? renNotes(x[k]) : x[k];
+      return y;
+    }
+    o.routePost = renNotes(DGRY.routePost);
     return o;
   })();
 
@@ -116,11 +128,11 @@
       title: sadi ? 'Jednozespoleniowe pomostowanie dwunastniczo-krętnicze z rękawem (SADI-S)' : 'Wyłączenie żółciowo-trzustkowe z przełączeniem dwunastniczym (BPD-DS)',
       sub: sadi ? 'SADI-S (single anastomosis duodeno-ileal bypass with sleeve gastrectomy) — rękaw i pętla omega jelita krętego do opuszki'
         : 'BPD-DS (biliopancreatic diversion with duodenal switch) — rękaw, zespolenie dwunastniczo-krętnicze na pętli Roux i krętniczo-krętnicze',
-      notes: (sadi ? ['Rękaw żołądkowy z zachowanym odźwiernikiem; dwunastnica przecięta za opuszką.',
-        'Pętla jelita krętego ok. 250–300 cm od zastawki zespolona bok z opuszką (zespolenie dwunastniczo-krętnicze, DI) — jedno zespolenie.',
+      notes: (sadi ? ['Rękaw żołądkowy z zachowanym odźwiernikiem; dwunastnica przecięta w części pierwszej, ok. 3 cm za odźwiernikiem.',
+        'Pętla jelita krętego ok. 250–300 cm od zastawki zespolona bokiem z kikutem opuszki (koniec-do-boku; zespolenie dwunastniczo-krętnicze, DI) — jedno zespolenie.',
         'Do brodawki: przez DI wstecznie długą pętlą doprowadzającą do kikuta dwunastnicy — w praktyce enteroskopia lub dostęp chirurgiczny.']
-        : ['Rękaw żołądkowy z zachowanym odźwiernikiem; dwunastnica przecięta za opuszką.',
-        'Jelito kręte przecięte ok. 250 cm od zastawki: dalszy koniec (pętla alimentacyjna, ok. 150 cm) do opuszki (DI), bliższy koniec wszyty ok. 50–100 cm od zastawki.',
+        : ['Rękaw żołądkowy z zachowanym odźwiernikiem; dwunastnica przecięta w części pierwszej, ok. 3 cm za odźwiernikiem.',
+        'Jelito kręte przecięte ok. 250 cm od zastawki: dalszy koniec (pętla alimentacyjna, ok. 150 cm) do opuszki (DI), bliższy koniec wszyty typowo ok. 100 cm od zastawki (zakres 50–100 cm).',
         'Silne działanie malabsorpcyjne — kontrola niedoborów (białko, witaminy A, D, E, K, żelazo, wapń).']).concat(['Długości pętli różnią się między ośrodkami; na schemacie skrócone.']),
       frames: {
         resect: ['Linie przecięcia', sadi ? 'Rękaw wzdłuż krzywizny mniejszej, dwunastnica przecięta ok. 3 cm za odźwiernikiem; wybrana pętla jelita krętego.' : 'Rękaw wzdłuż krzywizny mniejszej, dwunastnica przecięta ok. 3 cm za odźwiernikiem, jelito kręte przecięte ok. 250 cm od zastawki.', 'Linie przecięcia'],

@@ -79,7 +79,7 @@
     an.id = o.id; an.short = o.short; an.title = o.title; an.sub = o.sub; an.notes = o.notes;
     an.focus = { t: [-3.2, -1.2, 1.4], k: 1.12 }; an.focusVar = { t: o.w.P.clone().addScaledVector(o.w.n, 1.2).toArray(), k: 0.66 };
     an.trialCaps = [[0, 'Zakres resekcji: prawa połowa okrężnicy razem ' + o.withWhat + ' i krezką z węzłami chłonnymi (limfadenektomia).'],
-      [1.2, 'Podwiązanie naczyń u nasady krezki; przecięcie jelita krętego i poprzecznicy staplerem liniowym.'],
+      [1.2, 'Podwiązanie naczyń u odejścia (centralne podwiązanie); przecięcie jelita krętego i poprzecznicy staplerem liniowym.'],
       [2, 'Preparat usunięty razem z krezką i węzłami chłonnymi.'],
       [3, 'Zespolenie krętniczo-poprzeczne bok-do-boku staplerem liniowym.'], [4.95, 'Ciągłość przewodu odtworzona; odcinek okrężnicy usunięty.']];
     return an;
@@ -90,7 +90,7 @@
   var W_L = wallAt(tL, PREF); W_L.t = tL;
   var TAT = { t: K.colT([-7.25, 1.6, 0]), pref: PREF };
 
-  var FUND = 'ECOPOP — Horizon Europe, grant nr 101156165';
+  var FUND = 'ECOPOP — Horizon Europe, umowa nr 101156165; sponsor wg rejestru: Norwegian Department of Health and Social Affairs';
   var NOTE = 'Schemat edukacyjny; szczegóły wg aktualnej wersji protokołu.';
   function trial(meta, arms) {
     arms[0].vshort = meta.arms[0]; arms[1].vshort = meta.arms[1];
@@ -101,18 +101,18 @@
     id: 'ethos', acronym: 'ETHOS', title: 'ETHOS — leczenie endoskopowe czy operacja we wczesnym raku okrężnicy',
     full: 'Endoscopic THerapy Or Surgery for early colon cancer', nct: 'NCT06940947',
     pi: 'Michael Bretthauer (Oslo)', role: 'współkierownik badania (co-PI), Gdańsk',
-    population: 'Wiek ≥ 40 lat; nowo rozpoznany rak okrężnicy (bez odbytnicy), makroskopowo podejrzenie naciekania podśluzówki, średnica ≤ 20 mm; w biopsji bez cech wysokiego ryzyka (G3, pączkowanie 2–3, naciek naczyń); w obrazowaniu cT1–2N0M0.',
+    population: 'Wiek ≥ 40 lat; nowo rozpoznany rak okrężnicy (bez odbytnicy), makroskopowo podejrzenie naciekania podśluzówki, średnica ≤ 20 mm; w biopsji bez cech wysokiego ryzyka (G3, pączkowanie guza Bd2–Bd3, naciek naczyń chłonnych lub krwionośnych — LVI); w obrazowaniu cT1–2N0M0.',
     randomisation: 'Randomizacja 1:1.',
-    arms: ['A: EFTR', 'B: Resekcja segmentarna'],
-    armsLong: ['A: pełnościenna resekcja endoskopowa (EFTR) — nasadka FTRD, klips OTSC, odcięcie pętlą; narząd zachowany.', 'B: standardowa resekcja segmentarna okrężnicy z limfadenektomią (otwarta, laparoskopowa lub robotowa); tu: hemikolektomia prawa przy zmianie w okrężnicy wstępującej.'],
-    primary: 'Nawrót raka lub przerzuty (węzłowe albo odległe) w ciągu 3 lat — nie gorsza skuteczność (non-inferiority).',
-    secondary: 'Poważne zdarzenia niepożądane i powikłania (Clavien-Dindo ≥ III) w ciągu 30 dni.',
-    followUp: 'Oba ramiona (ESMO, stopień I): wizyta i CEA co 6 mies. przez 3 lata, potem co 12 mies.; TK klatki piersiowej, brzucha i miednicy po 6 mies. i co rok do 5 lat; kolonoskopia po 1, 3 i 5 latach (w ramieniu A ocena blizny i klipsa).',
-    startCap: 'Rak okrężnicy wstępującej do 2 cm, uniesiony z zagłębieniem (Paris IIa+c), z podejrzeniem naciekania podśluzówki; dystalnie dwa tatuaże tuszem.',
+    arms: ['A: eFTR', 'B: Resekcja segmentarna'],
+    armsLong: ['A: pełnościenna resekcja endoskopowa (eFTR) — nasadka FTRD, klips OTSC, odcięcie pętlą; narząd zachowany.', 'B: standardowa resekcja segmentarna okrężnicy z limfadenektomią (otwarta, laparoskopowa lub robotowa); tu: hemikolektomia prawa przy zmianie w okrężnicy wstępującej.'],
+    primary: 'Współpierwszorzędowe: ciężkie zdarzenia niepożądane, ponowne hospitalizacje i zgony w ciągu 30 dni; nawrót raka, przerzuty (węzłowe lub odległe) lub zgon z powodu raka jelita grubego po 3 latach.',
+    secondary: '',
+    followUp: 'Oba ramiona wg ESMO 2020 (rak okrężnicy miejscowy): wywiad, badanie i CEA co 3–6 mies. przez 3 lata, potem co 6–12 mies. do 5 lat; kolonoskopia po roku, potem co 3–5 lat (w ramieniu A ocena blizny i klipsa); TK klatki piersiowej i brzucha co 6–12 mies. przez 3 lata — do rozważenia przy wyższym ryzyku nawrotu.',
+    startCap: 'Rak okrężnicy wstępującej do 2 cm, uniesiony z zagłębieniem (Paris 0-IIa+IIc), z podejrzeniem naciekania podśluzówki; dystalnie dwa tatuaże tuszem.',
     postCap: 'A: okrężnica z krezką i węzłami chłonnymi zachowana, w ścianie klips OTSC. B: odcinek okrężnicy usunięty razem z krezką i węzłami chłonnymi, zespolenie krętniczo-poprzeczne.',
     keys: 'ECOPOP EFTR FTRD OTSC T1'
   }, [
-    eftrArm({ id: 'ethos-a', short: 'ETHOS — ramię A', title: 'ETHOS, ramię A: pełnościenna resekcja endoskopowa (EFTR)', sub: 'Nasadka FTRD na kolonoskopie, klips OTSC, odcięcie pętlą; narząd zachowany',
+    eftrArm({ id: 'ethos-a', short: 'ETHOS — ramię A', title: 'ETHOS, ramię A: pełnościenna resekcja endoskopowa (eFTR)', sub: 'Nasadka FTRD na kolonoskopie, klips OTSC, odcięcie pętlą; narząd zachowany',
       notes: [], w: W_L, tat: TAT, target: function (w) { return [lesion(w, { labels: [K.L('Rak wczesny (T1)', 0.3, W.ALL)] })]; }, targetId: 'lesion', caps: EFTR_CAPS('zmiany') }),
     surgArm({ id: 'ethos-b', short: 'ETHOS — ramię B', title: 'ETHOS, ramię B: resekcja segmentarna okrężnicy z limfadenektomią', sub: 'Tu: hemikolektomia prawa (zmiana w okrężnicy wstępującej)',
       notes: [], w: W_L, tat: TAT, target: function (w, ex) { var o = lesion(w, ex); o.labels = [K.L('Rak wczesny (T1)', 0.3, [-9, 2.4])]; return o; }, withWhat: 'ze zmianą' })
@@ -121,22 +121,22 @@
   var SCAR_T = trial({
     id: 'scar', acronym: 'SCAR', title: 'SCAR — operacja czy resekcja endoskopowa po niedoszczętnym usunięciu wczesnego raka okrężnicy',
     full: 'Surgery versus Endoscopic Resection for incompletely removed early colon CAnceR', nct: 'NCT06057350',
-    pi: 'Nastazja Dagny Pilonis (Warszawa)', role: 'ośrodek GUMed w konsorcjum (main investigator: Jarosław Kobiela)',
-    population: 'Wiek ≥ 40 lat; rak okrężnicy pT1 usunięty endoskopowo niedoszczętnie (R1) lub z niepewnym marginesem (Rx), bez cech wysokiego ryzyka; blizna rozpoznawalna (tatuaż); w TK bez choroby poza T1N0M0.',
+    pi: 'Nastazja Dagny Pilonis (Warszawa)', role: 'ośrodek GUMed w konsorcjum (główny badacz ośrodka: Jarosław Kobiela)',
+    population: 'Wiek ≥ 40 lat; rak okrężnicy pT1 usunięty endoskopowo niedoszczętnie (R1) lub z niepewnym marginesem (Rx), bez cech wysokiego ryzyka; miejsce resekcji identyfikowalne (tatuaż lub blizna); w TK bez choroby poza T1N0M0.',
     randomisation: 'Randomizacja 1:1 (stratyfikacja: R1 vs Rx, ASA).',
     arms: ['A: eFTR blizny', 'B: Resekcja segmentarna'],
-    armsLong: ['A: pełnościenne wycięcie endoskopowe (eFTR) miejsca po polipektomii z klipsem.', 'B: resekcja segmentarna okrężnicy (jak w ETHOS); tu: hemikolektomia prawa.'],
-    primary: 'Współpierwszorzędowe: poważne zdarzenia niepożądane (Clavien-Dindo III–V) w ciągu 30 dni; nawrót lub przerzuty w ciągu 3 lat.',
-    secondary: '',
-    followUp: 'Wizyty kontrolne wg protokołu; punkty końcowe po 30 dniach i 3 latach.',
+    armsLong: ['A: pełnościenne wycięcie endoskopowe (eFTR) miejsca po resekcji endoskopowej z klipsem.', 'B: resekcja segmentarna okrężnicy (jak w ETHOS); tu: hemikolektomia prawa.'],
+    primary: 'Współpierwszorzędowe: ciężkie zdarzenia niepożądane (Clavien-Dindo III–V) w ciągu 30 dni; nawrót lub przerzuty w ciągu 3 lat.',
+    secondary: 'W rejestrze 11, m.in.: nawrót po 1 i 5 latach, przeżycie swoiste i całkowite po 1, 3 i 5 latach, ciężkie powikłania w ciągu roku, czas hospitalizacji, ponowne przyjęcia, sukces techniczny, ślad węglowy, jakość życia (EORTC QLQ-C30).',
+    followUp: 'Obserwacja 5 lat, wizyty kontrolne wg protokołu; pierwszorzędowe punkty końcowe po 30 dniach i 3 latach.',
     startCap: 'Blizna po niedoszczętnym endoskopowym usunięciu raka pT1 (R1 lub Rx), oznaczona tatuażem.',
-    postCap: 'A: miejsce po polipektomii wycięte na całą grubość, krezka i węzły chłonne zachowane, klips w ścianie. B: odcinek okrężnicy usunięty razem z krezką i węzłami chłonnymi.',
+    postCap: 'A: miejsce po resekcji endoskopowej wycięte na całą grubość, krezka i węzły chłonne zachowane, klips w ścianie. B: odcinek okrężnicy usunięty razem z krezką i węzłami chłonnymi.',
     keys: 'ECOPOP EFTR eFTR R1 Rx T1'
   }, [
     eftrArm({ id: 'scar-a', short: 'SCAR — ramię A', title: 'SCAR, ramię A: pełnościenne wycięcie blizny (eFTR)', sub: 'Nasadka FTRD, klips OTSC, odcięcie pętlą; narząd zachowany',
-      notes: [], w: W_L, tat: TAT, target: function (w) { return [scar(w, 'Blizna po polipektomii', { labels: [K.L('Blizna po polipektomii', 0.5, W.ALL)] })]; }, targetId: 'scar', caps: EFTR_CAPS('blizny') }),
+      notes: [], w: W_L, tat: TAT, target: function (w) { return [scar(w, 'Blizna po resekcji endoskopowej', { labels: [K.L('Blizna po resekcji endoskopowej', 0.5, W.ALL)] })]; }, targetId: 'scar', caps: EFTR_CAPS('blizny') }),
     surgArm({ id: 'scar-b', short: 'SCAR — ramię B', title: 'SCAR, ramię B: resekcja segmentarna okrężnicy', sub: 'Tu: hemikolektomia prawa',
-      notes: [], w: W_L, tat: TAT, target: function (w, ex) { var o = scar(w, 'Blizna po polipektomii', ex); o.labels = [K.L('Blizna po polipektomii', 0.5, [-9, 2.4])]; return o; }, withWhat: 'z blizną' })
+      notes: [], w: W_L, tat: TAT, target: function (w, ex) { var o = scar(w, 'Blizna po resekcji endoskopowej', ex); o.labels = [K.L('Blizna po resekcji endoskopowej', 0.5, [-9, 2.4])]; return o; }, withWhat: 'z blizną' })
   ]);
 
   var ALL_TRIALS = [ETHOS, SCAR_T];
