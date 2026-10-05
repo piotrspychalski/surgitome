@@ -57,7 +57,8 @@
   function updateDock() {
     var fr = FR[S.frame]; if (!fr) return;
     var isEndo = fr.kind === 'endo', anim = fr.kind === 'orbit' && fr.m1 > fr.m0;
-    $('ctxEndo').hidden = !isEndo; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim);
+    var lvSeg = !!(M && M.liver && !SPLIT.on && fr.k === 'segs'); // wątroba: suwak rozsunięcia i przyciski segmentów
+    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg);
     var t;
     if (isEndo) t = endo.playing ? 'Pauza' : (endo.route && endo.s >= endo.route.total - 0.01 ? 'Powtórz' : 'Dalej');
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');
@@ -66,6 +67,7 @@
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     $('togGuz').hidden = !an.tumour;
+    $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver'; });
     if (curProc().split) renderTrialPanel();
     else {
       $('pTitle').textContent = tr(an.title); $('pSub').textContent = tr(an.sub);
@@ -83,6 +85,7 @@
       b.onclick = function () { S.highlight = S.highlight === d.id ? null : d.id; applyM(); document.querySelectorAll('.leg').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.id === S.highlight); }); };
       li.appendChild(b); lg.appendChild(li);
     });
+    if (M.liver) lvLegend(lg);
   }
 
   $('btnNext').onclick = next; $('btnPrev').onclick = prev; $('btnPlay').onclick = togglePlay;

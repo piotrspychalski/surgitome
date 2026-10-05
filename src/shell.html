@@ -250,6 +250,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .mobile .ctxrow{ gap:6px; }
 .mobile #btnPlay{ padding:7px 12px; font-size:13px; }
 .mobile #ctxEndo{ min-width:0; }
+.mobile #lvSegs{ width:100%; } .mobile .btn.lvseg{ flex:1; min-width:0; padding:4px 2px; }
 .mobile #cap{ left:8px; right:8px; bottom:8px; max-width:none; padding:8px 12px; pointer-events:auto; cursor:pointer; }
 .mobile #capNum{ display:none; }
 .mobile #capTitle{ font-size:16px; margin:0; }
@@ -399,7 +400,13 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 .step[aria-current="step"]{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); font-weight:700; }
 .step[aria-current="step"] em{ background:var(--accent); color:var(--accent-ink); }
 .ctxrow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden]{ display:none; }
+.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden]{ display:none; }
+#ctxLiver{ display:flex; gap:8px; align-items:center; flex:1; flex-wrap:wrap; min-width:220px; }
+#lvExplode{ flex:1; min-width:120px; max-width:320px; }
+.lvlbl{ font-size:13px; opacity:.8; }
+#lvSegs{ display:flex; gap:4px; flex-wrap:wrap; }
+.btn.lvseg{ min-width:34px; padding:4px 7px; border-left:4px solid var(--sc); }
+.btn.lvseg[aria-pressed="true"]{ background:var(--sc); color:#1b1b1b; }
 #ctxEndo{ display:flex; gap:8px; align-items:center; flex:1; min-width:220px; }
 .btn:disabled{ opacity:.4; cursor:default; }
 @media (max-width: 860px){
@@ -480,6 +487,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <label class="tog"><input type="checkbox" id="optCaps" checked> <span>Podpisy kadrów</span></label>
       <label class="tog"><input type="checkbox" id="optDrift" checked> <span>Powolny ruch kamery</span></label>
       <label class="tog" id="togMeso" hidden><input type="checkbox" id="optMeso" checked> <span>Krezka, naczynia i węzły chłonne</span></label>
+      <label class="tog" id="togLvGlass" hidden><input type="checkbox" id="optLvGlass" checked> <span>Miąższ przezroczysty</span></label>
       <label class="tog" id="togGuz" hidden><input type="checkbox" id="optGuz" checked> <span>Guz (przesuń w kadrze „Prawidłowa”)</span></label>
       <p class="fine" id="finePrint"></p>
           <div class="pfoot"><span class="credit"><span><a href="https://piotrspychalski.github.io/" target="_blank" rel="noopener">Spychalski P MD PhD</a></span><span class="csep">|</span><span><a href="mailto:piotr.spychalski@gumed.edu.pl">piotr.spychalski@gumed.edu.pl</a></span></span></div>
@@ -501,6 +509,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <button class="btn" id="btnOther" hidden>Druga droga</button>
         <select id="speed" aria-label="Prędkość"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select>
       </div>
+      <div id="ctxLiver" hidden><label class="lvlbl" for="lvExplode" data-pl="Rozsunięcie">Rozsunięcie</label><input type="range" id="lvExplode" min="0" max="1000" value="0" aria-label="Rozsunięcie segmentów"><div id="lvSegs" role="group" aria-label="Segmenty"></div></div>
     </div>
   </footer>
 </div>

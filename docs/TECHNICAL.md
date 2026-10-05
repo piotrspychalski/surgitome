@@ -22,6 +22,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `07-gastroenterostomia-bpd-ds.js` — gastroenterostomia omijająca, BPD (Scopinaro), SADI-S, BPD-DS
 - `08-narzedzia-os-czasu-lista.js` — staplery i szwy na osi czasu, łuki ruchu (LIFT), przygotowanie danych, lista zabiegów; `ANAT._lib` — klocki dla modułu badań
 - `09-badania.js` — badania ECOPOP (`ANAT.TRIALS`): ETHOS, SCAR (flaga `published: false` ukrywa badanie; wtedy widoczne tylko przy `window.__SG_PREVIEW`); zmiana T1, tatuaże, blizna, klips OTSC, krezka z naczyniami i węzłami, narzędzie EFTR
+- `10-watroba.js` — wątroba (`ANAT.LIVER`, kategoria `liver`): bryła z funkcji odległości (elipsoidy, powierzchnia trzewna, rowek IVC, dół pęcherzyka), segmenty Couinauda z płaszczyzn (Cantlie/MHV, RHV, szczelina pępkowa, LHV, płaszczyzna wrotna, płat ogoniasty), siatki metodą surface nets (liczone raz, leniwie, ok. 0,4 s); drzewo żyły wrotnej z gałęziami segmentowymi, tętnice i przewody wewnątrzwątrobowe jako szypuły Glissona (kopia drzewa PV z przesunięciem), pnie we wnęce, żyły wątrobowe i IVC; przynależność punktów naczyń do segmentów (`seg`) steruje rozsuwaniem
 
 **src/app — aplikacja**
 - `01` słownik PL→EN i pomocnicze · `02` motyw i renderer · `03` TK · `04` tekstury, stan, obiekty
@@ -30,6 +31,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `12` badania: widok podzielony — dwa ramiona w jednej scenie, przy każdym przebiegu podmiana modelu `M`, kamery, obszaru widoku i warstwy etykiet (`withArm`); wspólny postęp kadru p ∈ [0, 1], ramię liczy m = p × mEnd; synchronizacja kamer; słownik `DICT_TRIALS`
 - `12-guz` przesuwalny guz (hemikolektomie prawe, testowo): przeciąganie w kadrze „Prawidłowa”, położenie w localStorage (`surgitome-guz-pos`) we współrzędnych anatomii prawidłowej, przypinane do najbliższego odcinka · `12-uwagi` formularz uwag → e-mail do autora przez Web3Forms (klucz publiczny z założenia; zapasowo mailto), z kontekstem: zabieg, wariant, kadr, język, urządzenie
 - `12-zakres` slajd „Wybór zakresu resekcji” (jelito grube): całe jelito z krezką i naczyniami (SMA/SMV, IC, RC, MC z RBMC i LBMC, IMA z LC, SB, SRA), przesunięcie guza podświetla zakres resekcji, krezkę i naczynia do podwiązania wg `ANAT.resectionFor` (04-jelito-grube.js; ASCRS 2022, odbytnica: PME/TME/APR)
+- `12-watroba` widok wątroby (`TOOL_EXT.liver`): kadr „Anatomia” (cały miąższ, przełącznik przezroczystości, wyróżnianie układów naczyń) i „Segmenty” (9 brył I–VIII z IVa/IVb, oś czasu m = rozsunięcie, suwak `lvExplode` i przyciski segmentów w doku, klik w segment wyróżnia go z jego szypułą i opisem); kadry z `singleFrames`, kadrowanie z `an.box`
 - `13` start aplikacji (po wszystkich modułach)
 
 Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kolejką „Dalej”); dostępne z wyszukiwarki, po oznaczeniu gwiazdką — w Ulubionych (`localStorage`, klucz `surgitome-fav`). Kadry badań: punkt wyjścia → interwencja → stan po (bez endoskopii i TK).
@@ -56,6 +58,7 @@ Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kole
 - `ui_31.js` — informacja przy pierwszym wejściu; `ui_32.js [mobile] [preview]` — badania: ukrycie w nawigacji, wyszukiwarka, widok podzielony, synchronizacja kamer, ulubione, „Dalej”, EN
 - `klikany_chromium.py zakres` — slajd „Wybór zakresu resekcji”: guz przeciągany przez 9 odcinków jelita grubego
 - `ui_33.js` — formularz uwag (kontekst, wysyłka, błąd → mailto, klawisze podczas pisania, EN); `ui_34.js` — guz (usuwany z preparatem / zostaje) i podwiązania naczyń w hemikolektomiach prawych
+- `ui_35.js [mobile]` — wątroba: kategoria, dwa kadry, animacja i suwak rozsunięcia, wyróżnianie segmentu (VIII, IV = IVa + IVb) i układu naczyń, przełącznik miąższu (localStorage), EN
 - `klikany_chromium.py meso|guz` — zrzuty krezki z naczyniami i przeciągania guza
 - `klikany_chromium.py trials [ethos,scar]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
