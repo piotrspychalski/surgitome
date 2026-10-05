@@ -2,7 +2,7 @@
      Kadr „Anatomia”: cały miąższ (przezroczysty) z naczyniami; klik w legendzie lub na naczyniu wyróżnia układ (PV, HA, drogi żółciowe, żyły wątrobowe).
      Kadr „Segmenty”: dziewięć brył (I, II, III, IVa, IVb, V–VIII); oś czasu m = rozsunięcie (0 — razem, 1 — rozsunięte), suwak w doku.
      Gałęzie wewnątrzwątrobowe przesuwają się razem ze swoim segmentem, pnie we wnęce i IVC zostają — szypuły rozciągają się między segmentami. */
-  var LV_SEG_COL = { '1': '#f2d06b', '2': '#9fd3c7', '3': '#5fb3a8', '4a': '#c7b3e6', '4b': '#a58fd6', '5': '#f4b183', '6': '#ee8f8f', '7': '#d79ac0', '8': '#b9d989' };
+  var LV_SEG_COL = { '1': '#f2c12e', '2': '#26a69a', '3': '#3d7dd8', '4a': '#9c5bd1', '4b': '#e07bb5', '5': '#f08a24', '6': '#e0453f', '7': '#7a4a35', '8': '#58b04f' };
   var LV_COL = { pv: '#7446c2', ha: '#d0302a', bd: '#2f9e44', hv: '#2f62c0', gb: '#6aa84f', par: '#a24a38' };
   var LV_ROMAN = { '1': 'I', '2': 'II', '3': 'III', '4a': 'IVa', '4b': 'IVb', '5': 'V', '6': 'VI', '7': 'VII', '8': 'VIII' };
   var LV_SYS = [['pv', 'Żyła wrotna i jej gałęzie'], ['ha', 'Tętnica wątrobowa i jej gałęzie'], ['bd', 'Drogi żółciowe i pęcherzyk'], ['hv', 'Żyły wątrobowe i IVC']];
@@ -40,8 +40,7 @@
       // etykieta na powierzchni: od środka segmentu w kierunku rozsuwania aż do brzegu miąższu
       var c = new V3().fromArray(G.centroid[s]), dir = new V3().fromArray(LM.DIR[s]), p = c.clone();
       for (var i = 0; i < 60; i++) { var q = p.clone().addScaledVector(dir, 0.2); if (LM.sdf(q.x, q.y, q.z) > -0.3) break; p = q; }
-      var L = { el: mkLabel('Segment ' + LV_ROMAN[s], '', LV_SEG_COL[s], 'seg'), base: p, seg: s, anchor: null, alpha: 0 };
-      labels.push(L);
+      var L = { base: p, el: mkLabel('Segment ' + LV_ROMAN[s], '', LV_SEG_COL[s], 'seg'), anchor: null, alpha: 0 }; labels.push(L);
       return { s: s, mesh: mesh, off: dir.multiplyScalar(LM.EXPLODE), L: L };
     });
     var OFF = {}; segs.forEach(function (sg) { OFF[sg.s] = sg.off; });

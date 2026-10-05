@@ -112,7 +112,7 @@
      seg: przynależność punktów (rozsuwanie: punkt przesuwa się o średnie przesunięcie wymienionych segmentów; '' — nieruchomy) */
   var B = [-0.6, -3.0, -1.0];                                   // podział żyły wrotnej we wnęce
   var PV_TREE = [
-    { id: 'pv', name: 'Żyła wrotna (PV)', pts: [[1.4, -12.5, -1.6], [0.8, -9.0, -1.4], [0.0, -6.0, -1.2], B], seg: ['', '', '', ''], r: [0.75, 0.62], at: 0.35 },
+    { id: 'pv', name: 'Żyła wrotna (PV)', pts: [[4.2, -9.6, 1.0], [2.5, -7.3, 0.4], [0.8, -5.0, -0.4], B], seg: ['', '', '', ''], r: [0.75, 0.62], at: 0.35 },
     { id: 'rpv', name: 'Gałąź prawa żyły wrotnej', pts: [B, [-2.0, -2.9, -1.1], [-3.2, -2.7, -1.0]], seg: ['', '', '5,6,7,8'], r: [0.55, 0.48], at: 0.55 },
     { id: 'rapv', pts: [[-3.2, -2.7, -1.0], [-4.0, -2.2, 0.4]], seg: ['5,6,7,8', '5,8'], r: [0.4, 0.36], sub: '5,8' },
     { id: 'p8', pts: [[-4.0, -2.2, 0.4], [-4.4, 0.8, 0.8], [-4.6, 3.2, 0.6]], seg: ['5,8', '8', '8'], r: [0.3, 0.18], sub: '8' },
@@ -128,15 +128,19 @@
     { id: 'p4a', pts: [[2.8, -1.6, 1.4], [1.6, 1.2, 1.2], [0.6, 3.2, 0.4]], seg: ['3,4b', '4a', '4a'], r: [0.24, 0.14], sub: '4a' },
     { id: 'p1', pts: [[0.6, -3.2, -0.7], [0.4, -2.4, -2.4], [0.6, -1.4, -3.4]], seg: ['', '1', '1'], r: [0.2, 0.13], sub: '1' }
   ];
-  // tętnice i przewody wewnątrzwątrobowe biegną razem z gałęziami żyły wrotnej (szypuły Glissona): kopia drzewa z przesunięciem bocznym
+  // tętnice i przewody wewnątrzwątrobowe biegną razem z gałęziami żyły wrotnej (szypuły Glissona): kopia drzewa z przesunięciem bocznym;
+  // punkt podziału liczony raz i wspólny dla gałęzi wychodzących z niego (drzewo pozostaje połączone); płat ogoniasty — tylko gałąź PV
   function companion(kind, side) {
-    return PV_TREE.filter(function (b) { return b.sub; }).map(function (b) {
+    var seen = {};
+    return PV_TREE.filter(function (b) { return b.sub && b.id !== 'p1'; }).map(function (b) {
       var pts = b.pts.map(function (p, i) {
+        var key = p.join(',');
+        if (seen[key]) return seen[key];
         var q = b.pts[Math.min(i + 1, b.pts.length - 1)], s = b.pts[Math.max(i - 1, 0)], t = [q[0] - s[0], q[1] - s[1], q[2] - s[2]];
         var up = [0, 0, 1], off = [t[1] * up[2] - t[2] * up[1], t[2] * up[0] - t[0] * up[2], t[0] * up[1] - t[1] * up[0]], ol = Math.hypot(off[0], off[1], off[2]);
         if (ol < 1e-3) { off = [1, 0, 0]; ol = 1; }
         var rr = b.r[0] + (b.r[1] - b.r[0]) * i / (b.pts.length - 1), k = side * (rr + (kind === 'ha' ? 0.1 : 0.12) + 0.02) / ol;
-        return [p[0] + off[0] * k, p[1] + off[1] * k + 0.05, p[2] + off[2] * k + 0.08];
+        return (seen[key] = [p[0] + off[0] * k, p[1] + off[1] * k + 0.05, p[2] + off[2] * k + 0.08]);
       });
       return { id: kind + '_' + b.id, pts: pts, seg: b.seg, r: kind === 'ha' ? [0.1, 0.06] : [0.12, 0.07], sub: b.sub };
     });
@@ -144,24 +148,18 @@
   var HA_IN = companion('ha', 1), BD_IN = companion('bd', -1);
   function startOf(list, id) { return list.filter(function (b) { return b.id === id; })[0].pts[0]; }
   var HA_EX = [
-    { id: 'cha', name: 'Tętnica wątrobowa wspólna (CHA)', pts: [[4.6, -10.8, -1.6], [2.4, -9.9, 0.1], [0.6, -9.2, 0.6]], seg: ['', '', ''], r: [0.26, 0.24], at: 0.4 },
-    { id: 'gda', name: 'Tętnica żołądkowo-dwunastnicza', pts: [[0.6, -9.2, 0.6], [0.4, -10.6, 1.0], [0.3, -12.0, 1.0]], seg: ['', '', ''], r: [0.17, 0.15], at: 0.7 },
-    { id: 'pha', name: 'Tętnica wątrobowa właściwa (PHA)', pts: [[0.6, -9.2, 0.6], [0.5, -7.0, 0.3], [0.2, -5.0, 0.1]], seg: ['', '', ''], r: [0.22, 0.2], at: 0.45 },
-    { id: 'rha', name: 'Tętnica wątrobowa prawa', pts: [[0.2, -5.0, 0.1], [-1.2, -4.2, -0.45], [-2.3, -3.2, -0.5], startOf(HA_IN, 'ha_rapv')], seg: ['', '', '', '5,6,7,8'], r: [0.18, 0.15], at: 0.45 },
-    { id: 'rha2', pts: [startOf(HA_IN, 'ha_rapv'), startOf(HA_IN, 'ha_rppv')], seg: ['5,6,7,8', '5,6,7,8'], r: [0.15, 0.15], sub: '5,6,7,8' },
-    { id: 'lha', name: 'Tętnica wątrobowa lewa', pts: [[0.2, -5.0, 0.1], [1.2, -4.2, 0.2], [2.2, -3.3, 0.5], startOf(HA_IN, 'ha_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.17, 0.15], at: 0.5 },
-    { id: 'lha2', pts: [startOf(HA_IN, 'ha_upv'), startOf(HA_IN, 'ha_p2')], seg: ['2,3,4a,4b', '2,3,4a,4b'], r: [0.12, 0.12], sub: '2,3,4a,4b' },
-    { id: 'ha1', pts: [[0.6, -4.6, 0.15], [0.8, -3.6, -1.4], startOf(HA_IN, 'ha_p1')], seg: ['', '', '1'], r: [0.09, 0.08], sub: '1' }
+    { id: 'cha', name: 'Tętnica wątrobowa wspólna (CHA)', pts: [[5.6, -9.0, -0.6], [3.9, -8.3, 1.3], [2.4, -7.4, 1.6]], seg: ['', '', ''], r: [0.26, 0.24], at: 0.4 },
+    { id: 'gda', name: 'Tętnica żołądkowo-dwunastnicza', pts: [[2.4, -7.4, 1.6], [2.0, -9.0, 2.0], [1.6, -10.8, 2.0]], seg: ['', '', ''], r: [0.17, 0.15], at: 0.7 },
+    { id: 'pha', name: 'Tętnica wątrobowa właściwa (PHA)', pts: [[2.4, -7.4, 1.6], [1.4, -6.2, 1.0], [0.4, -5.0, 0.4]], seg: ['', '', ''], r: [0.22, 0.2], at: 0.45 },
+    { id: 'rha', name: 'Tętnica wątrobowa prawa', pts: [[0.4, -5.0, 0.4], [-0.9, -4.3, -0.3], [-2.2, -3.2, -0.5], startOf(HA_IN, 'ha_rapv')], seg: ['', '', '', '5,6,7,8'], r: [0.18, 0.15], at: 0.45 },
+    { id: 'lha', name: 'Tętnica wątrobowa lewa', pts: [[0.4, -5.0, 0.4], [1.3, -4.2, 0.5], [2.2, -3.3, 0.6], startOf(HA_IN, 'ha_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.17, 0.15], at: 0.5 }
   ];
   var CONF = [-0.9, -2.75, 0.15], CYJ = [-1.5, -6.6, 0.25];   // konfluencja przewodów wątrobowych, ujście przewodu pęcherzykowego
   var BD_EX = [
     { id: 'cbd', name: 'Przewód żółciowy wspólny (CBD)', pts: [[-0.9, -12.6, -0.7], [-1.3, -9.4, -0.2], CYJ], seg: ['', '', ''], r: [0.34, 0.34], at: 0.45 },
     { id: 'chd', name: 'Przewód wątrobowy wspólny', pts: [CYJ, [-1.2, -4.6, 0.2], CONF], seg: ['', '', ''], r: [0.32, 0.3], at: 0.5 },
     { id: 'rhd', name: 'Przewód wątrobowy prawy', pts: [CONF, [-2.2, -2.6, -0.1], startOf(BD_IN, 'bd_rapv')], seg: ['', '', '5,6,7,8'], r: [0.24, 0.22], at: 0.5 },
-    { id: 'rhd2', pts: [startOf(BD_IN, 'bd_rapv'), startOf(BD_IN, 'bd_rppv')], seg: ['5,6,7,8', '5,6,7,8'], r: [0.19, 0.19], sub: '5,6,7,8' },
     { id: 'lhd', name: 'Przewód wątrobowy lewy', pts: [CONF, [0.6, -2.9, 0.5], [1.9, -2.5, 0.9], startOf(BD_IN, 'bd_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.24, 0.22], at: 0.55 },
-    { id: 'lhd2', pts: [startOf(BD_IN, 'bd_upv'), startOf(BD_IN, 'bd_p2')], seg: ['2,3,4a,4b', '2,3,4a,4b'], r: [0.15, 0.15], sub: '2,3,4a,4b' },
-    { id: 'bd1', pts: [[-0.3, -2.8, 0.1], [-0.1, -2.2, -1.6], startOf(BD_IN, 'bd_p1')], seg: ['', '', '1'], r: [0.1, 0.09], sub: '1' },
     { id: 'cyd', name: 'Przewód pęcherzykowy', pts: [GB[3], [-1.9, -5.0, 0.7], [-1.9, -6.0, 0.55], CYJ], seg: ['4b,5', '', '', ''], r: [0.17, 0.15], at: 0.4 }
   ];
   var HV = [
