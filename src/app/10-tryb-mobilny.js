@@ -67,7 +67,7 @@
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     $('togGuz').hidden = !an.tumour;
-    $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver'; });
+    $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver' || d.type === 'oltx'; });
     if (curProc().split) renderTrialPanel();
     else {
       $('pTitle').textContent = tr(an.title); $('pSub').textContent = tr(an.sub);
@@ -86,6 +86,7 @@
       li.appendChild(b); lg.appendChild(li);
     });
     if (M.liver) lvLegend(lg);
+    if (M.oltx) oltLegend(lg);
   }
 
   $('btnNext').onclick = next; $('btnPrev').onclick = prev; $('btnPlay').onclick = togglePlay;

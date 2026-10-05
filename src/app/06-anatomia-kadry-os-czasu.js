@@ -87,7 +87,7 @@
   // lista kadrów jednego wariantu: prawidłowa, zakres, [stapler], usunięcie, [rekonstrukcja], endoskopia, TK
   function framesFor(Pr, vi) {
     if (Pr.split) return trialFrames(Pr);
-    if (Pr.variants[0].singleFrames) return Pr.variants[0].singleFrames.map(function (f, i) { return Object.assign({ vi: 0, num: String(i + 1) }, f); });
+    if (Pr.variants[vi || 0].singleFrames) return Pr.variants[vi || 0].singleFrames.map(function (f, i) { return Object.assign({ vi: vi || 0, num: String(i + 1) }, f); });
     if (Pr.variants[0].single) return [{ k: 'normal', vi: 0, kind: 'orbit', m0: 0, m1: 0, cam: 'front', num: '1', short: 'Guz i zakres', title: 'Wybór zakresu resekcji', cap: '' }];
     var an = Pr.variants[vi || 0], fx = an.frames, tx = an.text || {}, v = vi || 0;
     var cut = an.focus ? 'focus' : an.id === 'sleeve' ? 'stomach' : 'upper';

@@ -226,8 +226,48 @@
         cap: 'Suwak „Rozsunięcie” rozsuwa i zsuwa segmenty. Kliknij segment (lub przycisk I–VIII), aby go wyróżnić razem z jego szypułą.' }
     ] };
   var PROC = { cat: 'liver', id: 'liver', short: LIVER_AN.short, title: LIVER_AN.title, variants: [LIVER_AN] };
+
+  /* ---------- przeszczepienie wątroby (OLTx): rekonstrukcja żylna klasyczna / piggyback × żółciowa przewód–przewód / Roux-en-Y ----------
+     Oś czasu m: 0 biorca, 0–1 hepatektomia (przecięcia, usunięcie wątroby), 1–2.2 wszczepienie i zespolenie(a) żylne, 2.2–3 żyła wrotna i tętnica,
+     3–4 drogi żółciowe, 4 stan po. Źródła: Starzl (technika klasyczna); Tzakis, Todo, Starzl, Ann Surg 1989 (zachowanie IVC biorcy — piggyback);
+     Belghiti i wsp., Surg Gynecol Obstet 1992 (zespolenie kawo-kawalne bok-do-boku). */
+  var OLT_NOTES = {
+    common: ['Ortotopowe przeszczepienie wątroby: wątrobę biorcy usuwa się, a przeszczep wszczepia w to samo miejsce. Kolejność zespoleń: żylne (IVC), żyła wrotna (reperfuzja), tętnica wątrobowa, drogi żółciowe.',
+      'Pęcherzyk żółciowy dawcy usuwa się zawsze; pęcherzyk biorcy wychodzi z wątrobą biorcy.',
+      'Żyła wrotna: zespolenie koniec-do-końca. Tętnica: zwykle pień trzewny lub CHA dawcy (z łatą Carrela) do tętnicy wątrobowej biorcy na wysokości odejścia GDA.'],
+    classic: 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwa się razem z wątrobą (zaciski nad i pod wątrobą, czasem omijające krążenie żylno-żylne); dwa zespolenia IVC: nad i pod wątrobą.',
+    pb: 'Piggyback: IVC biorcy zostaje (przepływ zachowany, IVC zaciśnięta tylko częściowo). Górny koniec IVC dawcy zespala się z ujściem żył wątrobowych biorcy (lub bok-do-boku z IVC — Belghiti), dolny koniec IVC dawcy zamyka się.',
+    d2d: 'Drogi żółciowe przewód–przewód (koniec-do-końca): zachowany zwieracz Oddiego i dostęp do dróg żółciowych w ECPW.',
+    roux: 'Hepatikojejunostomia na pętli Roux-en-Y: gdy przewód biorcy nie nadaje się do zespolenia (np. PSC, duża niezgodność średnic, retransplantacja, dzieci); kikut przewodu biorcy zamyka się. Po operacji ECPW zwykle niemożliwa (dostęp przezskórny lub enteroskopia).'
+  };
+  function oltAn(cav, bile, vshort) {
+    var notes = OLT_NOTES.common.slice(0, 1).concat([OLT_NOTES[cav], OLT_NOTES.common[2], OLT_NOTES[bile], OLT_NOTES.common[1],
+      'Schemat: proporcje i położenie naczyń uproszczone; odmiany tętnic i rekonstrukcje u żywych dawców (przeszczepy częściowe) nie są pokazane.']);
+    var venTxt = cav === 'classic' ? 'Przeszczep z odcinkiem IVC dawcy: zespolenie IVC nad wątrobą, potem pod wątrobą (koniec-do-końca).'
+      : 'Przeszczep ułożony przed zachowaną IVC biorcy: górny koniec IVC dawcy zespolony z ujściem żył wątrobowych biorcy, dolny koniec IVC dawcy zamknięty.';
+    var bileTxt = bile === 'd2d' ? 'Przewód wątrobowy wspólny dawcy zespolony koniec-do-końca z przewodem żółciowym biorcy.'
+      : 'Pętla jelita czczego wyprowadzona metodą Roux-en-Y; przewód wątrobowy dawcy wszyty w jej bok (hepatikojejunostomia), kikut przewodu biorcy zamknięty, zespolenie jelitowo-jelitowe niżej.';
+    return { cat: 'liver', id: 'oltx-' + cav + '-' + bile, vshort: vshort, short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — ' + vshort,
+      sub: cav === 'classic' ? 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwany z wątrobą' : 'Piggyback: IVC biorcy zachowana',
+      notes: notes, objects: [], marks: [], cutTools: [{ type: 'oltx', cav: cav, bile: bile }], anastTools: [], commonCuts: 0, mEnd: 4, single: true, box: [[-11.5, -14, -7], [11, 9.5, 7]],
+      singleFrames: [
+        { k: 'normal', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Biorca', title: 'Wątroba biorcy',
+          cap: 'Przed przeszczepieniem: wątroba biorcy z naczyniami wnęki, drogami żółciowymi, żyłami wątrobowymi i IVC.' },
+        { k: 'var', kind: 'orbit', m0: 0, m1: 1, dur: 4, cam: 'front', short: 'Hepatektomia', title: 'Hepatektomia biorcy',
+          cap: cav === 'classic' ? 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz IVC nad i pod wątrobą; wątroba biorcy usuwana razem z odcinkiem IVC.'
+            : 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz żył wątrobowych przy IVC; wątroba odpreparowana od IVC, która zostaje.' },
+        { k: 'ven', kind: 'orbit', m0: 1, m1: 2.2, dur: 4.5, cam: 'custom', camP: { t: [-1.2, 0.5, -2], az: -62, el: 12, k: 0.8 }, short: 'Zespolenie żylne', title: cav === 'classic' ? 'Wszczepienie: zespolenia IVC' : 'Wszczepienie: piggyback', cap: venTxt },
+        { k: 'pvha', kind: 'orbit', m0: 2.2, m1: 3, dur: 3.5, cam: 'custom', camP: { t: [0.6, -5.2, 0.5], az: 22, el: -12, k: 0.5 }, short: 'PV i tętnica', title: 'Zespolenie żyły wrotnej i tętnicy wątrobowej',
+          cap: 'Żyła wrotna koniec-do-końca, po nim reperfuzja przeszczepu; następnie zespolenie tętnicy wątrobowej.' },
+        { k: 'bile', kind: 'orbit', m0: 3, m1: 4, dur: 4, cam: 'custom', camP: bile === 'd2d' ? { t: [-0.6, -6, 0.5], az: 12, el: -8, k: 0.5 } : { t: [0.6, -9, 1.2], az: 18, el: -6, k: 0.72 }, short: 'Drogi żółciowe', title: bile === 'd2d' ? 'Zespolenie przewód–przewód' : 'Hepatikojejunostomia na pętli Roux-en-Y', cap: bileTxt },
+        { k: 'post', kind: 'orbit', m0: 4, m1: 4, cam: 'front', short: 'Po przeszczepieniu', title: 'Stan po przeszczepieniu wątroby',
+          cap: 'Przeszczep z zespoleniami: ' + (cav === 'classic' ? 'IVC nad i pod wątrobą' : 'IVC dawcy z ujściem żył wątrobowych biorcy') + ', żyła wrotna, tętnica wątrobowa, ' + (bile === 'd2d' ? 'przewód–przewód.' : 'hepatikojejunostomia na pętli Roux-en-Y.') }
+      ] };
+  }
+  var OLT = { cat: 'liver', id: 'oltx', short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — warianty rekonstrukcji żylnej i żółciowej',
+    variants: [oltAn('classic', 'd2d', 'Klasyczna, przewód–przewód'), oltAn('classic', 'roux', 'Klasyczna, Roux-en-Y'), oltAn('pb', 'd2d', 'Piggyback, przewód–przewód'), oltAn('pb', 'roux', 'Piggyback, Roux-en-Y')] };
   var at = 0; A.PROCS.forEach(function (p, i) { if (p.cat === 'hpb') at = i + 1; });
-  A.PROCS.splice(at, 0, PROC);
+  A.PROCS.splice(at, 0, PROC, OLT);
   var ci = 0; A.CATS.forEach(function (c, i) { if (c.id === 'hpb') ci = i + 1; });
   A.CATS.splice(ci, 0, { id: 'liver', name: 'Wątroba' });
 })(typeof window !== 'undefined' ? window : globalThis);

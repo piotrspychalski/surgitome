@@ -13,6 +13,7 @@
       case 'focusVar': return { t: new V3().fromArray(M.an.focusVar.t), az: 16, el: 8, d: D * M.an.focusVar.k };
       case 'stomach': return { t: new V3(1.8, 3.0, 0.5), az: 18, el: 8, d: D * 0.55 };
       case 'full': return { t: c, az: 18, el: 8, d: D };
+      case 'custom': var q = FR[S.frame] && FR[S.frame].camP; if (q) return { t: new V3().fromArray(q.t), az: q.az, el: q.el, d: D * q.k }; return { t: c, az: 10, el: 5, d: D }; // kadr z własnym ujęciem (wątroba)
       case 'lao': return { t: c, az: 58, el: 12, d: D * 1.02 };
       case 'top': return { t: c, az: -35, el: 40, d: D * 1.02 };
       default: return { t: c, az: 10, el: 5, d: D };
