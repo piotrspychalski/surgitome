@@ -151,7 +151,7 @@
       S.m = this.value / 1000; S.playing = false; applyM(); updateDock();
     });
     $('optLvGlass').checked = S.lvGlass;
-    $('optLvGlass').onchange = function () { S.lvGlass = this.checked; try { localStorage.setItem('surgitome-lv-glass', S.lvGlass ? '1' : '0'); } catch (e) {} if (M && (M.liver || M.oltx) && !SPLIT.on) applyM(); };
+    $('optLvGlass').onchange = function () { S.lvGlass = this.checked; try { localStorage.setItem('surgitome-lv-glass', S.lvGlass ? '1' : '0'); } catch (e) {} if (M && (M.liver || M.oltx || M.lvres || M.lvtumor) && !SPLIT.on) applyM(); };
   })();
   // klik w modelu: segment (kadr „Segmenty”) albo naczynie (kadr „Anatomia”); przeciągnięcie obraca kamerę, więc liczy się tylko klik bez ruchu
   var lvDown = null;

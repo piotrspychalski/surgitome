@@ -68,7 +68,7 @@
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     $('togGuz').hidden = !an.tumour;
-    $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver' || d.type === 'oltx'; });
+    $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver' || d.type === 'oltx' || d.type === 'lvres' || d.type === 'lvtumor'; });
     if (curProc().split) renderTrialPanel();
     else {
       $('pTitle').textContent = tr(an.title); $('pSub').textContent = tr(an.sub);

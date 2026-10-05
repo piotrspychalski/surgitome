@@ -8,7 +8,7 @@
   function oltBump(y) { return y < -6.8 ? sm((y + 9.5) / 2.7) : y > 5.8 ? 1 - sm((y - 5.8) / 2.2) : 1; }
   // rura IVC spłaszczona w odcinku zawątrobowym: oś przesunięta o dz·b(y), przekrój ściśnięty w osi z i lekko poszerzony w osi x
   function oltIvcTube(pts, r, mat, dz, k, whole) {
-    var m = oltTube(pts, r, mat), pa = m.geometry.attributes.position, X = A.LIVER.IVC[0], Z = A.LIVER.IVC[1];
+    var m = oltTube(pts, r, mat, true, 28), pa = m.geometry.attributes.position, X = A.LIVER.IVC[0], Z = A.LIVER.IVC[1];
     for (var i = 0; i < pa.count; i++) {
       var y = pa.getY(i), b = (whole ? 1 : oltBump(y)) * k; if (b <= 0) continue;
       pa.setX(i, X + (pa.getX(i) - X) * (1 + 0.22 * b)); pa.setZ(i, Z + dz * b + (pa.getZ(i) - Z) * (1 - 0.5 * b));
@@ -24,9 +24,9 @@
     return { a: { pts: a, r: [v.r[0], rt] }, b: { pts: b, r: [rt, v.r[1]] }, p: c.getPointAt(t), tan: c.getTangentAt(t), r: rt };
   }
   function oltTAtY(v, y) { var c = oltCurve(v.pts), best = 0, bd = 1e9; for (var i = 0; i <= 400; i++) { var d = Math.abs(c.getPointAt(i / 400).y - y); if (d < bd) { bd = d; best = i / 400; } } return best; }
-  function oltTube(pts, r, mat, caps) {
+  function oltTube(pts, r, mat, caps, rs) {
     var c = oltCurve(pts), rf = typeof r === 'function' ? r : function (t) { return r[0] + (r[1] - r[0]) * t; };
-    return new THREE.Mesh(A.buildTube(c, rf, Math.max(8, Math.round(c.getLength() * 3)), 12, caps === undefined ? true : caps), mat);
+    return new THREE.Mesh(A.buildTube(c, rf, Math.max(8, Math.round(c.getLength() * (rs ? 5 : 3))), rs || 12, caps === undefined ? true : caps), mat);
   }
   function makeOltx(d) {
     var LM = A.LIVER, G = LM.model(MOBILE ? 0.32 : 0.25), pb = d.cav === 'pb', roux = d.bile === 'roux', SH = new V3();
