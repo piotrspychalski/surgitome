@@ -96,7 +96,9 @@ Full list: `docs/PUBLICATIONS.md` · up-to-date record: ORCID [0000-0001-7111-46
 
 ## Development
 
-Concept, medical content, procedure selection, clinical review and all design decisions: Piotr Spychalski. The software implementation was developed with the assistance of an AI coding assistant (Claude, Anthropic) working under the author's direction. Clinical feedback on oesophagectomy anastomoses: Maciej Wilczyński.
+SURGITOME was built with the help of an AI assistant (Claude, Anthropic) for programming the models and drafting the descriptions. The concept, choice of procedures and medical content are my own; I have personally reviewed all models, descriptions and anatomical data and take full responsibility for them. Schematic educational tool, not a medical device. Clinical feedback on oesophagectomy anastomoses: Maciej Wilczyński.
+
+References for every procedure (original descriptions, current guidelines, sources of the details shown in the models, endoscopy after surgery; Vancouver style with PubMed and DOI links): in the app under *Description → References* and *Sources* in the panel footer; full list with the claim each source supports: `docs/BIBLIOGRAFIA.md`.
 
 Technical documentation (architecture, modules, data conventions, test suite): `docs/TECHNICAL.md`.
 
@@ -170,7 +172,9 @@ Narzędzie **schematyczne i edukacyjne**: długości pętli skrócone, proporcje
 - Publikacje m.in. w *JAMA*, *The Lancet*, *Clinical Gastroenterology and Hepatology*; indeks h = 13 (Web of Science, maj 2026). Pełna lista: `docs/PUBLICATIONS.md`.
 - Prowadzi kursy symulacyjne z chirurgii kolorektalnej w Centrum Symulacji Medycznej GUMed i UCK (techniki laparoskopowe; zespolenia jelitowe ręczne i staplerowe).
 
-Koncepcja, treści medyczne i decyzje projektowe: Piotr Spychalski; implementację oprogramowania wykonano przy wsparciu asystenta AI (Claude, Anthropic) pod kierunkiem autora.
+SURGITOME stworzyłem z pomocą asystenta AI (Claude, Anthropic), który wspierał programowanie modeli i redakcję opisów. Koncepcja, dobór zabiegów i treść medyczna są moje. Wszystkie modele, opisy i dane anatomiczne osobiście sprawdziłem i odpowiadam za ich poprawność. Narzędzie edukacyjne, schematyczne, nie jest wyrobem medycznym.
+
+Piśmiennictwo do każdego zabiegu (opisy oryginalne, aktualne wytyczne, źródła szczegółów pokazanych w modelach, endoskopia po zabiegu; styl Vancouver z odnośnikami do PubMed i DOI): w aplikacji w panelu *Opis → Piśmiennictwo* i pod *Źródła* w stopce panelu; pełna lista z uzasadnieniem każdej pozycji: `docs/BIBLIOGRAFIA.md`.
 
 ## Jak cytować
 

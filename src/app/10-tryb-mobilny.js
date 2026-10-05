@@ -75,6 +75,7 @@
       var ul = $('pNotes'); ul.innerHTML = '';
       an.notes.forEach(function (n) { var li = document.createElement('li'); li.textContent = tr(n); ul.appendChild(li); });
     }
+    renderRefs();
     var lg = $('legend'); lg.innerHTML = '';
     M.objs.forEach(function (o) {
       if (o.def.solid || kfNum(o.def.opacity, M.an.mEnd, 1) < 0.5) return;
@@ -143,7 +144,7 @@
   document.addEventListener('pointerdown', function (e) {
     panelTapClosed = false;
     if (panel.classList.contains('closed') || getComputedStyle(panel).position !== 'absolute') return;
-    if (panel.contains(e.target) || e.target.closest('#btnPanel, #mMenu, #mMenuBtn, #fInfo, #cite')) return;
+    if (panel.contains(e.target) || e.target.closest('#btnPanel, #mMenu, #mMenuBtn, #fInfo, #cite, #bib')) return;
     setPanel(false); panelTapClosed = true;
   }, true);
   setPanel(false);
@@ -182,6 +183,7 @@
     if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('cite').hidden) { if (e.key === 'Escape') { e.preventDefault(); citeShow(false); } return; } // okienko cytowania: Tab/Enter na przyciskach
+    if (!$('bib').hidden) { if (e.key === 'Escape') { e.preventDefault(); bibShow(false); } return; } // okno „Źródła”: klawisze do przewijania
     if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
     var tg = e.target, tag = tg && tg.tagName;

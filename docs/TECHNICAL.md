@@ -24,6 +24,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `09-badania.js` — badania ECOPOP (`ANAT.TRIALS`): ETHOS, SCAR (flaga `published: false` ukrywa badanie; wtedy widoczne tylko przy `window.__SG_PREVIEW`); zmiana T1, tatuaże, blizna, klips OTSC, krezka z naczyniami i węzłami, narzędzie EFTR
 - `10-watroba.js` — wątroba (`ANAT.LIVER`, kategoria `liver`): bryła z funkcji odległości (elipsoidy, powierzchnia trzewna, rowek IVC, dół pęcherzyka), segmenty Couinauda z płaszczyzn (Cantlie/MHV, RHV, szczelina pępkowa, LHV, płaszczyzna wrotna, płat ogoniasty), siatki metodą surface nets (liczone raz, leniwie, ok. 0,4 s); drzewo żyły wrotnej z gałęziami segmentowymi, tętnice i przewody wewnątrzwątrobowe jako szypuły Glissona (kopia drzewa PV z przesunięciem), pnie we wnęce, żyły wątrobowe i IVC; przynależność punktów naczyń do segmentów (`seg`) steruje rozsuwaniem
 - `11-watroba-resekcje.js` — resekcje wątroby (`ANAT.LIVER.RES`: segmenty usuwane, przecięcia naczyń `cuts` z czasem i rodzajem — podwiązanie / stapler, odcinki usuwane w całości `gone`, kierunek odsunięcia preparatu; ALPPS z przerostem `hyper`) i reguła zakresu resekcji anatomicznej `ANAT.LIVER.resFor` (segmentektomia, bisegmentektomia, sekcjonektomie, hepatektomia centralna, hemihepatektomie, trisekcjonektomie; IVa + IVb = IV, segment I dopisywany)
+- `12-bibliografia.js` — piśmiennictwo (`ANAT.BIB`): `R` — klucz → opis w stylu Vancouver (`c`), rok `y`, `pmid`/`doi`/`url`; `P` — id zabiegu lub wariantu → `[klucz, rola, uzasadnienie]` (role: original, guideline, anatomy, technique, endoscopy, outcomes, registry); `EXTRA` — pozycje tylko w pełnej liście. Teksty bibliograficzne nie są tłumaczone (`tests/i18n.js` pomija `ANAT.BIB`)
 
 **src/app — aplikacja**
 - `01` słownik PL→EN i pomocnicze · `02` motyw i renderer · `03` TK · `04` tekstury, stan, obiekty
@@ -36,6 +37,7 @@ Skrypt skleja pliki z `src/core/` i `src/app/` w kolejności nazw i wstawia je w
 - `12-watroba` widok wątroby (`TOOL_EXT.liver`): kadr „Anatomia” (cały miąższ, przełącznik przezroczystości, wyróżnianie układów naczyń) i „Segmenty” (9 brył I–VIII z IVa/IVb, oś czasu m = rozsunięcie, suwak `lvExplode` i przyciski segmentów w doku, klik w segment wyróżnia go z jego szypułą i opisem); kadry z `singleFrames`, kadrowanie z `an.box`
 - `12-watroba-przeszczep` przeszczepienie wątroby (`TOOL_EXT.oltx`, warianty w `10-watroba.js`): naczynia z `ANAT.LIVER` dzielone w punktach przecięcia na część biorcy (zostaje) i wątrobową (odjeżdża z wątrobą biorcy, wraca z przeszczepem); klasycznie zawątrobowa IVC idzie z wątrobą, w piggyback IVC biorcy zostaje, a przeszczep leży przed nią (przesunięcie `OLT_PB`, krótkie odcinki łączące w zespoleniach); pierścienie przecięć i zespoleń na osi czasu m 0–4; pętla Roux-en-Y; kadry z ujęciem `cam: 'custom'` + `camP` (preset w `07`)
 - `12-watroba-resekcje` widok resekcji (`lrBuild` → `TOOL_EXT.lvres`: segmenty pozostające / usuwane, barwa niedokrwienia po kontroli dopływu, naczynia dzielone w punktach przecięcia, pierścienie podwiązań i staplera, preparat odsuwany i usuwany; ALPPS — podział in situ, skalowanie segmentów II/III wokół szczeliny pępkowej) i „Guz: zakres resekcji” (`TOOL_EXT.lvtumor`, dwa warianty: kadr 1 — guz przeciągany po miąższu, położenie w localStorage `surgitome-lv-guz`; kadr 2 — metastazektomia: preparat i wątroba z lożą wycięte z siatki (`ANAT.LIVER.carve`, kula guz + margines 1 cm), albo resekcja anatomiczna: `ltAnatR` buduje opis resekcji z reguły `resFor` — szypuły podwiązane na najwyższym poziomie w całości usuwanym (segment, sektor, prawa gałąź, część pępkowa), żyły wątrobowe przy hemihepatektomiach, pęcherzyk przy V/IVb)
+- `12-bibliografia` panel „Opis” → „Piśmiennictwo”: źródła bieżącego zabiegu i wariantu (`refsFor`, kolejność: rola, rok) z odnośnikami PubMed/DOI; okno „Źródła” (`#bib`, cała lista, Esc zamyka); stopka panelu z oświadczeniem o autorstwie i udziale asystenta AI (PL/EN), licencjami i „Jak cytować” (`12-cytowanie`)
 - `13` start aplikacji (po wszystkich modułach)
 
 Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kolejką „Dalej”); dostępne z wyszukiwarki, po oznaczeniu gwiazdką — w Ulubionych (`localStorage`, klucz `surgitome-fav`). Kadry badań: punkt wyjścia → interwencja → stan po (bez endoskopii i TK).
@@ -74,36 +76,17 @@ Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) tra
 - `ui_41.js` — „Jak cytować”: link w panelu i w menu na telefonie, treść cytowania z DOI koncepcyjnym, kopiowanie, klawisze i Esc przy otwartym okienku, EN
 - `ui_43.js` — kod QR na telefonie: przycisk „Udostępnij” w menu, kod na pełnym ekranie, podpowiedź „Dotknij/Kliknij, aby zamknąć”, EN
 - `ui_44.js` — krezka i mezorektum w resekcjach lewostronnych: podwiązania, części usuwane i pozostające, przełącznik, kadry, EN
+- `ui_42.js` — piśmiennictwo: każdy zabieg i wariant ma źródła z odnośnikiem, stopka z oświadczeniem o autorstwie (PL/EN), okno „Źródła” (wszystkie zabiegi i badania, Esc), „Jak cytować” w stopce
 - `klikany_chromium.py meso|guz` — zrzuty krezki z naczyniami i przeciągania guza
 - `klikany_chromium.py trials [ethos,scar]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
 - `ui_26.js` sprawdza też zbyt wczesne przesunięcie suwaka endoskopii (trasa jeszcze się buduje)
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
-- `ui_27.js` — kategorie i wyszukiwarka (komputer i telefon: `node tests/ui_27.js mobile`)
-- `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`
 - `ui_40.js` — statystyki wyboru zabiegu (zdarzenia GoatCounter)
 - `ui_18…26.js` — kod QR, warianty, menu i gesty na telefonie, przyciski, panel, rampa endoskopu po rozwidleniu
 
 Narzędzie pomocnicze: `node tools/dumpgeo.js dist/core.js <id wariantu> > g.json && python3 tools/plotgeo.py g.json rzut.png post` — rzuty geometrii z przodu i z boku.
+
+Piśmiennictwo: `python3 tools/pubmed_vancouver.py <PMID…>` — rekord PubMed (E-utilities) → wiersz do `ANAT.BIB.R` w stylu Vancouver (poprawki błędnych rekordów w `FIX`); potem klucz do `P`, `node build.js && node tools/bibliografia_md.js` — odtwarza `docs/BIBLIOGRAFIA.md` (zabiegi w kolejności nawigacji, rola i uzasadnienie każdej pozycji; ręcznie pisany blok `<!-- autor -->…<!-- /autor -->` zostaje).
 
 Kod QR: `python3 tools/make_qr.py` — symbol `qrSym` z bezpośrednim linkiem do strony na GitHub Pages (https://piotrspychalski.github.io/surgitome/?ref=qr — źródło „qr” w statystykach GoatCounter, korekcja błędów Q, weryfikacja odczytu OpenCV; wymaga bibliotek qrcode, cairosvg z systemowym cairo, opencv-python); podpis pod kodem pozostaje „bit.ly/surgitome”. Wynik (`qrsym.txt`) wkleja się w `src/shell.html` w miejsce istniejącego `<symbol id="qrSym">`.
 

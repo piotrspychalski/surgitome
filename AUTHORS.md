@@ -7,4 +7,4 @@ clinical review and design. Colorectal surgeon and clinical researcher, Medical 
 ## Acknowledgements
 
 - Maciej Wilczyński — clinical feedback on oesophagectomy conduit and side-to-side anastomosis.
-- Software implementation developed with the assistance of an AI coding assistant (Claude, Anthropic) under the author's direction.
+- SURGITOME was built with the help of an AI assistant (Claude, Anthropic) for programming the models and drafting the descriptions. The concept, choice of procedures and medical content are the author's own; all models, descriptions and anatomical data were personally reviewed by the author, who takes full responsibility for them.

@@ -294,6 +294,25 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .credit{ user-select:text; display:flex; flex-wrap:wrap; gap:2px 8px; align-items:baseline; color:var(--muted); text-decoration:none; font-size:12.5px; letter-spacing:.01em; }
 .credit span:first-child{ font-weight:700; color:var(--text); letter-spacing:.03em; }
 .csep{ opacity:.5; }
+/* piśmiennictwo zabiegu (panel), stopka z oświadczeniem o autorstwie i licencjami, okno „Źródła” */
+.refs{ margin:14px 0 0; border:1px solid var(--line); border-radius:10px; padding:0 12px; }
+.refs > summary{ cursor:pointer; padding:9px 0; font-size:14px; font-weight:700; }
+.refs[open] > summary{ border-bottom:1px solid var(--line); margin-bottom:8px; }
+.rcount{ color:var(--muted); font-weight:400; }
+.reflist{ margin:0 0 10px; padding-left:22px; font-size:12.5px; line-height:1.45; user-select:text; overflow-wrap:anywhere; }
+.reflist li{ margin:0 0 8px; }
+.rrole{ display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+.reflist a{ color:var(--accent); white-space:nowrap; }
+.authnote{ margin:0 0 8px; font-size:12px; line-height:1.5; color:var(--muted); }
+.legal{ margin:0 0 8px; display:flex; flex-wrap:wrap; gap:2px 6px; align-items:baseline; font-size:12px; color:var(--muted); }
+.legal a, .legal .linkbtn{ color:var(--accent); text-decoration:underline; text-underline-offset:2px; }
+#bib{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.55); }
+#bib[hidden]{ display:none; }
+#bib .introbox{ max-width:760px; gap:10px; }
+#bib .introhead{ position:sticky; top:-22px; z-index:1; margin:-22px -22px 0; padding:14px 22px 10px; background:var(--surface); border-bottom:1px solid var(--line); }
+#bib h2{ margin:4px 0 0; font-size:19px; line-height:1.25; }
+#bib h3{ margin:14px 0 4px; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+#bib h4{ margin:10px 0 4px; font-size:14.5px; }
 .qrcred{ margin:6px 0 0; font-size:12.5px; color:#555; letter-spacing:.02em; }
 .mfoot{ margin-top:16px; padding-top:10px; border-top:1px solid var(--line); }
 .lbl span{ transition:none; }
@@ -522,6 +541,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <h2 id="pTitle"></h2>
       <p class="sub" id="pSub"></p>
       <ul class="notes" id="pNotes"></ul>
+      <details class="refs" id="pRefs" hidden><summary><span data-pl="Piśmiennictwo">Piśmiennictwo</span> <span class="rcount" id="pRefsN"></span></summary><ol class="reflist" id="pRefsList"></ol></details>
       <h3>Legenda</h3>
       <p class="hint">Kliknij odcinek, aby go wyróżnić.</p>
       <ul id="legend"></ul>
@@ -534,7 +554,10 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <label class="tog" id="togGuz" hidden><input type="checkbox" id="optGuz" checked> <span>Guz (przesuń w kadrze „Prawidłowa”)</span></label>
       <button class="btn tourbtn" id="btnTour" type="button" data-pl="Pokaż samouczek">Pokaż samouczek</button>
       <p class="fine" id="finePrint"></p>
-          <div class="pfoot"><span class="credit"><span><a href="https://piotrspychalski.github.io/" target="_blank" rel="noopener">Spychalski P MD PhD</a></span><span class="csep">|</span><span><a href="mailto:piotr.spychalski@gumed.edu.pl">piotr.spychalski@gumed.edu.pl</a></span><span class="csep">|</span><span><button class="linkbtn citeBtn" type="button" data-pl="Jak cytować">Jak cytować</button></span></span></div>
+          <div class="pfoot">
+            <p class="authnote" data-pl="SURGITOME stworzyłem z pomocą asystenta AI (Claude, Anthropic), który wspierał programowanie modeli i redakcję opisów. Koncepcja, dobór zabiegów i treść medyczna są moje. Wszystkie modele, opisy i dane anatomiczne osobiście sprawdziłem i odpowiadam za ich poprawność. Narzędzie edukacyjne, schematyczne, nie jest wyrobem medycznym.">SURGITOME stworzyłem z pomocą asystenta AI (Claude, Anthropic), który wspierał programowanie modeli i redakcję opisów. Koncepcja, dobór zabiegów i treść medyczna są moje. Wszystkie modele, opisy i dane anatomiczne osobiście sprawdziłem i odpowiadam za ich poprawność. Narzędzie edukacyjne, schematyczne, nie jest wyrobem medycznym.</p>
+            <p class="legal"><span>© 2026 Piotr Spychalski</span><span class="csep">·</span><span><span data-pl="Kod:">Kod:</span> <a href="https://github.com/piotrspychalski/surgitome/blob/main/LICENSE" target="_blank" rel="noopener license">MIT</a></span><span class="csep">·</span><span><span data-pl="Treści:">Treści:</span> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener license">CC BY 4.0</a></span><span class="csep">·</span><button type="button" class="linkbtn" id="btnSources" data-pl="Źródła">Źródła</button><span class="csep">·</span><button type="button" class="linkbtn citeBtn" data-pl="Jak cytować">Jak cytować</button></p>
+            <span class="credit"><span><a href="https://piotrspychalski.github.io/" target="_blank" rel="noopener">Spychalski P MD PhD</a></span><span class="csep">|</span><span><a href="mailto:piotr.spychalski@gumed.edu.pl">piotr.spychalski@gumed.edu.pl</a></span></span></div>
     </aside>
   </main>
   <footer class="dock">
@@ -598,6 +621,11 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   <p class="introfine" data-pl="Kod: licencja MIT. Treści (modele 3D, ilustracje, teksty): licencja CC BY 4.0, z podaniem autora.">Kod: licencja MIT. Treści (modele 3D, ilustracje, teksty): licencja CC BY 4.0, z podaniem autora.</p>
   <p id="citeStatus" class="fbstatus" role="status" aria-live="polite"></p>
   <div class="fbrow"><button class="btn" id="citeCopy" type="button" data-pl="Kopiuj">Kopiuj</button><button class="btn primary" id="citeOk" type="button" data-pl="Zamknij">Zamknij</button></div>
+<div id="bib" hidden role="dialog" aria-modal="true" aria-labelledby="bibTitle"><div class="introbox" id="bibBox">
+  <div class="introhead"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".55"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg><b>SURGITOME</b><button class="ghostbtn" id="bibClose" type="button" aria-label="Zamknij">✕</button></div>
+  <h2 id="bibTitle" data-pl="Źródła">Źródła</h2>
+  <p class="introfine" data-pl="Piśmiennictwo do każdego zabiegu: opisy oryginalne, aktualne wytyczne oraz źródła szczegółów pokazanych w modelach. Opisy wg stylu Vancouver, z odnośnikami do PubMed i DOI.">Piśmiennictwo do każdego zabiegu: opisy oryginalne, aktualne wytyczne oraz źródła szczegółów pokazanych w modelach. Opisy wg stylu Vancouver, z odnośnikami do PubMed i DOI.</p>
+  <div id="bibList"></div>
 </div></div>
 <div id="qrOverlay" hidden role="dialog" aria-label="bit.ly/surgitome"><div class="qrbox"><div class="qrbrand"><span>SURGITOME</span></div><svg viewBox="0 0 45 45" role="img" aria-label="QR: bit.ly/surgitome"><use href="#qrSym"/></svg><p class="qrurl">bit.ly/surgitome</p><p class="qrcred">Spychalski P MD PhD | piotr.spychalski@gumed.edu.pl</p><p class="qrhint">Kliknij, aby zamknąć</p></div></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
