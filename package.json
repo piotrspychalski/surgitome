@@ -1,6 +1,6 @@
 {
   "name": "surgitome",
-  "version": "2026.9.25",
+  "version": "1.0.0",
   "private": true,
   "description": "SURGITOME — interactive 3D postoperative gastrointestinal anatomy by Piotr Spychalski, MD, PhD (colorectal surgeon, Medical University of Gdańsk)",
   "author": "Piotr Spychalski, MD, PhD <piotr.spychalski@gumed.edu.pl> (Medical University of Gdańsk)",
@@ -12,7 +12,7 @@
     "three": "0.147.0",
     "jsdom": "^24.0.0"
   },
-  "license": "CC-BY-NC-4.0",
+  "license": "MIT",
   "keywords": [
     "postoperative anatomy",
     "colorectal surgery",
@@ -22,5 +22,5 @@
     "3D",
     "three.js"
   ],
-  "homepage": "https://bit.ly/surgitome"
+  "homepage": "https://piotrspychalski.github.io/surgitome/"
 }

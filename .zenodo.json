@@ -1,0 +1,29 @@
+{
+  "title": "SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Spychalski, Piotr",
+      "orcid": "0000-0001-7111-4660",
+      "affiliation": "Department of Oncological, Transplant and General Surgery, Medical University of Gdańsk, Gdańsk, Poland"
+    }
+  ],
+  "description": "<p>SURGITOME is an interactive, schematic 3D atlas of anatomy after gastrointestinal surgery. For 29 operations in oesophageal, gastric, bariatric, hepatopancreatobiliary, liver, small-bowel and colorectal surgery (57 variants) it shows the extent of resection, the reconstruction and anastomoses, the postoperative endoscopic view and schematic CT sections. The interface is in Polish and English. It is intended for surgical education and for communication with patients.</p><p>Licence: the source code is released under the MIT License (LICENSE); the content (3D anatomical models, illustrations and texts) is released under CC BY 4.0 (LICENSE-CONTENT).</p><p>SURGITOME is a schematic educational tool, not a medical device. Live version: <a href=\"https://piotrspychalski.github.io/surgitome/\">piotrspychalski.github.io/surgitome</a>.</p>",
+  "keywords": [
+    "postoperative anatomy",
+    "surgical education",
+    "3D atlas",
+    "colorectal surgery",
+    "gastrointestinal surgery",
+    "patient education"
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://piotrspychalski.github.io/surgitome/",
+      "relation": "isSupplementedBy"
+    }
+  ],
+  "language": "eng"
+}

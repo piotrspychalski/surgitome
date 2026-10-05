@@ -143,7 +143,7 @@
   document.addEventListener('pointerdown', function (e) {
     panelTapClosed = false;
     if (panel.classList.contains('closed') || getComputedStyle(panel).position !== 'absolute') return;
-    if (panel.contains(e.target) || e.target.closest('#btnPanel, #mMenu, #mMenuBtn, #fInfo')) return;
+    if (panel.contains(e.target) || e.target.closest('#btnPanel, #mMenu, #mMenuBtn, #fInfo, #cite')) return;
     setPanel(false); panelTapClosed = true;
   }, true);
   setPanel(false);
@@ -177,6 +177,7 @@
   document.addEventListener('keydown', function (e) {
     if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
+    if (!$('cite').hidden) { if (e.key === 'Escape') { e.preventDefault(); citeShow(false); } return; } // okienko cytowania: Tab/Enter na przyciskach
     if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
     var tg = e.target, tag = tg && tg.tagName;

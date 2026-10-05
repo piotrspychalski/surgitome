@@ -1,4 +1,4 @@
-// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · CC BY-NC 4.0
+// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Składanie SURGITOME: src/core/* → dist/core.js, src/app/* → dist/app.js, wstawienie do src/shell.html → dist/surgitome.html
 // Użycie: node build.js   (bez zależności; wynik to jeden samodzielny plik HTML)
 const fs = require('fs'), path = require('path');

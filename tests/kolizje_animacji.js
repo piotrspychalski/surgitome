@@ -1,4 +1,4 @@
-// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · CC BY-NC 4.0
+// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Kolizje w trakcie animacji: pary narządów, które NIE przenikają się na początku ani na końcu, a przenikają w trakcie przemiany
 globalThis.THREE = require('three'); require(process.env.CORE || require('path').join(__dirname,'../dist/core.js'));
 const A = ANAT, K = 60;

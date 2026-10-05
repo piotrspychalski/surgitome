@@ -1,11 +1,14 @@
-# SURGITOME — interactive 3D postoperative anatomy
+# SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy
 
-**Author:** Piotr Spychalski, MD, PhD — colorectal surgeon and clinical researcher, Assistant Professor at the Department of Surgical Oncology, Transplant Surgery and General Surgery, Medical University of Gdańsk (Gdański Uniwersytet Medyczny), Gdańsk, Poland
+<!-- Zenodo DOI badge, to be filled in after the first release (XXXXXXX = concept record id):
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+
+**Author:** Piotr Spychalski, MD, PhD — colorectal surgeon and clinical researcher, Assistant Professor at the Department of Oncological, Transplant and General Surgery, Medical University of Gdańsk (Gdański Uniwersytet Medyczny), Gdańsk, Poland
 **ORCID:** [0000-0001-7111-4660](https://orcid.org/0000-0001-7111-4660) · **E-mail:** piotr.spychalski@gumed.edu.pl · [Institutional profile](https://ppm.gumed.edu.pl/info/author/GUM3f5d1d8de0c54365ba7ffa8465799e64/)
 
 SURGITOME is an interactive, schematic 3D atlas of **postoperative gastrointestinal anatomy**, created by Piotr Spychalski, MD, PhD. It shows, step by step, what the digestive tract looks like after a given operation: what is resected, how the reconstruction and anastomoses are made (linear and circular staplers, sutures), what the endoscopist sees after surgery, and how the postoperative anatomy appears on schematic cross-sectional CT.
 
-> **Citation:** Spychalski P. *SURGITOME — interactive 3D postoperative gastrointestinal anatomy* [software]. Medical University of Gdańsk; 2026. ORCID 0000-0001-7111-4660. See `CITATION.cff`.
+> **Citation:** Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. 2026. See [How to cite](#how-to-cite).
 
 ## Purpose and audience
 
@@ -32,7 +35,9 @@ For every procedure and variant a fixed sequence of frames:
 
 Other features: rotatable 3D models, labels, Polish/English interface, favourites for teaching sessions, procedure search, mobile version, keyboard and presentation-clicker control, a short guided tour on the first visit.
 
-### Procedures (24 procedures, 48 variants)
+### Procedures (29 operations, 57 variants)
+
+Plus two teaching slides: liver anatomy and choosing the extent of colorectal resection.
 
 - **Oesophagus:** Oesophagectomy (Ivor Lewis; Ivor Lewis — side-to-side; McKeown; McKeown — side-to-side; Transhiatal (Orringer); Akiyama; Colon interposition)
 - **Stomach:** Distal gastrectomy (Billroth I; Billroth II; Billroth II + Braun; Roux-en-Y), Total gastrectomy, Bypass gastroenterostomy
@@ -59,7 +64,7 @@ SURGITOME is a **schematic educational tool**. Limb lengths are shortened and pr
 
 **Piotr Spychalski, MD, PhD** is a colorectal surgeon and clinical researcher from Gdańsk, Poland.
 
-- **Clinical:** specialist in general surgery working in the colorectal surgery unit of the Department of Surgical Oncology, Transplant Surgery and General Surgery, University Clinical Centre (UCK), Gdańsk; postgraduate training in practical coloproctology (Jagiellonian University Medical Centre of Postgraduate Education); certified da Vinci console surgeon.
+- **Clinical:** specialist in general surgery working in the colorectal surgery unit of the Department of Oncological, Transplant and General Surgery, University Clinical Centre (UCK), Gdańsk; postgraduate training in practical coloproctology (Jagiellonian University Medical Centre of Postgraduate Education); certified da Vinci console surgeon.
 - **Academic:** Assistant Professor at the Medical University of Gdańsk; Scientific Coordinator of the Laboratory of Research in Organ Medicine; PhD with distinction for the thesis *Epidemiology of colorectal cancer and its precursor lesions*; assistant supervisor of two completed doctoral dissertations.
 - **International training:** Clinical Scholars Research Training, Harvard Medical School (2023–2024); visiting professor, Università degli Studi di Milano (2023); research internships at the Clinical Effectiveness Group, University of Oslo, and the Danish Centre for Particle Therapy, Aarhus University; clinical-scientific internship at the Division of Gastrointestinal Surgery, European Institute of Oncology (IEO), Milan.
 - **Research focus:** randomised health-services and comparative-effectiveness trials in colorectal surgery and endoscopy, colorectal cancer screening and epidemiology, organ-preserving treatment of early colorectal cancer, quality of colorectal surgery.
@@ -96,9 +101,26 @@ Concept, medical content, procedure selection, clinical review and all design de
 
 Technical documentation (architecture, modules, data conventions, test suite): `docs/TECHNICAL.md`.
 
+## How to cite
+
+If you use SURGITOME in teaching, research or publications, please cite the version archived in Zenodo:
+
+> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:10.5281/zenodo.XXXXXXX
+
+DOI: *to be assigned by Zenodo on the first release (v1.0.0)*. The concept DOI always resolves to the latest version; each release also has its own version DOI on Zenodo. Machine-readable metadata: `CITATION.cff` (GitHub: *Cite this repository*) and `.zenodo.json`.
+
 ## License
 
-© 2026 Piotr Spychalski. Released under the **Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0)** licence — free for education and non-commercial use with attribution to the author. See `LICENSE`.
+© 2026 Piotr Spychalski. SURGITOME is dual-licensed:
+
+| Part | Licence | File |
+| --- | --- | --- |
+| **Code**: program logic, user interface, build and test scripts (`src/app/`, `src/shell.html`, `build.js`, `tests/`, `tools/`) | [MIT License](https://opensource.org/licenses/MIT) | `LICENSE` |
+| **Content**: 3D anatomical models and their data (mainly `src/core/`), illustrations (every frame, endoscopic view and schematic CT section rendered by the application, including screenshots and recordings), texts (descriptions, labels, Polish and English interface texts, documentation) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | `LICENSE-CONTENT` |
+
+Where code and content share a file (for example anatomical data written as JavaScript), the program logic is under MIT and the content under CC BY 4.0. Reuse of the content, including commercial reuse, requires attribution to the author (see *How to cite*).
+
+Third-party components keep their own licences and are not part of this repository: [three.js](https://threejs.org/) 0.147.0 (MIT License, © three.js authors) and the [Atkinson Hyperlegible](https://fonts.google.com/specimen/Atkinson+Hyperlegible) font (SIL Open Font License 1.1, Braille Institute of America), both loaded from public CDNs.
 
 ---
 
@@ -115,7 +137,9 @@ SURGITOME to interaktywny, schematyczny atlas 3D **anatomii przewodu pokarmowego
 - **Lekarze w trakcie specjalizacji chirurgicznej** — konfiguracje zespoleń (izo- i antyperystaltyczne, koniec-do-końca, bok-do-boku, podwójne staplowanie).
 - **Pacjenci**, razem z lekarzem — wyjaśnienie zakresu resekcji i rekonstrukcji w zrozumiały, obrazowy sposób.
 
-## Zabiegi (24 zabiegi, 48 wariantów)
+## Zabiegi (29 operacji, 57 wariantów)
+
+Do tego dwa slajdy dydaktyczne: anatomia wątroby i wybór zakresu resekcji jelita grubego.
 
 - **Przełyk:** Esofagektomia (Ivor Lewis; Ivor Lewis — bok-do-boku; McKeown; McKeown — bok-do-boku; Przezrozworowa (Orringer); Akiyama; Interpozycja okrężnicy)
 - **Żołądek:** Resekcja dystalna (Billroth I; Billroth II; Billroth II + Braun; Roux-en-Y), Gastrektomia całkowita, Gastroenterostomia omijająca
@@ -149,4 +173,14 @@ Narzędzie **schematyczne i edukacyjne**: długości pętli skrócone, proporcje
 
 Koncepcja, treści medyczne i decyzje projektowe: Piotr Spychalski; implementację oprogramowania wykonano przy wsparciu asystenta AI (Claude, Anthropic) pod kierunkiem autora.
 
-Licencja: CC BY-NC 4.0 — © 2026 Piotr Spychalski. Cytowanie: `CITATION.cff`.
+## Jak cytować
+
+Jeśli korzystasz z SURGITOME w dydaktyce, badaniach lub publikacjach, zacytuj wersję zarchiwizowaną w Zenodo:
+
+> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:10.5281/zenodo.XXXXXXX
+
+DOI: *nadawany przez Zenodo przy pierwszym wydaniu (v1.0.0)*. DOI koncepcyjny zawsze prowadzi do najnowszej wersji; każde wydanie ma też w Zenodo własny DOI wersji. Metadane: `CITATION.cff` i `.zenodo.json`.
+
+## Licencja
+
+© 2026 Piotr Spychalski. Kod (logika programu, interfejs, skrypty budowania i testy) jest udostępniony na licencji **MIT** (`LICENSE`). Treści, czyli modele anatomiczne 3D i ich dane, ilustracje (kadry, obraz endoskopowy, przekroje TK, także zrzuty ekranu i nagrania) oraz teksty, są udostępnione na licencji **CC BY 4.0** (`LICENSE-CONTENT`). Wykorzystanie treści, także komercyjne, wymaga podania autora. Komponenty zewnętrzne (three.js, font Atkinson Hyperlegible) mają własne licencje.

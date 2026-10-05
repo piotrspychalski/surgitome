@@ -1,4 +1,4 @@
-// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · CC BY-NC 4.0
+// SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 globalThis.THREE = require('three'); require(process.env.CORE || require('path').join(__dirname,'../dist/core.js'));
 const A=globalThis.ANAT, K=90;
 function kf(arr,m,def){ if(!arr) return def; if(m<=arr[0][0]) return arr[0][1]; for(let i=1;i<arr.length;i++) if(m<=arr[i][0]){const a=arr[i-1],b=arr[i];return a[1]+(b[1]-a[1])*(m-a[0])/(b[0]-a[0]);} return arr[arr.length-1][1]; }
