@@ -87,18 +87,23 @@
       'Etap II: przecięcie tętnicy wątrobowej prawej, przewodu wątrobowego prawego, szypuł segmentu IV oraz żył wątrobowych pośrodkowej i prawej; usunięcie segmentów IV–VIII.',
       'Pozostają powiększone segmenty II i III z płatem ogoniastym oraz żyła wątrobowa lewa.']);
 
-  // slajd „Guz w wątrobie — zakres resekcji”: przesuwany guz, metastazektomia albo resekcja anatomiczna
-  var TUMOR = { cat: 'liver', id: 'lv-guz', short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — metastazektomia lub resekcja anatomiczna',
-    sub: 'Przesuń guz — wyświetla się margines (metastazektomia) albo segmenty do usunięcia (resekcja anatomiczna)',
-    notes: ['Metastazektomia (resekcja nieanatomiczna): wycięcie guza z marginesem zdrowego miąższu; oszczędza miąższ. Przy przerzutach raka jelita grubego liczy się margines R0 — za wystarczający uznaje się już ≥ 1 mm (Pawlik i wsp., Ann Surg 2005), zwykle planuje się ok. 1 cm.',
-      'Resekcja anatomiczna: usunięcie całego segmentu (lub segmentów) zaopatrywanego przez szypułę, w której leży guz; częściej przy raku wątrobowokomórkowym.',
-      'Gdy guz leży na granicy segmentów lub blisko szypuły albo dużej żyły wątrobowej, zakres rośnie (bisegmentektomia, sekcjonektomia, hemihepatektomia).',
-      'Pokazywany odsetek miąższu pozostającego po resekcji jest orientacyjny (model). ' + COMMON],
-    objects: [], marks: [], cutTools: [{ type: 'lvtumor' }], anastTools: [], commonCuts: 0, mEnd: 0, single: true, box: [[-11.5, -9, -7], [11, 8.5, 6]],
-    singleFrames: [
-      { k: 'meta', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Metastazektomia', title: 'Metastazektomia', cap: '' },
-      { k: 'anat', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Resekcja anatomiczna', title: 'Resekcja anatomiczna', cap: '' }
-    ] };
+  // „Guz w wątrobie — zakres resekcji”: dwa warianty — metastazektomia i resekcja anatomiczna; kadr 1 — położenie guza (przeciąganie), kadr 2 — resekcja
+  var T_NOTES = ['Metastazektomia (resekcja nieanatomiczna): wycięcie guza z marginesem zdrowego miąższu; oszczędza miąższ. Przy przerzutach raka jelita grubego liczy się margines R0 — za wystarczający uznaje się już ≥ 1 mm (Pawlik i wsp., Ann Surg 2005), zwykle planuje się ok. 1 cm.',
+    'Resekcja anatomiczna: usunięcie całego segmentu (lub segmentów) zaopatrywanego przez szypułę, w której leży guz; częściej przy raku wątrobowokomórkowym.',
+    'Gdy guz leży na granicy segmentów lub blisko szypuły albo dużej żyły wątrobowej, zakres rośnie (bisegmentektomia, sekcjonektomia, hemihepatektomia).',
+    'Pokazywany odsetek miąższu pozostającego po resekcji jest orientacyjny (model). ' + COMMON];
+  function tumorAn(mode, vshort) {
+    var meta = mode === 'meta';
+    return { cat: 'liver', id: 'lv-guz-' + mode, vshort: vshort, short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — ' + (meta ? 'metastazektomia' : 'resekcja anatomiczna'),
+      sub: meta ? 'Przesuń przerzut, potem zobacz jego wycięcie z marginesem' : 'Przesuń guz, potem zobacz usunięcie segmentów z podwiązaniem szypuł',
+      notes: T_NOTES, objects: [], marks: [], cutTools: [{ type: 'lvtumor', mode: mode }], anastTools: [], commonCuts: 0, mEnd: 1, single: true, box: [[-11.5, -9, -7], [11, 8.5, 6]],
+      singleFrames: [
+        { k: 'pos', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: meta ? 'Położenie przerzutu' : 'Położenie guza', title: meta ? 'Położenie przerzutu' : 'Położenie guza', cap: '' },
+        { k: 'res', kind: 'orbit', m0: 0, m1: 1, dur: meta ? 4 : 6, cam: 'front', short: 'Resekcja', title: meta ? 'Metastazektomia' : 'Resekcja anatomiczna', cap: '' }
+      ] };
+  }
+  var TUMOR = { cat: 'liver', id: 'lv-guz', short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — metastazektomia lub resekcja anatomiczna', distinct: true,
+    variants: [tumorAn('meta', 'Metastazektomia'), tumorAn('anat', 'Resekcja anatomiczna')] };
   // zakres resekcji anatomicznej dla zbioru segmentów objętych guzem z marginesem: nazwa (przedrostek + numery) i segmenty do usunięcia
   var ROM = { '1': 'I', '2': 'II', '3': 'III', '4a': 'IVa', '4b': 'IVb', '5': 'V', '6': 'VI', '7': 'VII', '8': 'VIII' };
   function resFor(list) {
@@ -124,9 +129,11 @@
   }
   A.LIVER.resFor = resFor; A.LIVER.ROM = ROM;
   A.LIVER.RES_TXT = { meta: 'Wycięcie guza z marginesem zdrowego miąższu (R0); oszczędza pozostały miąższ. Guz w segmencie:', anat: 'Segmenty objęte guzem z marginesem:',
-    left: 'Pozostaje ok.', pct: '% miąższu.', plus1: 'z segmentem I', hint: 'Przeciągnij guz — wyświetla się margines (metastazektomia) albo segmenty do usunięcia (resekcja anatomiczna).' };
+    left: 'Pozostaje ok.', pct: '% miąższu.', plus1: 'z segmentem I', hintM: 'Przeciągnij przerzut po wątrobie; kolorem zaznaczony margines wycięcia.', hintA: 'Przeciągnij guz po wątrobie; kolorem zaznaczone segmenty do usunięcia.',
+    metaRes: 'Przerzut wycięty z marginesem zdrowego miąższu; w wątrobie zostaje loża po resekcji. Guz w segmencie:',
+    anatRes: 'Podwiązanie szypuł usuwanych segmentów, linia demarkacyjna, przecięcie miąższu i usunięcie segmentów:' };
   function one(an) { return { cat: 'liver', id: an.id, short: an.short, title: an.title, variants: [an] }; }
   var at = 0; A.PROCS.forEach(function (p, i) { if (p.id === 'liver') at = i + 1; });
-  A.PROCS.splice.apply(A.PROCS, [at, 0].concat([TUMOR, P_B23, P_RH, P_LH, P_ALPPS].map(one)));
+  A.PROCS.splice.apply(A.PROCS, [at, 0].concat([TUMOR], [P_B23, P_RH, P_LH, P_ALPPS].map(one)));
   A.LIVER.RES = RES;
 })(typeof window !== 'undefined' ? window : globalThis);

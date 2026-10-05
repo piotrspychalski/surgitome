@@ -33,16 +33,31 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
     ok(!L.some(x=>/^Preparat/.test(x)),name+': preparat widoczny po resekcji');
     console.log(name,'| etykiety po:',L.length);
   }
-  // slajd z guzem: reguły zakresu w różnych miejscach
-  [...D.querySelectorAll('#tabs .tab')].find(b=>b.textContent.includes('Guz:')).click(); await sleep(800);
-  let T=w.__sgTest.lvTumor(); ok(T&&T.segs.length>=1,'brak segmentu guza'); ok($('capTitle').textContent==='Metastazektomia','podpis kadru 1: '+$('capTitle').textContent);
-  D.querySelectorAll('.srow1 .step')[1].click(); await sleep(400);
-  const CASES=[[[5.5,1.2,0.6],'Bisegmentektomia II/III'],[[-4.6,2.4,2.0],'Segmentektomia VIII'],[[-7.2,-2,-1.5],'Bisegmentektomia V/VI']];
-  for(const [p,want] of CASES){ T=w.__sgTest.lvTumor(p); await sleep(30); ok($('capTitle').textContent===want,'guz '+p+': '+$('capTitle').textContent+' (chciano '+want+')'); ok(/Pozostaje ok\. \d+% miąższu/.test($('capText').textContent),'brak odsetka: '+$('capText').textContent); }
+  // guz: wariant „Metastazektomia” — kadr 1 położenie, kadr 2 wycięcie z marginesem (preparat odjeżdża, zostaje loża)
+  const tumTab=()=>[...D.querySelectorAll('#tabs .tab')].find(b=>b.textContent.includes('Guz:')).click();
+  tumTab(); await sleep(800);
+  const vb=[...D.querySelectorAll('#variants .vbtn')].map(b=>b.textContent); ok(vb.join('|')==='Metastazektomia|Resekcja anatomiczna','warianty guza: '+vb.join('|'));
+  ok($('capTitle').textContent==='Położenie przerzutu','kadr 1 metastazektomii: '+$('capTitle').textContent);
+  w.__sgTest.lvTumor([-4.6,2.4,2.0]); await sleep(30); ok(/Guz w segmencie: VIII/.test($('capText').textContent),'segment przerzutu: '+$('capText').textContent);
+  D.querySelectorAll('.srow1 .step')[1].click(); await sleep(4600);
+  ok($('capTitle').textContent==='Metastazektomia','kadr 2 metastazektomii: '+$('capTitle').textContent);
+  let L=lbl(); ok(L.includes('Loża po metastazektomii'),'brak loży po metastazektomii: '+L.join('|'));
+  // wariant „Resekcja anatomiczna”: reguły zakresu, kadr 2 z podwiązaniem szypuł
+  D.querySelectorAll('#variants .vbtn')[1].click(); await sleep(800); D.querySelectorAll('.srow1 .step')[0].click(); await sleep(300);
+  const CASES=[[[5.5,1.2,0.6],'Bisegmentektomia II/III',['Szypuła segmentu II (podwiązana)','Szypuła segmentu III (podwiązana)','Żyła wątrobowa lewa (stapler)']],
+    [[-4.6,2.4,2.0],'Segmentektomia VIII',['Szypuła segmentu VIII (podwiązana)']],[[-7.2,-2,-1.5],'Bisegmentektomia V/VI',['Szypuła segmentu V (podwiązana)','Szypuła segmentu VI (podwiązana)']]];
+  for(const [p,want,ligs] of CASES){
+    D.querySelectorAll('.srow1 .step')[0].click(); await sleep(300);
+    w.__sgTest.lvTumor(p); await sleep(30); ok($('capTitle').textContent===want,'guz '+p+': '+$('capTitle').textContent+' (chciano '+want+')');
+    ok(/Pozostaje ok\. \d+% miąższu/.test($('capText').textContent),'brak odsetka: '+$('capText').textContent);
+    D.querySelectorAll('.srow1 .step')[1].click(); await sleep(6600); L=lbl();
+    ligs.forEach(x=>ok(L.includes(x),want+': brak „'+x+'”: '+L.join('|')));
+    ok(L.includes('Pozostała wątroba')&&!L.includes('Preparat'),want+': koniec resekcji: '+L.join('|'));
+  }
   // EN
   $('btnLang').click(); await sleep(100);
   const txt=[$('capTitle').textContent,$('capText').textContent,$('pTitle').textContent,$('pSub').textContent,...[...D.querySelectorAll('#pNotes li,#labels .lbl,.srow1 .step,#tabs .tab')].filter(e=>e.style.display!=='none').map(e=>e.textContent)].join(' | ');
   const pl=txt.match(/[^|]*[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ][^|]*/g); ok(!pl,'polskie teksty w EN: '+(pl||[]).slice(0,4).join(' / '));
-  ok(/Bisegmentectomy V\/VI/.test($('capTitle').textContent),'EN tytuł reguły: '+$('capTitle').textContent);
+  ok(/Bisegmentectomy V\/VI/.test($('capTitle').textContent),'EN tytuł reguły: '+$('capTitle').textContent); ok(/Segment V pedicle \(ligated\)/.test(lbl().join('|')),'EN etykiety szypuł: '+lbl().join('|'));
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);
 })();

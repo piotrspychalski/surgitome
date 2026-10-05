@@ -199,11 +199,25 @@
     });
     var vol = 0; SEGS.forEach(function (sg) { vol += cnt[sg]; });
     var share = {}; SEGS.forEach(function (sg) { share[sg] = cnt[sg] / vol; });
-    CACHE = { h: h, whole: whole, segs: segs, centroid: cen, share: share };
+    CACHE = { h: h, whole: whole, segs: segs, centroid: cen, share: share, Lg: Lg, G: G };
     return CACHE;
   }
 
+  // wycięcie kuli (środek c, promień r) z miąższu: inside = false — wątroba z lożą, true — preparat (część miąższu w kuli)
+  function carve(c, r, inside) {
+    var M = liverModel(), G = M.G, Lg = M.Lg, nx = G.nx, ny = G.ny, nz = G.nz, h = G.h, o = G.o, F = inside ? new Float32Array(Lg.length).fill(1) : new Float32Array(Lg);
+    var i0 = Math.max(1, Math.floor((c[0] - r - 1 - o[0]) / h)), i1 = Math.min(nx - 2, Math.ceil((c[0] + r + 1 - o[0]) / h)),
+      j0 = Math.max(1, Math.floor((c[1] - r - 1 - o[1]) / h)), j1 = Math.min(ny - 2, Math.ceil((c[1] + r + 1 - o[1]) / h)),
+      k0 = Math.max(1, Math.floor((c[2] - r - 1 - o[2]) / h)), k1 = Math.min(nz - 2, Math.ceil((c[2] + r + 1 - o[2]) / h));
+    for (var k = k0; k <= k1; k++) for (var j = j0; j <= j1; j++) for (var i = i0; i <= i1; i++) {
+      var n = i + nx * (j + ny * k), dx = o[0] + i * h - c[0], dy = o[1] + j * h - c[1], dz = o[2] + k * h - c[2], d = Math.sqrt(dx * dx + dy * dy + dz * dz) - r;
+      F[n] = inside ? Math.max(Lg[n], d) : Math.max(Lg[n], -d);
+    }
+    return surfNets(F, G);
+  }
+
   A.LIVER = {
+    carve: carve,
     sdf: liverSDF, planes: planes, region: region, model: liverModel, SEGS: SEGS, DIR: DIR, EXPLODE: EXPLODE,
     IVC: [IVC_X, IVC_Z, IVC_R], vessels: { pv: PV_TREE, ha: HA_EX.concat(HA_IN), bd: BD_EX.concat(BD_IN), hv: HV, gb: GBV }, gbR: gbR,
     box: [[-11.5, -12.5, -7], [11, 8.5, 6]]

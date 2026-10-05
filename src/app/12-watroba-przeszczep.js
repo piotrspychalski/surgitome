@@ -26,7 +26,7 @@
   function oltTAtY(v, y) { var c = oltCurve(v.pts), best = 0, bd = 1e9; for (var i = 0; i <= 400; i++) { var d = Math.abs(c.getPointAt(i / 400).y - y); if (d < bd) { bd = d; best = i / 400; } } return best; }
   function oltTube(pts, r, mat, caps, rs) {
     var c = oltCurve(pts), rf = typeof r === 'function' ? r : function (t) { return r[0] + (r[1] - r[0]) * t; };
-    return new THREE.Mesh(A.buildTube(c, rf, Math.max(8, Math.round(c.getLength() * (rs ? 5 : 3))), rs || 12, caps === undefined ? true : caps), mat);
+    return new THREE.Mesh(track(A.buildTube(c, rf, Math.max(8, Math.round(c.getLength() * (rs ? 5 : 3))), rs || 12, caps === undefined ? true : caps)), mat);
   }
   function makeOltx(d) {
     var LM = A.LIVER, G = LM.model(MOBILE ? 0.32 : 0.25), pb = d.cav === 'pb', roux = d.bile === 'roux', SH = new V3();
