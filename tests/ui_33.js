@@ -3,7 +3,7 @@
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); const w=dom.window;
-w.localStorage.setItem('surgitome-intro','1');
+w.localStorage.setItem('surgitome-intro','1'); w.localStorage.setItem('surgitome-tour','1');
 w.matchMedia=()=>({matches:false,addEventListener(){}});
 w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
 const T=Object.assign({},require('three'));

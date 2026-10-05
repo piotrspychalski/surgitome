@@ -8,7 +8,7 @@ const orbit=fs.readFileSync(path.join(path.dirname(require.resolve('three')),'..
 const sc=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]); const errs=[], fails=[], sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function ok(c,m){ if(!c) fails.push(m); }
 function boot(pos){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); const w=dom.window;
-  w.localStorage.setItem('surgitome-intro','1'); if(pos) w.localStorage.setItem('surgitome-guz-pos',JSON.stringify(pos));
+  w.localStorage.setItem('surgitome-intro','1'); w.localStorage.setItem('surgitome-tour','1'); if(pos) w.localStorage.setItem('surgitome-guz-pos',JSON.stringify(pos));
   w.matchMedia=()=>({matches:false,addEventListener(){}});
   w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }

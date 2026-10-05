@@ -30,7 +30,7 @@ For every procedure and variant a fixed sequence of frames:
 6. Postoperative endoscopy — first-person virtual endoscope, with a choice of route at forks (e.g. biliopancreatic vs alimentary limb) and a navigation minimap.
 7. Schematic cross-sectional CT with a slice-by-slice sweep.
 
-Other features: rotatable 3D models, labels, Polish/English interface, favourites for teaching sessions, procedure search, mobile version, keyboard and presentation-clicker control.
+Other features: rotatable 3D models, labels, Polish/English interface, favourites for teaching sessions, procedure search, mobile version, keyboard and presentation-clicker control, a short guided tour on the first visit.
 
 ### Procedures (24 procedures, 48 variants)
 
