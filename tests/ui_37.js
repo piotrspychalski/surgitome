@@ -19,7 +19,7 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
   [...D.querySelectorAll('#tabs .tab')].find(b=>/Przeszczep/.test(b.textContent)).click(); await sleep(800);
   const vb=[...D.querySelectorAll('#variants .vbtn')].map(b=>b.textContent); ok(vb.length===4,'warianty: '+vb.join('|'));
   const WANT={0:['Zespolenie IVC nad wątrobą','Zespolenie IVC pod wątrobą','Zespolenie przewód–przewód'],1:['Zespolenie IVC nad wątrobą','Hepatikojejunostomia','Zespolenie jelitowo-jelitowe','Kikut przewodu żółciowego biorcy (zamknięty)','Pętla Roux-en-Y'],
-    2:['Zespolenie IVC dawcy z ujściem żył wątrobowych biorcy','Zamknięty dolny koniec IVC dawcy','Zespolenie przewód–przewód','IVC biorcy (zachowana)'],3:['Zespolenie IVC dawcy z ujściem żył wątrobowych biorcy','Hepatikojejunostomia','Pętla Roux-en-Y']};
+    2:['Zespolenie kawo-kawalne bok-do-bokuprzednia ściana IVC biorcy – tylna ściana IVC dawcy','Zamknięty górny koniec IVC dawcy','Zamknięty dolny koniec IVC dawcy','Zamknięte ujścia żył wątrobowych biorcy','Zespolenie przewód–przewód','IVC biorcy (zachowana)'],3:['Zespolenie kawo-kawalne bok-do-bokuprzednia ściana IVC biorcy – tylna ściana IVC dawcy','Hepatikojejunostomia','Pętla Roux-en-Y','Kikut przewodu żółciowego biorcy (zamknięty)']};
   const NOT={0:['Hepatikojejunostomia','Zamknięty dolny koniec IVC dawcy'],1:['Zespolenie przewód–przewód'],2:['Zespolenie IVC pod wątrobą','Pętla Roux-en-Y'],3:['Zespolenie IVC nad wątrobą','Zespolenie przewód–przewód']};
   for(let v=0;v<4;v++){
     D.querySelectorAll('#variants .vbtn')[v].click(); await sleep(700);

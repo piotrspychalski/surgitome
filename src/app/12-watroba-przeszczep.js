@@ -4,7 +4,7 @@
      a przeszczep z własnym odcinkiem IVC leży przed nią (przesunięcie OLT_PB), górny koniec IVC dawcy zespolony z ujściem żył wątrobowych biorcy.
      Oś czasu: 0–1 hepatektomia, 1–1.6 przeszczep na miejsce, 1.6–2.2 IVC, 2.2–3 PV i tętnica, 3–4 drogi żółciowe. */
   var OLT_COL = { rec: '#8f6a3e', graft: '#b8503f', roux: '#43a36f', bp: '#e2ad3f', ring: '#f4f1e8', cut: '#e0302a', lig: '#262b31' };
-  var OLT_AWAY = new V3(8, 7, 9), OLT_PB = new V3(0, 0.3, 2.4);
+  var OLT_AWAY = new V3(8, 7, 9), OLT_PB_Z = 2.3; // piggyback: zawątrobowy odcinek IVC biorcy cofa się, przeszczep zostaje na miejscu
   var OLT_SYS = [['par', 'Wątroba biorcy i przeszczep'], ['pv', 'Żyła wrotna'], ['ha', 'Tętnica wątrobowa'], ['bd', 'Drogi żółciowe'], ['hv', 'Żyły wątrobowe i IVC'], ['roux', 'Pętla Roux-en-Y']];
   function oltCurve(pts) { return new THREE.CatmullRomCurve3(pts.map(function (p) { return p.isVector3 ? p.clone() : new V3().fromArray(p); }), false, 'centripetal'); }
   // podział naczynia w punkcie t (długość łuku): część bliższa [0, t], dalsza [t, 1], punkt i kierunek przecięcia
@@ -19,7 +19,7 @@
     return new THREE.Mesh(A.buildTube(c, rf, Math.max(8, Math.round(c.getLength() * 3)), 12, caps === undefined ? true : caps), mat);
   }
   function makeOltx(d) {
-    var LM = A.LIVER, G = LM.model(MOBILE ? 0.32 : 0.25), pb = d.cav === 'pb', roux = d.bile === 'roux', SH = pb ? OLT_PB.clone() : new V3();
+    var LM = A.LIVER, G = LM.model(MOBILE ? 0.32 : 0.25), pb = d.cav === 'pb', roux = d.bile === 'roux', SH = new V3();
     var grp = new THREE.Group(), rec = new THREE.Group(), exp = new THREE.Group(), gft = new THREE.Group(), anas = new THREE.Group(), labels = [];
     grp.add(rec, exp, gft, anas);
     // materiały: osobny komplet dla części biorcy, wątroby usuwanej i przeszczepu (różne krycie w czasie)
@@ -30,22 +30,27 @@
     var MR = set(OLT_COL.rec), ME = set(OLT_COL.rec), MG = set(OLT_COL.graft), MA = set(OLT_COL.graft);
     MA.roux = lvMat(OLT_COL.roux, 0.45); MA.bp = lvMat(OLT_COL.bp, 0.45);
     var wE = new THREE.Mesh(lvGeo(G.whole), ME.par), wG = new THREE.Mesh(lvGeo(G.whole), MG.par); wE.renderOrder = wG.renderOrder = 2; exp.add(wE); gft.add(wG);
-    var cuts = {}, kindOf = {}, recMesh = {};
+    var cuts = {}, recMesh = {}, ivcV = null, ivcG = new THREE.Group(); rec.add(ivcG);
     function add(g, M, kind, part, id) { var m = oltTube(part.pts, part.r, M[id === 'ivc' ? 'ivc' : kind]); m.userData.sys = kind; g.add(m); return m; }
     ['pv', 'ha', 'bd', 'hv'].forEach(function (kind) {
       LM.vessels[kind].forEach(function (v) {
         var id = v.id, liverSide = function (part, onlyExp) { add(exp, ME, kind, part, id); if (!onlyExp) add(gft, MG, kind, part, id); };
+        if (id === 'cbd' && roux) {
+          // Roux-en-Y: przewód biorcy przecięty nisko, nad trzustką; zostaje krótki zamknięty kikut, reszta wychodzi z wątrobą biorcy
+          var sc = oltSplit(v, 0.3); cuts.cbd = sc; recMesh.cbd = add(rec, MR, kind, sc.a, id); add(exp, ME, kind, sc.b, id); return;
+        }
         if (id === 'cha' || id === 'gda' || id === 'cbd') { recMesh[id] = add(rec, MR, kind, v, id); return; }
         if (id === 'pv' || id === 'pha' || id === 'chd') {
           var sp = oltSplit(v, id === 'pv' ? 0.55 : id === 'pha' ? 0.5 : 0.2); cuts[id] = sp;
-          recMesh[id] = add(rec, MR, kind, sp.a, id); liverSide(sp.b); return;
+          if (id === 'chd' && roux) add(exp, ME, kind, sp.a, id); else recMesh[id] = add(rec, MR, kind, sp.a, id);
+          liverSide(sp.b); return;
         }
         if (id === 'ivc') {
           var tl = oltTAtY(v, -6.6), th = oltTAtY(v, 6.0), lo = oltSplit(v, tl), hi = oltSplit(v, th), c = oltCurve(v.pts), mid = [];
           for (var i = 0; i <= 12; i++) mid.push(c.getPointAt(tl + (th - tl) * i / 12));
           var midP = { pts: mid, r: v.r };
           cuts.ivcL = lo; cuts.ivcU = hi;
-          if (pb) { recMesh.ivc = add(rec, MR, kind, v, id); add(gft, MG, kind, midP, id); cuts.donorIvc = midP; }
+          if (pb) { ivcV = v; add(gft, MG, kind, midP, id); cuts.donorIvc = midP; }
           else { recMesh.ivc = add(rec, MR, kind, lo.a, id); add(rec, MR, kind, hi.b, id); liverSide(midP); }
           return;
         }
@@ -60,39 +65,40 @@
       var mat = track(new THREE.MeshStandardMaterial({ color: col, emissive: new THREE.Color(col).multiplyScalar(col === OLT_COL.cut ? 0.35 : 0.15), roughness: 0.4, transparent: true }));
       var m = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.1, Math.max(0.06, r * 0.18), 10, 40)), mat);
       m.position.copy(p); m.quaternion.setFromUnitVectors(new V3(0, 0, 1), tan.clone().normalize()); anas.add(m);
-      var R = { m: m, on: on, off: off || 99, L: name ? { el: mkLabel(name, sub || '', col === OLT_COL.cut ? OLT_COL.cut : '#7d8794', 'anast'), anchor: p.clone(), alpha: 0 } : null };
+      var R = { m: m, base: p.clone(), on: on, off: off || 99, L: name ? { el: mkLabel(name, sub || '', col === OLT_COL.cut ? OLT_COL.cut : '#7d8794', 'anast'), anchor: p.clone(), alpha: 0 } : null };
       if (R.L) labels.push(R.L); rings.push(R); return R;
     }
     var bridges = [];
-    function bridge(pts, r, mat, on) { var m = oltTube(pts, r, mat); anas.add(m); bridges.push({ m: m, on: on }); return m; }
     // przecięcia w hepatektomii
-    ['pv', 'pha', 'chd'].forEach(function (k) { ring(cuts[k].p, cuts[k].tan, cuts[k].r, OLT_COL.cut, 0.08, 1.0); });
-    if (pb) LM.vessels.hv.forEach(function (v) { if (v.id === 'ivc') return; var c = oltCurve(v.pts); ring(c.getPointAt(0.04), c.getTangentAt(0.04), v.r[0], OLT_COL.cut, 0.08, 1.0); });
+    ['pv', 'pha', roux ? 'cbd' : 'chd'].forEach(function (k) { ring(cuts[k].p, cuts[k].tan, cuts[k].r, OLT_COL.cut, 0.08, 1.0); });
+    if (pb) LM.vessels.hv.forEach(function (v, i) {
+      if (v.id === 'ivc') return; var c = oltCurve(v.pts), p = c.getPointAt(0.04), t = c.getTangentAt(0.04);
+      ring(p, t, v.r[0], OLT_COL.cut, 0.08, 1.0);
+      // ujścia żył wątrobowych na IVC biorcy zamknięte (przesuwają się z IVC biorcy)
+      var R = ring(p, t, v.r[0] * 0.8, OLT_COL.lig, 1.0, 99, i === 1 ? 'Zamknięte ujścia żył wątrobowych biorcy' : null); anas.remove(R.m); ivcG.add(R.m); R.moving = true;
+    });
     else { ring(cuts.ivcU.p, cuts.ivcU.tan, cuts.ivcU.r, OLT_COL.cut, 0.08, 1.0); ring(cuts.ivcL.p, cuts.ivcL.tan, cuts.ivcL.r, OLT_COL.cut, 0.08, 1.0); }
     // zespolenia żylne
     if (!pb) {
       ring(cuts.ivcU.p, cuts.ivcU.tan, cuts.ivcU.r, OLT_COL.ring, 1.65, 99, 'Zespolenie IVC nad wątrobą');
       ring(cuts.ivcL.p, cuts.ivcL.tan, cuts.ivcL.r, OLT_COL.ring, 1.95, 99, 'Zespolenie IVC pod wątrobą');
     } else {
-      var dv = cuts.donorIvc.pts, top = dv[dv.length - 1].clone().add(SH), bot = dv[0].clone().add(SH), IR = LM.vessels.hv[0].r[0];
-      var endP = new V3(top.x, top.y + 0.2, -4.6 + IR * 0.55);
-      bridge([top, top.clone().add(new V3(0, 0.6, -0.4)), new V3(top.x, top.y + 0.7, endP.z + 0.9), endP], [IR * 0.9, IR * 0.8], MA.ivc, 1.6);
-      ring(new V3(top.x, top.y + 0.55, endP.z + 0.55), new V3(0, 0.25, -1), IR * 0.8, OLT_COL.ring, 1.65, 99, 'Zespolenie IVC dawcy z ujściem żył wątrobowych biorcy');
+      // zespolenie kawo-kawalne bok-do-boku (Belghiti): przednia ściana IVC biorcy z tylną ścianą IVC dawcy w środkowym odcinku; oba końce IVC dawcy zamknięte
+      var dv = cuts.donorIvc.pts, top = dv[dv.length - 1], bot = dv[0], IR = LM.vessels.hv[0].r[0], win = new V3(top.x, -0.6, -4.6 - OLT_PB_Z / 2);
+      var stoma = new THREE.Mesh(track(new THREE.CylinderGeometry(0.62, 0.62, OLT_PB_Z, 24)), MA.ivc); stoma.rotation.x = Math.PI / 2; stoma.scale.set(1, 1, 2.4); stoma.position.copy(win);
+      anas.add(stoma); bridges.push({ m: stoma, on: 1.6 });
+      var W = ring(win, new V3(0, 0, 1), 0.62, OLT_COL.ring, 1.65, 99, 'Zespolenie kawo-kawalne bok-do-boku', 'przednia ściana IVC biorcy – tylna ściana IVC dawcy'); W.m.scale.set(1, 2.4, 1);
+      ring(top.clone().add(new V3(0, -0.15, 0)), new V3(0, 1, 0), IR * 0.6, OLT_COL.lig, 1.9, 99, 'Zamknięty górny koniec IVC dawcy');
       ring(bot.clone().add(new V3(0, 0.15, 0)), new V3(0, 1, 0), IR * 0.6, OLT_COL.lig, 1.95, 99, 'Zamknięty dolny koniec IVC dawcy');
     }
-    // żyła wrotna, tętnica: w piggyback krótki odcinek łączący kikut biorcy z przesuniętym przeszczepem
-    [['pv', 2.3, 'Zespolenie żyły wrotnej'], ['pha', 2.65, 'Zespolenie tętnicy wątrobowej']].forEach(function (z) {
-      var c = cuts[z[0]], q = c.p.clone().add(SH);
-      if (pb) bridge([c.p, c.p.clone().lerp(q, 0.5), q], [c.r, c.r], MA[z[0] === 'pv' ? 'pv' : 'ha'], z[1] - 0.05);
-      ring(c.p.clone().lerp(q, 0.5), pb ? q.clone().sub(c.p) : c.tan, c.r, OLT_COL.ring, z[1], 99, z[2]);
-    });
+    // żyła wrotna, tętnica: koniec-do-końca w miejscu przecięcia
+    [['pv', 2.3, 'Zespolenie żyły wrotnej'], ['pha', 2.65, 'Zespolenie tętnicy wątrobowej']].forEach(function (z) { var c = cuts[z[0]]; ring(c.p, c.tan, c.r, OLT_COL.ring, z[1], 99, z[2]); });
     // drogi żółciowe
     var cb = cuts.chd, dEnd = cb.p.clone().add(SH), roux3 = [];
     if (!roux) {
-      if (pb) bridge([cb.p, cb.p.clone().lerp(dEnd, 0.5), dEnd], [cb.r, cb.r], MA.bd, 3.35);
-      ring(cb.p.clone().lerp(dEnd, 0.5), pb ? dEnd.clone().sub(cb.p) : cb.tan, cb.r, OLT_COL.ring, 3.4, 99, 'Zespolenie przewód–przewód', 'koniec-do-końca');
+      ring(cb.p, cb.tan, cb.r, OLT_COL.ring, 3.4, 99, 'Zespolenie przewód–przewód', 'koniec-do-końca');
     } else {
-      ring(cb.p.clone().addScaledVector(cb.tan, -0.15), cb.tan, cb.r * 0.7, OLT_COL.lig, 3.15, 99, 'Kikut przewodu żółciowego biorcy (zamknięty)');
+      var cs = cuts.cbd; ring(cs.p.clone().addScaledVector(cs.tan, -0.12), cs.tan, cs.r * 0.75, OLT_COL.lig, 3.15, 99, 'Kikut przewodu żółciowego biorcy (zamknięty)');
       // pętla Roux-en-Y: od zespolenia jelitowo-jelitowego w górę do przewodu dawcy (koniec pętli ślepy, przewód wszyty w bok)
       var JJ = new V3(3.2, -14.6, 2.4), lim = [new V3(3.0, -18.0, 1.6), JJ, new V3(2.0, -11.8, 2.8), new V3(1.0, -9.2, 2.6),
         dEnd.clone().add(new V3(1.4, -1.3, 0.85)), dEnd.clone().add(new V3(0, -0.62, 0.62)), dEnd.clone().add(new V3(-1.5, -0.55, 0.55))];
@@ -108,7 +114,7 @@
     var Lrec = { el: mkLabel('Wątroba biorcy', '', OLT_COL.rec, 'seg'), base: new V3(-6.5, 4.5, 3.0), anchor: null, alpha: 0 };
     var Lgft = { el: mkLabel('Przeszczep (wątroba dawcy)', '', OLT_COL.graft, 'seg'), base: new V3(-6.5, 4.5, 3.0), anchor: null, alpha: 0 };
     labels.push(Lrec, Lgft);
-    var RL = [['pv', 'Żyła wrotna biorcy', LV_COL.pv, 0.4], ['cha', 'Tętnica wątrobowa wspólna (CHA)', LV_COL.ha, 0.5], ['cbd', 'Przewód żółciowy wspólny biorcy', LV_COL.bd, 0.4],
+    var RL = [['pv', 'Żyła wrotna biorcy', LV_COL.pv, 0.4], ['cha', 'Tętnica wątrobowa wspólna (CHA)', LV_COL.ha, 0.5], ['cbd', 'Przewód żółciowy wspólny biorcy', LV_COL.bd, roux ? 0.12 : 0.4],
       ['ivc', pb ? 'IVC biorcy (zachowana)' : 'IVC biorcy', '#2a4f9e', pb ? 0.12 : 0.35]].map(function (x) {
       var L = { el: mkLabel(x[1], '', x[2], 'seg'), anchor: null, alpha: 0, id: x[0], at: x[3] };
       labels.push(L); return L;
@@ -126,6 +132,17 @@
         var ke = sm((m - 0.45) / 0.5), oe = 1 - sm((m - 0.7) / 0.3), kg = sm((m - 1) / 0.6), og = sm((m - 1) / 0.25);
         exp.position.copy(OLT_AWAY).multiplyScalar(ke); exp.visible = oe > 0.01;
         gft.position.copy(OLT_AWAY).lerp(SH, kg); gft.visible = og > 0.01;
+        if (pb) {
+          // IVC biorcy w odcinku zawątrobowym cofa się (miejsce dla IVC dawcy przed nią); przebudowa tylko przy zmianie
+          var kb = sm((m - 0.95) / 0.4);
+          if (Math.abs(kb - (this.kb === undefined ? -1 : this.kb)) > 1e-3) {
+            this.kb = kb; var c = oltCurve(ivcV.pts), pts = [];
+            for (var i = 0; i <= 40; i++) { var q = c.getPointAt(i / 40), y = q.y, b = y < -7 ? sm((y + 11) / 4) : y > 5.5 ? 1 - sm((y - 5.5) / 2.8) : 1; q.z -= OLT_PB_Z * kb * b; pts.push(q); }
+            if (recMesh.ivc) { rec.remove(recMesh.ivc); recMesh.ivc.geometry.dispose(); }
+            recMesh.ivc = oltTube(pts, ivcV.r, MR.ivc); rec.add(recMesh.ivc);
+            ivcG.position.set(0, 0, -OLT_PB_Z * kb);
+          }
+        }
         function fade(M, f, par) {
           Object.keys(M).forEach(function (k) {
             var sysK = k === 'ivc' || k === 'hv' ? 'hv' : k === 'gb' ? 'bd' : k === 'bp' ? 'roux' : k;
@@ -138,7 +155,7 @@
         bridges.forEach(function (b) { b.m.visible = m >= b.on; });
         rings.forEach(function (R) {
           var a = sm((m - R.on) / 0.12) * (1 - sm((m - R.off + 0.12) / 0.12)); R.m.visible = a > 0.01; R.m.material.opacity = a;
-          if (R.L) { R.L.alpha = a > 0.5 && R.on > 1 ? 1 : 0; }
+          if (R.L) { R.L.alpha = a > 0.5 && R.on >= 1 ? 1 : 0; if (R.moving) R.L.anchor = R.base.clone().add(ivcG.position); }
         });
         Lrec.anchor = Lrec.base.clone().add(exp.position); Lrec.alpha = oe > 0.6 && m < 0.7 ? 1 : 0;
         Lgft.anchor = Lgft.base.clone().add(gft.position); Lgft.alpha = m >= 1.5 ? 1 : 0;

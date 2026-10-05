@@ -236,7 +236,7 @@
       'Pęcherzyk żółciowy dawcy usuwa się zawsze; pęcherzyk biorcy wychodzi z wątrobą biorcy.',
       'Żyła wrotna: zespolenie koniec-do-końca. Tętnica: zwykle pień trzewny lub CHA dawcy (z łatą Carrela) do tętnicy wątrobowej biorcy na wysokości odejścia GDA.'],
     classic: 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwa się razem z wątrobą (zaciski nad i pod wątrobą, czasem omijające krążenie żylno-żylne); dwa zespolenia IVC: nad i pod wątrobą.',
-    pb: 'Piggyback: IVC biorcy zostaje (przepływ zachowany, IVC zaciśnięta tylko częściowo). Górny koniec IVC dawcy zespala się z ujściem żył wątrobowych biorcy (lub bok-do-boku z IVC — Belghiti), dolny koniec IVC dawcy zamyka się.',
+    pb: 'Piggyback: IVC biorcy zostaje (przepływ zachowany, zaciśnięcie tylko częściowe). Pokazany wariant: zespolenie kawo-kawalne bok-do-boku (Belghiti) — przednia ściana IVC biorcy z tylną ścianą środkowego odcinka IVC dawcy; oba końce IVC dawcy i ujścia żył wątrobowych biorcy zamknięte. Inna odmiana: górny koniec IVC dawcy do wspólnego ujścia żył wątrobowych biorcy (Tzakis).',
     d2d: 'Drogi żółciowe przewód–przewód (koniec-do-końca): zachowany zwieracz Oddiego i dostęp do dróg żółciowych w ECPW.',
     roux: 'Hepatikojejunostomia na pętli Roux-en-Y: gdy przewód biorcy nie nadaje się do zespolenia (np. PSC, duża niezgodność średnic, retransplantacja, dzieci); kikut przewodu biorcy zamyka się. Po operacji ECPW zwykle niemożliwa (dostęp przezskórny lub enteroskopia).'
   };
@@ -244,24 +244,24 @@
     var notes = OLT_NOTES.common.slice(0, 1).concat([OLT_NOTES[cav], OLT_NOTES.common[2], OLT_NOTES[bile], OLT_NOTES.common[1],
       'Schemat: proporcje i położenie naczyń uproszczone; odmiany tętnic i rekonstrukcje u żywych dawców (przeszczepy częściowe) nie są pokazane.']);
     var venTxt = cav === 'classic' ? 'Przeszczep z odcinkiem IVC dawcy: zespolenie IVC nad wątrobą, potem pod wątrobą (koniec-do-końca).'
-      : 'Przeszczep ułożony przed zachowaną IVC biorcy: górny koniec IVC dawcy zespolony z ujściem żył wątrobowych biorcy, dolny koniec IVC dawcy zamknięty.';
+      : 'Przeszczep z zawątrobowym odcinkiem IVC dawcy leży przed zachowaną IVC biorcy: zespolenie kawo-kawalne bok-do-boku w środkowym odcinku, oba końce IVC dawcy zamknięte.';
     var bileTxt = bile === 'd2d' ? 'Przewód wątrobowy wspólny dawcy zespolony koniec-do-końca z przewodem żółciowym biorcy.'
       : 'Pętla jelita czczego wyprowadzona metodą Roux-en-Y; przewód wątrobowy dawcy wszyty w jej bok (hepatikojejunostomia), kikut przewodu biorcy zamknięty, zespolenie jelitowo-jelitowe niżej.';
     return { cat: 'liver', id: 'oltx-' + cav + '-' + bile, vshort: vshort, short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — ' + vshort,
-      sub: cav === 'classic' ? 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwany z wątrobą' : 'Piggyback: IVC biorcy zachowana',
+      sub: cav === 'classic' ? 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwany z wątrobą' : 'Piggyback: IVC biorcy zachowana, zespolenie kawo-kawalne bok-do-boku',
       notes: notes, objects: [], marks: [], cutTools: [{ type: 'oltx', cav: cav, bile: bile }], anastTools: [], commonCuts: 0, mEnd: 4, single: true, box: [[-11.5, -14, -7], [11, 9.5, 7]],
       singleFrames: [
         { k: 'normal', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Biorca', title: 'Wątroba biorcy',
           cap: 'Przed przeszczepieniem: wątroba biorcy z naczyniami wnęki, drogami żółciowymi, żyłami wątrobowymi i IVC.' },
         { k: 'var', kind: 'orbit', m0: 0, m1: 1, dur: 4, cam: 'front', short: 'Hepatektomia', title: 'Hepatektomia biorcy',
           cap: cav === 'classic' ? 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz IVC nad i pod wątrobą; wątroba biorcy usuwana razem z odcinkiem IVC.'
-            : 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz żył wątrobowych przy IVC; wątroba odpreparowana od IVC, która zostaje.' },
-        { k: 'ven', kind: 'orbit', m0: 1, m1: 2.2, dur: 4.5, cam: 'custom', camP: { t: [-1.2, 0.5, -2], az: -62, el: 12, k: 0.8 }, short: 'Zespolenie żylne', title: cav === 'classic' ? 'Wszczepienie: zespolenia IVC' : 'Wszczepienie: piggyback', cap: venTxt },
+            : 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz żył wątrobowych przy IVC (ujścia zamknięte); wątroba odpreparowana od IVC, która zostaje.' },
+        { k: 'ven', kind: 'orbit', m0: 1, m1: 2.2, dur: 4.5, cam: 'custom', camP: { t: [-1.2, 0.5, -2], az: -62, el: 12, k: 0.8 }, short: 'Zespolenie żylne', title: cav === 'classic' ? 'Wszczepienie: zespolenia IVC' : 'Wszczepienie: piggyback, zespolenie bok-do-boku', cap: venTxt },
         { k: 'pvha', kind: 'orbit', m0: 2.2, m1: 3, dur: 3.5, cam: 'custom', camP: { t: [0.6, -5.2, 0.5], az: 22, el: -12, k: 0.5 }, short: 'PV i tętnica', title: 'Zespolenie żyły wrotnej i tętnicy wątrobowej',
           cap: 'Żyła wrotna koniec-do-końca, po nim reperfuzja przeszczepu; następnie zespolenie tętnicy wątrobowej.' },
         { k: 'bile', kind: 'orbit', m0: 3, m1: 4, dur: 4, cam: 'custom', camP: bile === 'd2d' ? { t: [-0.6, -6, 0.5], az: 12, el: -8, k: 0.5 } : { t: [0.6, -9, 1.2], az: 18, el: -6, k: 0.72 }, short: 'Drogi żółciowe', title: bile === 'd2d' ? 'Zespolenie przewód–przewód' : 'Hepatikojejunostomia na pętli Roux-en-Y', cap: bileTxt },
         { k: 'post', kind: 'orbit', m0: 4, m1: 4, cam: 'front', short: 'Po przeszczepieniu', title: 'Stan po przeszczepieniu wątroby',
-          cap: 'Przeszczep z zespoleniami: ' + (cav === 'classic' ? 'IVC nad i pod wątrobą' : 'IVC dawcy z ujściem żył wątrobowych biorcy') + ', żyła wrotna, tętnica wątrobowa, ' + (bile === 'd2d' ? 'przewód–przewód.' : 'hepatikojejunostomia na pętli Roux-en-Y.') }
+          cap: 'Przeszczep z zespoleniami: ' + (cav === 'classic' ? 'IVC nad i pod wątrobą' : 'kawo-kawalne bok-do-boku') + ', żyła wrotna, tętnica wątrobowa, ' + (bile === 'd2d' ? 'przewód–przewód.' : 'hepatikojejunostomia na pętli Roux-en-Y.') }
       ] };
   }
   var OLT = { cat: 'liver', id: 'oltx', short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — warianty rekonstrukcji żylnej i żółciowej',
