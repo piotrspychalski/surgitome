@@ -101,7 +101,7 @@
   scrub.addEventListener('change', function () { scrubbing = false; });
   scrub.addEventListener('pointerdown', function () { endo.playing = false; updateDock(); });
   function setLabels(on) {
-    S.labels = on; ct.labels = on;
+    S.labels = on; ct.labels = on; $('cap').hidden = !(on && S.captions); // podpis kadru znika razem z etykietami
     $('optLabels').checked = on; $('ctLabels').checked = on;
     $('btnLabels').setAttribute('aria-pressed', on ? 'true' : 'false'); $('fLbl').setAttribute('aria-pressed', on ? 'true' : 'false');
     try { localStorage.setItem('surgitome-labels', on ? '1' : '0'); } catch (e) {}
@@ -118,7 +118,14 @@
   });
   var lp = null; try { lp = localStorage.getItem('surgitome-labels'); } catch (e) {}
   if (lp === '0' || (lp === null && MOBILE)) setLabels(false);
-  $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !this.checked; };
+  $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !(this.checked && S.labels); };
+  // podpis kadru (lewy dolny róg) przygasa pod kursorem myszy, żeby nie zasłaniał modelu; zdarzenia idą dalej do widoku (obrót kamery)
+  viewport.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var c = $('cap'), r = c.getBoundingClientRect(), inside = !c.hidden && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (inside !== c.classList.contains('faded')) c.classList.toggle('faded', inside);
+  });
+  viewport.addEventListener('pointerleave', function () { $('cap').classList.remove('faded'); });
   $('optMeso').checked = S.meso;
   $('optGuz').checked = S.tumour;
   $('optGuz').onchange = function () { S.tumour = this.checked; try { localStorage.setItem('surgitome-guz', S.tumour ? '1' : '0'); } catch (e) {} applyM(); };

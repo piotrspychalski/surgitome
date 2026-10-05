@@ -379,6 +379,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 #cap{ position:absolute; z-index:3; left:16px; bottom:16px; max-width:min(640px, calc(100% - 32px)); padding:12px 16px 13px 18px; border-radius:12px;
   background:var(--pill); box-shadow:inset 4px 0 0 var(--accent), 0 6px 24px rgba(0,0,0,.2); pointer-events:none; }
 #cap[hidden]{ display:none; }
+#cap.faded{ opacity:.12; transition:opacity .2s ease; }
 #viewport.endo #cap{ max-width:min(560px, calc(100% - min(28vw,260px) - 48px)); background:rgba(10,6,6,.72); color:#f3ece8; }
 #viewport.endo #cap #capText, #viewport.endo #cap #capNum{ color:#d9ccc6; }
 #capNum{ display:block; font-size:13px; color:var(--muted); }
@@ -3053,7 +3054,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     { id: 'gda', name: 'Tętnica żołądkowo-dwunastnicza', pts: [[2.4, -7.4, 1.6], [2.0, -9.0, 2.0], [1.6, -10.8, 2.0]], seg: ['', '', ''], r: [0.17, 0.15], at: 0.7 },
     { id: 'pha', name: 'Tętnica wątrobowa właściwa (PHA)', pts: [[2.4, -7.4, 1.6], [1.4, -6.2, 1.0], [0.4, -5.0, 0.4]], seg: ['', '', ''], r: [0.22, 0.2], at: 0.45 },
     { id: 'rha', name: 'Tętnica wątrobowa prawa', pts: [[0.4, -5.0, 0.4], [-0.9, -4.3, -0.3], [-2.2, -3.2, -0.5], startOf(HA_IN, 'ha_rapv')], seg: ['', '', '', '5,6,7,8'], r: [0.18, 0.15], at: 0.45 },
-    { id: 'lha', name: 'Tętnica wątrobowa lewa', pts: [[0.4, -5.0, 0.4], [1.3, -4.2, 0.5], [2.2, -3.3, 0.6], startOf(HA_IN, 'ha_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.17, 0.15], at: 0.5 }
+    { id: 'lha', name: 'Tętnica wątrobowa lewa', pts: [[0.4, -5.0, 0.4], [1.3, -4.2, 0.5], [2.2, -3.3, 0.6], startOf(HA_IN, 'ha_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.17, 0.15], at: 0.5 },
+    { id: 'ha1', pts: [[1.3, -4.2, 0.5], [1.2, -4.0, -1.6], [0.9, -2.6, -2.6], [0.4, -1.4, -3.5]], seg: ['', '', '1', '1'], r: [0.09, 0.07], sub: '1' } // gałąź do płata ogoniastego (od tętnicy wątrobowej lewej, pod i za lewą gałęzią PV)
   ];
   var CONF = [-0.9, -2.75, 0.15], CYJ = [-1.5, -6.6, 0.25];   // konfluencja przewodów wątrobowych, ujście przewodu pęcherzykowego
   var BD_EX = [
@@ -3061,6 +3063,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     { id: 'chd', name: 'Przewód wątrobowy wspólny', pts: [CYJ, [-1.2, -4.6, 0.2], CONF], seg: ['', '', ''], r: [0.32, 0.3], at: 0.5 },
     { id: 'rhd', name: 'Przewód wątrobowy prawy', pts: [CONF, [-2.2, -2.6, -0.1], startOf(BD_IN, 'bd_rapv')], seg: ['', '', '5,6,7,8'], r: [0.24, 0.22], at: 0.5 },
     { id: 'lhd', name: 'Przewód wątrobowy lewy', pts: [CONF, [0.6, -2.9, 0.5], [1.9, -2.5, 0.9], startOf(BD_IN, 'bd_upv')], seg: ['', '', '', '2,3,4a,4b'], r: [0.24, 0.22], at: 0.55 },
+    { id: 'bd1', pts: [[0.6, -2.9, 0.5], [0.2, -2.2, -1.0], [0.0, -1.6, -2.6], [0.1, -1.0, -3.2]], seg: ['', '', '1', '1'], r: [0.1, 0.08], sub: '1' }, // przewód z płata ogoniastego (do przewodu wątrobowego lewego, nad lewą gałęzią PV)
     { id: 'cyd', name: 'Przewód pęcherzykowy', pts: [GB[3], [-1.9, -5.0, 0.7], [-1.9, -6.0, 0.55], CYJ], seg: ['4b,5', '', '', ''], r: [0.17, 0.15], at: 0.4 }
   ];
   var HV = [
@@ -4332,7 +4335,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   scrub.addEventListener('change', function () { scrubbing = false; });
   scrub.addEventListener('pointerdown', function () { endo.playing = false; updateDock(); });
   function setLabels(on) {
-    S.labels = on; ct.labels = on;
+    S.labels = on; ct.labels = on; $('cap').hidden = !(on && S.captions); // podpis kadru znika razem z etykietami
     $('optLabels').checked = on; $('ctLabels').checked = on;
     $('btnLabels').setAttribute('aria-pressed', on ? 'true' : 'false'); $('fLbl').setAttribute('aria-pressed', on ? 'true' : 'false');
     try { localStorage.setItem('surgitome-labels', on ? '1' : '0'); } catch (e) {}
@@ -4349,7 +4352,14 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   });
   var lp = null; try { lp = localStorage.getItem('surgitome-labels'); } catch (e) {}
   if (lp === '0' || (lp === null && MOBILE)) setLabels(false);
-  $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !this.checked; };
+  $('optCaps').onchange = function () { S.captions = this.checked; $('cap').hidden = !(this.checked && S.labels); };
+  // podpis kadru (lewy dolny róg) przygasa pod kursorem myszy, żeby nie zasłaniał modelu; zdarzenia idą dalej do widoku (obrót kamery)
+  viewport.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var c = $('cap'), r = c.getBoundingClientRect(), inside = !c.hidden && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (inside !== c.classList.contains('faded')) c.classList.toggle('faded', inside);
+  });
+  viewport.addEventListener('pointerleave', function () { $('cap').classList.remove('faded'); });
   $('optMeso').checked = S.meso;
   $('optGuz').checked = S.tumour;
   $('optGuz').onchange = function () { S.tumour = this.checked; try { localStorage.setItem('surgitome-guz', S.tumour ? '1' : '0'); } catch (e) {} applyM(); };
