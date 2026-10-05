@@ -10,7 +10,7 @@ function ok(c,m){ if(!c) fails.push(m); }
 // położenia elementów (JSDOM nie liczy układu): [x, y, szerokość, wysokość] w oknie 1024×768
 const RD={btnLang:[930,12,78,32],q:[300,10,400,36],subbar:[0,56,1024,80],btnPrev:[16,690,92,38],strip:[118,690,700,38],btnNext:[826,690,92,38],fLbl:[970,206,42,42],fInfo:[970,110,42,42],viewport:[0,136,1024,540],btnPlay:[16,736,90,30]};
 const RM={fLang:[970,160,42,42],mq:[24,330,976,40],mMenuBtn:[60,8,950,40],mDock:[0,700,1024,60],fLbl:[970,210,42,42],fInfo:[970,110,42,42],viewport:[0,56,1024,640]};
-function boot(keys,mobile){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); const w=dom.window;
+function boot(keys,mobile){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); Object.defineProperty(dom.window.navigator,'languages',{value:['pl-PL']}); Object.defineProperty(dom.window.navigator,'language',{value:'pl-PL'});  const w=dom.window;
   for(const k in keys) w.localStorage.setItem(k,keys[k]);
   w.matchMedia=q=>({matches:!!mobile&&/max-width/.test(q),addEventListener(){}});
   w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};

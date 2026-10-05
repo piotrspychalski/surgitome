@@ -66,6 +66,7 @@ Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kole
 - `ui_36.js` — samouczek: start po informacji startowej i u stałych użytkowników, zapis w localStorage, kolejność kroków i liczba wycięć, klawisze (blokada skrótów pod spodem), klikalny przełącznik języka (EN), Esc i „Pomiń”, powtórka z opisu; telefon: wyszukiwarka w otwartym menu, powtórka z menu. Pozostałe testy interfejsu ustawiają `surgitome-intro` i `surgitome-tour`, żeby pominąć oba okna
 - `ui_37.js [mobile]` — przeszczepienie wątroby: 4 warianty × 6 kadrów, zestaw zespoleń w stanie końcowym (i brak zbędnych), „Dalej”, legenda, EN
 - `ui_38.js [mobile]` — resekcje wątroby: kolejność zakładek, 5 kadrów, preparat w planie i jego brak po resekcji, etykiety kikutów; slajd z guzem: reguły zakresu w kilku położeniach, odsetek miąższu, EN
+- `ui_39.js` — język startowy: zapisany wybór (`surgitome-lang`) ma pierwszeństwo, bez niego pierwszy język przeglądarki — polski → PL, każdy inny → EN. Pozostałe testy jsdom ustawiają przeglądarkę na `pl-PL` (jsdom domyślnie zgłasza `en-US`)
 - `klikany_chromium.py meso|guz` — zrzuty krezki z naczyniami i przeciągania guza
 - `klikany_chromium.py trials [ethos,scar]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo
 - `klikany_chromium.py` — test klikany w prawdziwej przeglądarce z renderowaniem 3D (Playwright), zrzuty ekranu w `zrzuty/`

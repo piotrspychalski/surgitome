@@ -16,7 +16,7 @@ def route(r):
     return r.continue_()
 def page_for(b, mobile, size=None, preview=False):
     vp = size or ({'width': 390, 'height': 844} if mobile else {'width': 1440, 'height': 900})
-    ctx = b.new_context(viewport=vp, device_scale_factor=2 if mobile else 1, is_mobile=mobile, has_touch=mobile)
+    ctx = b.new_context(locale='pl-PL', viewport=vp, device_scale_factor=2 if mobile else 1, is_mobile=mobile, has_touch=mobile)
     ctx.add_init_script("try { localStorage.setItem('surgitome-intro', '1'); localStorage.setItem('surgitome-tour', '1'); } catch (e) {}" + (" window.__SG_PREVIEW = true;" if preview else ''))
     p = ctx.new_page(); p.route('**/*', route)
     p.on('console', lambda m: log.append(('console.' + m.type, m.text)) if m.type in ('error', 'warning') else None)
