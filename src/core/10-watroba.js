@@ -205,7 +205,7 @@
 
   A.LIVER = {
     sdf: liverSDF, planes: planes, region: region, model: liverModel, SEGS: SEGS, DIR: DIR, EXPLODE: EXPLODE,
-    vessels: { pv: PV_TREE, ha: HA_EX.concat(HA_IN), bd: BD_EX.concat(BD_IN), hv: HV, gb: GBV }, gbR: gbR,
+    IVC: [IVC_X, IVC_Z, IVC_R], vessels: { pv: PV_TREE, ha: HA_EX.concat(HA_IN), bd: BD_EX.concat(BD_IN), hv: HV, gb: GBV }, gbR: gbR,
     box: [[-11.5, -12.5, -7], [11, 8.5, 6]]
   };
 

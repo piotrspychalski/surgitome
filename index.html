@@ -3147,7 +3147,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 
   A.LIVER = {
     sdf: liverSDF, planes: planes, region: region, model: liverModel, SEGS: SEGS, DIR: DIR, EXPLODE: EXPLODE,
-    vessels: { pv: PV_TREE, ha: HA_EX.concat(HA_IN), bd: BD_EX.concat(BD_IN), hv: HV, gb: GBV }, gbR: gbR,
+    IVC: [IVC_X, IVC_Z, IVC_R], vessels: { pv: PV_TREE, ha: HA_EX.concat(HA_IN), bd: BD_EX.concat(BD_IN), hv: HV, gb: GBV }, gbR: gbR,
     box: [[-11.5, -12.5, -7], [11, 8.5, 6]]
   };
 
@@ -5327,7 +5327,17 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
      a przeszczep z własnym odcinkiem IVC leży przed nią (przesunięcie OLT_PB), górny koniec IVC dawcy zespolony z ujściem żył wątrobowych biorcy.
      Oś czasu: 0–1 hepatektomia, 1–1.6 przeszczep na miejsce, 1.6–2.2 IVC, 2.2–3 PV i tętnica, 3–4 drogi żółciowe. */
   var OLT_COL = { rec: '#8f6a3e', graft: '#b8503f', roux: '#43a36f', bp: '#e2ad3f', ring: '#f4f1e8', cut: '#e0302a', lig: '#262b31' };
-  var OLT_AWAY = new V3(8, 7, 9), OLT_PB_Z = 2.3; // piggyback: zawątrobowy odcinek IVC biorcy cofa się, przeszczep zostaje na miejscu
+  var OLT_AWAY = new V3(8, 7, 9), OLT_PB_DZ = 0.58; // piggyback: obie IVC w odcinku zawątrobowym spłaszczone (przód–tył) i przylegające, przeszczep i IVC biorcy w miejscu
+  function oltBump(y) { return y < -6.8 ? sm((y + 9.5) / 2.7) : y > 5.8 ? 1 - sm((y - 5.8) / 2.2) : 1; }
+  // rura IVC spłaszczona w odcinku zawątrobowym: oś przesunięta o dz·b(y), przekrój ściśnięty w osi z i lekko poszerzony w osi x
+  function oltIvcTube(pts, r, mat, dz, k, whole) {
+    var m = oltTube(pts, r, mat), pa = m.geometry.attributes.position, X = A.LIVER.IVC[0], Z = A.LIVER.IVC[1];
+    for (var i = 0; i < pa.count; i++) {
+      var y = pa.getY(i), b = (whole ? 1 : oltBump(y)) * k; if (b <= 0) continue;
+      pa.setX(i, X + (pa.getX(i) - X) * (1 + 0.22 * b)); pa.setZ(i, Z + dz * b + (pa.getZ(i) - Z) * (1 - 0.5 * b));
+    }
+    pa.needsUpdate = true; m.geometry.computeVertexNormals(); m.geometry.computeBoundingSphere(); return m;
+  }
   var OLT_SYS = [['par', 'Wątroba biorcy i przeszczep'], ['pv', 'Żyła wrotna'], ['ha', 'Tętnica wątrobowa'], ['bd', 'Drogi żółciowe'], ['hv', 'Żyły wątrobowe i IVC'], ['roux', 'Pętla Roux-en-Y']];
   function oltCurve(pts) { return new THREE.CatmullRomCurve3(pts.map(function (p) { return p.isVector3 ? p.clone() : new V3().fromArray(p); }), false, 'centripetal'); }
   // podział naczynia w punkcie t (długość łuku): część bliższa [0, t], dalsza [t, 1], punkt i kierunek przecięcia
@@ -5373,7 +5383,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
           for (var i = 0; i <= 12; i++) mid.push(c.getPointAt(tl + (th - tl) * i / 12));
           var midP = { pts: mid, r: v.r };
           cuts.ivcL = lo; cuts.ivcU = hi;
-          if (pb) { ivcV = v; add(gft, MG, kind, midP, id); cuts.donorIvc = midP; }
+          if (pb) { ivcV = v; var dm = oltIvcTube(midP.pts, midP.r, MG.ivc, OLT_PB_DZ, 1, true); dm.userData.sys = kind; gft.add(dm); cuts.donorIvc = midP; }
           else { recMesh.ivc = add(rec, MR, kind, lo.a, id); add(rec, MR, kind, hi.b, id); liverSide(midP); }
           return;
         }
@@ -5407,8 +5417,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       ring(cuts.ivcL.p, cuts.ivcL.tan, cuts.ivcL.r, OLT_COL.ring, 1.95, 99, 'Zespolenie IVC pod wątrobą');
     } else {
       // zespolenie kawo-kawalne bok-do-boku (Belghiti): przednia ściana IVC biorcy z tylną ścianą IVC dawcy w środkowym odcinku; oba końce IVC dawcy zamknięte
-      var dv = cuts.donorIvc.pts, top = dv[dv.length - 1], bot = dv[0], IR = LM.vessels.hv[0].r[0], win = new V3(top.x, -0.6, -4.6 - OLT_PB_Z / 2);
-      var stoma = new THREE.Mesh(track(new THREE.CylinderGeometry(0.62, 0.62, OLT_PB_Z, 24)), MA.ivc); stoma.rotation.x = Math.PI / 2; stoma.scale.set(1, 1, 2.4); stoma.position.copy(win);
+      var dv = cuts.donorIvc.pts, top = dv[dv.length - 1], bot = dv[0], IR = LM.vessels.hv[0].r[0], win = new V3(top.x, -0.6, A.LIVER.IVC[1]);
+      var stoma = new THREE.Mesh(track(new THREE.CylinderGeometry(0.62, 0.62, 0.3, 24)), MA.ivc); stoma.rotation.x = Math.PI / 2; stoma.scale.set(1, 1, 2.4); stoma.position.copy(win);
       anas.add(stoma); bridges.push({ m: stoma, on: 1.6 });
       var W = ring(win, new V3(0, 0, 1), 0.62, OLT_COL.ring, 1.65, 99, 'Zespolenie kawo-kawalne bok-do-boku', 'przednia ściana IVC biorcy – tylna ściana IVC dawcy'); W.m.scale.set(1, 2.4, 1);
       ring(top.clone().add(new V3(0, -0.15, 0)), new V3(0, 1, 0), IR * 0.6, OLT_COL.lig, 1.9, 99, 'Zamknięty górny koniec IVC dawcy');
@@ -5456,14 +5466,14 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         exp.position.copy(OLT_AWAY).multiplyScalar(ke); exp.visible = oe > 0.01;
         gft.position.copy(OLT_AWAY).lerp(SH, kg); gft.visible = og > 0.01;
         if (pb) {
-          // IVC biorcy w odcinku zawątrobowym cofa się (miejsce dla IVC dawcy przed nią); przebudowa tylko przy zmianie
+          // IVC biorcy w odcinku zawątrobowym spłaszcza się ku tyłowi (IVC dawcy spłaszczona przed nią); przebudowa tylko przy zmianie
           var kb = sm((m - 0.95) / 0.4);
           if (Math.abs(kb - (this.kb === undefined ? -1 : this.kb)) > 1e-3) {
             this.kb = kb; var c = oltCurve(ivcV.pts), pts = [];
-            for (var i = 0; i <= 40; i++) { var q = c.getPointAt(i / 40), y = q.y, b = y < -7 ? sm((y + 11) / 4) : y > 5.5 ? 1 - sm((y - 5.5) / 2.8) : 1; q.z -= OLT_PB_Z * kb * b; pts.push(q); }
+            for (var i = 0; i <= 40; i++) pts.push(c.getPointAt(i / 40));
             if (recMesh.ivc) { rec.remove(recMesh.ivc); recMesh.ivc.geometry.dispose(); }
-            recMesh.ivc = oltTube(pts, ivcV.r, MR.ivc); rec.add(recMesh.ivc);
-            ivcG.position.set(0, 0, -OLT_PB_Z * kb);
+            recMesh.ivc = oltIvcTube(pts, ivcV.r, MR.ivc, -OLT_PB_DZ, kb); rec.add(recMesh.ivc);
+            ivcG.position.set(0, 0, -OLT_PB_DZ * kb);
           }
         }
         function fade(M, f, par) {
