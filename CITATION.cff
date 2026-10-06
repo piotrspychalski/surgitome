@@ -17,6 +17,9 @@ identifiers:
     value: 10.5281/zenodo.23185125
     description: "Concept DOI (all versions)"
   - type: doi
+    value: 10.5281/zenodo.23196737
+    description: "Version 1.1.0"
+  - type: doi
     value: 10.5281/zenodo.23185126
     description: "Version 1.0.0"
 repository-code: "https://github.com/piotrspychalski/surgitome"

@@ -108,7 +108,7 @@ If you use SURGITOME in teaching, research or publications, please cite the vers
 
 > Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:[10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125)
 
-Concept DOI (all versions, always resolves to the latest): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Version 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). To cite a specific version, use its version DOI from the [Zenodo record](https://doi.org/10.5281/zenodo.23185125). Machine-readable metadata: `CITATION.cff` (GitHub: *Cite this repository*) and `.zenodo.json`.
+Concept DOI (all versions, always resolves to the latest): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Version 1.1.0: [10.5281/zenodo.23196737](https://doi.org/10.5281/zenodo.23196737); version 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). To cite a specific version, use its version DOI from the [Zenodo record](https://doi.org/10.5281/zenodo.23185125). Machine-readable metadata: `CITATION.cff` (GitHub: *Cite this repository*) and `.zenodo.json`.
 
 ## License
 
@@ -182,7 +182,7 @@ Jeśli korzystasz z SURGITOME w dydaktyce, badaniach lub publikacjach, zacytuj w
 
 > Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:[10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125)
 
-DOI koncepcyjny (wszystkie wersje, zawsze prowadzi do najnowszej): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Wersja 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). Aby zacytować konkretną wersję, użyj jej DOI z [rekordu w Zenodo](https://doi.org/10.5281/zenodo.23185125). Metadane: `CITATION.cff` i `.zenodo.json`.
+DOI koncepcyjny (wszystkie wersje, zawsze prowadzi do najnowszej): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Wersja 1.1.0: [10.5281/zenodo.23196737](https://doi.org/10.5281/zenodo.23196737); wersja 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). Aby zacytować konkretną wersję, użyj jej DOI z [rekordu w Zenodo](https://doi.org/10.5281/zenodo.23185125). Metadane: `CITATION.cff` i `.zenodo.json`.
 
 ## Licencja
 

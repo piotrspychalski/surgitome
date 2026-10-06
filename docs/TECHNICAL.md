@@ -51,7 +51,7 @@ Badania są ukryte w nawigacji (kategoria `trials` poza paskiem kategorii i kole
 
 ## Wydania i archiwizacja
 
-Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) trafia przez integrację do Zenodo jako ZIP drzewa plików z tagu, z metadanymi z `.zenodo.json` (`CITATION.cff` jest wtedy pomijany przez Zenodo, ale służy GitHubowi do „Cite this repository”). Przed wydaniem: `version` i `date-released` w `CITATION.cff`, `version` w `package.json`, `softwareVersion` w JSON-LD (`src/shell.html`), odbudowany `index.html`. DOI koncepcyjny (wszystkie wersje): `10.5281/zenodo.23185125` (v1.0.0: `10.5281/zenodo.23185126`); jest w README („How to cite” / „Jak cytować”), w `CITATION.cff` (`doi`) i w `CITE_DOI` (`src/app/12-cytowanie.js`). Licencje: kod MIT (`LICENSE`), treści CC BY 4.0 (`LICENSE-CONTENT`).
+Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) trafia przez integrację do Zenodo jako ZIP drzewa plików z tagu, z metadanymi z `.zenodo.json` (`CITATION.cff` jest wtedy pomijany przez Zenodo, ale służy GitHubowi do „Cite this repository”). Przed wydaniem: `version` i `date-released` w `CITATION.cff`, `version` w `package.json`, `softwareVersion` w JSON-LD (`src/shell.html`), odbudowany `index.html`. DOI koncepcyjny (wszystkie wersje): `10.5281/zenodo.23185125` (v1.0.0: `10.5281/zenodo.23185126`, v1.1.0 — 063cf7c, baza SURGITOME-STUDY: `10.5281/zenodo.23196737`); jest w README („How to cite” / „Jak cytować”), w `CITATION.cff` (`doi`) i w `CITE_DOI` (`src/app/12-cytowanie.js`). Licencje: kod MIT (`LICENSE`), treści CC BY 4.0 (`LICENSE-CONTENT`).
 
 ## Testy
     npm install
