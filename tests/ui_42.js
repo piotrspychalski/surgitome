@@ -1,6 +1,6 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Piśmiennictwo i stopka: każdy zabieg i wariant ma listę źródeł z odnośnikiem (PubMed, DOI lub online); stopka z oświadczeniem
-// o autorstwie i licencjami w PL i EN; okno „Źródła” obejmuje wszystkie zabiegi i badania, zamyka się klawiszem Escape; „Jak cytować” w stopce otwiera okienko cytowania
+// o autorstwie i licencjami w PL i EN; okna dialogowe bezpośrednio w <body>; okno „Źródła” obejmuje wszystkie zabiegi i badania, zamyka się klawiszem Escape; „Jak cytować” w stopce otwiera okienko cytowania
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -18,6 +18,9 @@ const refs=()=>[...D.querySelectorAll('#pRefsList li')];
 const linked=li=>li.className==='rbook'||[...li.querySelectorAll('a')].some(a=>/^https:\/\//.test(a.href));
 (async()=>{
   await sleep(250);
+  // 0. okna dialogowe i nakładki są bezpośrednio w <body> (niezamknięty <div> chowa je w innym, ukrytym oknie — jsdom sprawdza tylko atrybut hidden)
+  const dlg=['intro','tour','fb','cite','bib','qrOverlay','mMenu'].filter(id=>D.getElementById(id));
+  ok(dlg.length>=6&&dlg.every(id=>D.getElementById(id).parentElement===D.body),'okno poza <body>: '+dlg.filter(id=>D.getElementById(id).parentElement!==D.body).map(id=>id+' w #'+(D.getElementById(id).parentElement.closest('[id]')||{}).id).join(', '));
   // 1. każdy zabieg i każdy wariant z głównej nawigacji
   let n=0, minN=99, total=0;
   for(const c of [...D.querySelectorAll('#cats .cat')].filter(b=>!/Ulubione/.test(b.textContent))){
