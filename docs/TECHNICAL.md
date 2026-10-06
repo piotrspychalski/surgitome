@@ -74,7 +74,7 @@ Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) tra
 - `ui_38.js [mobile]` — resekcje wątroby: kolejność zakładek, 5 kadrów, preparat w planie i jego brak po resekcji, etykiety kikutów; slajd z guzem: reguły zakresu w kilku położeniach, odsetek miąższu, EN
 - `ui_39.js` — język startowy: zapisany wybór (`surgitome-lang`) ma pierwszeństwo, bez niego pierwszy język przeglądarki — polski → PL, każdy inny → EN. Pozostałe testy jsdom ustawiają przeglądarkę na `pl-PL` (jsdom domyślnie zgłasza `en-US`)
 - `ui_41.js` — „Jak cytować”: link w panelu i w menu na telefonie, treść cytowania z DOI koncepcyjnym, kopiowanie, klawisze i Esc przy otwartym okienku, EN
-- `ui_43.js` — kod QR na telefonie: przycisk „Udostępnij” w menu, kod na pełnym ekranie, podpowiedź „Dotknij/Kliknij, aby zamknąć”, EN
+- `ui_43.js` — kod QR na telefonie: ikona QR w nagłówku menu, kod na pełnym ekranie, podpowiedź „Dotknij/Kliknij, aby zamknąć”, EN
 - `ui_44.js` — krezka i mezorektum w resekcjach lewostronnych: podwiązania, części usuwane i pozostające, przełącznik, kadry, EN
 - `ui_42.js` — piśmiennictwo: każdy zabieg i wariant ma źródła z odnośnikiem, stopka z oświadczeniem o autorstwie (PL/EN), okno „Źródła” (wszystkie zabiegi i badania, Esc), „Jak cytować” w stopce
 - `klikany_chromium.py meso|guz` — zrzuty krezki z naczyniami i przeciągania guza

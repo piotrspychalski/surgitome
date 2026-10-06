@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Kod QR na telefonie: przycisk „Udostępnij” w menu otwiera kod QR na pełnym ekranie (podpowiedź „Dotknij”), zamykanie, EN; komputer bez zmian
+// Kod QR na telefonie: ikona kodu QR w nagłówku menu otwiera kod QR na pełnym ekranie (podpowiedź „Dotknij”), zamykanie, EN; komputer bez zmian
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); Object.defineProperty(dom.window.navigator,'languages',{value:['pl-PL']}); Object.defineProperty(dom.window.navigator,'language',{value:'pl-PL'});  const w=dom.window;
@@ -18,7 +18,7 @@ const key=(k,el)=>(el||w.document).dispatchEvent(new w.KeyboardEvent('keydown',{
   ok(w.document.documentElement.classList.contains('mobile'),'brak trybu mobilnego');
   ok($('qrOverlay').hidden,'kod QR otwarty na starcie');
   const b=$('mQrBtn'); ok(b&&b.closest('#mMenu .mhead'),'brak przycisku kodu QR w nagłówku menu na telefonie');
-  ok(b.querySelector('use')&&b.querySelector('use').getAttribute('href')==='#qrSym','przycisk w menu bez miniatury kodu QR');
+  ok(b.querySelector('svg')&&!b.textContent.trim()&&b.getAttribute('aria-label')==='Kod QR — udostępnij','przycisk w menu: oczekiwana sama ikona QR z opisem dla czytników');
   $('mMenuBtn').click(); await sleep(20); ok(!$('mMenu').hidden,'menu się nie otwiera');
   b.click(); await sleep(20);
   ok($('mMenu').hidden&&!$('qrOverlay').hidden,'przycisk w menu nie otwiera kodu QR albo nie zamyka menu');
@@ -34,7 +34,7 @@ const key=(k,el)=>(el||w.document).dispatchEvent(new w.KeyboardEvent('keydown',{
   key('Escape'); await sleep(20); ok($('qrOverlay').hidden,'Esc nie zamyka kodu QR');
   // EN
   $('btnLang').click(); await sleep(50);
-  ok(b.textContent==='Share','przycisk nieprzetłumaczony: '+b.textContent);
+  ok(b.getAttribute('aria-label')==='QR code — share','opis przycisku nieprzetłumaczony: '+b.getAttribute('aria-label'));
   b.click(); await sleep(20); ok(hint()==='Tap to close','podpowiedź nieprzetłumaczona: '+hint()); key('Escape'); await sleep(20);
   // komputer: miniatura w pasku jak dotąd, podpowiedź „Click”
   mq.matches=false; mq.f&&mq.f(); await sleep(20);
