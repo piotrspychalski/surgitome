@@ -16,7 +16,7 @@ function ok(c,m){ if(!c) fails.push(m); }
 (async()=>{ await sleep(300);
   const L=w.ANAT._lib, tie=d=>d.vessels.filter(v=>v.tie!=null).map(v=>v.id).join(','), rem=d=>d.vessels.filter(v=>v.removed&&v.kind==='a').map(v=>v.id).join(','), keep=d=>d.vessels.filter(v=>!v.removed&&v.kind==='a').map(v=>v.id).join(',');
   const X={ lh:{tie:'lc,sb',rem:'lc,lca,sb',keep:'ima,sb2,sra',rect:'pozostaje'}, ar:{tie:'ima,lc',rem:'ima,sb,sb2,sra',keep:'lc,lca',rect:'usuwane w całości (TME)'}, arp:{tie:'ima,lc,sra',rem:'ima,sb,sb2,sraTop',keep:'lc,lca,sra',rect:'częściowo usuwane (PME)'}, hart:{tie:'ima,sra',rem:'ima,sb,sb2,sraTop',keep:'imaTop,lc,lca,sra',rect:'pozostaje z kikutem odbytnicy'} };
-  const T={ lh:[L.colT([2.4,4.0,2.5]),L.colT([2.6,-8.2,2.2])], ar:[L.colT([7.4,-6.0,-0.3]),0.985], arp:[L.colT([7.4,-6.0,-0.3]),L.colT([0.45,-13.3,0.2])], hart:[L.colT([7.4,-6.0,-0.3]),L.colT([0.5,-12.8,0.9])] };
+  const T={ lh:[L.colT([2.4,4.0,2.5]),L.colT([2.6,-8.2,2.2])], ar:[L.colT([7.4,-6.0,-0.3]),0.985], arp:[L.colT([7.4,-6.0,-0.3]),L.colT([0.2,-15.1,-1.0])], hart:[L.colT([7.4,-6.0,-0.3]),L.colT([0.5,-12.8,0.9])] };
   for(const m of ['lh','ar','arp','hart']){
     const d=L.mesoLeft(m), x=X[m]; console.log(m,'| podwiązania:',tie(d),'| usuwane:',rem(d),'| zostają:',keep(d));
     ok(d.type==='meso'&&d.name==='Krezka z węzłami chłonnymi'&&d.sub==='usuwana z preparatem',m+': zły opis krezki');
@@ -26,10 +26,12 @@ function ok(c,m){ if(!c) fails.push(m); }
     ok(sh.filter(s=>s.removed).every(s=>s.rows.every(r=>r[2]>=T[m][0]-eps&&r[2]<=T[m][1]+eps)),m+': krezka usuwana poza zakresem preparatu');
     ok(sh.filter(s=>!s.removed).every(s=>s.rows.slice(1,-1).every(r=>r[2]<T[m][0]||r[2]>T[m][1])),m+': krezka pozostająca w zakresie preparatu');
     const all=sh.flatMap(s=>s.rows.map(r=>r[2])); ok(Math.max(...all)>0.98&&Math.min(...all)<T.lh[0],m+': arkusze nie obejmują poprzecznicy lub mezorektum');
-    const rect=sh.filter(s=>s.rows.some(r=>r[2]>0.9)); ok(rect.length&&rect.every(s=>s.removed===(m==='ar')),m+': mezorektum: zła część (usuwana/pozostaje)');
+    const rect=m==='ar'?sh.filter(s=>s.rows.some(r=>r[2]>0.9)):sh.filter(s=>s.rows.some(r=>r[2]>Math.max(0.9,T[m][1])+0.005)); ok(rect.length&&rect.every(s=>s.removed===(m==='ar')),m+': mezorektum: zła część (usuwana/pozostaje)');
     ok(d.labels&&d.labels.length===1&&d.labels[0].name==='Mezorektum'&&d.labels[0].sub===x.rect&&d.labels[0].removed===(m==='ar'),m+': brak lub zły podpis mezorektum');
     ok(sh.some(s=>s.mob)===(m!=='lh')&&(m==='lh'||d.mobOpacity&&d.mobOpacity[1][1]===0),m+': krezka odcinka sprowadzanego (mob) niezgodna');
     ok(d.nodes.some(n=>n.removed)&&d.nodes.some(n=>!n.removed),m+': brak węzłów usuwanych lub pozostających');
+    if(m==='hart'){ const top=d.vessels.find(v=>v.id==='imaTop'); ok(top&&top.nodesRemoved,'hart: węzły u korzenia IMA powinny być usuwane'); }
+    if(m==='hart'||m==='arp') ok(d.vessels.find(v=>v.id==='sraTop').nodes,m+': brak węzłów w usuwanej części SRA/mezorektum');
     ok(JSON.stringify(d.offset[1][1])===JSON.stringify(m==='lh'?[7,1,5]:[-6,2,6]),m+': krezka nie odjeżdża razem z preparatem');
   }
   // zabiegi: każdy wariant ma krezkę, przełącznik widoczny, przejście przez wszystkie kadry bez błędów; hemikolektomia prawa bez zmian

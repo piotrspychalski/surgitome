@@ -319,7 +319,9 @@
   /* ---------- Wspólny moduł zespoleń staplerem okrężnym (EEA) na kikucie zamkniętym staplerem liniowym ---------- */
   // o: { tD: t kikuta na C_COL, R, H: kopuła, kind: center|racket|side, rc: promień pierścienia,
   //      base: ścieżka zachowanej części proksymalnej, tail: punkty sprowadzenia, rBase(t), rEnd, sideX }
-  var tL = ct([0.2, -15.1, -1.0]), tLs = ct([0.45, -13.3, 0.2]); // tLs: wyższe przecięcie odbytnicy (dłuższy kikut) przy zespoleniu na przedniej ścianie
+  // tL — TME: przecięcie nisko, tuż nad połączeniem odbytniczo-odbytowym (ok. 5 cm od odbytu, w skali 0,045 t ≈ 5 cm);
+  // tLs — PME przy zespoleniu na przedniej ścianie: wyżej (ok. 9 cm), mezorektum przecięte na tej samej wysokości — kikut ok. 1,8 raza dłuższy
+  var tL = ct([0, -17.3, -1.3]), tLs = ct([0.2, -15.1, -1.0]);
   var LAR_R = 1.7, LAR_H = 0.9, RC = 0.9, SIDE_X = 2.2;
   function eeaJoin(o) {
     var D = stumpDome(o.tD, o.R, o.H), T0 = D.T0, n = D.n, b = D.b, rc = o.rc || RC, kind = o.kind;
@@ -416,19 +418,19 @@
     var T = AR_TXT[kind], side = kind === 'side', tD = side ? tLs : tL;
     return colonEEA({
       id: 'ar-' + kind, short: 'Resekcja odbytnicy', title: 'Resekcja odbytnicy — ' + T[0].charAt(0).toLowerCase() + T[0].slice(1),
-      sub: 'Przednia resekcja odbytnicy (wysoka lub niska — zależnie od poziomu zespolenia); EEA (end-to-end anastomosis) — stapler okrężny, technika podwójnego staplowania',
-      notes: (side ? ['Resekcja wysoka: usunięta esica z górną częścią odbytnicy i częścią mezorektum (PME, co najmniej 5 cm poniżej guza); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.', 'Zespolenie na przedniej ścianie (koniec okrężnicy do boku odbytnicy) wykonuje się zwykle przy znacznie dłuższym kikucie odbytnicy, czyli po resekcji wysokiej.'] : ['Usunięta esica z górną i środkową częścią odbytnicy oraz mezorektum (w resekcji niskiej całkowite wycięcie mezorektum — TME; w wysokiej częściowe — PME, co najmniej 5 cm poniżej guza); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.',
+      sub: side ? 'Wysoka przednia resekcja odbytnicy z częściowym wycięciem mezorektum (PME); zespolenie koniec-do-boku staplerem okrężnym, technika podwójnego staplowania' : 'Niska przednia resekcja odbytnicy z całkowitym wycięciem mezorektum (TME); EEA (end-to-end anastomosis) — stapler okrężny, technika podwójnego staplowania',
+      notes: (side ? ['Resekcja wysoka (guz w górnej części odbytnicy): usunięta esica i górna część odbytnicy; odbytnica i mezorektum przecięte na tej samej wysokości, co najmniej 5 cm poniżej guza (częściowe wycięcie mezorektum — PME); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.', 'Zespolenie na przedniej ścianie (koniec okrężnicy do boku odbytnicy) wykonuje się zwykle przy znacznie dłuższym kikucie odbytnicy, czyli po resekcji wysokiej.'] : ['Usunięta esica z górną i środkową częścią odbytnicy oraz mezorektum (w resekcji niskiej całkowite wycięcie mezorektum — TME; w wysokiej częściowe — PME, z przecięciem mezorektum co najmniej 5 cm poniżej guza); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.',
         'Resekcja wysoka i niska różnią się poziomem przecięcia odbytnicy (odległością zespolenia od odbytu); geometria zespolenia jest taka sama.']).concat([
         'Kikut odbytnicy zamknięty poprzecznie staplerem liniowym; stapler okrężny przez odbyt, kowadełko w końcu okrężnicy.', T[1],
-        'Tętnica krezkowa dolna (IMA) podwiązana u odejścia, z węzłami chłonnymi u jej korzenia (alternatywnie poniżej odejścia LC); tętnica lewa okrężnicy (LC) przecięta u odejścia, zstępnica ukrwiona przez łuk brzeżny.']),
+        'Tętnica krezkowa dolna (IMA) podwiązana u odejścia (alternatywnie poniżej odejścia LC), z usunięciem węzłów chłonnych u jej korzenia; przy podwiązaniu u odejścia tętnica lewa okrężnicy (LC) przecięta u odejścia, a zstępnica ukrwiona przez łuk brzeżny z tętnicy środkowej okrężnicy. Krezka sprowadzanej zstępnicy z łukiem brzeżnym przemieszcza się razem z jelitem (w modelu po sprowadzeniu niepokazana).']),
       frames: {
-        resect: ['Zakres resekcji', side ? 'Esica z górną częścią odbytnicy, krezką i częścią mezorektum (PME, co najmniej 5 cm poniżej guza); przecięcie na granicy zstępnicy i esicy oraz w górnej części odbytnicy — dłuższy kikut odbytnicy. IMA podwiązana u odejścia.' : 'Esica z górną i środkową częścią odbytnicy, krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz w odbytnicy. IMA podwiązana u odejścia.', 'Zakres resekcji'],
+        resect: ['Zakres resekcji', side ? 'Esica z górną częścią odbytnicy, krezką i częścią mezorektum (PME): odbytnica i mezorektum przecięte co najmniej 5 cm poniżej guza; przecięcie na granicy zstępnicy i esicy oraz w odbytnicy wyżej niż przy TME — dłuższy kikut odbytnicy. IMA podwiązana u odejścia.' : 'Esica z górną i środkową częścią odbytnicy, krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz nisko w odbytnicy, nad dnem miednicy. IMA podwiązana u odejścia.', 'Zakres resekcji'],
         remove: ['Usunięcie preparatu', 'Preparat usunięty; kikut odbytnicy zamknięty poprzecznie staplerem liniowym.', 'Usunięcie'],
         recon: ['Zespolenie staplerem okrężnym', 'Zstępnica z kowadełkiem sprowadzona do miednicy. ' + T[1], 'Zespolenie'],
         post: T[2],
         endoPost: kind === 'side' ? 'Od odbytu do kikuta: zespolenie na przedniej ścianie, powyżej ślepy szczyt kikuta; wejście do okrężnicy.' : 'Od odbytu przez kikut — pierścień zszywek i linia zamknięcia kikuta — tuż za zespolenie.'
       },
-      focus: { t: [1.5, -13.5, 0], k: 0.5 }, kind: kind, tD: tD, R: side ? COL_R(tD) * 1.12 : LAR_R, H: LAR_H, cutP: tA, cutNames: ['Przecięcie okrężnicy', 'Przecięcie odbytnicy'],
+      focus: { t: [1.0, -15.5, -0.5], k: 0.5 }, kind: kind, tD: tD, R: COL_R(tD) * 1.12, H: LAR_H, cutP: tA, cutNames: ['Przecięcie okrężnicy', 'Przecięcie odbytnicy'],
       base: COL_BASE_A, tail: [[2.6, -11.4, 0.6]], rBase: rColA, rBaseEnd: 1.15, rEnd: RC,
       keepObjs: [tiObj({}), appObj({})],
       proxObj: function (J) { return colObj('prox', 0, tA, { name: 'Okrężnica', post: { path: J.proxPath, r: J.proxR }, morph: [2, 2.6] }); },
@@ -619,7 +621,7 @@
         'Najczęściej w trybie pilnym (perforacja, niedrożność, zapalenie uchyłków z zapaleniem otrzewnej) — bez zespolenia.',
         'Zstępnica wyprowadzona jako kolostomia końcowa w lewym dole biodrowym; kikut odbytnicy zamknięty i pozostawiony w miednicy.',
         'Endoskopia przez kolostomię w stronę kątnicy albo przez odbyt do ślepego kikuta (ocena przed odtworzeniem ciągłości).',
-        'W modelu tętnica krezkowa dolna (IMA) podwiązana poniżej odejścia tętnicy lewej okrężnicy (LC), z gałęziami esiczymi i górną częścią tętnicy odbytniczej górnej (SRA); mezorektum z dolną częścią SRA zostaje z kikutem.'
+        'W modelu tętnica krezkowa dolna (IMA) podwiązana poniżej odejścia tętnicy lewej okrężnicy (LC), z usunięciem węzłów u korzenia IMA; gałęzie esicze i górna część tętnicy odbytniczej górnej (SRA) usunięte z preparatem; mezorektum z dolną częścią SRA zostaje z kikutem.'
       ],
       focus: { t: [4, -9, 2], k: 0.62 }, text: COL_TEXT,
       frames: {
@@ -696,7 +698,7 @@
     var IMA = [IMA_O, LC_O, [1.0, -6.0, -2.4], SRA_O], SRA = [SRA_O, [0.6, -11.0, -2.5], [0.25, -14.0, -2.9], [0.1, -16.6, -3.0]];
     var V = [];
     if (ht) { // podwiązanie IMA poniżej odejścia LC
-      V.push({ id: 'imaTop', name: '', kind: 'a', pts: [IMA_O, LC_O], nodes: 'central' });
+      V.push({ id: 'imaTop', name: '', kind: 'a', pts: [IMA_O, LC_O], nodes: 'central', nodesRemoved: true }); // węzły u korzenia IMA usuwane (niskie podwiązanie z wycięciem węzłów wzdłuż IMA)
       V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA.slice(1), removed: true, tie: 0.06, at: 0.5 });
     } else V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA, removed: ar, tie: ar ? 0.05 : null, at: 0.3, nodes: 'central' });
     V.push({ id: 'lc', name: 'LC — tętnica lewa okrężnicy', kind: 'a', pts: [LC_O, via3(LC_O, LCB, 0.2), LCB, le(0.575)], removed: lh, tie: lh || ar ? 0.06 : null, at: 0.55, nodes: true });
@@ -708,7 +710,7 @@
       for (var q = 0; q <= 200; q++) { var dy = Math.abs(cS.getPointAt(q / 200).y - yCut); if (dy < best) { best = dy; fS = q / 200; } }
       var up = [], low = [];
       for (var u = 0; u <= 12; u++) { up.push(cS.getPointAt(fS * u / 12).toArray()); low.push(cS.getPointAt(fS + (1 - fS) * u / 12).toArray()); }
-      V.push({ id: 'sraTop', name: '', kind: 'a', pts: up, removed: true });
+      V.push({ id: 'sraTop', name: '', kind: 'a', pts: up, removed: true, nodes: 'outer' });
       V.push({ id: 'sra', name: 'SRA — tętnica odbytnicza górna', kind: 'a', pts: low, tie: 0.03, at: 0.5, nodes: 'meso' });
     } else V.push({ id: 'sra', name: 'SRA — tętnica odbytnicza górna', kind: 'a', pts: SRA, removed: ar, at: 0.6, nodes: 'meso' });
     var TA = T0 + 0.004, TB = 0.86; // łuk brzeżny (do esicy; odbytnicę zaopatruje SRA)
@@ -719,7 +721,7 @@
     V.forEach(function (v) {
       if (!v.nodes) return;
       var cv = curveOf(v.pts), fs = v.nodes === 'central' ? [0.35] : v.nodes === 'outer' ? [0.5, 0.86] : v.nodes === 'meso' ? [0.35, 0.6, 0.85] : [0.15, 0.5, 0.86];
-      fs.forEach(function (f) { nodes.push({ p: cv.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed }); });
+      fs.forEach(function (f) { nodes.push({ p: cv.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed || !!v.nodesRemoved }); });
     });
     var tm = ar ? 0.8 : (c.r[0] + c.r[1]) / 2, tR = 0.93;
     return { type: 'meso', sheets: sheets.filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes,
