@@ -9,6 +9,8 @@ const line2 = app.split('\n').find(l => l.trim().startsWith('var DICT_TRIALS = '
 if (line2) Object.assign(DICT, JSON.parse(line2.slice(line2.indexOf('{'), line2.lastIndexOf('}') + 1)));
 const seen = new Set(), S = new Set(); // ANAT.BIB (piśmiennictwo: opisy bibliograficzne, DOI, uzasadnienia) się nie tłumaczy
 (function walk(o, d) { if (d > 12 || o == null) return; if (typeof o === 'string') { S.add(o); return; } if (typeof o !== 'object' || seen.has(o) || o === ANAT.BIB) return; seen.add(o); if (o.isVector3 || o.isCurve) return; for (const k in o) walk(o[k], d + 1); })(ANAT, 0);
+// teksty generowane dopiero przy wywołaniu: reguła „Wybór zakresu resekcji” dla wszystkich położeń guza
+for (let i = 0; i <= 200; i++) ['colon', 'ti', 'app'].forEach(o => { const r = ANAT.resectionFor(i / 200, o); [r.name, r.where, r.desc].forEach(x => x && S.add(x)); });
 // polskie teksty bez znaków diakrytycznych (np. „przez zespolenie”, „Kikut esicy”) też muszą mieć tłumaczenie
 const PL = /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]|\b(i|oraz|pętla|jelito|kikut|widok|do|na|w|z)\b/, ID = /^[a-z][A-Za-z0-9_-]*$/;
 const PL2 = /\b(przez|od|ok|bez|za|przy|nad|pod|typowo|kikut|zespolenie|otwarcie|przewodu|dwunastnica|brodawka|esicy|poprzecznica|jelito|pętla|widok|oraz)\b/i;
