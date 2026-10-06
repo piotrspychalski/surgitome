@@ -171,8 +171,12 @@
   $('introLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
   try { if (localStorage.getItem(INTRO_KEY) !== '1') { $('intro').hidden = false; setTimeout(function () { $('introOk').focus(); }, 0); } } catch (e) {}
 
-  function qrShow(on) { $('qrOverlay').hidden = !on; }
+  function qrShow(on) {
+    if (on) { var h = $('qrOverlay').querySelector('.qrhint'); h.dataset.pl = MOBILE ? 'Dotknij, aby zamknąć' : 'Kliknij, aby zamknąć'; h.textContent = tr(h.dataset.pl); }
+    $('qrOverlay').hidden = !on;
+  }
   $('qrBtn').onclick = function () { qrShow(true); };
+  $('mQrBtn').onclick = function () { mMenu(false); qrShow(true); }; // telefon: kod QR z menu, do pokazania innej osobie
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
     if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
