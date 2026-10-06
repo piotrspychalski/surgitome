@@ -3,7 +3,7 @@
    Model: segmenty i naczynia z ANAT.LIVER (10-watroba.js). Każda resekcja: segmenty usuwane (rem), przecięcia naczyń (cuts: id odcinka, t, rodzaj),
    odcinki usuwane w całości z preparatem (gone), kierunek odsunięcia preparatu (dir).
    Oś czasu m: 0 plan, 0–1 kontrola dopływu (podwiązania, linia demarkacyjna), 1–2 przecięcie miąższu i żyły wątrobowej, 2–3 usunięcie preparatu, 3 stan po.
-   ALPPS: 0–1 etap I (podwiązanie prawej gałęzi PV, podział miąższu in situ), 1–2 przerost FLR, 2–3 etap II (trisekcjonektomia prawa).
+   ALPPS: 0–1 etap I (podwiązanie prawej gałęzi PV, podział miąższu in situ z przecięciem szypuł segmentu IV), 1–2 przerost FLR, 2–3 etap II (trisekcjonektomia prawa).
    Nazewnictwo: Brisbane 2000 (Strasberg 2005); ALPPS: Schnitzbauer i wsp., Ann Surg 2012; margines przy przerzutach raka jelita grubego:
    Pawlik i wsp., Ann Surg 2005 (każdy margines R0 ≥ 1 mm). Schemat: zakresy i kikuty uproszczone.
    ===================================================================== */
@@ -27,10 +27,11 @@
         { id: 'lhd', t: 0.58, name: 'Przewód wątrobowy lewy (przecięty)', on: 0.55, kind: 'lig' }, { id: 'lhv', t: 0.12, name: 'Żyła wątrobowa lewa (stapler)', on: 1.6, kind: 'stap' }],
       specimen: 'Preparat: segmenty II–IV (z pęcherzykiem)', remnant: 'Pozostała wątroba: I, V–VIII' },
     alpps: { rem: ['4a', '4b', '5', '6', '7', '8'], dir: [-1, 0.1, 0.3], gone: RIGHT.concat(['cyd', 'gb']), hyper: ['2', '3'], split: true,
-      cuts: [{ id: 'rpv', t: 0.45, name: 'Prawa gałąź żyły wrotnej (podwiązana — etap I)', on: 0.3, kind: 'lig' },
-        { id: 'rha', t: 0.55, name: 'Tętnica wątrobowa prawa', on: 2.05, kind: 'lig' }, { id: 'rhd', t: 0.45, name: 'Przewód wątrobowy prawy', on: 2.12, kind: 'lig' }]
-        .concat(cut3('p4a', 0.12, 'Szypuły segmentu IV', 2.18), cut3('p4b', 0.12, null, 2.2),
-          [{ id: 'mhv', t: 0.12, name: 'Żyła wątrobowa pośrodkowa (stapler)', on: 2.28, kind: 'stap' }, { id: 'rhv', t: 0.12, name: 'Żyła wątrobowa prawa (stapler)', on: 2.34, kind: 'stap' }]),
+      // etap I: podwiązanie prawej gałęzi PV, potem w trakcie podziału miąższu przecięcie szypuł segmentu IV w płaszczyźnie podziału (technika oryginalna)
+      cuts: [{ id: 'rpv', t: 0.45, name: 'Prawa gałąź żyły wrotnej (podwiązana — etap I)', on: 0.3, kind: 'lig' }]
+        .concat(cut3('p4a', 0.12, 'Szypuły segmentu IV (przecięte — etap I)', 0.75), cut3('p4b', 0.12, null, 0.77),
+          [{ id: 'rha', t: 0.55, name: 'Tętnica wątrobowa prawa', on: 2.05, kind: 'lig' }, { id: 'rhd', t: 0.45, name: 'Przewód wątrobowy prawy', on: 2.12, kind: 'lig' },
+            { id: 'mhv', t: 0.12, name: 'Żyła wątrobowa pośrodkowa (stapler)', on: 2.28, kind: 'stap' }, { id: 'rhv', t: 0.12, name: 'Żyła wątrobowa prawa (stapler)', on: 2.34, kind: 'stap' }]),
       specimen: 'Preparat: segmenty IV–VIII', remnant: 'Przyszła pozostała wątroba (FLR): II, III (+ I)' }
   };
   function fr(k, m0, m1, short, title, cap, camP) { return { k: k, kind: 'orbit', m0: m0, m1: m1, dur: m1 > m0 ? 4 : 0, cam: camP ? 'custom' : 'front', camP: camP, short: short, title: title, cap: cap }; }
@@ -56,9 +57,9 @@
   var COMMON = 'Schemat: granice segmentów uproszczone; zakres ustala się indywidualnie (choroba, objętość i czynność pozostałej wątroby).';
   var P_B23 = resAn('b23', 'Bisegmentektomia II/III', 'Bisegmentektomia II/III', 'Usunięcie segmentów II i III (na lewo od więzadła obłego)',
     ['Usuwa się segmenty II i III leżące na lewo od więzadła obłego i szczeliny pępkowej (w nazewnictwie Brisbane 2000 — sekcjonektomia boczna lewa).',
-      'Szypuły segmentów II i III podwiązuje się w szczelinie pępkowej, po lewej stronie więzadła obłego; szypuły segmentu IV zostają.',
-      'Żyłę wątrobową lewą przecina się staplerem przy jej końcu, z zachowaniem odpływu segmentu IV.', COMMON],
-    ['Planowany zakres: segmenty II i III (sekcja boczna lewa).', 'Szypuły segmentów II i III podwiązane w szczelinie pępkowej; zmiana barwy wyznacza linię demarkacyjną.',
+      'Szypuły segmentów II i III podwiązuje się na lewo od więzadła obłego, poza szczeliną pępkową; preparowanie w szczelinie grozi odnaczynieniem segmentu IV, którego szypuły odchodzą w niej po prawej stronie.',
+      'Żyłę wątrobową lewą przecina się staplerem w miąższu, blisko jej ujścia, ale obwodowo od dopływu żył z segmentu IV, by zachować odpływ segmentu IV.', COMMON],
+    ['Planowany zakres: segmenty II i III (sekcja boczna lewa).', 'Szypuły segmentów II i III podwiązane na lewo od więzadła obłego; zmiana barwy wyznacza linię demarkacyjną.',
       'Przecięcie miąższu wzdłuż więzadła sierpowatego; żyła wątrobowa lewa przecięta staplerem.', 'Preparat (segmenty II i III) usunięty.', 'Pozostają segmenty I i IV–VIII; kikuty szypuł II i III oraz żyły wątrobowej lewej.']);
   var P_RH = resAn('rh', 'Prawa hemihepatektomia', 'Prawa hemihepatektomia', 'Usunięcie segmentów V–VIII',
     ['Usuwa się prawą wątrobę (segmenty V–VIII) w płaszczyźnie Cantliego; żyła wątrobowa pośrodkowa zostaje z lewą wątrobą.',
@@ -77,21 +78,21 @@
       'Pozostają segmenty I i V–VIII z żyłą wątrobową prawą i pośrodkową; kikuty lewych struktur wnęki i żyły wątrobowej lewej.']);
   var P_ALPPS = resAn('alpps', 'ALPPS', 'ALPPS — podział wątroby i podwiązanie prawej gałęzi żyły wrotnej (resekcja dwuetapowa)', 'Dwuetapowa trisekcjonektomia prawa z szybkim przerostem segmentów II i III',
     ['ALPPS (Associating Liver Partition and Portal vein Ligation for Staged hepatectomy): gdy przyszła pozostała wątroba (FLR) jest za mała do jednoetapowej resekcji.',
-      'Etap I: podwiązanie prawej gałęzi żyły wrotnej i podział miąższu wzdłuż więzadła sierpowatego (in situ split); tętnice, przewody i żyły wątrobowe pozostają.',
+      'Etap I: podwiązanie prawej gałęzi żyły wrotnej i podział miąższu wzdłuż więzadła sierpowatego (in situ split) z przecięciem szypuł segmentu IV w płaszczyźnie podziału; tętnica wątrobowa prawa, przewód wątrobowy prawy i żyły wątrobowe pozostają.',
       'W ciągu 7–14 dni segmenty II i III (z płatem ogoniastym) szybko się powiększają; ocena objętości w TK przed etapem II.',
-      'Etap II: trisekcjonektomia prawa — usunięcie segmentów IV–VIII z przecięciem tętnicy wątrobowej prawej, przewodu wątrobowego prawego, szypuł segmentu IV oraz żył wątrobowych pośrodkowej i prawej.',
+      'Etap II: trisekcjonektomia prawa — usunięcie segmentów IV–VIII z przecięciem tętnicy wątrobowej prawej, przewodu wątrobowego prawego oraz żył wątrobowych pośrodkowej i prawej.',
       'Schnitzbauer i wsp., Ann Surg 2012. Większy odsetek powikłań niż w klasycznej resekcji dwuetapowej z embolizacją żyły wrotnej — kwalifikacja w ośrodkach referencyjnych. ' + COMMON],
     ['Planowany zakres: segmenty IV–VIII; przyszła pozostała wątroba (FLR) to segmenty II i III z płatem ogoniastym.',
-      'Etap I: podwiązanie prawej gałęzi żyły wrotnej i podział miąższu wzdłuż więzadła sierpowatego; obie części zostają w jamie brzusznej.',
-      'Po 7–14 dniach segmenty II i III wyraźnie się powiększają (krew wrotna płynie tylko do lewej strony), prawa część zanika.',
-      'Etap II: przecięcie tętnicy wątrobowej prawej, przewodu wątrobowego prawego, szypuł segmentu IV oraz żył wątrobowych pośrodkowej i prawej; usunięcie segmentów IV–VIII.',
+      'Etap I: podwiązanie prawej gałęzi żyły wrotnej i podział miąższu wzdłuż więzadła sierpowatego z przecięciem szypuł segmentu IV; obie części zostają w jamie brzusznej.',
+      'Po 7–14 dniach segmenty II i III wyraźnie się powiększają (krew wrotna płynie tylko do nich i do płata ogoniastego), prawa część zanika.',
+      'Etap II: przecięcie tętnicy wątrobowej prawej, przewodu wątrobowego prawego oraz żył wątrobowych pośrodkowej i prawej; usunięcie segmentów IV–VIII.',
       'Pozostają powiększone segmenty II i III z płatem ogoniastym oraz żyła wątrobowa lewa.']);
 
   // „Guz w wątrobie — zakres resekcji”: dwa warianty — metastazektomia i resekcja anatomiczna; kadr 1 — położenie guza (przeciąganie), kadr 2 — resekcja
-  var T_NOTES = ['Metastazektomia (resekcja nieanatomiczna): wycięcie guza z marginesem zdrowego miąższu; oszczędza miąższ. Przy przerzutach raka jelita grubego liczy się margines R0 — za wystarczający uznaje się już ≥ 1 mm (Pawlik i wsp., Ann Surg 2005), zwykle planuje się ok. 1 cm.',
-    'Resekcja anatomiczna: usunięcie całego segmentu (lub segmentów) zaopatrywanego przez szypułę, w której leży guz; częściej przy raku wątrobowokomórkowym.',
+  var T_NOTES = ['Resekcja nieanatomiczna (metastazektomia z marginesem, resekcja oszczędzająca miąższ): wycięcie guza z marginesem zdrowego miąższu; oszczędza miąższ. Przy przerzutach raka jelita grubego liczy się margines R0 — za wystarczający uznaje się już ≥ 1 mm (Pawlik i wsp., Ann Surg 2005), zwykle planuje się ok. 1 cm. Przy przerzutach raka jelita grubego resekcja oszczędzająca miąższ daje przeżycie nie gorsze niż hemihepatektomia czy sekcjonektomia i częściej pozwala na ponowną resekcję przy nawrocie (Mise i wsp., Ann Surg 2016).',
+    'Resekcja anatomiczna: usunięcie całego segmentu (lub segmentów) zaopatrywanego przez szypułę, w której obszarze leży guz; częściej przy raku wątrobowokomórkowym.',
     'Gdy guz leży na granicy segmentów lub blisko szypuły albo dużej żyły wątrobowej, zakres rośnie (bisegmentektomia, sekcjonektomia, hemihepatektomia).',
-    'Pokazywany odsetek miąższu pozostającego po resekcji jest orientacyjny (model). ' + COMMON];
+    'Pokazywany odsetek miąższu pozostającego po resekcji to średnie udziały segmentów u dorosłych bez choroby wątroby (Abdalla i wsp. 2004); różnice osobnicze są duże. ' + COMMON];
   function tumorAn(mode, vshort) {
     var meta = mode === 'meta';
     return { cat: 'liver', id: 'lv-guz-' + mode, vshort: vshort, short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — ' + (meta ? 'metastazektomia' : 'resekcja anatomiczna'),
@@ -102,7 +103,7 @@
         { k: 'res', kind: 'orbit', m0: 0, m1: 1, dur: meta ? 4 : 6, cam: 'front', short: 'Resekcja', title: meta ? 'Metastazektomia' : 'Resekcja anatomiczna', cap: '' }
       ] };
   }
-  var TUMOR = { cat: 'liver', id: 'lv-guz', short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — metastazektomia lub resekcja anatomiczna', distinct: true,
+  var TUMOR = { cat: 'liver', id: 'lv-guz', short: 'Guz: zakres resekcji', title: 'Guz w wątrobie — resekcja nieanatomiczna lub anatomiczna', distinct: true,
     variants: [tumorAn('meta', 'Metastazektomia'), tumorAn('anat', 'Resekcja anatomiczna')] };
   // zakres resekcji anatomicznej dla zbioru segmentów objętych guzem z marginesem: nazwa (przedrostek + numery) i segmenty do usunięcia
   var ROM = { '1': 'I', '2': 'II', '3': 'III', '4a': 'IVa', '4b': 'IVb', '5': 'V', '6': 'VI', '7': 'VII', '8': 'VIII' };
@@ -128,9 +129,11 @@
     return R('Rozległa resekcja — decyzja indywidualna', '', ex(U));
   }
   A.LIVER.resFor = resFor; A.LIVER.ROM = ROM;
-  A.LIVER.RES_TXT = { meta: 'Wycięcie guza z marginesem zdrowego miąższu (R0); oszczędza pozostały miąższ. Guz w segmencie:', anat: 'Segmenty objęte guzem z marginesem:',
+  A.LIVER.RES_TXT = { meta: 'Wycięcie guza z marginesem zdrowego miąższu (R0); oszczędza pozostały miąższ. Guz z marginesem w segmentach:', anat: 'Segmenty objęte guzem z marginesem:',
     left: 'Pozostaje ok.', pct: '% miąższu.', plus1: 'z segmentem I', hintM: 'Przeciągnij przerzut po wątrobie; kolorem zaznaczony margines wycięcia.', hintA: 'Przeciągnij guz po wątrobie; kolorem zaznaczone segmenty do usunięcia.',
-    metaRes: 'Przerzut wycięty z marginesem zdrowego miąższu; w wątrobie zostaje loża po resekcji. Guz w segmencie:',
+    metaRes: 'Przerzut wycięty z marginesem zdrowego miąższu; w wątrobie zostaje loża po resekcji. Guz z marginesem w segmentach:',
+    // metastazektomia: naczynie (szypuła, żyła wątrobowa) w kuli guza z marginesem — przecięte i podwiązane na brzegu loży
+    vesWarn: 'W marginesie leży szypuła lub żyła wątrobowa: jej przecięcie pozbawia dopływu lub odpływu miąższ obwodowo od guza — wtedy rozważa się resekcję anatomiczną.',
     anatRes: 'Podwiązanie szypuł usuwanych segmentów, linia demarkacyjna, przecięcie miąższu i usunięcie segmentów:' };
   function one(an) { return { cat: 'liver', id: an.id, short: an.short, title: an.title, variants: [an] }; }
   var at = 0; A.PROCS.forEach(function (p, i) { if (p.id === 'liver') at = i + 1; });

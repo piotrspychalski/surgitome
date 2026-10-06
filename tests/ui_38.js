@@ -1,5 +1,7 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Resekcje wątroby (bisegmentektomia II/III, prawa i lewa hemihepatektomia, ALPPS) i slajd „Guz w wątrobie”: kadry, kikuty, preparat, reguły zakresu, EN
+// ALPPS: szypuły segmentu IV przecięte już w etapie I; guz: odsetek pozostającego miąższu (Abdalla 2004: prawa hemihepatektomia ~35%, lewa ~67%),
+// lewa hemihepatektomia z podwiązaniem we wnęce, metastazektomia — naczynia w marginesie przecięte (pierścienie, etykiety kikutów, ostrzeżenie w podpisie)
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -23,7 +25,7 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
   const WANT={'Bisegmentektomia II/III':['Szypuła segmentu II (podwiązana)','Szypuła segmentu III (podwiązana)','Żyła wątrobowa lewa (stapler)','Pozostała wątroba: I, IV–VIII'],
     'Prawa hemihepatektomia':['Tętnica wątrobowa prawa (podwiązana)','Prawa gałąź żyły wrotnej (podwiązana)','Przewód wątrobowy prawy (przecięty)','Żyła wątrobowa prawa (stapler)','Pozostała wątroba: I–IV'],
     'Lewa hemihepatektomia':['Tętnica wątrobowa lewa (podwiązana)','Lewa gałąź żyły wrotnej (podwiązana)','Przewód wątrobowy lewy (przecięty)','Żyła wątrobowa lewa (stapler)','Pozostała wątroba: I, V–VIII'],
-    'ALPPS':['Prawa gałąź żyły wrotnej (podwiązana — etap I)','Żyła wątrobowa pośrodkowa (stapler)','Żyła wątrobowa prawa (stapler)','Szypuły segmentu IV','Przyszła pozostała wątroba (FLR): II, III (+ I)']};
+    'ALPPS':['Prawa gałąź żyły wrotnej (podwiązana — etap I)','Żyła wątrobowa pośrodkowa (stapler)','Żyła wątrobowa prawa (stapler)','Szypuły segmentu IV (przecięte — etap I)','Przyszła pozostała wątroba (FLR): II, III (+ I)']};
   for(const name of Object.keys(WANT)){
     [...D.querySelectorAll('#tabs .tab')].find(b=>b.textContent.includes(name)).click(); await sleep(800);
     const st=[...D.querySelectorAll('.srow1 .step')]; ok(st.length===5,name+': kadrów '+st.length);
@@ -33,25 +35,44 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
     ok(!L.some(x=>/^Preparat/.test(x)),name+': preparat widoczny po resekcji');
     console.log(name,'| etykiety po:',L.length);
   }
+  // ALPPS, koniec etapu I: podwiązana prawa gałąź PV i przecięte szypuły segmentu IV; struktury etapu II jeszcze nietknięte
+  { const st=[...D.querySelectorAll('.srow1 .step')]; st[1].click(); await sleep(4600); const L=lbl();
+    ['Prawa gałąź żyły wrotnej (podwiązana — etap I)','Szypuły segmentu IV (przecięte — etap I)'].forEach(x=>ok(L.includes(x),'ALPPS etap I: brak „'+x+'”: '+L.join('|')));
+    ['Tętnica wątrobowa prawa','Żyła wątrobowa pośrodkowa (stapler)'].forEach(x=>ok(!L.includes(x),'ALPPS etap I: „'+x+'” już przecięta: '+L.join('|'))); }
   // guz: wariant „Metastazektomia” — kadr 1 położenie, kadr 2 wycięcie z marginesem (preparat odjeżdża, zostaje loża)
   const tumTab=()=>[...D.querySelectorAll('#tabs .tab')].find(b=>b.textContent.includes('Guz:')).click();
   tumTab(); await sleep(800);
   const vb=[...D.querySelectorAll('#variants .vbtn')].map(b=>b.textContent); ok(vb.join('|')==='Metastazektomia|Resekcja anatomiczna','warianty guza: '+vb.join('|'));
   ok($('capTitle').textContent==='Położenie przerzutu','kadr 1 metastazektomii: '+$('capTitle').textContent);
-  w.__sgTest.lvTumor([-4.6,2.4,2.0]); await sleep(30); ok(/Guz w segmencie: VIII/.test($('capText').textContent),'segment przerzutu: '+$('capText').textContent);
+  // przerzut daleko od szypuł i żył wątrobowych: nic nie jest przecinane, bez ostrzeżenia
+  let G=w.__sgTest.lvTumor([-6,0,4.5]); await sleep(30); ok(!G.cut.length&&!/W marginesie leży szypuła/.test($('capText').textContent),'przerzut bez naczyń w marginesie: '+G.cut.join(',')+' | '+$('capText').textContent);
+  G=w.__sgTest.lvTumor([-4.6,2.4,2.0]); await sleep(30); ok(/Guz z marginesem w segmentach: VIII/.test($('capText').textContent),'segment przerzutu: '+$('capText').textContent);
+  // domyślne położenie (segment VIII): szypuła segmentu VIII w marginesie — przecięta, ostrzeżenie w podpisie
+  ok(['p8','ha_p8','bd_p8'].every(x=>G.cut.includes(x)),'szypuła VIII nie w marginesie: '+G.cut.join(','));
+  ok(/W marginesie leży szypuła lub żyła wątrobowa/.test($('capText').textContent),'brak ostrzeżenia o szypule w marginesie: '+$('capText').textContent);
   D.querySelectorAll('.srow1 .step')[1].click(); await sleep(4600);
   ok($('capTitle').textContent==='Metastazektomia','kadr 2 metastazektomii: '+$('capTitle').textContent);
   let L=lbl(); ok(L.includes('Loża po metastazektomii'),'brak loży po metastazektomii: '+L.join('|'));
+  G=w.__sgTest.lvTumor(); ok(G.res&&G.res.rings>=3,'za mało pierścieni podwiązań na kikutach: '+JSON.stringify(G.res));
+  ok(L.includes('Szypuła segmentu VIII (podwiązana)'),'brak etykiety kikuta szypuły VIII: '+L.join('|'));
+  ok(/W marginesie leży szypuła/.test($('capText').textContent),'brak ostrzeżenia w kadrze Resekcja: '+$('capText').textContent);
+  // naczynia w kadrze Resekcja: kopia z przeciętymi odcinkami zamiast pełnego układu przechodzącego przez lożę
+  ok(G.vesWhole===false,'pełny układ naczyń widoczny w kadrze Resekcja');
   // wariant „Resekcja anatomiczna”: reguły zakresu, kadr 2 z podwiązaniem szypuł
   D.querySelectorAll('#variants .vbtn')[1].click(); await sleep(800); D.querySelectorAll('.srow1 .step')[0].click(); await sleep(300);
   const CASES=[[[5.5,1.2,0.6],'Bisegmentektomia II/III',['Szypuła segmentu II (podwiązana)','Szypuła segmentu III (podwiązana)','Żyła wątrobowa lewa (stapler)']],
-    [[-4.6,2.4,2.0],'Segmentektomia VIII',['Szypuła segmentu VIII (podwiązana)']],[[-7.2,-2,-1.5],'Bisegmentektomia V/VI',['Szypuła segmentu V (podwiązana)','Szypuła segmentu VI (podwiązana)']]];
-  for(const [p,want,ligs] of CASES){
+    [[-4.6,2.4,2.0],'Segmentektomia VIII',['Szypuła segmentu VIII (podwiązana)']],
+    [[-5.5,0.2,-1.6],'Prawa hemihepatektomia (V–VIII)',['Tętnica wątrobowa prawa (podwiązana)','Prawa gałąź żyły wrotnej (podwiązana)','Przewód wątrobowy prawy (przecięty)','Żyła wątrobowa prawa (stapler)'],35],
+    [[2.8,1.0,0.4],'Lewa hemihepatektomia (II–IV)',['Tętnica wątrobowa lewa (podwiązana)','Lewa gałąź żyły wrotnej (podwiązana)','Przewód wątrobowy lewy (przecięty)','Żyła wątrobowa lewa (stapler)'],67],
+    [[-7.2,-2,-1.5],'Bisegmentektomia V/VI',['Szypuła segmentu V (podwiązana)','Szypuła segmentu VI (podwiązana)']]];
+  for(const [p,want,ligs,pct] of CASES){
     D.querySelectorAll('.srow1 .step')[0].click(); await sleep(300);
     w.__sgTest.lvTumor(p); await sleep(30); ok($('capTitle').textContent===want,'guz '+p+': '+$('capTitle').textContent+' (chciano '+want+')');
     ok(/Pozostaje ok\. \d+% miąższu/.test($('capText').textContent),'brak odsetka: '+$('capText').textContent);
+    if(pct) ok(new RegExp('Pozostaje ok\\. '+pct+'% miąższu').test($('capText').textContent),want+': odsetek inny niż '+pct+'%: '+$('capText').textContent);
     D.querySelectorAll('.srow1 .step')[1].click(); await sleep(6600); L=lbl();
     ligs.forEach(x=>ok(L.includes(x),want+': brak „'+x+'”: '+L.join('|')));
+    if(/hemihepatektomia/.test(want)) ok(!L.some(x=>/Szypuł/.test(x)),want+': szypuły segmentów podwiązywane obok podwiązania we wnęce: '+L.join('|'));
     ok(L.includes('Pozostała wątroba')&&!L.includes('Preparat'),want+': koniec resekcji: '+L.join('|'));
   }
   // EN
