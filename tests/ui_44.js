@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Krezka i mezorektum w resekcjach lewostronnych (hemikolektomia lewa, resekcja odbytnicy, Hartmann): podwiązania, część usuwana i pozostająca, przełącznik, kadry, EN
+// Krezka i mezorektum w resekcjach lewostronnych (hemikolektomia lewa, resekcja odbytnicy — TME, przednia ściana — PME z dłuższym kikutem, Hartmann): podwiązania, część usuwana i pozostająca, przełącznik, kadry, EN
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); Object.defineProperty(dom.window.navigator,'languages',{value:['pl-PL']}); Object.defineProperty(dom.window.navigator,'language',{value:'pl-PL'});  const w=dom.window;
@@ -15,9 +15,9 @@ const $=id=>w.document.getElementById(id), sleep=ms=>new Promise(r=>setTimeout(r
 function ok(c,m){ if(!c) fails.push(m); }
 (async()=>{ await sleep(300);
   const L=w.ANAT._lib, tie=d=>d.vessels.filter(v=>v.tie!=null).map(v=>v.id).join(','), rem=d=>d.vessels.filter(v=>v.removed&&v.kind==='a').map(v=>v.id).join(','), keep=d=>d.vessels.filter(v=>!v.removed&&v.kind==='a').map(v=>v.id).join(',');
-  const X={ lh:{tie:'lc,sb',rem:'lc,lca,sb',keep:'ima,sb2,sra',rect:'pozostaje'}, ar:{tie:'ima,lc',rem:'ima,sb,sb2,sra',keep:'lc,lca',rect:'usuwane w całości (TME)'}, hart:{tie:'ima,sra',rem:'ima,sb,sb2,sraTop',keep:'imaTop,lc,lca,sra',rect:'pozostaje z kikutem odbytnicy'} };
-  const T={ lh:[L.colT([2.4,4.0,2.5]),L.colT([2.6,-8.2,2.2])], ar:[L.colT([7.4,-6.0,-0.3]),0.985], hart:[L.colT([7.4,-6.0,-0.3]),L.colT([0.5,-12.8,0.9])] };
-  for(const m of ['lh','ar','hart']){
+  const X={ lh:{tie:'lc,sb',rem:'lc,lca,sb',keep:'ima,sb2,sra',rect:'pozostaje'}, ar:{tie:'ima,lc',rem:'ima,sb,sb2,sra',keep:'lc,lca',rect:'usuwane w całości (TME)'}, arp:{tie:'ima,lc,sra',rem:'ima,sb,sb2,sraTop',keep:'lc,lca,sra',rect:'częściowo usuwane (PME)'}, hart:{tie:'ima,sra',rem:'ima,sb,sb2,sraTop',keep:'imaTop,lc,lca,sra',rect:'pozostaje z kikutem odbytnicy'} };
+  const T={ lh:[L.colT([2.4,4.0,2.5]),L.colT([2.6,-8.2,2.2])], ar:[L.colT([7.4,-6.0,-0.3]),0.985], arp:[L.colT([7.4,-6.0,-0.3]),L.colT([0.45,-13.3,0.2])], hart:[L.colT([7.4,-6.0,-0.3]),L.colT([0.5,-12.8,0.9])] };
+  for(const m of ['lh','ar','arp','hart']){
     const d=L.mesoLeft(m), x=X[m]; console.log(m,'| podwiązania:',tie(d),'| usuwane:',rem(d),'| zostają:',keep(d));
     ok(d.type==='meso'&&d.name==='Krezka z węzłami chłonnymi'&&d.sub==='usuwana z preparatem',m+': zły opis krezki');
     ok(tie(d)===x.tie&&rem(d)===x.rem&&keep(d)===x.keep,m+': złe podwiązania lub naczynia usuwane');
@@ -44,6 +44,12 @@ function ok(c,m){ if(!c) fails.push(m); }
     }
   }
   const procs=w.ANAT.PROCS.filter(p=>['lh','ar','hartmann'].includes(p.id));
+  // przednia ściana: dłuższy kikut odbytnicy (wyższe przecięcie) i PME; linia przez środek i rakieta: TME
+  const AR=w.ANAT.PROCS.find(p=>p.id==='ar'), sub=id=>AR.variants.find(v=>v.id===id).cutTools.find(t=>t.type==='meso').labels[0].sub;
+  ok(sub('ar-side')==='częściowo usuwane (PME)'&&sub('ar-center')==='usuwane w całości (TME)'&&sub('ar-racket')==='usuwane w całości (TME)','resekcja odbytnicy: zły zakres mezorektum w wariantach');
+  const stump=id=>{ const o=AR.variants.find(v=>v.id===id).objects.find(o=>o.id==='rect'); return L.colT(o.pre.path[0]); };
+  console.log('początek kikuta (t): środek',stump('ar-center').toFixed(3),'| przednia ściana',stump('ar-side').toFixed(3));
+  ok(stump('ar-side')<stump('ar-center')-0.02,'przednia ściana: kikut odbytnicy nie jest dłuższy niż w zespoleniu koniec-do-końca');
   ok(procs.length===3&&procs.every(p=>p.variants.every(v=>v.cutTools.filter(t=>t.type==='meso').length===1)),'nie każdy wariant lewostronny ma krezkę');
   ok(w.ANAT.PROCS.filter(p=>['ira','ipaa','ileo'].includes(p.id)).every(p=>p.variants.every(v=>!v.cutTools.some(t=>t.type==='meso'))),'krezka w zabiegu, w którym jej nie dodawano');
   // EN: podpisy krezki i mezorektum przetłumaczone
