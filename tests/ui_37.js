@@ -31,6 +31,9 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
     WANT[v].forEach(x=>ok(lab.includes(x),'wariant '+v+': brak „'+x+'”'));
     NOT[v].forEach(x=>ok(!lab.includes(x),'wariant '+v+': zbędne „'+x+'”'));
     ok(lab.includes('Przeszczep (wątroba dawcy)')&&!lab.includes('Wątroba biorcy'),'wariant '+v+': etykiety wątroby '+lab.join('|'));
+    // etykieta IVC biorcy na IVC biorcy: poniżej zespolenia pod wątrobą (klasycznie zawątrobowy odcinek to IVC dawcy) albo poniżej zamkniętego dolnego końca IVC dawcy (piggyback)
+    const ivcL=v<2?'IVC biorcy':'IVC biorcy (zachowana)', lowR=v<2?'Zespolenie IVC pod wątrobą':'Zamknięty dolny koniec IVC dawcy', ai=o.at[ivcL], ar=o.at[lowR];
+    ok(ai&&ar&&ai[1]<ar[1]-0.5,'wariant '+v+': „'+ivcL+'” nie na IVC biorcy (y '+(ai&&ai[1].toFixed(2))+', „'+lowR+'” y '+(ar&&ar[1].toFixed(2))+')');
     console.log('wariant',vb[v],'| etykiety:',lab.length);
   }
   // „Dalej” przez cały wariant: kadry po kolei, animacje do końca
