@@ -7,11 +7,11 @@
     'Piśmiennictwo do każdego zabiegu: opisy oryginalne, aktualne wytyczne oraz źródła szczegółów pokazanych w modelach. Opisy wg stylu Vancouver, z odnośnikami do PubMed i DOI.':
       'References for each procedure: original descriptions, current guidelines and the sources of details shown in the models. Vancouver style, with links to PubMed and DOI.',
     'Opis oryginalny': 'Original description', 'Wytyczne / konsensus': 'Guideline / consensus', 'Anatomia': 'Anatomy', 'Technika': 'Technique',
-    'Endoskopia': 'Endoscopy', 'Wyniki badań': 'Outcomes', 'Rejestr badania': 'Trial registry', 'Narzędzia': 'Instruments', 'online': 'online'
+    'Endoskopia': 'Endoscopy', 'Wyniki badań': 'Outcomes', 'Rejestr badania': 'Trial registry', 'Materiały dla chorych': 'Patient information', 'Narzędzia': 'Instruments', 'online': 'online'
   });
   var BIB = A.BIB || { R: {}, P: {}, EXTRA: [] };
-  var ROLES = ['original', 'guideline', 'anatomy', 'technique', 'endoscopy', 'outcomes', 'registry'];
-  var ROLE_PL = { original: 'Opis oryginalny', guideline: 'Wytyczne / konsensus', anatomy: 'Anatomia', technique: 'Technika', endoscopy: 'Endoskopia', outcomes: 'Wyniki badań', registry: 'Rejestr badania' };
+  var ROLES = ['original', 'guideline', 'anatomy', 'technique', 'endoscopy', 'outcomes', 'registry', 'patient'];
+  var ROLE_PL = { original: 'Opis oryginalny', guideline: 'Wytyczne / konsensus', anatomy: 'Anatomia', technique: 'Technika', endoscopy: 'Endoskopia', outcomes: 'Wyniki badań', registry: 'Rejestr badania', patient: 'Materiały dla chorych' };
 
   // pozycje zabiegu i bieżącego wariantu, bez powtórzeń; kolejność: rola, potem rok
   function refsFor(ids) {

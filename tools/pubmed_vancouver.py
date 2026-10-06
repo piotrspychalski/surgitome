@@ -5,10 +5,12 @@
 import json, re, sys, unicodedata, urllib.request
 import xml.etree.ElementTree as ET
 
-# błędy w rekordach PubMed sprawdzone ręcznie (autor zbiorowy zapisany jako osoba, literówka, brak DOI w PubMed — DOI z Crossref)
+# błędy w rekordach PubMed sprawdzone ręcznie (autor zbiorowy zapisany jako osoba, literówka, brak lub błędny DOI w PubMed — DOI z Crossref)
 FIX = {'39560893': {'authors': ['Bhasker AG', 'Prasad A', 'Shah S', 'Parmar C'], 'collective': ['OAGB-MGB Consensus Contributors']},
        '25733126': {'collective': ['American Society for Gastrointestinal Endoscopy Standards of Practice Committee']},
-       '703369': {'doi': '10.1016/S0022-5223(19)41012-X'}, '3702486': {'doi': '10.1016/S0022-5223(19)36003-9'}}
+       '703369': {'doi': '10.1016/S0022-5223(19)41012-X'}, '3702486': {'doi': '10.1016/S0022-5223(19)36003-9'},
+       '7524454': {'doi': '10.1097/00000658-199410000-00008'},   # w PubMed DOI innej pracy (Frey, Amikura, J Hepatobiliary Pancreat Surg 1995)
+       '39264553': {'authors': ['Ponce de Leon-Ballesteros G', 'Romero-Velez G', 'Higa K', 'Himpens J', "O'Kane M", 'Torres A', 'Prager G', 'Herrera MF']}}   # „O' Kane” w PubMed
 EPONYM = {'vater': 'Vater', 'whipple': 'Whipple', 'roux': 'Roux', 'billroth': 'Billroth', 'puestow': 'Puestow', 'hartmann': 'Hartmann', 'braun': 'Braun'}
 
 def txt(el):
@@ -19,15 +21,16 @@ def parse(art):
     auths, coll = [], []
     for au in a.findall('AuthorList/Author'):
         if au.find('CollectiveName') is not None: coll.append(txt(au.find('CollectiveName'))); continue
-        ln, ini = au.findtext('LastName') or '', au.findtext('Initials') or ''
-        if ln: auths.append(((ln.title() if ln.isupper() and len(ln) > 1 else ln) + ' ' + ini).strip())
+        ln, ini, suf = au.findtext('LastName') or '', au.findtext('Initials') or '', au.findtext('Suffix') or ''   # Suffix: np. „Jr”
+        if ln: auths.append(' '.join(x for x in ((ln.title() if ln.isupper() and len(ln) > 1 else ln), ini, suf) if x))
     pd = ji.find('PubDate'); year = pd.findtext('Year') or (re.findall(r'\d{4}', pd.findtext('MedlineDate') or '') or [''])[0]
     doi = ''
     for e in a.findall('ELocationID') + art.findall('PubmedData/ArticleIdList/ArticleId'):
         if (e.get('EIdType') or e.get('IdType')) == 'doi' and e.text: doi = e.text.strip()
     return {'pmid': mc.findtext('PMID'), 'authors': auths, 'collective': coll, 'title': txt(a.find('ArticleTitle')) or txt(a.find('VernacularTitle')),
             'journal': mc.findtext('MedlineJournalInfo/MedlineTA') or j.findtext('ISOAbbreviation') or j.findtext('Title'),
-            'year': year, 'volume': ji.findtext('Volume') or '', 'issue': ji.findtext('Issue') or '', 'pages': a.findtext('Pagination/MedlinePgn') or '', 'doi': doi}
+            'year': year, 'volume': ji.findtext('Volume') or '', 'issue': ji.findtext('Issue') or '', 'pages': a.findtext('Pagination/MedlinePgn') or '', 'doi': doi,
+            'pii': next((e.text.strip() for e in a.findall('ELocationID') if e.get('EIdType') == 'pii' and e.text), '')}
 
 def sentence_case(t):
     if sum(ch.isupper() for ch in t) < 0.8 * sum(ch.isalpha() for ch in t): return t
@@ -51,6 +54,7 @@ def vancouver(r):
     elif r['issue']: src += ';(' + r['issue'] + ')'
     pg = nlm_pages(r['pages'])
     if not pg and r['doi'].startswith('10.3791/'): pg = 'e' + r['doi'].split('/')[1]   # JoVE: numer artykułu
+    if not pg and re.fullmatch(r'[A-Za-z]{0,4}\d{1,7}', r['pii']): pg = r['pii']        # brak stron: numer artykułu z ELocationID (pii), np. zrab035, 1646
     if pg: src += ':' + pg
     return s.rstrip('.') + '. ' + t + ' ' + src + '.'
 

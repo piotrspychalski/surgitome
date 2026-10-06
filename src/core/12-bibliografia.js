@@ -2,8 +2,8 @@
    PIŚMIENNICTWO do zabiegów: panel „Opis” → „Piśmiennictwo” i okno „Źródła” w stopce panelu (src/app/12-bibliografia.js)
    R: klucz → { c: opis wg stylu Vancouver, pmid, doi, url, y: rok }
    P: id zabiegu lub wariantu → [[klucz, rola, co w modelu uzasadnia]]; rola: original (opis oryginalny), guideline (wytyczne / konsensus),
-      anatomy, technique, endoscopy, outcomes, registry (rejestr badania). Pozycje wariantu dochodzą do pozycji zabiegu.
-   Opisy z rekordów PubMed (E-utilities efetch) z 2026-10-05; uzasadnienie każdej pozycji: docs/BIBLIOGRAFIA.md
+      anatomy, technique, endoscopy, outcomes, registry (rejestr badania), patient (materiały dla chorych). Pozycje wariantu dochodzą do pozycji zabiegu.
+   Opisy z rekordów PubMed (E-utilities efetch) z 2026-10-05 i 2026-10-06; uzasadnienie każdej pozycji: docs/BIBLIOGRAFIA.md
    ===================================================================== */
 (function (root) {
   var A = root.ANAT;
@@ -21,6 +21,7 @@
       "partington1960": { c: "Partington PF, Rochelle RE. Modified Puestow procedure for retrograde drainage of the pancreatic duct. Ann Surg. 1960;152(6):1037-43.", pmid: "13733040", doi: "10.1097/00000658-196012000-00015", y: 1960 },
       "starzl1963": { c: "Starzl TE, Marchioro TL, Vonkaulla KN, Hermann G, Brittain RS, Waddell WR. Homotransplantation of the liver in humans. Surg Gynecol Obstet. 1963;117:659-76.", pmid: "14100514", y: 1963 },
       "mason1967": { c: "Mason EE, Ito C. Gastric bypass in obesity. Surg Clin North Am. 1967;47(6):1345-51.", pmid: "6073761", doi: "10.1016/s0039-6109(16)38384-0", y: 1967 },
+      "calne1968": { c: "Calne RY, Williams R. Liver transplantation in man. I. Observations on technique and organization in five cases. Br Med J. 1968;4(5630):535-40.", pmid: "4881063", doi: "10.1136/bmj.4.5630.535", y: 1968 },
       "steichen1968": { c: "Steichen FM. The use of staplers in anatomical side-to-side and functional end-to-end enteroanastomoses. Surgery. 1968;64(5):948-53.", pmid: "5687844", y: 1968 },
       "akiyama1975": { c: "Akiyama H, Hiyama M, Miyazono H. Total esophageal reconstruction after extraction of the esophagus. Ann Surg. 1975;182(5):547-52.", pmid: "1190859", doi: "10.1097/00000658-197511000-00002", y: 1975 },
       "starzl1975": { c: "Starzl TE, Bell RH, Beart RW, Putnam CW. Hepatic trisegmentectomy and other liver resections. Surg Gynecol Obstet. 1975;141(3):429-37.", pmid: "1162576", y: 1975 },
@@ -29,7 +30,7 @@
       "akiyama1978": { c: "Akiyama H, Miyazono H, Tsurumaru M, Hashimoto C, Kawamura T. Use of the stomach as an esophageal substitute. Ann Surg. 1978;188(5):606-10.", pmid: "718285", doi: "10.1097/00000658-197811000-00004", y: 1978 },
       "orringer1978": { c: "Orringer MB, Sloan H. Esophagectomy without thoracotomy. J Thorac Cardiovasc Surg. 1978;76(5):643-54.", pmid: "703369", doi: "10.1016/S0022-5223(19)41012-X", y: 1978 },
       "parks1978": { c: "Parks AG, Nicholls RJ. Proctocolectomy without ileostomy for ulcerative colitis. Br Med J. 1978;2(6130):85-8.", pmid: "667572", doi: "10.1136/bmj.2.6130.85", y: 1978 },
-      "traverso1978": { c: "Traverso LW, Longmire WP. Preservation of the pylorus in pancreaticoduodenectomy. Surg Gynecol Obstet. 1978;146(6):959-62.", pmid: "653575", y: 1978 },
+      "traverso1978": { c: "Traverso LW, Longmire WP Jr. Preservation of the pylorus in pancreaticoduodenectomy. Surg Gynecol Obstet. 1978;146(6):959-62.", pmid: "653575", y: 1978 },
       "scopinaro1979": { c: "Scopinaro N, Gianetta E, Civalleri D, Bonalumi U, Bachi V. Bilio-pancreatic bypass for obesity: 1. An experimental study in dogs. Br J Surg. 1979;66(9):613-7.", pmid: "497644", doi: "10.1002/bjs.1800660905", y: 1979 },
       "scopinaro1979b": { c: "Scopinaro N, Gianetta E, Civalleri D, Bonalumi U, Bachi V. Bilio-pancreatic bypass for obesity: II. Initial experience in man. Br J Surg. 1979;66(9):618-20.", pmid: "497645", doi: "10.1002/bjs.1800660906", y: 1979 },
       "knight1980": { c: "Knight CD, Griffen FD. An improved technique for low anterior resection of the rectum using the EEA stapler. Surgery. 1980;88(5):710-4.", pmid: "7434211", y: 1980 },
@@ -49,10 +50,10 @@
       "gustavsson1988": { c: "Gustavsson S, Ilstrup DM, Morrison P, Kelly KA. Roux-Y stasis syndrome after gastrectomy. Am J Surg. 1988;155(3):490-4.", pmid: "3344916", doi: "10.1016/s0002-9610(88)80120-x", y: 1988 },
       "warshaw1988": { c: "Warshaw AL. Conservation of the spleen with distal pancreatectomy. Arch Surg. 1988;123(5):550-3.", pmid: "3358679", doi: "10.1001/archsurg.1988.01400290032004", y: 1988 },
       "tzakis1989": { c: "Tzakis A, Todo S, Starzl TE. Orthotopic liver transplantation with preservation of the inferior vena cava. Ann Surg. 1989;210(5):649-52.", pmid: "2818033", doi: "10.1097/00000658-198911000-00013", y: 1989 },
-      "escuderofabre1991": { c: "Escudero-Fabre A, Escallon A, Sack J, Halpern NB, Aldrete JS. Choledochoduodenostomy. Analysis of 71 cases followed for 5 to 15 years. Ann Surg. 1991;213(6):635-42; discussion 643-4.", pmid: "2039295", doi: "10.1097/00000658-199106000-00014", y: 1991 },
+      "escuderofabre1991": { c: "Escudero-Fabre A, Escallon A Jr, Sack J, Halpern NB, Aldrete JS. Choledochoduodenostomy. Analysis of 71 cases followed for 5 to 15 years. Ann Surg. 1991;213(6):635-42; discussion 643-4.", pmid: "2039295", doi: "10.1097/00000658-199106000-00014", y: 1991 },
       "belghiti1992": { c: "Belghiti J, Panis Y, Sauvanet A, Gayet B, Fékété F. A new technique of side to side caval anastomosis during orthotopic hepatic transplantation without inferior vena caval occlusion. Surg Gynecol Obstet. 1992;175(3):270-2.", pmid: "1514163", y: 1992 },
       "marceau1993": { c: "Marceau P, Biron S, Bourque RA, Potvin M, Hould FS, Simard S. Biliopancreatic Diversion with a New Type of Gastrectomy. Obes Surg. 1993;3(1):29-35.", pmid: "10757900", doi: "10.1381/096089293765559728", y: 1993 },
-      "frey1994": { c: "Frey CF, Amikura K. Local resection of the head of the pancreas combined with longitudinal pancreaticojejunostomy in the management of patients with chronic pancreatitis. Ann Surg. 1994;220(4):492-504; discussion 504-7.", pmid: "7524454", doi: "10.1007/BF02348284", y: 1994 },
+      "frey1994": { c: "Frey CF, Amikura K. Local resection of the head of the pancreas combined with longitudinal pancreaticojejunostomy in the management of patients with chronic pancreatitis. Ann Surg. 1994;220(4):492-504; discussion 504-7.", pmid: "7524454", doi: "10.1097/00000658-199410000-00008", y: 1994 },
       "vogel1994": { c: "Vogel SB, Drane WE, Woodward ER. Clinical and radionuclide evaluation of bile diversion by Braun enteroenterostomy: prevention and treatment of alkaline reflux gastritis. An alternative to Roux-en-Y diversion. Ann Surg. 1994;219(5):458-65; discussion 465-6.", pmid: "8185396", doi: "10.1097/00000658-199405000-00003", y: 1994 },
       "wittgrove1994": { c: "Wittgrove AC, Clark GW, Tremblay LJ. Laparoscopic Gastric Bypass, Roux-en-Y: Preliminary Report of Five Cases. Obes Surg. 1994;4(4):353-7.", pmid: "10742801", doi: "10.1381/096089294765558331", y: 1994 },
       "peters1995": { c: "Peters JH, Kronson JW, Katz M, DeMeester TR. Arterial anatomic considerations in colon interposition for esophageal replacement. Arch Surg. 1995;130(8):858-62; discussion 862-3.", pmid: "7632146", doi: "10.1001/archsurg.1995.01430080060009", y: 1995 },
@@ -127,6 +128,7 @@
       "europeanassociat2016": { c: "European Association for the Study of the Liver. EASL Clinical Practice Guidelines: Liver transplantation. J Hepatol. 2016;64(2):433-85.", pmid: "26597456", doi: "10.1016/j.jhep.2015.10.006", y: 2016 },
       "huttner2016": { c: "Hüttner FJ, Fitzmaurice C, Schwarzer G, Seiler CM, Antes G, Büchler MW, et al. Pylorus-preserving pancreaticoduodenectomy (pp Whipple) versus pancreaticoduodenectomy (classic Whipple) for surgical treatment of periampullary and pancreatic carcinoma. Cochrane Database Syst Rev. 2016;2(2):CD006053.", pmid: "26905229", doi: "10.1002/14651858.CD006053.pub6", y: 2016 },
       "mahawar2016": { c: "Mahawar KK, Kumar P, Parmar C, Graham Y, Carr WR, Jennings N, et al. Small Bowel Limb Lengths and Roux-en-Y Gastric Bypass: a Systematic Review. Obes Surg. 2016;26(3):660-71.", pmid: "26749410", doi: "10.1007/s11695-016-2050-2", y: 2016 },
+      "mise2016": { c: "Mise Y, Aloia TA, Brudvik KW, Schwarz L, Vauthey JN, Conrad C. Parenchymal-sparing Hepatectomy in Colorectal Liver Metastasis Improves Salvageability and Survival. Ann Surg. 2016;263(1):146-52.", pmid: "25775068", doi: "10.1097/SLA.0000000000001194", y: 2016 },
       "oldhafer2016": { c: "Oldhafer KJ, Stavrou GA, van Gulik TM; Core Group. ALPPS--Where Do We Stand, Where Do We Go?: Eight Recommendations From the First International Expert Meeting. Ann Surg. 2016;263(5):839-41.", pmid: "26756771", doi: "10.1097/SLA.0000000000001633", y: 2016 },
       "reslinger2016": { c: "Reslinger V, Tranchart H, D'Annunzio E, Poghosyan T, Quero L, Munoz-Bongrand N, et al. Esophageal reconstruction by colon interposition after esophagectomy for cancer analysis of current indications, operative outcomes, and long-term survival. J Surg Oncol. 2016;113(2):159-64.", pmid: "26699417", doi: "10.1002/jso.24118", y: 2016 },
       "shimada2016": { c: "Shimada H, Fukagawa T, Haga Y, Oba K. Does remnant gastric cancer really differ from primary gastric cancer? A systematic review of the literature by the Task Force of Japanese Gastric Cancer Association. Gastric Cancer. 2016;19(2):339-49.", pmid: "26667370", doi: "10.1007/s10120-015-0582-0", y: 2016 },
@@ -180,10 +182,10 @@
       "nishizaki2021": { c: "Nishizaki D, Ganeko R, Hoshino N, Hida K, Obama K, Furukawa TA, et al. Roux-en-Y versus Billroth-I reconstruction after distal gastrectomy for gastric cancer. Cochrane Database Syst Rev. 2021;9(9):CD012998.", pmid: "34523717", doi: "10.1002/14651858.CD012998.pub2", y: 2021 },
       "shen2021": { c: "Shen B, Kochhar GS, Navaneethan U, Cross RK, Farraye FA, Iacucci M, et al. Endoscopic evaluation of surgically altered bowel in inflammatory bowel disease: a consensus guideline from the Global Interventional Inflammatory Bowel Disease Group. Lancet Gastroenterol Hepatol. 2021;6(6):482-97.", pmid: "33872568", doi: "10.1016/S2468-1253(20)30394-0", y: 2021 },
       "vanworkum2021": { c: "van Workum F, Verstegen MHP, Klarenbeek BR, Bouwense SAW, van Berge Henegouwen MI, Daams F, et al.; ICAN collaborative research group. Intrathoracic vs Cervical Anastomosis After Totally or Hybrid Minimally Invasive Esophagectomy for Esophageal Cancer: A Randomized Clinical Trial. JAMA Surg. 2021;156(7):601-10.", pmid: "33978698", doi: "10.1001/jamasurg.2021.1555", y: 2021 },
-      "varghese2021": { c: "Varghese C, Bhat S, Wang TH, O'Grady G, Pandanaboyana S. Impact of gastric resection and enteric anastomotic configuration on delayed gastric emptying after pancreaticoduodenectomy: a network meta-analysis of randomized trials. BJS Open. 2021;5(3).", pmid: "33989392", doi: "10.1093/bjsopen/zrab035", y: 2021 },
+      "varghese2021": { c: "Varghese C, Bhat S, Wang TH, O'Grady G, Pandanaboyana S. Impact of gastric resection and enteric anastomotic configuration on delayed gastric emptying after pancreaticoduodenectomy: a network meta-analysis of randomized trials. BJS Open. 2021;5(3):zrab035.", pmid: "33989392", doi: "10.1093/bjsopen/zrab035", y: 2021 },
       "chen2022": { c: "Chen Y, Xie Y, Zhang H, Li Z, Wu B, Li C, et al. Modified McKeown vs. traditional McKeown minimally invasive esophagectomy in improving short-term efficacy and the quality of life of esophageal cancers: a retrospective comparative cohort study. J Gastrointest Oncol. 2022;13(4):1579-88.", pmid: "36092321", doi: "10.21037/jgo-22-712", y: 2022 },
       "davis2022": { c: "Davis BR, Valente MA, Goldberg JE, Lightner AL, Feingold DL, Paquette IM; Prepared on behalf of the Clinical Practice Guidelines Committee of the American Society of Colon and Rectal Surgeons. The American Society of Colon and Rectal Surgeons Clinical Practice Guidelines for Ostomy Surgery. Dis Colon Rectum. 2022;65(10):1173-90.", pmid: "35616386", doi: "10.1097/DCR.0000000000002498", y: 2022 },
-      "gkolfakis2022": { c: "Gkolfakis P, Papaefthymiou A, Facciorusso A, Tziatzios G, Ramai D, Dritsas S, et al. Comparison between Enteroscopy-, Laparoscopy- and Endoscopic Ultrasound-Assisted Endoscopic Retrograde Cholangio-Pancreatography in Patients with Surgically Altered Anatomy: A Systematic Review and Meta-Analysis. Life (Basel). 2022;12(10).", pmid: "36295081", doi: "10.3390/life12101646", y: 2022 },
+      "gkolfakis2022": { c: "Gkolfakis P, Papaefthymiou A, Facciorusso A, Tziatzios G, Ramai D, Dritsas S, et al. Comparison between Enteroscopy-, Laparoscopy- and Endoscopic Ultrasound-Assisted Endoscopic Retrograde Cholangio-Pancreatography in Patients with Surgically Altered Anatomy: A Systematic Review and Meta-Analysis. Life (Basel). 2022;12(10):1646.", pmid: "36295081", doi: "10.3390/life12101646", y: 2022 },
       "hembree2022": { c: "Hembree AE, Scherl E. Diagnosis and Management of Cuffitis: A Systematic Review. Dis Colon Rectum. 2022;65(S1):S85-S91.", pmid: "36399769", doi: "10.1097/DCR.0000000000002593", y: 2022 },
       "justiniano2022": { c: "Justiniano CF, Hull TL. Construction of J- and S-Pouches. Dis Colon Rectum. 2022;65(S1):S20-S25.", pmid: "35895866", doi: "10.1097/DCR.0000000000002561", y: 2022 },
       "lombardo2022": { c: "Lombardo F, Aiolfi A, Cavalli M, Mini E, Lastraioli C, Panizzo V, et al. Techniques for reconstruction after distal gastrectomy for cancer: updated network meta-analysis of randomized controlled trials. Langenbecks Arch Surg. 2022;407(1):75-86.", pmid: "35094151", doi: "10.1007/s00423-021-02411-6", y: 2022 },
@@ -205,28 +207,33 @@
       "alavi2024": { c: "Alavi K, Thorsen AJ, Fang SH, Burgess PL, Trevisani G, Lightner AL, et al.; Clinical Practice Guidelines Committee of the American Society of Colon and Rectal Surgeons. The American Society of Colon and Rectal Surgeons Clinical Practice Guidelines for the Evaluation and Management of Chronic Constipation. Dis Colon Rectum. 2024;67(10):1244-57.", pmid: "39250791", doi: "10.1097/DCR.0000000000003430", y: 2024 },
       "bhasker2024": { c: "Bhasker AG, Prasad A, Shah S, Parmar C; OAGB-MGB Consensus Contributors. MGB-OAGB International Club-Results of a Modified Delphi Consensus on Controversies in OAGB. Obes Surg. 2024;34(12):4541-54.", pmid: "39560893", doi: "10.1007/s11695-024-07563-0", y: 2024 },
       "cavallaro2024": { c: "Cavallaro P, Lee GC, Kanters A, Valente M, Holubar SD, Champagne B, et al. Fact or fiction? Does the position of the end-to-end (EEA) stapler spike matter for colorectal anastomoses using a double-stapled technique? Colorectal Dis. 2024;26(1):137-44.", pmid: "38083875", doi: "10.1111/codi.16833", y: 2024 },
-      "cordis_ecopop": { c: "European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5].", doi: "10.3030/101156165", url: "https://cordis.europa.eu/project/id/101156165", y: 2024 },
+      "europeanassociat2024": { c: "European Association for the Study of the Liver. EASL Clinical Practice Guidelines on liver transplantation. J Hepatol. 2024;81(6):1040-86.", pmid: "39487043", doi: "10.1016/j.jhep.2024.07.032", y: 2024 },
       "ferlitsch2024": { c: "Ferlitsch M, Hassan C, Bisschops R, Bhandari P, Dinis-Ribeiro M, Risio M, et al. Colorectal polypectomy and endoscopic mucosal resection: European Society of Gastrointestinal Endoscopy (ESGE) Guideline - Update 2024. Endoscopy. 2024;56(7):516-45.", pmid: "38670139", doi: "10.1055/a-2304-3219", y: 2024 },
       "langenfeld2024": { c: "Langenfeld SJ, Davis BR, Vogel JD, Davids JS, Temple LKF, Cologne KG, et al.; Clinical Practice Guidelines Committee of the American Society of Colon and Rectal Surgeons. The American Society of Colon and Rectal Surgeons Clinical Practice Guidelines for the Management of Rectal Cancer 2023 Supplement. Dis Colon Rectum. 2024;67(1):18-31.", pmid: "37647138", doi: "10.1097/DCR.0000000000003057", y: 2024 },
       "maspero2024": { c: "Maspero M, Liska D, Kessler H, Lipman J, Steele SR, Hull T, et al. Redo IPAA for long rectal cuff syndrome after ileoanal pouch for inflammatory bowel disease. Tech Coloproctol. 2024;28(1):38.", pmid: "38451358", doi: "10.1007/s10151-023-02909-9", y: 2024 },
+      "poncedeleonballe2024": { c: "Ponce de Leon-Ballesteros G, Romero-Velez G, Higa K, Himpens J, O'Kane M, Torres A, et al. Single Anastomosis Duodeno-Ileostomy with Sleeve Gastrectomy/Single Anastomosis Duodenal Switch (SADI-S/SADS) IFSO Position Statement-Update 2023. Obes Surg. 2024;34(10):3639-85.", pmid: "39264553", doi: "10.1007/s11695-024-07490-0", y: 2024 },
       "poylin2024": { c: "Poylin VY, Shaffer VO, Felder SI, Goldstein LE, Goldberg JE, Kalady MF, et al.; Clinical Practice Guidelines Committee of the American Society of Colon and Rectal Surgeons. The American Society of Colon and Rectal Surgeons Clinical Practice Guidelines for the Management of Inherited Adenomatous Polyposis Syndromes. Dis Colon Rectum. 2024;67(2):213-27.", pmid: "37682806", doi: "10.1097/DCR.0000000000003072", y: 2024 },
       "sal2024": { c: "Şal O, Serin KR, Ercan LD, Göksoy B, Al Hajeh A, Ekiz F, et al. Is Endoscopic Sphincterotomy Sufficient in the Treatment of Sump Syndrome? A 25-Year Experience. J Laparoendosc Adv Surg Tech A. 2024;34(5):430-3.", pmid: "38502847", doi: "10.1089/lap.2023.0519", y: 2024 },
       "sanchezpernaute2024": { c: "Sánchez-Pernaute A, Lasses B, Antoñanzas LL, Rubio MÁ, Marcuello C, Ferré NP, et al. Revisional surgery for malnutrition after SADI-S: prevalence, indications, techniques and outcomes. Updates Surg. 2024;76(5):1879-85.", pmid: "38805173", doi: "10.1007/s13304-024-01900-9", y: 2024 },
       "shen2024": { c: "Shen B. Endoscopic Evaluation of the Ileal Pouch. Dis Colon Rectum. 2024;67(S1):S52-S69.", pmid: "38276962", doi: "10.1097/DCR.0000000000003269", y: 2024 },
       "tchouta2024": { c: "Tchouta LN, Schrope BA. Evolving Technique for Puestow-Type Procedure for Chronic Pancreatitis: The Combined Roux-en-Y Proximal End-to-Side and Distal Longitudinal Pancreatojejunostomy. Am J Case Rep. 2024;25:e942066.", pmid: "38243588", doi: "10.12659/AJCR.942066", y: 2024 },
-      "han2025": { c: "Han S, Kolb JM, Edmundowicz SA, Attwell AR, Hammad HT, Wani S, et al. The Success and Safety of Endoscopic Retrograde Cholangiopancreatography in Surgically Altered Gastrointestinal Anatomy. Med Sci (Basel). 2025;13(1).", pmid: "39982243", doi: "10.3390/medsci13010018", y: 2025 },
+      "cordis_ecopop": { c: "European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5].", doi: "10.3030/101156165", url: "https://cordis.europa.eu/project/id/101156165", y: 2025 },
+      "han2025": { c: "Han S, Kolb JM, Edmundowicz SA, Attwell AR, Hammad HT, Wani S, et al. The Success and Safety of Endoscopic Retrograde Cholangiopancreatography in Surgically Altered Gastrointestinal Anatomy. Med Sci (Basel). 2025;13(1):18.", pmid: "39982243", doi: "10.3390/medsci13010018", y: 2025 },
       "kinugasa2025": { c: "Kinugasa Y, Uehara K, Yamaguchi K, Saito Y, Murofushi K, Sugai T, et al.; Japanese Society for Cancer of the Colon and Rectum. Japanese Society for Cancer of the Colon and Rectum (JSCCR) guidelines 2024 for the treatment of colorectal cancer. Int J Clin Oncol. 2025;30(12):2410-63.", pmid: "41186794", doi: "10.1007/s10147-025-02899-8", y: 2025 },
       "kitadani2025": { c: "Kitadani J, Hayata K, Goda T, Tominaga S, Fukuda N, Nakai T, et al. Whole stomach versus narrow gastric tube reconstruction after esophagectomy for esophageal cancer (ATHLETE trial): study protocol for a randomized controlled trial. Trials. 2025;26(1):111.", pmid: "40155976", doi: "10.1186/s13063-025-08823-9", y: 2025 },
       "liu2025": { c: "Liu S, Guo J, Cheng Z, Wei M, Dong Z, Nie Z, et al. Removal of the \"dog-ear\" during laparoscopic anterior resection with double stapling technique reduces the anastomotic leakage: a prospective cohort study. Tech Coloproctol. 2025;29(1):143.", pmid: "40681878", doi: "10.1007/s10151-025-03178-4", y: 2025 },
       "miyo2025": { c: "Miyo M, Uemura M, Ozato Y, Nishimura J, Nakata K, Suzuki Y, et al.; Clinical Study Group of Osaka University, Colorectal Group (CSGO-CG). Influence of the rotation of the diverting loop ileostomy in rectal cancer surgery on small-bowel obstruction: A multicenter prospective study conducted by the Clinical Study Group of Osaka University, Colorectal Group. Surgery. 2025;178:108874.", pmid: "39516112", doi: "10.1016/j.surg.2024.09.032", y: 2025 },
       "nct_ethos": { c: "Endoscopic Therapy Or Surgery for Early Colon Cancer (ETHOS). ClinicalTrials.gov identifier: NCT06940947 [Internet]. Bethesda (MD): National Library of Medicine (US); 2025 Apr 15 [updated 2025 Nov 17; cited 2026 Oct 5].", url: "https://clinicaltrials.gov/study/NCT06940947", y: 2025 },
       "oshiro2025": { c: "Oshiro T, Ohta M, Nabekura T, Seki Y, Nagao Y, Tsuboi K, et al. Staple line leakage after laparoscopic sleeve gastrectomy in Japan: a nationwide survey. Surg Today. 2025;55(11):1535-41.", pmid: "40369377", doi: "10.1007/s00595-025-03057-3", y: 2025 },
-      "aiolfi2026": { c: "Aiolfi A, Cammarata F, Rausa E, Bonitta G, Biondi A, Bonavina L, et al. Prognostic impact of low versus high inferior mesenteric artery ligation in rectosigmoid cancer: individual patient data meta-analysis of randomized trials. BJS Open. 2026;10(5).", pmid: "42725584", doi: "10.1093/bjsopen/zrag120", y: 2026 },
+      "aiolfi2026": { c: "Aiolfi A, Cammarata F, Rausa E, Bonitta G, Biondi A, Bonavina L, et al. Prognostic impact of low versus high inferior mesenteric artery ligation in rectosigmoid cancer: individual patient data meta-analysis of randomized trials. BJS Open. 2026;10(5):zrag120.", pmid: "42725584", doi: "10.1093/bjsopen/zrag120", y: 2026 },
       "chang2026": { c: "Chang W, Delgado LM, Ng J, Tran B. Billroth II With Braun Anastomosis Versus Roux-En-Y Reconstruction Following Distal Gastrectomy: A Systematic Review and Meta-Analysis. World J Surg. 2026;50(3):693-702.", pmid: "41665541", doi: "10.1002/wjs.70256", y: 2026 },
       "cocca2026": { c: "Cocca S, Casoni Pattacini G, Grova A, Esposito S, Lupo M, Ferrante M, et al. Biliary drainage in patients with altered anatomy: Literature review of different endoscopic approaches. World J Gastroenterol. 2026;32(2):113071.", pmid: "41551827", doi: "10.3748/wjg.v32.i2.113071", y: 2026 },
+      "deluca2026": { c: "De Luca M, Belluzzi A, Monami M, Angrisani L, Carbajo MA, Di Lorenzo N, et al. Primary and Revisional One Anastomosis Gastric Bypass: A Systematic Review and GRADE-Based IFSO Position Statement. Obes Surg. 2026;36(1):253-304.", pmid: "41364417", doi: "10.1007/s11695-025-08278-6", y: 2026 },
       "faleiro2026": { c: "Faleiro MD, de M Ogawa T, Correia PP, Perim V, Riella J, Siddiqui F, et al. Updated Systematic Review and Meta-Analysis of Duct-to-duct Versus Hepaticojejunostomy Reconstruction After Liver Transplantation for Primary Sclerosing Cholangitis. Transplantation. 2026;110(4):e774-e784.", pmid: "41572464", doi: "10.1097/TP.0000000000005639", y: 2026 },
+      "hawkins2026": { c: "Hawkins AT, Bhama AR, Langenfeld SJ, Boutros M, Jafari MD, Davis B, et al.; Clinical Practice Guidelines Committee of the American Society of Colon and Rectal Surgeons. The American Society of Colon and Rectal Surgeons Clinical Practice Guidelines for the Management of Left-Sided Colonic Diverticulitis. Dis Colon Rectum. 2026;69(10):2431-50.", pmid: "42478484", doi: "10.1097/DCR.0000000000004382", y: 2026 },
+      "japanesegastricc2026": { c: "Japanese Gastric Cancer Association. Japanese gastric cancer treatment guidelines 2025 (7th edition). Gastric Cancer. 2026;29(2):271-99.", pmid: "41569370", doi: "10.1007/s10120-025-01698-4", y: 2026 },
       "mitra2026": { c: "Mitra A, Bhambri A, Fehervari M, Parmar C. Long-Term Outcomes of One Anastomosis Gastric Bypass: A Systematic Review and Meta-Analysis of 5-Year and Beyond. Obes Surg. 2026;36(1):71-87.", pmid: "41094294", doi: "10.1007/s11695-025-08339-w", y: 2026 },
-      "ren2026": { c: "Ren H, Lu S, Sun Y, Zhang Q, Shen Y. The effectiveness and safety of isoperistaltic versus antiperistaltic side-to-side ileocolic anastomosis in minimally invasive radical right hemicolectomy: a systematic review and meta-analysis. Int J Colorectal Dis. 2026;41(1).", pmid: "42234166", doi: "10.1007/s00384-026-05160-4", y: 2026 },
+      "ren2026": { c: "Ren H, Lu S, Sun Y, Zhang Q, Shen Y. The effectiveness and safety of isoperistaltic versus antiperistaltic side-to-side ileocolic anastomosis in minimally invasive radical right hemicolectomy: a systematic review and meta-analysis. Int J Colorectal Dis. 2026;41(1):129.", pmid: "42234166", doi: "10.1007/s00384-026-05160-4", y: 2026 },
       "sassun2026": { c: "Sassun R, Sileo A, Ng JC, Mari G, Brucchi F, Ferrari D, et al. Low Versus High Ligation of Inferior Mesenteric Artery in Rectal and Sigmoid Cancers: A Systematic Review, Meta-analysis, and Trial Sequential Analysis of Randomized Controlled Trials. Ann Surg Oncol. 2026;33(1):210-9.", pmid: "41139188", doi: "10.1245/s10434-025-18642-6", y: 2026 }
     },
     P: {
@@ -252,7 +259,8 @@
         ["rutledge2001", "original", "Oryginalny opis mini-gastric bypass: długi wąski zbiornik i pętla omega."],
         ["carbajo2005", "original", "OAGB: zbiornik wzdłuż krzywizny mniejszej, zespolenie boczne z pętlą 200 cm od Treitza."],
         ["deluca2021", "guideline", "Stanowisko IFSO: OAGB jako uznany zabieg bariatryczny; technika, powikłania, obserwacja."],
-        ["bhasker2024", "technique", "Konsensus Delphi: pętla biliopankreatyczna 150–200 cm, dostosowana do ryzyka niedożywienia."],
+        ["deluca2026", "guideline", "Stanowisko IFSO 2026 (GRADE, 14 RCT): OAGB pierwotny i rewizyjny; utrata masy i remisja cukrzycy nie gorsze niż po RYGB."],
+        ["bhasker2024", "guideline", "Konsensus Delphi: pętla biliopankreatyczna 150–200 cm, dostosowana do ryzyka niedożywienia."],
         ["robert2019", "outcomes", "RCT YOMEGA: OAGB z pętlą 200 cm — więcej powikłań odżywczych niż RYGB."],
         ["mitra2026", "outcomes", "Metaanaliza ≥5 lat po OAGB: refluks żółciowy ok. 4%, owrzodzenie brzeżne ok. 2%."]],
       "ds": [
@@ -262,6 +270,7 @@
         ["sanchezpernaute2007", "original", "Oryginalny opis SADI-S: rękaw i zespolenie dwunastniczo-krętnicze koniec-do-boku, pętla omega."],
         ["sanchezpernaute2015", "technique", "Technika SADI-S: sonda 54 Fr, wspólna pętla wydłużona z 200 do 250 cm."],
         ["brown2021", "guideline", "Stanowisko IFSO 2020: SADI-S/OADS — wskazania, technika, konieczność długoterminowej opieki."],
+        ["poncedeleonballe2024", "guideline", "Stanowisko IFSO 2023 (aktualizacja wersji 2020): SADI-S/SADS — częste niedobory, dożywotnia suplementacja i kontrola."],
         ["kallies2020", "guideline", "Stanowisko ASMBS 2020: SADI-S zaakceptowany jako zabieg bariatryczny; przegląd techniki i wyników."],
         ["sanchezpernaute2022", "outcomes", "Wyniki 10-letnie SADI-S; wspólna pętla 200–300 cm, rewizje z powodu hipoproteinemii."],
         ["sanchezpernaute2024", "outcomes", "Niedożywienie po SADI-S z krótką pętlą: rewizje, najczęściej wydłużenie wspólnej pętli."]],
@@ -347,6 +356,7 @@
         ["hembree2022", "endoscopy", "Zapalenie mankietu (cuffitis): rozpoznanie endoskopowe i leczenie"]],
       "hartmann": [
         ["hall2020", "guideline", "Zapalenie uchyłków z zapaleniem otrzewnej: Hartmann lub resekcja z zespoleniem"],
+        ["hawkins2026", "guideline", "Aktualizacja 2026 wytycznych ASCRS dla lewostronnego zapalenia uchyłków okrężnicy"],
         ["sartelli2020", "guideline", "WSES 2020: Hartmann u chorych niestabilnych lub z kałowym zapaleniem otrzewnej"],
         ["lambrichts2019", "outcomes", "LADIES: resekcja z zespoleniem vs Hartmann w ropnym zapaleniu otrzewnej"],
         ["bridoux2017", "outcomes", "DIVERTI: Hartmann vs zespolenie pierwotne w perforacyjnym zapaleniu uchyłków"]],
@@ -357,8 +367,8 @@
         ["du2020", "outcomes", "Pręcik przy stomii pętlowej: więcej powikłań, nie zalecany rutynowo"],
         ["gialamas2021", "outcomes", "Pręcik nie zapobiega retrakcji stomii pętlowej, zwiększa powikłania"],
         ["franklyn2017", "outcomes", "RCT: pręcik przy kolostomii pętlowej nie zapobiega retrakcji"],
-        ["cozl_poradnik_stomia", "guideline", "Poradnik dla chorych: rodzaje stomii, pielęgnacja, sprzęt stomijny"],
-        ["wss_olsztyn_stomia", "guideline", "Wskazówki praktyczne dla chorego po wyłonieniu stomii"]],
+        ["cozl_poradnik_stomia", "patient", "Poradnik dla chorych: rodzaje stomii, pielęgnacja, sprzęt stomijny"],
+        ["wss_olsztyn_stomia", "patient", "Wskazówki praktyczne dla chorego po wyłonieniu stomii"]],
       "ethos": [
         ["schmidt2018", "technique", "EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT"],
         ["ferlitsch2024", "guideline", "ESGE 2024: przy podejrzeniu raka powierzchownego resekcja en bloc, m.in. EFTR"],
@@ -369,7 +379,7 @@
       "scar": [
         ["schmidt2018", "technique", "EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT"],
         ["zwager2022", "outcomes", "Rejestr eFTR: 198 wycięć blizny po niedoszczętnej resekcji raka T1"],
-        ["zwager2022c", "outcomes", "Protokół LOCAL: wyniki odległe eFTR po niedoszczętnej resekcji raka T1 niskiego ryzyka"],
+        ["zwager2022c", "registry", "Protokół LOCAL: wyniki odległe eFTR po niedoszczętnej resekcji raka T1 niskiego ryzyka"],
         ["argiles2020", "guideline", "ESMO 2020: postępowanie po endoskopowym usunięciu raka pT1 i obserwacja"],
         ["nct_scar", "registry", "Rejestracja SCAR: eFTR blizny vs resekcja segmentarna po niedoszczętnym usunięciu raka T1"],
         ["cordis_ecopop", "registry", "Projekt Horyzont Europa ECOPOP: leczenie oszczędzające narząd we wczesnym raku jelita grubego"]],
@@ -421,8 +431,9 @@
         ["reslinger2016", "outcomes", "Wskazania do interpozycji okrężnicy: m.in. przebyta gastrektomia, martwica rury żołądkowej"],
         ["jeyasingham1999", "outcomes", "Odległe następstwa: narastające wydłużenie (redundancja) przeszczepu okrężniczego"]],
       "dg": [
-        ["weil1999", "original", "Przegląd historyczny resekcji żołądka Billrotha (oryginał 1881 poza PubMed)"],
+        ["weil1999", "technique", "Przegląd historyczny resekcji żołądka Billrotha (oryginał 1881 poza PubMed)"],
         ["japanesegastricc2023", "guideline", "Wytyczne JGCA: metody rekonstrukcji po resekcji dystalnej (B-I, B-II, Roux-en-Y)"],
+        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): rekonstrukcje po resekcji dystalnej — B-I, B-II, Roux-en-Y"],
         ["lombardo2022", "outcomes", "Metaanaliza sieciowa RCT: B-I, B-II, B-II+Braun, Roux-en-Y — porównanie wyników"],
         ["shimada2016", "outcomes", "Rak kikuta żołądka: typowo 10–30 lat po resekcji"]],
       "b1": [
@@ -446,6 +457,7 @@
       "tg": [
         ["hutchison2010", "original", "Oryginalna praca Roux (1893) w tłumaczeniu angielskim"],
         ["japanesegastricc2023", "guideline", "Wytyczne JGCA: gastrektomia całkowita i rekonstrukcja Roux-en-Y"],
+        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): po gastrektomii całkowitej zespolenie przełykowo-jelitowe Roux-en-Y"],
         ["donovan1982", "technique", "Pętla Roux ≥40 cm zapobiega refluksowi żółci do przełyku"],
         ["gustavsson1988", "outcomes", "Zastój rzadki po zespoleniu przełykowo-jelitowym; pętle >40 cm zwiększają ryzyko"],
         ["zhang2022", "endoscopy", "ECPW po Roux-en-Y: brodawka osiągalna tylko wstecznie od strony dystalnej"],
@@ -494,7 +506,7 @@
         ["mavrogiannis1999", "endoscopy", "Zespół ślepego worka: leczenie endoskopowe (sfinkterotomia) i nawroty"],
         ["sal2024", "endoscopy", "Zespół ślepego worka po CDD: skuteczność sfinkterotomii endoskopowej"]],
       "drain": [
-        ["andersen2010", "guideline", "Przegląd ewolucji operacji drenujących i resekcyjnych w przewlekłym zapaleniu trzustki"],
+        ["andersen2010", "technique", "Przegląd ewolucji operacji drenujących i resekcyjnych w przewlekłym zapaleniu trzustki"],
         ["lohr2017", "guideline", "HaPanEU: wskazania do leczenia operacyjnego przewlekłego zapalenia trzustki"]],
       "puestow": [
         ["puestow1958", "original", "Opis oryginalny wstecznego drenażu przewodu trzustkowego (Puestow, Gillesby)"],
@@ -507,7 +519,7 @@
         ["frey1987", "original", "Opis oryginalny: wydrążenie głowy trzustki z podłużnym zespoleniem (Frey)"],
         ["frey1994", "technique", "Miejscowa resekcja głowy z podłużnym PJ: technika i wyniki"]],
       "liver": [
-        ["couinaud1999", "original", "Segmentacja wrotna i żył wątrobowych Couinauda — podstawa podziału na segmenty I–VIII"],
+        ["couinaud1999", "anatomy", "Segmentacja wrotna i żył wątrobowych Couinauda — podstawa podziału na segmenty I–VIII"],
         ["bismuth1982", "anatomy", "Anatomia chirurgiczna: płaszczyzny żył wątrobowych, szypuły Glissona, segment I"],
         ["strasberg2005", "guideline", "Nazewnictwo Brisbane 2000; po prawej „sekcja” i „sektor” to synonimy"],
         ["wakabayashi2022", "guideline", "Tokyo 2020: aktualizacja Brisbane, granice segmentów i resekcje segmentarne"],
@@ -519,13 +531,14 @@
         ["adams2013", "guideline", "Kwalifikacja do resekcji przerzutów CRC; wystarczająca FLR zależnie od uszkodzenia miąższu"],
         ["brisbane2000", "guideline", "Oryginalna terminologia IHPBA Brisbane 2000: segmenty, sekcje, hemiwątroby, nazwy resekcji"]],
       "lv-guz-meta": [
-        ["pawlik2005", "outcomes", "Przerzuty CRC: liczy się margines R0; szerokość ≥1 mm nie zmienia przeżycia"]],
+        ["pawlik2005", "outcomes", "Przerzuty CRC: liczy się margines R0; szerokość ≥1 mm nie zmienia przeżycia"],
+        ["mise2016", "outcomes", "Pojedynczy przerzut CRC ≤ 3 cm: resekcja oszczędzająca miąższ — przeżycie nie gorsze niż po hemihepatektomii lub sekcjonektomii, częściej możliwa ponowna resekcja (68% vs 24%)"]],
       "lv-guz-anat": [
         ["makuuchi1985", "original", "Systematyczna (sub)segmentektomia anatomiczna wg szypuły wrotnej pod kontrolą USG"],
         ["hasegawa2005", "outcomes", "Resekcja anatomiczna korzystniejsza od nieanatomicznej w raku wątrobowokomórkowym"],
         ["wakabayashi2022", "guideline", "Definicje anatomicznej segmentektomii i mniejszych resekcji (Tokyo 2020)"],
         ["abdalla2004", "anatomy", "Udział segmentów w objętości wątroby (prawa ~2/3, lewa ~1/3, II+III ~16%)"],
-        ["clavien2007", "guideline", "Bezpieczna objętość pozostałej wątroby (FLR) zależy od czynności miąższu"]],
+        ["clavien2007", "technique", "Bezpieczna objętość pozostałej wątroby (FLR) zależy od czynności miąższu"]],
       "lv-b23": [
         ["strasberg2005", "guideline", "Bisegmentektomia II/III = sekcjonektomia boczna lewa (Brisbane 2000)"],
         ["starzl1975", "technique", "Szypuły II/III podwiązywać na lewo od szczeliny pępkowej, by nie odnaczynić IV"],
@@ -537,7 +550,7 @@
         ["strasberg2005", "guideline", "Prawa hemihepatektomia = usunięcie segmentów V–VIII (Brisbane 2000)"],
         ["bismuth1982", "anatomy", "Płaszczyzna Cantliego wzdłuż żyły wątrobowej pośrodkowej dzieli wątrobę na prawą i lewą"],
         ["abdalla2004", "anatomy", "Lewa wątroba (II–IV) to średnio ok. 1/3 objętości (zakres 17–49%)"],
-        ["clavien2007", "guideline", "Minimalna bezpieczna FLR zależy od czynności wątroby (zdrowa vs uszkodzona)"],
+        ["clavien2007", "technique", "Minimalna bezpieczna FLR zależy od czynności wątroby (zdrowa vs uszkodzona)"],
         ["brisbane2000", "guideline", "Oryginalna terminologia IHPBA Brisbane 2000: segmenty, sekcje, hemiwątroby, nazwy resekcji"]],
       "lv-lh": [
         ["strasberg2005", "guideline", "Lewa hemihepatektomia = usunięcie segmentów II–IV, segment I osobno"],
@@ -555,16 +568,19 @@
       "oltx": [
         ["starzl1963", "original", "Pierwsze ortotopowe przeszczepienia wątroby u ludzi — technika klasyczna"],
         ["europeanassociat2016", "guideline", "Wytyczne EASL: wskazania, kwalifikacja i opieka po przeszczepieniu wątroby"],
+        ["europeanassociat2024", "guideline", "Wytyczne EASL 2024 (aktualizacja wersji z 2016 r.): wskazania, kwalifikacja, nowe techniki i opieka po przeszczepieniu"],
         ["pandanaboyana2015", "outcomes", "PSC: przewód–przewód vs Roux-en-Y — podobne zwężenia, więcej zapaleń dróg żółciowych po Roux"],
         ["faleiro2026", "outcomes", "PSC: Roux-en-Y związane z lepszym przeżyciem chorych i przeszczepów niż przewód–przewód"],
         ["arain2013", "endoscopy", "ECPW po przewód–przewód; po Roux-en-Y dostęp enteroskopowy lub przezskórny"]],
       "oltx-pb-d2d": [
+        ["calne1968", "original", "Wczesny opis przeszczepienia z zachowaniem IVC biorcy, przed Tzakisem 1989 (pierwszeństwo za: Kruk i wsp. 2023, PMID 37629332)"],
         ["tzakis1989", "original", "Piggyback: przeszczepienie z zachowaniem IVC biorcy"],
-        ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez zaciskania IVC (Belghiti)"],
+        ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez całkowitego zaciśnięcia IVC (zacisk boczny; Belghiti)"],
         ["dumonceau2018", "endoscopy", "ESGE: łagodne zwężenia dróg żółciowych — mnogie stenty plastikowe lub FCSEMS"]],
       "oltx-pb-roux": [
+        ["calne1968", "original", "Wczesny opis przeszczepienia z zachowaniem IVC biorcy, przed Tzakisem 1989 (pierwszeństwo za: Kruk i wsp. 2023, PMID 37629332)"],
         ["tzakis1989", "original", "Piggyback: przeszczepienie z zachowaniem IVC biorcy"],
-        ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez zaciskania IVC (Belghiti)"]],
+        ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez całkowitego zaciśnięcia IVC (zacisk boczny; Belghiti)"]],
       "oltx-classic-d2d": [
         ["dumonceau2018", "endoscopy", "ESGE: łagodne zwężenia dróg żółciowych — mnogie stenty plastikowe lub FCSEMS"]],
       "_tools": [
