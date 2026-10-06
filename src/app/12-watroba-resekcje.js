@@ -1,7 +1,9 @@
   /* ---------- wątroba: resekcje (TOOL_EXT.lvres) i slajd z przesuwanym guzem (TOOL_EXT.lvtumor) ----------
      Resekcja: segmenty pozostające (brąz) i usuwane (czerwień planu → po kontroli dopływu barwa niedokrwienia), naczynia dzielone w punktach
      przecięcia (część bliższa zostaje, dalsza idzie z preparatem), pierścienie podwiązań i linii staplera, preparat odsuwa się i znika.
-     ALPPS: etap I (podwiązanie PV, podział miąższu), przerost segmentów II i III (skala grupy wokół szczeliny pępkowej), etap II. */
+     ALPPS: etap I (podwiązanie PV, podział miąższu z przecięciem szypuł segmentu IV), przerost segmentów II i III (skala grupy wokół szczeliny pępkowej), etap II.
+     Slajd z guzem: odsetek pozostającego miąższu z udziałów objętościowych G.vol (Abdalla 2004); metastazektomia — naczynia w kuli guza z marginesem
+     przecięte (odcinek wewnątrz wychodzi z preparatem, kikuty podwiązane) i ostrzeżenie w podpisie. */
   var LR_COL = { keep: '#a24a38', plan: '#d9463b', isch: '#6d3a4c', lig: '#262b31', stap: '#8b96a1' };
   var LR_HYPER_PIV = new V3(2.8, -1.2, 0.6), LR_SPEC_PIV = new V3(-4, 0.5, -0.5);
   function lrRing(parent, p, tan, r, kind) {
@@ -89,19 +91,21 @@
     });
     return LM.SEGS.filter(function (s) { return out[s]; });
   }
-  // resekcja anatomiczna z reguły: szypuły podwiązane na najwyższym poziomie, którego cały obszar jest usuwany (segment, sektor, gałąź prawa, część pępkowa)
+  // resekcja anatomiczna z reguły: szypuły podwiązane na najwyższym poziomie, którego cały obszar jest usuwany (segment, sektor, gałąź prawa lub lewa, część pępkowa)
   var LT_TREE = [['rpv', null, ['5', '6', '7', '8']], ['rapv', 'rpv', ['5', '8']], ['rppv', 'rpv', ['6', '7']], ['p8', 'rapv', ['8']], ['p5', 'rapv', ['5']], ['p7', 'rppv', ['7']], ['p6', 'rppv', ['6']],
-    ['upv', null, ['3', '4a', '4b']], ['p2', null, ['2']], ['p3', 'upv', ['3']], ['p4a', 'upv', ['4a']], ['p4b', 'upv', ['4b']], ['p1', null, ['1']]];
+    ['lpv', null, ['2', '3', '4a', '4b']], ['upv', 'lpv', ['3', '4a', '4b']], ['p2', 'lpv', ['2']], ['p3', 'upv', ['3']], ['p4a', 'upv', ['4a']], ['p4b', 'upv', ['4b']], ['p1', null, ['1']]];
+  // gałąź prawa lub lewa żyły wrotnej: podwiązania we wnęce jak na slajdach hemihepatektomii (tętnica, gałąź żyły wrotnej, przewód — z RES.rh / RES.lh)
+  var LT_HIL = { rpv: 'rh', lpv: 'lh' };
   var LT_PED = { rapv: 'Szypuła sektora przedniego prawego (podwiązana)', rppv: 'Szypuła sektora tylnego prawego (podwiązana)', upv: 'Szypuły segmentów III–IV w szczelinie pępkowej (podwiązane)',
     p2: 'Szypuła segmentu II (podwiązana)', p3: 'Szypuła segmentu III (podwiązana)', p4a: 'Szypuła segmentu IVa (podwiązana)', p4b: 'Szypuła segmentu IVb (podwiązana)', p5: 'Szypuła segmentu V (podwiązana)',
     p6: 'Szypuła segmentu VI (podwiązana)', p7: 'Szypuła segmentu VII (podwiązana)', p8: 'Szypuła segmentu VIII (podwiązana)', p1: 'Szypuła segmentu I (podwiązana)' };
   function ltAnatR(rem) {
     var inR = function (L) { return L.every(function (s) { return rem.indexOf(s) >= 0; }); }, sel = {}, cuts = [], gone = [], on = 0.05;
-    LT_TREE.forEach(function (n) { if (inR(n[2]) && !(n[1] && sel[n[1]])) sel[n[0]] = 1; });
+    // węzeł pod wybranym przodkiem (np. szypuła segmentu VIII pod prawą gałęzią PV) nie jest podwiązywany osobno — idzie z preparatem
+    var cov = {}; LT_TREE.forEach(function (n) { if (n[1] && (sel[n[1]] || cov[n[1]])) cov[n[0]] = 1; else if (inR(n[2])) sel[n[0]] = 1; });
     var desc = function (id) { var o = []; LT_TREE.forEach(function (n) { if (n[1] === id) o = o.concat([n[0]], desc(n[0])); }); return o; };
     Object.keys(sel).forEach(function (id) {
-      if (id === 'rpv') cuts.push({ id: 'rha', t: 0.55, name: 'Tętnica wątrobowa prawa (podwiązana)', on: on, kind: 'lig' }, { id: 'rpv', t: 0.45, name: 'Prawa gałąź żyły wrotnej (podwiązana)', on: on + 0.05, kind: 'lig' },
-        { id: 'rhd', t: 0.45, name: 'Przewód wątrobowy prawy (przecięty)', on: on + 0.1, kind: 'lig' });
+      if (LT_HIL[id]) A.LIVER.RES[LT_HIL[id]].cuts.filter(function (x) { return x.kind === 'lig'; }).forEach(function (x, i) { cuts.push({ id: x.id, t: x.t, name: x.name, on: on + 0.05 * i, kind: 'lig' }); });
       else if (id === 'p1') cuts.push({ id: 'p1', t: 0.35, name: LT_PED.p1, on: on, kind: 'lig' }, { id: 'ha1', t: 0.6, on: on + 0.02, kind: 'lig' }, { id: 'bd1', t: 0.6, on: on + 0.04, kind: 'lig' });
       else cuts.push({ id: id, t: 0.12, name: LT_PED[id], on: on, kind: 'lig' }, { id: 'ha_' + id, t: 0.12, on: on + 0.02, kind: 'lig' }, { id: 'bd_' + id, t: 0.12, on: on + 0.04, kind: 'lig' });
       desc(id).forEach(function (x) { gone.push(x, 'ha_' + x, 'bd_' + x); }); on += 0.12;
@@ -113,6 +117,70 @@
     if (rem.indexOf('5') >= 0 || rem.indexOf('4b') >= 0) gone.push('gb', 'cyd');
     var d = new V3(); rem.forEach(function (s) { d.add(new V3().fromArray(A.LIVER.DIR[s])); }); if (d.lengthSq() < 1e-6) d.set(0, 0, 1);
     return { rem: rem, dir: d.normalize().toArray(), cuts: cuts, gone: gone, specimen: 'Preparat', remnant: 'Pozostała wątroba' };
+  }
+  // metastazektomia: naczynia w kuli guza z marginesem wychodzą z preparatem — odcinek wewnątrz kuli odcięty, na brzegu loży pierścienie podwiązań.
+  // IVC (w rowku, poza miąższem) zostaje; pęcherzyk z przewodem pęcherzykowym wychodzi z preparatem, gdy kula na niego zachodzi (cholecystektomia).
+  var LT_VES = null, LT_GB = null;
+  var LT_VNAME = { rpv: 'Prawa gałąź żyły wrotnej (podwiązana)', lpv: 'Lewa gałąź żyły wrotnej (podwiązana)', rhv: 'Żyła wątrobowa prawa (podwiązana)',
+    mhv: 'Żyła wątrobowa pośrodkowa (podwiązana)', lhv: 'Żyła wątrobowa lewa (podwiązana)' };
+  function ltVes() {
+    if (LT_VES) return LT_VES;
+    LT_VES = [];
+    ['pv', 'ha', 'bd', 'hv'].forEach(function (kind) {
+      A.LIVER.vessels[kind].forEach(function (v) {
+        var c = oltCurve(v.pts), n = Math.max(24, Math.ceil(c.getLength() * 8)), P = [];
+        for (var i = 0; i <= n; i++) P.push(c.getPointAt(i / n));
+        LT_VES.push({ v: v, kind: kind, c: c, n: n, P: P, fixed: v.id === 'ivc' || v.id === 'cyd' });
+      });
+    });
+    var gc = oltCurve(A.LIVER.vessels.gb.pts); LT_GB = [];
+    for (var j = 0; j <= 40; j++) LT_GB.push({ p: gc.getPointAt(j / 40), r: A.LIVER.gbR(j / 40) });
+    return LT_VES;
+  }
+  // naczynia przecinane przy wycięciu kuli (środek c, promień RR): oś naczynia wewnątrz kuli
+  function ltCutIds(c, RR) {
+    return ltVes().filter(function (e) { return !e.fixed && e.P.some(function (p) { return p.distanceTo(c) < RR; }); }).map(function (e) { return e.v.id; });
+  }
+  function ltGbHit(c, RR) { ltVes(); return LT_GB.some(function (g) { return g.p.distanceTo(c) - g.r < RR; }); }
+  // odcinki osi naczynia wewnątrz kuli: przedziały [t0, t1] długości łuku, granice doprecyzowane bisekcją
+  function ltInside(e, c, RR) {
+    var out = [], a = null, ins = function (t) { return e.c.getPointAt(t).distanceTo(c) < RR; };
+    function edge(t0, t1) { var i0 = ins(t0); for (var k = 0; k < 16; k++) { var tm = (t0 + t1) / 2; if (ins(tm) === i0) t0 = tm; else t1 = tm; } return (t0 + t1) / 2; }
+    for (var i = 0; i <= e.n; i++) {
+      var inn = e.P[i].distanceTo(c) < RR;
+      if (inn && a === null) a = i === 0 ? 0 : edge((i - 1) / e.n, i / e.n);
+      if (!inn && a !== null) { out.push([a, edge((i - 1) / e.n, i / e.n)]); a = null; }
+    }
+    if (a !== null) out.push([a, 1]);
+    return out;
+  }
+  // kopia naczyń dla kadru „Resekcja”: części poza kulą — keep, wewnątrz — spec (z preparatem); pierścienie i etykiety kikutów w keep
+  function ltClipVes(c, RR, keep, spec) {
+    var mset = function () { var o = {}; ['pv', 'ha', 'bd', 'hv'].forEach(function (k) { o[k] = lvMat(LV_COL[k], 0.42); }); o.ivc = lvMat('#2a4f9e', 0.42); o.gb = lvMat(LV_COL.gb, 0.35); return o; };
+    var MK = mset(), MS = mset(), rings = [], labels = [], gbHit = ltGbHit(c, RR);
+    ltVes().forEach(function (e) {
+      var v = e.v, mk = v.id === 'ivc' ? 'ivc' : e.kind;
+      if (e.fixed) { ((v.id === 'cyd' && gbHit) ? spec : keep).add(oltTube(v.pts, v.r, (v.id === 'cyd' && gbHit ? MS : MK)[mk])); return; }
+      var IN = ltInside(e, c, RR);
+      if (!IN.length) { keep.add(oltTube(v.pts, v.r, MK[mk])); return; }
+      var rAt = function (t) { return v.r[0] + (v.r[1] - v.r[0]) * t; };
+      var piece = function (g, t0, t1, M) { var pts = []; for (var i = 0; i <= 10; i++) pts.push(e.c.getPointAt(t0 + (t1 - t0) * i / 10)); g.add(oltTube(pts, [rAt(t0), rAt(t1)], M[mk])); };
+      var t = 0, named = false;
+      IN.forEach(function (s) {
+        if (s[0] > t + 1e-3) piece(keep, t, s[0], MK);
+        piece(spec, s[0], s[1], MS);
+        [s[0], s[1]].forEach(function (tc) {
+          if (tc < 1e-3 || tc > 1 - 1e-3) return;          // początek lub koniec naczynia wewnątrz kuli: bez kikuta
+          var p = e.c.getPointAt(tc), ring = lrRing(keep, p, e.c.getTangentAt(tc), rAt(tc), 'lig'), nm = LT_VNAME[v.id] || (e.kind === 'pv' && LT_PED[v.id]), L = null;
+          if (nm && !named) { named = true; L = { el: mkLabel(nm, '', '#262b31', 'cut'), anchor: p.clone(), alpha: 0 }; labels.push(L); }
+          rings.push({ m: ring, on: 0.08 + Math.min(0.2, 0.025 * rings.length), L: L });
+        });
+        t = s[1];
+      });
+      if (t < 1 - 1e-3) piece(keep, t, 1, MK);
+    });
+    var gbv = A.LIVER.vessels.gb; (gbHit ? spec : keep).add(oltTube(gbv.pts, A.LIVER.gbR, (gbHit ? MS : MK).gb));
+    return { MS: MS, rings: rings, labels: labels, gb: gbHit };
   }
   function ltDispose(o, labels) {
     o.grp.traverse(function (x) { if (x.geometry) x.geometry.dispose(); });
@@ -134,7 +202,7 @@
     var Lbed = { anchor: null, alpha: 0 }, Lspec = { anchor: null, alpha: 0 };
     if (meta) { Lbed.el = mkLabel('Loża po metastazektomii', '', '#7d8794', 'cut'); Lspec.el = mkLabel('Preparat: przerzut z marginesem', '', LR_COL.plan, 'seg'); labels.push(Lbed, Lspec); }
     var key = null, resKey = null, res = null;
-    var tool = { d: d, grp: grp, overlay: false, el: null, labels: labels, mesh: tm, segs: segs, whole: whole, c: new V3().fromArray(ltPos()), rule: null, list: [],
+    var tool = { d: d, grp: grp, overlay: false, el: null, labels: labels, mesh: tm, segs: segs, whole: whole, c: new V3().fromArray(ltPos()), rule: null, list: [], cut: [], resInfo: null, vesG: vesG,
       // kadr 2: przygotowanie resekcji dla bieżącego położenia guza (tylko gdy położenie się zmieniło)
       prepRes: function () {
         var k = key; if (k === resKey) return; resKey = k;
@@ -142,10 +210,13 @@
         var c = this.c.toArray(), RR = LT_R + LT_MARGIN;
         if (meta) {
           var rg = new THREE.Group(), keepM = new THREE.Mesh(lvGeo(LM.carve(c, RR, false)), lvMat(LR_COL.keep, 0.5)), specM = new THREE.Mesh(lvGeo(LM.carve(c, RR, true)), lvMat(LR_COL.plan, 0.5));
-          keepM.renderOrder = specM.renderOrder = 2; var sg = new THREE.Group(); sg.add(specM); rg.add(keepM, sg);
+          keepM.renderOrder = specM.renderOrder = 2; var sg = new THREE.Group(), vg = new THREE.Group(); sg.add(specM); rg.add(keepM, vg, sg);
+          // naczynia: odcinki w kuli wychodzą z preparatem, kikuty na brzegu loży podwiązane
+          var VC = ltClipVes(this.c, RR, vg, sg); VC.labels.forEach(function (L) { labels.push(L); });
           // kierunek wyjęcia preparatu: na zewnątrz od miąższu (gradient funkcji odległości)
           var e = 0.05, n = new V3(LM.sdf(c[0] + e, c[1], c[2]) - LM.sdf(c[0] - e, c[1], c[2]), LM.sdf(c[0], c[1] + e, c[2]) - LM.sdf(c[0], c[1] - e, c[2]), LM.sdf(c[0], c[1], c[2] + e) - LM.sdf(c[0], c[1], c[2] - e)).normalize();
-          res = { grp: rg, labels: [], keepM: keepM, specM: specM, sg: sg, n: n };
+          res = { grp: rg, labels: VC.labels, keepM: keepM, specM: specM, sg: sg, n: n, VC: VC };
+          this.resInfo = { rings: VC.rings.length, labels: VC.labels.map(function (L) { return L.el.querySelector('b').dataset.pl; }), gb: VC.gb };
         } else {
           var B = lrBuild(ltAnatR(this.rule ? this.rule.rem : this.list), false); B.labels.forEach(function (L) { labels.push(L); });
           res = { grp: B.grp, labels: B.labels, B: B };
@@ -155,10 +226,10 @@
       update: function (m) {
         var fr = FR[S.frame], resF = fr && fr.k === 'res', glass = S.lvGlass ? 0.45 : 1, c = this.c;
         var k = c.toArray().map(function (x) { return x.toFixed(2); }).join(',');
-        if (k !== key) { key = k; this.list = ltSegs(c); this.rule = LM.resFor(this.list); }
+        if (k !== key) { key = k; this.list = ltSegs(c); this.rule = LM.resFor(this.list); this.cut = meta ? ltCutIds(c, LT_R + LT_MARGIN) : []; }
         var rem = this.rule ? this.rule.rem : [];
         if (resF) this.prepRes();
-        baseG.visible = !resF; vesG.visible = meta || !resF; if (res) { res.grp.visible = resF; if (!resF) res.labels.forEach(function (L) { L.alpha = 0; }); }
+        baseG.visible = !resF; vesG.visible = !resF; if (res) { res.grp.visible = resF; if (!resF) res.labels.forEach(function (L) { L.alpha = 0; }); }
         tm.position.copy(c); shell.position.copy(c); shell.visible = meta && !resF;
         lvSetOp(whole.material, glass * 0.8);
         segs.forEach(function (S2) { var on = rem.indexOf(S2.s) >= 0; S2.m.material.color.set(on ? LR_COL.plan : LR_COL.keep); lvSetOp(S2.m.material, on ? Math.max(glass, 0.85) : glass * 0.7); });
@@ -170,15 +241,17 @@
             lvSetOp(res.keepM.material, glass * 0.85); lvSetOp(res.specM.material, Math.max(0.85, glass) * fade); res.sg.visible = fade > 0.02;
             Lspec.anchor = c.clone().add(off).addScaledVector(res.n, LT_R + LT_MARGIN + 0.3); Lspec.alpha = fade > 0.5 ? 1 : 0;
             Lbed.anchor = c.clone(); Lbed.alpha = m > 0.8 ? 1 : 0;
+            Object.keys(res.VC.MS).forEach(function (q) { lvSetOp(res.VC.MS[q], fade); });
+            res.VC.rings.forEach(function (r) { var a = sm((m - r.on) / 0.1); r.m.visible = a > 0.01; r.m.material.opacity = a; if (r.L) r.L.alpha = a > 0.5 ? 1 : 0; });
           } else {
             res.B.update(m * 3); var sp = res.B.specG; sp.updateMatrix(); tm.position.copy(c).applyMatrix4(sp.matrix); tm.visible = sp.visible;
           }
         } else { tm.visible = true; tm.material.opacity = 1; Lbed.alpha = 0; Lspec.alpha = 0; }
         // podpis
         var T = LM.RES_TXT, R = this.rule, names = this.list.map(function (s) { return LM.ROM[s]; }).join(', ') || '—', tt, tx, share = 0;
-        rem.forEach(function (s) { share += G.share[s]; });
+        rem.forEach(function (s) { share += G.vol[s]; });             // udziały objętościowe z TK (Abdalla 2004), nie z siatki modelu
         var rname = R ? tr(R.pre) + (R.suf ? ' ' + R.suf : '') + (R.plus1 ? ' ' + tr(T.plus1) : '') : tr('Resekcja anatomiczna');
-        if (meta) { tt = tr(resF ? 'Metastazektomia' : 'Położenie przerzutu'); tx = tr(resF ? T.metaRes : T.meta) + ' ' + names + '.' + (resF ? '' : ' ' + tr(T.hintM)); }
+        if (meta) { tt = tr(resF ? 'Metastazektomia' : 'Położenie przerzutu'); tx = tr(resF ? T.metaRes : T.meta) + ' ' + names + '.' + (this.cut.length ? ' ' + tr(T.vesWarn) : '') + (resF ? '' : ' ' + tr(T.hintM)); }
         else { tt = rname; tx = (resF ? tr(T.anatRes) + ' ' + rem.map(function (s) { return LM.ROM[s]; }).join(', ') + '.' : tr(T.anat) + ' ' + names + '.') + ' ' + tr(T.left) + ' ' + Math.round(100 * (1 - share)) + tr(T.pct) + (resF ? '' : ' ' + tr(T.hintA)); }
         if ($('capTitle').textContent !== tt) $('capTitle').textContent = tt;
         if ($('capText').textContent !== tx) $('capText').textContent = tx;
@@ -190,7 +263,7 @@
   // przeciąganie guza: po powierzchni miąższu, środek guza pod torebką (wewnątrz wątroby)
   var ltDrag = null;
   function ltActive() { return M && M.lvtumor && !SPLIT.on && !endo.active && !ct.on && FR[S.frame] && FR[S.frame].k === 'pos'; }
-  window.__sgTest.lvTumor = function (p) { if (!(M && M.lvtumor)) return null; if (p) { M.lvtumor.c.fromArray(p); applyM(); } var T = M.lvtumor; return { c: T.c.toArray(), segs: T.list.slice(), rule: T.rule, title: $('capTitle').textContent, text: $('capText').textContent }; };
+  window.__sgTest.lvTumor = function (p) { if (!(M && M.lvtumor)) return null; if (p) { M.lvtumor.c.fromArray(p); applyM(); } var T = M.lvtumor; return { c: T.c.toArray(), segs: T.list.slice(), rule: T.rule, cut: (T.cut || []).slice(), res: T.resInfo || null, vesWhole: T.vesG.visible, title: $('capTitle').textContent, text: $('capText').textContent }; };
   viewport.addEventListener('pointerdown', function (e) {
     if (!ltActive() || !guzPick(e, [M.lvtumor.mesh]).length) return;
     e.stopPropagation(); e.preventDefault();

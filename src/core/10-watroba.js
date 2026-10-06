@@ -197,9 +197,14 @@
       segs[sg] = surfNets(F, G);
       cen[sg] = cen[sg].map(function (v) { return v / Math.max(1, cnt[sg]); });
     });
-    var vol = 0; SEGS.forEach(function (sg) { vol += cnt[sg]; });
-    var share = {}; SEGS.forEach(function (sg) { share[sg] = cnt[sg] / vol; });
-    CACHE = { h: h, whole: whole, segs: segs, centroid: cen, share: share, Lg: Lg, G: G };
+    var tot = 0; SEGS.forEach(function (sg) { tot += cnt[sg]; });
+    var share = {}; SEGS.forEach(function (sg) { share[sg] = cnt[sg] / tot; });
+    // udziały objętościowe do podpisów („Pozostaje ok. X% miąższu”): średnie z TK u dorosłych bez choroby wątroby (Abdalla i wsp., Surgery 2004):
+    // V–VIII ≈ 65%, II+III ≈ 16%, IV ≈ 17%; segment I z modelu; podział w obrębie grupy jak w modelu. Geometria (share) bez zmian — z niej liczą się środki etykiet.
+    var vol = {}, GRP = [[['5', '6', '7', '8'], 0.65], [['2', '3'], 0.16], [['4a', '4b'], 0.17], [['1'], share['1']]];
+    GRP.forEach(function (g) { var s0 = 0; g[0].forEach(function (s) { s0 += share[s]; }); g[0].forEach(function (s) { vol[s] = share[s] * g[1] / s0; }); });
+    var vt = 0; SEGS.forEach(function (s) { vt += vol[s]; }); SEGS.forEach(function (s) { vol[s] /= vt; });
+    CACHE = { h: h, whole: whole, segs: segs, centroid: cen, share: share, vol: vol, Lg: Lg, G: G };
     return CACHE;
   }
 
