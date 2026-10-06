@@ -197,8 +197,10 @@
         one(IPAA, 'Zbiornik J (IPAA)', 'Proktokolektomia ze zbiornikiem J (IPAA)'),
         one(HART),
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
-      // krezka z naczyniami i węzłami (na razie testowo: hemikolektomie prawe)
+      // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
+      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart' };
+      LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(ML[p.id])]); }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
@@ -209,7 +211,7 @@
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
     resectionFor: resectionFor, COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
     // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
-    _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
+    _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, mesoLeft: mesoLeft, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
       C_COL: C_COL, COL_R: COL_R, colT: ct, colors: function () { return { COL: COL, COLC: COLC, MUC: MUC, MUC_C: MUC_C, STAPLE: STAPLE, SUT: SUT }; },
       windows: function () { return { PRE: PRE, POST: POST, ALL: ALL, SPEC_OP: SPEC_OP, RH_OFF: RH_OFF, COL_TEXT: COL_TEXT }; } }
   };
