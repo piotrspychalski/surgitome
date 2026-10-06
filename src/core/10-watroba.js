@@ -248,11 +248,18 @@
   var OLT_NOTES = {
     common: ['Ortotopowe przeszczepienie wątroby: wątrobę biorcy usuwa się, a przeszczep wszczepia w to samo miejsce. Kolejność zespoleń: żylne (IVC), żyła wrotna (reperfuzja), tętnica wątrobowa, drogi żółciowe.',
       'Pęcherzyk żółciowy dawcy usuwa się zawsze; pęcherzyk biorcy wychodzi z wątrobą biorcy.',
-      'Żyła wrotna: zespolenie koniec-do-końca. Tętnica: zwykle pień trzewny lub CHA dawcy (z łatą Carrela) do tętnicy wątrobowej biorcy na wysokości odejścia GDA.'],
+      'Żyła wrotna: zespolenie koniec-do-końca. Tętnica: tętnica wątrobowa wspólna dawcy (z łatą z rozwidlenia) albo pień trzewny (z łatą Carrela z aorty) do tętnicy wątrobowej biorcy — właściwej lub wspólnej, często w miejscu odejścia GDA.'],
     classic: 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwa się razem z wątrobą (zaciski nad i pod wątrobą, czasem omijające krążenie żylno-żylne); dwa zespolenia IVC: nad i pod wątrobą.',
     pb: 'Piggyback: IVC biorcy zostaje (przepływ zachowany, zaciśnięcie tylko częściowe). Pokazany wariant: zespolenie kawo-kawalne bok-do-boku (Belghiti) — przednia ściana IVC biorcy z tylną ścianą środkowego odcinka IVC dawcy; oba końce IVC dawcy i ujścia żył wątrobowych biorcy zamknięte. Inna odmiana: górny koniec IVC dawcy do wspólnego ujścia żył wątrobowych biorcy (Tzakis).',
     d2d: 'Drogi żółciowe przewód–przewód (koniec-do-końca): zachowany zwieracz Oddiego i dostęp do dróg żółciowych w ECPW.',
-    roux: 'Hepatikojejunostomia na pętli Roux-en-Y: gdy przewód biorcy nie nadaje się do zespolenia (np. PSC, duża niezgodność średnic, retransplantacja, dzieci); kikut przewodu biorcy zamyka się. Po operacji ECPW zwykle niemożliwa (dostęp przezskórny lub enteroskopia).'
+    roux: 'Hepatikojejunostomia na pętli Roux-en-Y: gdy przewód biorcy nie nadaje się do zespolenia (np. PSC, duża niezgodność średnic, retransplantacja, dzieci); kikut przewodu biorcy zamyka się. Po operacji klasyczna ECPW (duodenoskopem) jest niemożliwa; do zespolenia dociera się przez pętlę Roux w ECPW wspomaganej enteroskopią (np. balonową) albo przezskórnie (PTC).'
+  };
+  // podpis kadru „Hepatektomia”: w Roux-en-Y przewód żółciowy wspólny biorcy przecina się nisko, nad trzustką (kikut zamknięty), a nie we wnęce
+  var OLT_HX = {
+    'classic-d2d': 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz IVC nad i pod wątrobą; wątroba biorcy usuwana razem z odcinkiem IVC.',
+    'classic-roux': 'Przecięcie żyły wrotnej i tętnicy wątrobowej we wnęce, przewodu żółciowego wspólnego nisko, nad trzustką, oraz IVC nad i pod wątrobą; wątroba biorcy usuwana razem z odcinkiem IVC i pozawątrobowym przewodem żółciowym.',
+    'pb-d2d': 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz żył wątrobowych przy IVC (ujścia zamknięte); wątroba odpreparowana od IVC po podwiązaniu krótkich żył wątrobowych (płata ogoniastego), IVC zostaje.',
+    'pb-roux': 'Przecięcie żyły wrotnej i tętnicy wątrobowej we wnęce, przewodu żółciowego wspólnego nisko, nad trzustką, oraz żył wątrobowych przy IVC (ujścia zamknięte); wątroba odpreparowana od IVC po podwiązaniu krótkich żył wątrobowych (płata ogoniastego), IVC zostaje.'
   };
   function oltAn(cav, bile, vshort) {
     var notes = OLT_NOTES.common.slice(0, 1).concat([OLT_NOTES[cav], OLT_NOTES.common[2], OLT_NOTES[bile], OLT_NOTES.common[1],
@@ -268,11 +275,10 @@
         { k: 'normal', kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Biorca', title: 'Wątroba biorcy',
           cap: 'Przed przeszczepieniem: wątroba biorcy z naczyniami wnęki, drogami żółciowymi, żyłami wątrobowymi i IVC.' },
         { k: 'var', kind: 'orbit', m0: 0, m1: 1, dur: 4, cam: 'front', short: 'Hepatektomia', title: 'Hepatektomia biorcy',
-          cap: cav === 'classic' ? 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz IVC nad i pod wątrobą; wątroba biorcy usuwana razem z odcinkiem IVC.'
-            : 'Przecięcie żyły wrotnej, tętnicy wątrobowej i przewodu żółciowego we wnęce oraz żył wątrobowych przy IVC (ujścia zamknięte); wątroba odpreparowana od IVC, która zostaje.' },
+          cap: OLT_HX[cav + '-' + bile] },
         { k: 'ven', kind: 'orbit', m0: 1, m1: 2.2, dur: 4.5, cam: 'custom', camP: { t: [-1.2, 0.5, -2], az: -62, el: 12, k: 0.8 }, short: 'Zespolenie żylne', title: cav === 'classic' ? 'Wszczepienie: zespolenia IVC' : 'Wszczepienie: piggyback, zespolenie bok-do-boku', cap: venTxt },
         { k: 'pvha', kind: 'orbit', m0: 2.2, m1: 3, dur: 3.5, cam: 'custom', camP: { t: [0.6, -5.2, 0.5], az: 22, el: -12, k: 0.5 }, short: 'PV i tętnica', title: 'Zespolenie żyły wrotnej i tętnicy wątrobowej',
-          cap: 'Żyła wrotna koniec-do-końca, po nim reperfuzja przeszczepu; następnie zespolenie tętnicy wątrobowej.' },
+          cap: 'Zespolenie żyły wrotnej koniec-do-końca, po nim reperfuzja przeszczepu; następnie zespolenie tętnicy wątrobowej.' },
         { k: 'bile', kind: 'orbit', m0: 3, m1: 4, dur: 4, cam: 'custom', camP: bile === 'd2d' ? { t: [-0.6, -6, 0.5], az: 12, el: -8, k: 0.5 } : { t: [0.6, -9, 1.2], az: 18, el: -6, k: 0.72 }, short: 'Drogi żółciowe', title: bile === 'd2d' ? 'Zespolenie przewód–przewód' : 'Hepatikojejunostomia na pętli Roux-en-Y', cap: bileTxt },
         { k: 'post', kind: 'orbit', m0: 4, m1: 4, cam: 'front', short: 'Po przeszczepieniu', title: 'Stan po przeszczepieniu wątroby',
           cap: 'Przeszczep z zespoleniami: ' + (cav === 'classic' ? 'IVC nad i pod wątrobą' : 'kawo-kawalne bok-do-boku') + ', żyła wrotna, tętnica wątrobowa, ' + (bile === 'd2d' ? 'przewód–przewód.' : 'hepatikojejunostomia na pętli Roux-en-Y.') }

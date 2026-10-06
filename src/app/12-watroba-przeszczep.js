@@ -1,7 +1,7 @@
   /* ---------- przeszczepienie wątroby (OLTx): wątroba biorcy → hepatektomia → przeszczep → zespolenia ----------
      Naczynia z modelu wątroby (ANAT.LIVER) dzielone w punktach przecięcia: część biorcy zostaje w miejscu, część wątrobowa odjeżdża z wątrobą
      biorcy i wraca z przeszczepem. Klasycznie zawątrobowy odcinek IVC idzie z wątrobą (dwa zespolenia IVC); w piggyback IVC biorcy zostaje,
-     a przeszczep z własnym odcinkiem IVC leży przed nią (przesunięcie OLT_PB), górny koniec IVC dawcy zespolony z ujściem żył wątrobowych biorcy.
+     a przeszczep z własnym odcinkiem IVC leży przed nią (obie IVC spłaszczone w odcinku zawątrobowym, OLT_PB_DZ); zespolenie kawo-kawalne bok-do-boku, oba końce IVC dawcy zamknięte.
      Oś czasu: 0–1 hepatektomia, 1–1.6 przeszczep na miejsce, 1.6–2.2 IVC, 2.2–3 PV i tętnica, 3–4 drogi żółciowe. */
   var OLT_COL = { rec: '#8f6a3e', graft: '#b8503f', roux: '#43a36f', bp: '#e2ad3f', ring: '#f4f1e8', cut: '#e0302a', lig: '#262b31' };
   var OLT_AWAY = new V3(8, 7, 9), OLT_PB_DZ = 0.58; // piggyback: obie IVC w odcinku zawątrobowym spłaszczone (przód–tył) i przylegające, przeszczep i IVC biorcy w miejscu
@@ -125,7 +125,7 @@
     var Lgft = { el: mkLabel('Przeszczep (wątroba dawcy)', '', OLT_COL.graft, 'seg'), base: new V3(-6.5, 4.5, 3.0), anchor: null, alpha: 0 };
     labels.push(Lrec, Lgft);
     var RL = [['pv', 'Żyła wrotna biorcy', LV_COL.pv, 0.4], ['cha', 'Tętnica wątrobowa wspólna (CHA)', LV_COL.ha, 0.5], ['cbd', 'Przewód żółciowy wspólny biorcy', LV_COL.bd, roux ? 0.12 : 0.4],
-      ['ivc', pb ? 'IVC biorcy (zachowana)' : 'IVC biorcy', '#2a4f9e', pb ? 0.12 : 0.35]].map(function (x) {
+      ['ivc', pb ? 'IVC biorcy (zachowana)' : 'IVC biorcy', '#2a4f9e', pb ? 0.12 : 0.2]].map(function (x) { // klasycznie kotwica poniżej zespolenia pod wątrobą (odcinek zawątrobowy to IVC dawcy)
       var L = { el: mkLabel(x[1], '', x[2], 'seg'), anchor: null, alpha: 0, id: x[0], at: x[3] };
       labels.push(L); return L;
     });
@@ -187,4 +187,8 @@
       li.appendChild(b); lg.appendChild(li);
     });
   }
-  window.__sgTest.oltx = function () { return M && M.oltx ? { m: S.m, rings: M.oltx.labels.filter(function (L) { return L.alpha > 0; }).map(function (L) { return L.el.textContent; }) } : null; };
+  window.__sgTest.oltx = function () {
+    if (!M || !M.oltx) return null; var vis = M.oltx.labels.filter(function (L) { return L.alpha > 0; }), at = {};
+    vis.forEach(function (L) { if (L.anchor) at[L.el.textContent] = L.anchor.toArray(); });
+    return { m: S.m, rings: vis.map(function (L) { return L.el.textContent; }), at: at };
+  };
