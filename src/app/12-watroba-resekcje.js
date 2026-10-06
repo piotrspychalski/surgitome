@@ -119,7 +119,9 @@
     return { rem: rem, dir: d.normalize().toArray(), cuts: cuts, gone: gone, specimen: 'Preparat', remnant: 'Pozostała wątroba' };
   }
   // metastazektomia: naczynia w kuli guza z marginesem wychodzą z preparatem — odcinek wewnątrz kuli odcięty, na brzegu loży pierścienie podwiązań.
-  // IVC (w rowku, poza miąższem) zostaje; pęcherzyk z przewodem pęcherzykowym wychodzi z preparatem, gdy kula na niego zachodzi (cholecystektomia).
+  // IVC (w rowku, poza miąższem) i pnie we wnęce (żyła wrotna, tętnica wątrobowa wspólna/właściwa z GDA, przewód wątrobowy wspólny i żółciowy wspólny) zostają;
+  // pęcherzyk z przewodem pęcherzykowym wychodzi z preparatem, gdy kula na niego zachodzi (cholecystektomia).
+  var LT_FIXED = { ivc: 1, cyd: 1, pv: 1, cha: 1, gda: 1, pha: 1, chd: 1, cbd: 1 };
   var LT_VES = null, LT_GB = null;
   var LT_VNAME = { rpv: 'Prawa gałąź żyły wrotnej (podwiązana)', lpv: 'Lewa gałąź żyły wrotnej (podwiązana)', rhv: 'Żyła wątrobowa prawa (podwiązana)',
     mhv: 'Żyła wątrobowa pośrodkowa (podwiązana)', lhv: 'Żyła wątrobowa lewa (podwiązana)' };
@@ -130,7 +132,7 @@
       A.LIVER.vessels[kind].forEach(function (v) {
         var c = oltCurve(v.pts), n = Math.max(24, Math.ceil(c.getLength() * 8)), P = [];
         for (var i = 0; i <= n; i++) P.push(c.getPointAt(i / n));
-        LT_VES.push({ v: v, kind: kind, c: c, n: n, P: P, fixed: v.id === 'ivc' || v.id === 'cyd' });
+        LT_VES.push({ v: v, kind: kind, c: c, n: n, P: P, fixed: !!LT_FIXED[v.id] });
       });
     });
     var gc = oltCurve(A.LIVER.vessels.gb.pts); LT_GB = [];

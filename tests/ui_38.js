@@ -58,6 +58,9 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
   ok(/W marginesie leży szypuła/.test($('capText').textContent),'brak ostrzeżenia w kadrze Resekcja: '+$('capText').textContent);
   // naczynia w kadrze Resekcja: kopia z przeciętymi odcinkami zamiast pełnego układu przechodzącego przez lożę
   ok(G.vesWhole===false,'pełny układ naczyń widoczny w kadrze Resekcja');
+  // guz przy wnęce: pnie we wnęce (PV, CHA/PHA z GDA, CHD/CBD) i IVC nie są przecinane przy metastazektomii
+  { const pv=w.ANAT.LIVER.vessels.pv.find(v=>v.id==='pv').pts, H=pv[pv.length-1]; const g=w.__sgTest.lvTumor(H); await sleep(30);
+    ok(g.cut.length&&!['pv','cha','gda','pha','chd','cbd','ivc'].some(x=>g.cut.includes(x)),'guz przy wnęce: przecięte pnie we wnęce lub brak przecięć: '+g.cut.join(',')); }
   // wariant „Resekcja anatomiczna”: reguły zakresu, kadr 2 z podwiązaniem szypuł
   D.querySelectorAll('#variants .vbtn')[1].click(); await sleep(800); D.querySelectorAll('.srow1 .step')[0].click(); await sleep(300);
   const CASES=[[[5.5,1.2,0.6],'Bisegmentektomia II/III',['Szypuła segmentu II (podwiązana)','Szypuła segmentu III (podwiązana)','Żyła wątrobowa lewa (stapler)']],
