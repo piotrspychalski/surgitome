@@ -11,6 +11,14 @@ authors:
 version: "1.0.0"
 date-released: "2026-10-06"
 license: MIT
+doi: 10.5281/zenodo.23185125
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23185125
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: 10.5281/zenodo.23185126
+    description: "Version 1.0.0"
 repository-code: "https://github.com/piotrspychalski/surgitome"
 url: "https://piotrspychalski.github.io/surgitome/"
 abstract: >-

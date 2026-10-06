@@ -1,6 +1,6 @@
   /* ---------- jak cytować: okienko z gotowym cytowaniem, link „Jak cytować” w stopce panelu i w menu na telefonie ----------
-     CITE_DOI — DOI koncepcyjny z Zenodo (prowadzi do najnowszej wersji); pusty do pierwszego wydania, wtedy cytowanie z adresem strony */
-  var CITE_DOI = '', CITE_URL = 'https://piotrspychalski.github.io/surgitome/';
+     CITE_DOI — DOI koncepcyjny z Zenodo (prowadzi do najnowszej wersji); pusty = cytowanie z adresem strony */
+  var CITE_DOI = '10.5281/zenodo.23185125', CITE_URL = 'https://piotrspychalski.github.io/surgitome/';
   function citeParts() {
     return { head: 'Spychalski P. SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy [software]. ' + (CITE_DOI ? 'Zenodo; 2026. ' : '2026. '),
       link: CITE_DOI ? 'https://doi.org/' + CITE_DOI : CITE_URL, linkText: CITE_DOI ? 'doi:' + CITE_DOI : CITE_URL };

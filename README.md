@@ -1,14 +1,13 @@
 # SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy
 
-<!-- Zenodo DOI badge, to be filled in after the first release (XXXXXXX = concept record id):
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23185125.svg)](https://doi.org/10.5281/zenodo.23185125)
 
 **Author:** Piotr Spychalski, MD, PhD — colorectal surgeon and clinical researcher, Assistant Professor at the Department of Oncological, Transplant and General Surgery, Medical University of Gdańsk (Gdański Uniwersytet Medyczny), Gdańsk, Poland
 **ORCID:** [0000-0001-7111-4660](https://orcid.org/0000-0001-7111-4660) · **E-mail:** piotr.spychalski@gumed.edu.pl · [Institutional profile](https://ppm.gumed.edu.pl/info/author/GUM3f5d1d8de0c54365ba7ffa8465799e64/)
 
 SURGITOME is an interactive, schematic 3D atlas of **postoperative gastrointestinal anatomy**, created by Piotr Spychalski, MD, PhD. It shows, step by step, what the digestive tract looks like after a given operation: what is resected, how the reconstruction and anastomoses are made (linear and circular staplers, sutures), what the endoscopist sees after surgery, and how the postoperative anatomy appears on schematic cross-sectional CT.
 
-> **Citation:** Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. 2026. See [How to cite](#how-to-cite).
+> **Citation:** Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:[10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). See [How to cite](#how-to-cite).
 
 ## Purpose and audience
 
@@ -105,9 +104,9 @@ Technical documentation (architecture, modules, data conventions, test suite): `
 
 If you use SURGITOME in teaching, research or publications, please cite the version archived in Zenodo:
 
-> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:10.5281/zenodo.XXXXXXX
+> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:[10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125)
 
-DOI: *to be assigned by Zenodo on the first release (v1.0.0)*. The concept DOI always resolves to the latest version; each release also has its own version DOI on Zenodo. Machine-readable metadata: `CITATION.cff` (GitHub: *Cite this repository*) and `.zenodo.json`.
+Concept DOI (all versions, always resolves to the latest): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Version 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). To cite a specific version, use its version DOI from the [Zenodo record](https://doi.org/10.5281/zenodo.23185125). Machine-readable metadata: `CITATION.cff` (GitHub: *Cite this repository*) and `.zenodo.json`.
 
 ## License
 
@@ -177,9 +176,9 @@ Koncepcja, treści medyczne i decyzje projektowe: Piotr Spychalski; implementacj
 
 Jeśli korzystasz z SURGITOME w dydaktyce, badaniach lub publikacjach, zacytuj wersję zarchiwizowaną w Zenodo:
 
-> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:10.5281/zenodo.XXXXXXX
+> Spychalski P. *SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy* [software]. Zenodo; 2026. doi:[10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125)
 
-DOI: *nadawany przez Zenodo przy pierwszym wydaniu (v1.0.0)*. DOI koncepcyjny zawsze prowadzi do najnowszej wersji; każde wydanie ma też w Zenodo własny DOI wersji. Metadane: `CITATION.cff` i `.zenodo.json`.
+DOI koncepcyjny (wszystkie wersje, zawsze prowadzi do najnowszej): [10.5281/zenodo.23185125](https://doi.org/10.5281/zenodo.23185125). Wersja 1.0.0: [10.5281/zenodo.23185126](https://doi.org/10.5281/zenodo.23185126). Aby zacytować konkretną wersję, użyj jej DOI z [rekordu w Zenodo](https://doi.org/10.5281/zenodo.23185125). Metadane: `CITATION.cff` i `.zenodo.json`.
 
 ## Licencja
 

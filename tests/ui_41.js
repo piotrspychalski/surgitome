@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Jak cytować: link w stopce panelu i w menu na telefonie, okienko z cytowaniem (DOI z Zenodo albo adres strony), kopiowanie, klawisze, Esc, EN
+// Jak cytować: link w stopce panelu i w menu na telefonie, okienko z cytowaniem (DOI koncepcyjny z Zenodo), kopiowanie, klawisze, Esc, EN
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); Object.defineProperty(dom.window.navigator,'languages',{value:['pl-PL']}); Object.defineProperty(dom.window.navigator,'language',{value:'pl-PL'});  const w=dom.window;
@@ -23,8 +23,7 @@ const key=(k,el)=>(el||w.document).dispatchEvent(new w.KeyboardEvent('keydown',{
   ok(!$('cite').hidden,'okienko cytowania się nie otwiera');
   const ref=$('citeRef').textContent, a=$('citeRef').querySelector('a'); console.log('cytowanie:',ref,'|',a&&a.href);
   ok(/^Spychalski P\. SURGITOME: interactive 3D atlas of postoperative gastrointestinal anatomy \[software\]\. /.test(ref),'zły początek cytowania');
-  if(/doi:/.test(ref)) ok(/Zenodo; 2026\. doi:10\.5281\/zenodo\.\d+$/.test(ref)&&a&&/^https:\/\/doi\.org\/10\.5281\/zenodo\.\d+$/.test(a.href),'zły DOI w cytowaniu');
-  else ok(/2026\. https:\/\/piotrspychalski\.github\.io\/surgitome\/$/.test(ref)&&a&&a.href==='https://piotrspychalski.github.io/surgitome/','brak adresu strony w cytowaniu');
+  ok(/Zenodo; 2026\. doi:10\.5281\/zenodo\.23185125$/.test(ref)&&a&&a.href==='https://doi.org/10.5281/zenodo.23185125','brak DOI koncepcyjnego z Zenodo w cytowaniu');
   ok(/MIT/.test($('cite').textContent)&&/CC BY 4\.0/.test($('cite').textContent),'brak informacji o licencjach');
   // klawisze przy otwartym okienku nie działają jak skróty
   const fav0=w.localStorage.getItem('surgitome-fav'), fr0=w.__sgTest.state().frame;
