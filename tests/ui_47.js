@@ -16,7 +16,7 @@ function ok(c,m){ if(!c) fails.push(m); }
 (async()=>{ await sleep(300);
   const A=w.ANAT, mesoOf=v=>v.cutTools.find(t=>t.type==='meso'), rem=d=>d.groups.list.filter(g=>g.removed).map(g=>g.code).sort().join(' '), keep=d=>d.groups.list.filter(g=>!g.removed).map(g=>g.code).sort().join(' ');
   const proc=id=>A.PROCS.find(p=>p.id===id), sort=a=>a.slice().sort().join(' ');
-  // gastrektomia całkowita i dystalna: D2 wg JGCA 2021
+  // gastrektomia całkowita i dystalna: D2 wg JGCA 2025
   const tg=mesoOf(proc('tg').variants[0]);
   ok(rem(tg)===sort(['1','2','3a','3b','4sa','4sb','4d','5','6','7','8a','9','11p','11d','12a'])&&keep(tg)==='10','TG: zły zakres D2: '+rem(tg)+' | '+keep(tg));
   ok(['lga','rga','rgea','lgea'].every(k=>tg.vessels.find(x=>x.id===k).tie!=null)&&tg.vessels.filter(x=>/^sg\d/.test(x.id)).every(x=>x.tie!=null),'TG: brak podwiązań u odejścia lub krótkich tętnic');

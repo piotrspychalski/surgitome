@@ -3,7 +3,7 @@
      Wspólne drzewo naczyń w układzie modeli żołądka, trzustki i przełyku: aorta, pień trzewny (LGA, CHA, śledzionowa),
      PHA, GDA, RGA, RGEA, LGEA, krótkie tętnice żołądkowe, łuki krzywizny mniejszej i większej z gałęziami do ściany, żyła wrotna.
      Stacje węzłowe — numeracja JGCA (Japanese classification of gastric carcinoma, 3. wyd. ang. 2011; zakresy D1/D2:
-     Japanese Gastric Cancer Treatment Guidelines 2021, 6. wyd.): gastrektomia całkowita D2 = 1–7, 8a, 9, 11p, 11d, 12a;
+     Japanese Gastric Cancer Treatment Guidelines 2025, 7. wyd. — bez zmian względem 2021): gastrektomia całkowita D2 = 1–7, 8a, 9, 11p, 11d, 12a;
      dystalna D2 = 1, 3, 4sb, 4d, 5, 6, 7, 8a, 9, 11p, 12a. Sieć większa usuwana standardowo przy guzach T3 i głębszych.
      ===================================================================== */
   var NG_JGCA = {
@@ -13,7 +13,7 @@
     '10': 'we wnęce śledziony', '11p': 'wzdłuż bliższej części tętnicy śledzionowej', '11d': 'wzdłuż dalszej części tętnicy śledzionowej',
     '12a': 'więzadło wątrobowo-dwunastnicze — wzdłuż PHA' };
   NG_ORDER.jgca = NG_ORDER.jps = ['1', '2', '3a', '3b', '4sa', '4sb', '4d', '5', '6', '7', '8a', '9', '10', '11p', '11d', '12a', '12b1', '12b2', '12c', '12p', '13a', '13b', '14a', '14b', '17a', '17b', '18'];
-  NG_SYS.jgca = 'Numeracja JGCA (Japanese Gastric Cancer Association); zakres D2 wg wytycznych JGCA 2021';
+  NG_SYS.jgca = 'Numeracja JGCA (Japanese Gastric Cancer Association); zakres D2 wg wytycznych JGCA 2025';
   var UG = (function () {
     var V3 = THREE.Vector3;
     function A(p) { return p.toArray ? p.toArray() : p.slice(); }
@@ -274,8 +274,8 @@
 
   // jedno zdanie w opisie zabiegu: zakres limfadenektomii i podwiązania (warstwa „Krezka, naczynia i węzły chłonne”)
   var UP_NOTES = {
-    tg: 'Limfadenektomia D2 (JGCA 2021): stacje 1–7, 8a, 9, 11p, 11d, 12a; LGA, RGA, RGEA i LGEA podwiązane u odejścia, krótkie tętnice żołądkowe przy śledzionie; śledziona zachowana (stacja 10 poza D2). Sieć większa usuwana standardowo przy guzach T3 i głębszych.',
-    dg: 'Limfadenektomia D2 (JGCA 2021): stacje 1, 3, 4sb, 4d, 5, 6, 7, 8a, 9, 11p, 12a; LGA, RGA, RGEA i LGEA podwiązane u odejścia, krótkie tętnice żołądkowe zachowane — ukrwienie kikuta żołądka. Sieć większa usuwana standardowo przy guzach T3 i głębszych.',
+    tg: 'Limfadenektomia D2 (JGCA 2025): stacje 1–7, 8a, 9, 11p, 11d, 12a; LGA, RGA, RGEA i LGEA podwiązane u odejścia, krótkie tętnice żołądkowe przy śledzionie; śledziona zachowana (stacja 10 poza D2). Sieć większa usuwana standardowo przy guzach T3 i głębszych.',
+    dg: 'Limfadenektomia D2 (JGCA 2025): stacje 1, 3, 4sb, 4d, 5, 6, 7, 8a, 9, 11p, 12a; LGA, RGA, RGEA i LGEA podwiązane u odejścia, krótkie tętnice żołądkowe zachowane — ukrwienie kikuta żołądka. Sieć większa usuwana standardowo przy guzach T3 i głębszych.',
     pd: 'Limfadenektomia standardowa (ISGPS 2014, numeracja JPS): stacje 5, 6, 8a, 12b1, 12b2, 12c, 13a, 13b, 14a, 14b, 17a, 17b; GDA podwiązana u odejścia, IPDA przy SMA; mezopankreas (tkanka między SMA a głową trzustki) z preparatem, SMA i żyła wrotna zachowane.',
     dp: 'Limfadenektomia standardowa (ISGPS 2014): stacje 10, 11, 18; tętnica śledzionowa podwiązana przy odejściu, żyła śledzionowa przy połączeniu z SMV.',
     eso: 'Rura żołądkowa ukrwiona przez RGEA (łuk krzywizny większej zachowany); LGA podwiązana u odejścia, krótkie tętnice żołądkowe i LGEA przecięte.',

@@ -234,7 +234,11 @@
       "japanesegastricc2026": { c: "Japanese Gastric Cancer Association. Japanese gastric cancer treatment guidelines 2025 (7th edition). Gastric Cancer. 2026;29(2):271-99.", pmid: "41569370", doi: "10.1007/s10120-025-01698-4", y: 2026 },
       "mitra2026": { c: "Mitra A, Bhambri A, Fehervari M, Parmar C. Long-Term Outcomes of One Anastomosis Gastric Bypass: A Systematic Review and Meta-Analysis of 5-Year and Beyond. Obes Surg. 2026;36(1):71-87.", pmid: "41094294", doi: "10.1007/s11695-025-08339-w", y: 2026 },
       "ren2026": { c: "Ren H, Lu S, Sun Y, Zhang Q, Shen Y. The effectiveness and safety of isoperistaltic versus antiperistaltic side-to-side ileocolic anastomosis in minimally invasive radical right hemicolectomy: a systematic review and meta-analysis. Int J Colorectal Dis. 2026;41(1):129.", pmid: "42234166", doi: "10.1007/s00384-026-05160-4", y: 2026 },
-      "sassun2026": { c: "Sassun R, Sileo A, Ng JC, Mari G, Brucchi F, Ferrari D, et al. Low Versus High Ligation of Inferior Mesenteric Artery in Rectal and Sigmoid Cancers: A Systematic Review, Meta-analysis, and Trial Sequential Analysis of Randomized Controlled Trials. Ann Surg Oncol. 2026;33(1):210-9.", pmid: "41139188", doi: "10.1245/s10434-025-18642-6", y: 2026 }
+      "sassun2026": { c: "Sassun R, Sileo A, Ng JC, Mari G, Brucchi F, Ferrari D, et al. Low Versus High Ligation of Inferior Mesenteric Artery in Rectal and Sigmoid Cancers: A Systematic Review, Meta-analysis, and Trial Sequential Analysis of Randomized Controlled Trials. Ann Surg Oncol. 2026;33(1):210-9.", pmid: "41139188", doi: "10.1245/s10434-025-18642-6", y: 2026 },
+      "japanesesocietyf2019": { c: "Japanese Society for Cancer of the Colon and Rectum. Japanese Classification of Colorectal, Appendiceal, and Anal Carcinoma: the 3d English Edition [Secondary Publication]. J Anus Rectum Colon. 2019;3(4):175-95.", pmid: "31768468", doi: "10.23922/jarc.2019-018", y: 2019 },
+      "japanesegastricc2011": { c: "Japanese Gastric Cancer Association. Japanese classification of gastric carcinoma: 3rd English edition. Gastric Cancer. 2011;14(2):101-12.", pmid: "21573743", doi: "10.1007/s10120-011-0041-5", y: 2011 },
+      "tol2014": { c: "Tol JA, Gouma DJ, Bassi C, Dervenis C, Montorsi M, Adham M, et al.; International Study Group on Pancreatic Surgery. Definition of a standard lymphadenectomy in surgery for pancreatic ductal adenocarcinoma: a consensus statement by the International Study Group on Pancreatic Surgery (ISGPS). Surgery. 2014;156(3):591-600.", pmid: "25061003", doi: "10.1016/j.surg.2014.06.016", y: 2014 },
+      "rice2017": { c: "Rice TW, Ishwaran H, Ferguson MK, Blackstone EH, Goldstraw P. Cancer of the Esophagus and Esophagogastric Junction: An Eighth Edition Staging Primer. J Thorac Oncol. 2017;12(1):36-42.", pmid: "27810391", doi: "10.1016/j.jtho.2016.10.016", y: 2017 },
     },
     P: {
       "sleeve": [
@@ -301,7 +305,8 @@
         ["heald1982", "original", "Całkowite wycięcie mezorektum (TME) — opis oryginalny"],
         ["aiolfi2026", "outcomes", "Niskie vs wysokie podwiązanie IMA: bez różnicy przeżycia (metaanaliza IPD RCT)"],
         ["kruszewski2021", "outcomes", "RCT (Gdańsk): podwiązanie IMA poniżej LC równoważne wysokiemu"],
-        ["sassun2026", "outcomes", "Metaanaliza RCT: niskie podwiązanie IMA bezpieczne onkologicznie, mniej nieszczelności"]],
+        ["sassun2026", "outcomes", "Metaanaliza RCT: niskie podwiązanie IMA bezpieczne onkologicznie, mniej nieszczelności"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "rh": [
         ["vogel2022", "guideline", "Hemikolektomia prawa: zakres z krezką, podwiązanie IC i RC u odejścia"],
         ["hohenberger2009", "technique", "CME i centralne podwiązanie naczyń w hemikolektomii prawej"],
@@ -310,7 +315,8 @@
         ["ibanez2019", "outcomes", "Zespolenie krętniczo-okrężnicze izo- vs antyperystaltyczne: podobne wyniki (RCT ISOVANTI)"],
         ["ren2026", "outcomes", "Metaanaliza izo vs anty w hemikolektomii prawej: obie bezpieczne, brak wyraźnej przewagi"],
         ["choy2011", "outcomes", "Zespolenie krętniczo-okrężnicze staplerem: mniej nieszczelności niż szew ręczny (Cochrane)"],
-        ["mp_komorowski_2021", "outcomes", "Zespolenie wewnątrz- vs zewnątrzustrojowe w laparoskopowej hemikolektomii prawej (komentarz PL)"]],
+        ["mp_komorowski_2021", "outcomes", "Zespolenie wewnątrz- vs zewnątrzustrojowe w laparoskopowej hemikolektomii prawej (komentarz PL)"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "rh-anti": [
         ["steichen1968", "original", "Opis oryginalny FEEA (functional end-to-end anastomosis) staplerem liniowym"]],
       "rh-ext": [
@@ -318,7 +324,8 @@
         ["morarasu2021", "outcomes", "Rak poprzecznicy: poszerzona daje więcej węzłów, przeżycie i nawroty podobne"]],
       "lh": [
         ["vogel2022", "guideline", "Zakres resekcji z krezką i podwiązaniem naczyń u odejścia (ASCRS 2022)"],
-        ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w lewej połowie okrężnicy"]],
+        ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w lewej połowie okrężnicy"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "lh-anti": [
         ["steichen1968", "original", "Opis oryginalny FEEA staplerem liniowym z poprzecznym zamknięciem końców"]],
       "ar": [
@@ -326,7 +333,8 @@
         ["langenfeld2024", "guideline", "Aktualizacja 2023 wytycznych ASCRS dla raka odbytnicy"],
         ["heald1982", "original", "TME — wycięcie odbytnicy z całym mezorektum (opis oryginalny)"],
         ["knight1980", "original", "Opis oryginalny podwójnego staplowania: stapler okrężny przez zamknięty kikut odbytnicy"],
-        ["cohen1983", "technique", "Technika podwójnego staplowania w niskiej przedniej resekcji odbytnicy"]],
+        ["cohen1983", "technique", "Technika podwójnego staplowania w niskiej przedniej resekcji odbytnicy"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ar-center": [
         ["zhuo2015", "technique", "Klasyczne podwójne staplowanie tworzy dwa „psie uszy” po bokach pierścienia"],
         ["liu2025", "outcomes", "Usunięcie „psich uszu” zmniejsza nieszczelność i krwawienie z zespolenia"],
@@ -359,7 +367,8 @@
         ["hawkins2026", "guideline", "Aktualizacja 2026 wytycznych ASCRS dla lewostronnego zapalenia uchyłków okrężnicy"],
         ["sartelli2020", "guideline", "WSES 2020: Hartmann u chorych niestabilnych lub z kałowym zapaleniem otrzewnej"],
         ["lambrichts2019", "outcomes", "LADIES: resekcja z zespoleniem vs Hartmann w ropnym zapaleniu otrzewnej"],
-        ["bridoux2017", "outcomes", "DIVERTI: Hartmann vs zespolenie pierwotne w perforacyjnym zapaleniu uchyłków"]],
+        ["bridoux2017", "outcomes", "DIVERTI: Hartmann vs zespolenie pierwotne w perforacyjnym zapaleniu uchyłków"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ileo": [
         ["davis2022", "guideline", "Wytyczne ASCRS: wyłonienie, lokalizacja i powikłania stomii"],
         ["brooke1952", "original", "Wywinięcie ramienia wydzielniczego ileostomii (Brooke) — opis oryginalny"],
@@ -386,7 +395,8 @@
       "esoph": [
         ["low2015", "guideline", "Konsensus ECCG: definicje nieszczelności, martwicy rury i porażenia nerwu krtaniowego"],
         ["obermannova2022", "guideline", "Wytyczne ESMO: leczenie raka przełyku i połączenia przełykowo-żołądkowego"],
-        ["vanworkum2021", "outcomes", "RCT ICAN: zespolenie szyjne — więcej nieszczelności i porażeń nerwu krtaniowego niż w klatce"]],
+        ["vanworkum2021", "outcomes", "RCT ICAN: zespolenie szyjne — więcej nieszczelności i porażeń nerwu krtaniowego niż w klatce"],
+        ["rice2017", "anatomy", "Mapa węzłów regionalnych przełyku AJCC 8 (stacje 1R–20) — przełącznik „Grupy węzłów chłonnych”"]],
       "eso-il": [
         ["lewis1946", "original", "Opis oryginalny: dostęp brzuszny i prawostronna torakotomia, zespolenie w klatce"],
         ["fabbi2021", "technique", "Małoinwazyjny Ivor Lewis: technika zespolenia przełykowo-żołądkowego wewnątrz klatki piersiowej"],
@@ -433,9 +443,10 @@
       "dg": [
         ["weil1999", "technique", "Przegląd historyczny resekcji żołądka Billrotha (oryginał 1881 poza PubMed)"],
         ["japanesegastricc2023", "guideline", "Wytyczne JGCA: metody rekonstrukcji po resekcji dystalnej (B-I, B-II, Roux-en-Y)"],
-        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): rekonstrukcje po resekcji dystalnej — B-I, B-II, Roux-en-Y"],
+        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): rekonstrukcje po resekcji dystalnej — B-I, B-II, Roux-en-Y; limfadenektomia D2 — stacje 1, 3, 4sb, 4d, 5, 6, 7, 8a, 9, 11p, 12a"],
         ["lombardo2022", "outcomes", "Metaanaliza sieciowa RCT: B-I, B-II, B-II+Braun, Roux-en-Y — porównanie wyników"],
-        ["shimada2016", "outcomes", "Rak kikuta żołądka: typowo 10–30 lat po resekcji"]],
+        ["shimada2016", "outcomes", "Rak kikuta żołądka: typowo 10–30 lat po resekcji"],
+        ["japanesegastricc2011", "anatomy", "Numeracja stacji węzłowych JGCA — przełącznik „Grupy węzłów chłonnych”"]],
       "b1": [
         ["nishizaki2021", "outcomes", "Cochrane: po B-I więcej refluksu żółciowego niż po Roux-en-Y"]],
       "b2": [
@@ -457,11 +468,12 @@
       "tg": [
         ["hutchison2010", "original", "Oryginalna praca Roux (1893) w tłumaczeniu angielskim"],
         ["japanesegastricc2023", "guideline", "Wytyczne JGCA: gastrektomia całkowita i rekonstrukcja Roux-en-Y"],
-        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): po gastrektomii całkowitej zespolenie przełykowo-jelitowe Roux-en-Y"],
+        ["japanesegastricc2026", "guideline", "Wytyczne JGCA 2025 (wyd. 7): po gastrektomii całkowitej zespolenie przełykowo-jelitowe Roux-en-Y; limfadenektomia D2 — stacje 1–7, 8a, 9, 11p, 11d, 12a"],
         ["donovan1982", "technique", "Pętla Roux ≥40 cm zapobiega refluksowi żółci do przełyku"],
         ["gustavsson1988", "outcomes", "Zastój rzadki po zespoleniu przełykowo-jelitowym; pętle >40 cm zwiększają ryzyko"],
         ["zhang2022", "endoscopy", "ECPW po Roux-en-Y: brodawka osiągalna tylko wstecznie od strony dystalnej"],
-        ["gkolfakis2022", "endoscopy", "Metaanaliza ECPW w zmienionej anatomii, w tym po Roux-en-Y"]],
+        ["gkolfakis2022", "endoscopy", "Metaanaliza ECPW w zmienionej anatomii, w tym po Roux-en-Y"],
+        ["japanesegastricc2011", "anatomy", "Numeracja stacji węzłowych JGCA (1–12a) — przełącznik „Grupy węzłów chłonnych”"]],
       "gebp": [
         ["vandermerwe2022", "guideline", "ESGE: EUS-GE alternatywą dla stentu lub operacji w złośliwej niedrożności odźwiernika"],
         ["jue2021", "guideline", "ASGE: gastroenterostomia chirurgiczna vs stent w niedrożności żołądkowo-dwunastniczej"],
@@ -475,7 +487,8 @@
         ["cheng2017", "outcomes", "PG vs PJ (Cochrane): brak wyraźnej różnicy w częstości przetoki trzustkowej"],
         ["chahal2006", "endoscopy", "ECPW po operacji Whipple'a: dotarcie pętlą doprowadzającą do HJ"],
         ["han2025", "endoscopy", "Skuteczność i bezpieczeństwo ECPW w zmienionej anatomii, w tym dotarcie do HJ"],
-        ["pennazio2023", "guideline", "ESGE: ECPW wspomagana enteroskopem jako pierwszy wybór w zmienionej anatomii"]],
+        ["pennazio2023", "guideline", "ESGE: ECPW wspomagana enteroskopem jako pierwszy wybór w zmienionej anatomii"],
+        ["tol2014", "guideline", "Limfadenektomia standardowa przy pankreatoduodenektomii (ISGPS, numeracja JPS): stacje 5, 6, 8a, 12b1, 12b2, 12c, 13a, 13b, 14a, 14b, 17a, 17b"]],
       "pppd": [
         ["traverso1978", "original", "Opis oryginalny PD z zachowaniem odźwiernika (Traverso-Longmire)"],
         ["child1944", "technique", "Rekonstrukcja Childa na jednej pętli: kolejno PJ, HJ, zespolenie z przewodem pokarmowym"],
@@ -484,13 +497,15 @@
         ["hackert2018", "outcomes", "RCT PROPP: resekcja odźwiernika nie zmniejsza DGE"],
         ["klaiber2018", "outcomes", "Metaanaliza: brak istotnej różnicy DGE między PPPD a PRPD"],
         ["cheng2017", "outcomes", "PG vs PJ (Cochrane): brak wyraźnej różnicy w częstości przetoki trzustkowej"],
-        ["chahal2006", "endoscopy", "ECPW po pankreatoduodenektomii: dotarcie pętlą doprowadzającą do HJ"]],
+        ["chahal2006", "endoscopy", "ECPW po pankreatoduodenektomii: dotarcie pętlą doprowadzającą do HJ"],
+        ["tol2014", "guideline", "Limfadenektomia standardowa przy pankreatoduodenektomii (ISGPS, numeracja JPS): stacje 5, 6, 8a, 12b1, 12b2, 12c, 13a, 13b, 14a, 14b, 17a, 17b"]],
       "dp": [
         ["mayo1913", "original", "Wczesny opis resekcji lewej połowy trzustki (Mayo 1913)"],
         ["diener2011", "technique", "DISPACT: zamknięcie kikuta staplerem vs szwem ręcznym, podobny odsetek przetok"],
         ["bassi2017", "guideline", "ISGPS 2016: definicja i stopnie przetoki trzustkowej z kikuta"],
         ["warshaw1988", "technique", "Zachowanie śledziony przy pankreatektomii dystalnej (technika Warshawa)"],
-        ["davies2011", "guideline", "Szczepienia i profilaktyka zakażeń po splenektomii (BCSH)"]],
+        ["davies2011", "guideline", "Szczepienia i profilaktyka zakażeń po splenektomii (BCSH)"],
+        ["tol2014", "guideline", "Limfadenektomia standardowa przy raku trzonu i ogona trzustki (ISGPS): stacje 10, 11, 18"]],
       "hj": [
         ["hepp1956", "original", "Dostęp do przewodu wątrobowego lewego w naprawie dróg żółciowych (Hepp–Couinaud)"],
         ["deangelis2021", "guideline", "WSES 2020: uszkodzenia dróg żółciowych, naprawa przez HJ na pętli Roux"],
