@@ -6128,12 +6128,41 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     if (projV.z > 1 || projV.z < -1 || Math.abs(projV.x) > 1.05 || Math.abs(projV.y) > 1.05) { el.style.display = 'none'; return; }
     el.style.display = ''; el.style.opacity = alpha.toFixed(2);
     var x = view.x + (projV.x + 1) / 2 * view.w, y = view.y + (1 - projV.y) / 2 * view.h;
-    // strona dymka: na lewo od środka modelu — w lewo, na prawo — w prawo (z histerezą, bez przeskakiwania przy obrocie)
-    var left = el._left;
+    // strona dymka: na lewo od środka modelu — w lewo, na prawo — w prawo (z histerezą, bez przeskakiwania przy obrocie);
+    // ostateczną stronę i przesunięcie przy brzegu ekranu ustala declutter (fitSide)
+    var left = el._nat;
     if (left === undefined) left = x < lblCx; else if (left && x > lblCx + 24) left = false; else if (!left && x < lblCx - 24) left = true;
-    if (left !== el._left) { el._left = left; el.classList.toggle('lbl-left', left); el._sw = 0; }
-    el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)' + (left ? ' translateX(-100%)' : '');
+    el._nat = left;
+    if (el._left === undefined) { el._left = left; el.classList.toggle('lbl-left', left); }
+    el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)' + (el._left ? ' translateX(-100%)' : '');
     if (alpha > 0.25) lblVis.push({ el: el, x: x, y: y, left: left });
+    else if (el._left !== left) { el._left = left; el.classList.toggle('lbl-left', left); el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)' + (left ? ' translateX(-100%)' : ''); }
+  }
+  // dymek mieszczący się w widoku: gdy po swojej stronie wychodzi poza brzeg (lub pod pływające przyciski), przechodzi na drugą stronę punktu;
+  // gdy nie mieści się po żadnej — zostaje i jest przesuwany w poziomie do brzegu (punkt etykiety zostaje na miejscu)
+  // punkty innych etykiet (dots) pod tekstem dymka są karane: przy dwóch stronach mieszczących się w widoku wybierana ta, która zasłania mniej punktów
+  function fitSide(it, btns, dots) {
+    var el = it.el, w = el._sw, xmin = view.x + 4, xmax = view.x + view.w - 4, y0 = it.y - 7, y1 = y0 + el._sh;
+    function span(left) { return left ? [it.x - 9 - w, it.x - 9] : [it.x + 9, it.x + 9 + w]; }
+    function bad(left) {
+      var r = span(left), o = Math.max(0, xmin - r[0]) + Math.max(0, r[1] - xmax);
+      btns.forEach(function (b) { if (y1 > b[1] && y0 < b[3]) o += Math.max(0, Math.min(r[1], b[2]) - Math.max(r[0], b[0])); });
+      return o;
+    }
+    function covers(left) { var r = span(left), n = 0; dots.forEach(function (d) { if (d.el !== el && d.x > r[0] - 3 && d.x < r[1] + 3 && d.y > y0 - 3 && d.y < y1 + 3) n++; }); return n; }
+    var left = it.left, bn = bad(left);
+    if (bn > 0) { var bo = bad(!left); if (bo < bn - 2) left = !left; }
+    else if (bad(!left) === 0) {
+      var cn = covers(left), co = covers(!left), cp = el._left === left ? cn : co;
+      if (co < cn) left = !left;
+      else if (el._left !== left && co === cn && cp === cn) left = el._left; // bez przeskoków: wcześniejsza strona, jeśli nie gorsza
+    }
+    if (left !== el._left) { el._left = left; el.classList.toggle('lbl-left', left); el.style.transform = 'translate(' + it.x.toFixed(1) + 'px,' + it.y.toFixed(1) + 'px)' + (left ? ' translateX(-100%)' : ''); }
+    var r = span(left), dx = 0;
+    btns.forEach(function (b) { if (y1 > b[1] && y0 < b[3] && r[1] > b[0] && r[0] < b[2]) dx = Math.min(dx, b[0] - r[1]); }); // spod przycisków w lewo
+    if (r[0] + dx < xmin) dx = xmin - r[0];
+    else if (r[1] + dx > xmax) dx = xmax - r[1];
+    it.left = left; it.dx = dx; it.l = r[0] + dx; it.r = r[1] + dx;
   }
   // grupy węzłów chłonnych: punkt na węźle, kod w pigułce obok — miejsce wybierane tak, by nie zasłaniać innych etykiet, pigułek ani punktów węzłów
   var nodeVis = [], NODE_D = [8, 22, 38, 58, 80];
@@ -6146,9 +6175,9 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     nodeVis.push({ el: el, x: x, y: y });
   }
   // przyciski i karta podpisu kadru nad widokiem — pigułki węzłów ich nie zasłaniają (współrzędne warstwy etykiet)
-  function overlayRects() {
+  function overlayRects(btnOnly) {
     var base = labelsEl.getBoundingClientRect(), out = [];
-    document.querySelectorAll('#viewport .fbtn, #viewport #cap, #viewport #btnPanel, #viewport #btnLabels').forEach(function (e) {
+    document.querySelectorAll(btnOnly ? '#viewport .fbtn' : '#viewport .fbtn, #viewport #cap, #viewport #btnPanel, #viewport #btnLabels').forEach(function (e) {
       if (e.hidden || !e.offsetParent) return; var r = e.getBoundingClientRect(); if (r.width < 2) return;
       out.push([r.left - base.left - 4, r.top - base.top - 4, r.right - base.left + 4, r.bottom - base.top + 4]);
     });
@@ -6191,11 +6220,11 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   }
   // rozsuwanie nachodzących dymków: od góry do dołu, kolejny dymek zsuwany pod poprzedni, jeśli zachodzą w poziomie
   function declutter() {
-    var list = lblVis; lblVis = [];
+    var list = lblVis, btns = list.length ? overlayRects(true) : []; lblVis = [];
     list.forEach(function (it) {
       var sp = it.el.lastElementChild; it.sp = sp;
       if (!it.el._sw) { it.el._sw = sp.offsetWidth || 80; it.el._sh = sp.offsetHeight || 22; }
-      if (it.left) { it.r = it.x - 9; it.l = it.r - it.el._sw; } else { it.l = it.x + 9; it.r = it.l + it.el._sw; }
+      fitSide(it, btns, list);
       it.t = it.y - 7; it.h = it.el._sh;
     });
     list.sort(function (p, q) { return p.t - q.t; });
@@ -6205,7 +6234,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       it.nt = top;
       var want = Math.min(90, top - it.t), cur = it.el._dy || 0;
       cur += (want - cur) * 0.35; if (Math.abs(want - cur) < 0.5) cur = want; it.el._dy = cur;
-      it.sp.style.transform = cur ? 'translateY(' + cur.toFixed(1) + 'px)' : '';
+      it.sp.style.transform = cur || it.dx ? 'translate(' + it.dx.toFixed(1) + 'px,' + cur.toFixed(1) + 'px)' : '';
       it.el.classList.toggle('lbl-moved', cur > 3);
     }
     placeNodes(list.map(function (it) { var t0 = it.t + (it.el._dy || 0); return [it.l, t0, it.r, t0 + it.h]; })); // zwykłe etykiety jako przeszkody dla pigułek węzłów
