@@ -17,9 +17,10 @@ function ok(c,m){ if(!c) fails.push(m); }
   const A=w.ANAT, L=A._lib, nodeLbl=()=>[...$('labels').querySelectorAll('.lbl-node')].filter(e=>e.style.display!=='none').map(e=>e.querySelector('b').textContent);
   // dane: kody JSCCR w hemikolektomii prawej i resekcjach lewostronnych
   const g=d=>d.groups.list.map(x=>x.code+(x.removed?'*':'')).join(' ');
-  ok(g(L.mesoRight('rh'))==='203* 202* 201* 213* 212* 211* 223 222-rt* 221* 222-lt 221','hemikolektomia prawa: złe grupy: '+g(L.mesoRight('rh')));
-  ok(/253\* 252\*/.test(g(L.mesoLeft('ar')))&&/251\*/.test(g(L.mesoLeft('ar'))),'resekcja odbytnicy: 253/252/251 nie z preparatem: '+g(L.mesoLeft('ar')));
-  ok(/^253 252 /.test(g(L.mesoLeft('lh'))),'hemikolektomia lewa: 253/252 powinny zostać: '+g(L.mesoLeft('lh')));
+  ok(g(L.mesoRight('rh'))==='201* 202* 203* 211* 212* 213* 221* 221 222-rt* 222-lt 223','hemikolektomia prawa: złe grupy lub kolejność JSCCR: '+g(L.mesoRight('rh')));
+  const has=(d,c)=>g(d).split(' ').includes(c);
+  ok(['253*','252*','251*'].every(c=>has(L.mesoLeft('ar'),c)),'resekcja odbytnicy: 253/252/251 nie z preparatem: '+g(L.mesoLeft('ar')));
+  ok(['253','252'].every(c=>has(L.mesoLeft('lh'),c)),'hemikolektomia lewa: 253/252 powinny zostać: '+g(L.mesoLeft('lh')));
   ok(L.mesoRight('rh').groups.system.startsWith('Numeracja JSCCR'),'brak nazwy systemu numeracji');
   ok(A.PROCS.filter(p=>!p.split).every(p=>p.variants.every(v=>!v.cutTools.some(t=>t.type==='meso')||v.cutTools.some(t=>t.type==='meso'&&t.groups&&t.groups.list.length))),'zabieg z krezką bez grup węzłów');
   // interfejs: domyślnie wyłączone, przełącznik widoczny przy krezce, podpisy niezależne od etykiet
@@ -35,8 +36,17 @@ function ok(c,m){ if(!c) fails.push(m); }
   ok([...$('labels').querySelectorAll('.lbl:not(.lbl-node)')].every(e=>e.style.display==='none'),'zwykłe etykiety widoczne mimo wyłączenia');
   ok($('labels').style.display!=='none','warstwa etykiet ukryta mimo włączonych grup');
   ok(w.localStorage.getItem('surgitome-wezly')==='1','wybór nie zapisany');
+  // lista grup w panelu (kod, nazwa; kolejność JSCCR; grupa rozdzielona — „częściowo z preparatem”), pigułki z linią odniesienia, nazwa po stuknięciu
+  const rowsL=[...$('nodeList').querySelectorAll('li:not(.nkey)')];
+  ok(!$('nodeList').hidden&&rowsL.length===10&&rowsL[0].querySelector('.nc').textContent==='201'&&rowsL[0].querySelector('.nc').classList.contains('r'),'lista grup w panelu: '+rowsL.map(r=>r.textContent).join(' / ').slice(0,200));
+  ok(rowsL.find(r=>r.querySelector('.nc').textContent==='221').textContent.includes('częściowo z preparatem')&&!rowsL.find(r=>r.querySelector('.nc').textContent==='223').querySelector('.nc').classList.contains('r'),'lista: status grup 221 (częściowo) i 223 (zostaje)');
+  const pill=[...$('labels').querySelectorAll('.lbl-node')].find(e=>e.textContent.startsWith('203'));
+  ok(pill&&pill.querySelector('.ldr')&&pill.classList.contains('lbl-node-r'),'pigułka 203: brak linii odniesienia lub stylu „z preparatem”');
+  pill.querySelector('span').dispatchEvent(new w.MouseEvent('click',{bubbles:true})); await sleep(50); ok(pill.classList.contains('open'),'stuknięcie nie pokazuje nazwy grupy');
+  pill.querySelector('span').dispatchEvent(new w.MouseEvent('click',{bubbles:true})); await sleep(50); ok(!pill.classList.contains('open'),'ponowne stuknięcie nie chowa nazwy');
   $('optMeso').click(); await sleep(200); ok(nodeLbl().length===0,'grupy widoczne przy wyłączonej krezce');
   $('optMeso').click(); await sleep(200);
+  $('optNodes').click(); await sleep(100); ok($('nodeList').hidden,'lista grup widoczna przy wyłączonym przełączniku'); $('optNodes').click(); await sleep(100);
   // zabieg bez krezki: przełącznik ukryty
   [...$('tabs').children].find(b=>b.textContent.startsWith('Ileostomia')).click(); await sleep(400); ok($('togNodes').hidden,'przełącznik grup przy zabiegu bez krezki');
   // jelito cienkie (nowy model): grupy opisowe; wybór zakresu: JSCCR

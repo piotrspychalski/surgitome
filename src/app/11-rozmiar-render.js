@@ -70,6 +70,60 @@
     el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)' + (left ? ' translateX(-100%)' : '');
     if (alpha > 0.25) lblVis.push({ el: el, x: x, y: y, left: left });
   }
+  // grupy węzłów chłonnych: punkt na węźle, kod w pigułce obok — miejsce wybierane tak, by nie zasłaniać innych etykiet, pigułek ani punktów węzłów
+  var nodeVis = [], NODE_D = [8, 22, 38, 58, 80];
+  function placeNode(el, pos, alpha) {
+    if (alpha < 0.02) { el.style.display = 'none'; return; }
+    projV.copy(pos).project(orbitCam);
+    if (projV.z > 1 || projV.z < -1 || Math.abs(projV.x) > 1.05 || Math.abs(projV.y) > 1.05) { el.style.display = 'none'; return; }
+    var x = view.x + (projV.x + 1) / 2 * view.w, y = view.y + (1 - projV.y) / 2 * view.h;
+    el.style.display = ''; el.style.opacity = alpha.toFixed(2); el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    nodeVis.push({ el: el, x: x, y: y });
+  }
+  // przyciski i karta podpisu kadru nad widokiem — pigułki węzłów ich nie zasłaniają (współrzędne warstwy etykiet)
+  function overlayRects() {
+    var base = labelsEl.getBoundingClientRect(), out = [];
+    document.querySelectorAll('#viewport .fbtn, #viewport #cap, #viewport #btnPanel, #viewport #btnLabels').forEach(function (e) {
+      if (e.hidden || !e.offsetParent) return; var r = e.getBoundingClientRect(); if (r.width < 2) return;
+      out.push([r.left - base.left - 4, r.top - base.top - 4, r.right - base.left + 4, r.bottom - base.top + 4]);
+    });
+    return out;
+  }
+  function placeNodes(rects) {
+    var list = nodeVis; nodeVis = [];
+    if (!list.length) return;
+    var placed = rects.concat(overlayRects()), x0 = view.x + 2, y0 = view.y + 2, x1 = view.x + view.w - 2, y1 = view.y + view.h - 2;
+    list.forEach(function (it) { placed.push([it.x - 5, it.y - 5, it.x + 5, it.y + 5]); }); // punkty wszystkich węzłów
+    function cost(r) {
+      var c = 0;
+      if (r[0] < x0 || r[1] < y0 || r[2] > x1 || r[3] > y1) c += 1e5;
+      placed.forEach(function (q) { var ox = Math.min(r[2], q[2] + 2) - Math.max(r[0], q[0] - 2), oy = Math.min(r[3], q[3] + 2) - Math.max(r[1], q[1] - 2); if (ox > 0 && oy > 0) c += ox * oy; });
+      return c;
+    }
+    list.sort(function (a, b) { return a.y - b.y || a.x - b.x; });
+    list.forEach(function (it) {
+      var el = it.el, sp = el.lastElementChild;
+      if (!el._nw) { el._nw = sp.offsetWidth || 24; el._nh = sp.offsetHeight || 18; }
+      var w = el._nw, h = el._nh, out = it.x >= lblCx ? 1 : -1, cands = el._off ? [el._off] : [];
+      NODE_D.forEach(function (d) {
+        var e = d * 0.7, R = [d, -h / 2], Lf = [-d - w, -h / 2], U = [-w / 2, -d - h], D = [-w / 2, d];
+        var UR = [e, -e - h], DR = [e, e], UL = [-e - w, -e - h], DL = [-e - w, e];
+        cands.push.apply(cands, out > 0 ? [R, UR, DR, U, D, UL, DL, Lf] : [Lf, UL, DL, U, D, UR, DR, R]);
+      });
+      var best = null, bc = 1e12;
+      for (var i = 0; i < cands.length; i++) {
+        var c = cands[i], r = [it.x + c[0], it.y + c[1], it.x + c[0] + w, it.y + c[1] + h], k = cost(r) + (i ? 0.01 * Math.abs(c[0]) + 0.01 * Math.abs(c[1]) : 0);
+        if (k < bc) { bc = k; best = c; } if (k < 1) break;
+      }
+      el._off = best;
+      var rb = [it.x + best[0], it.y + best[1], it.x + best[0] + w, it.y + best[1] + h];
+      placed.push(rb);
+      sp.style.transform = 'translate(' + best[0].toFixed(1) + 'px,' + best[1].toFixed(1) + 'px)';
+      // linia odniesienia od punktu węzła do najbliższego punktu pigułki
+      var nx = Math.max(rb[0], Math.min(it.x, rb[2])) - it.x, ny = Math.max(rb[1], Math.min(it.y, rb[3])) - it.y, L = Math.sqrt(nx * nx + ny * ny), ld = el.firstChild;
+      if (L > 5) { ld.style.display = 'block'; ld.style.width = L.toFixed(1) + 'px'; ld.style.transform = 'rotate(' + Math.atan2(ny, nx).toFixed(3) + 'rad)'; } else ld.style.display = 'none';
+    });
+  }
   // rozsuwanie nachodzących dymków: od góry do dołu, kolejny dymek zsuwany pod poprzedni, jeśli zachodzą w poziomie
   function declutter() {
     var list = lblVis; lblVis = [];
@@ -89,6 +143,7 @@
       it.sp.style.transform = cur ? 'translateY(' + cur.toFixed(1) + 'px)' : '';
       it.el.classList.toggle('lbl-moved', cur > 3);
     }
+    placeNodes(list.map(function (it) { var t0 = it.t + (it.el._dy || 0); return [it.l, t0, it.r, t0 + it.h]; })); // zwykłe etykiety jako przeszkody dla pigułek węzłów
   }
   // etykiety (przełącznik „Etykiety”) i podpisy grup węzłów chłonnych (przełącznik „Grupy węzłów chłonnych”) — niezależne od siebie;
   // przy wyłączonych etykietach warstwa zostaje widoczna dla grup węzłów, a zwykłe etykiety są ukrywane pojedynczo (k = 0)
@@ -113,7 +168,7 @@
       if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? k * t.alpha : 0);
       if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? k * t.alpha : 0);
       (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? k * (L.alpha || 0) : 0); });
-      (t.groups || []).forEach(function (G) { placeLabel(G.el, G.anchor || tmpV.set(0, 0, 0), showN && G.anchor ? G.alpha || 0 : 0); });
+      (t.groups || []).forEach(function (G) { placeNode(G.el, G.anchor || tmpV.set(0, 0, 0), showN && G.anchor ? G.alpha || 0 : 0); });
     });
     if (M.papLbl) {
       var pa = Math.max(winAlpha([-9, 0.4], m), winAlpha([2.7, 99], m)) * (M.byId[M.an.papilla.obj].op > 0.5 ? 1 : 0);
@@ -185,7 +240,7 @@
   function setLang(l) {
     LANG = l; try { localStorage.setItem('surgitome-lang', l); } catch (e) {}
     root.lang = l; $('btnLang').setAttribute('aria-checked', l === 'en' ? 'true' : 'false');
-    [].forEach.call(labelsEl.children, function (e) { e._sw = 0; }); $('fLang').textContent = l.toUpperCase();
+    [].forEach.call(labelsEl.children, function (e) { e._sw = 0; e._nw = 0; }); $('fLang').textContent = l.toUpperCase();
     $('fbBtn').setAttribute('aria-label', tr('Zgłoś uwagę')); $('fbBtn').title = tr('Zgłoś uwagę'); if (!$('fb').hidden) $('fbCtx').textContent = fbContext().whereUi;
     $('fInfo').setAttribute('aria-label', tr('Opis zabiegu')); $('mQrBtn').setAttribute('aria-label', tr('Kod QR — udostępnij')); $('fLbl').setAttribute('aria-label', tr('Etykiety')); $('fLang').setAttribute('aria-label', tr('Język'));
     document.querySelectorAll('[data-pl]').forEach(function (el) { el.textContent = tr(el.dataset.pl); });

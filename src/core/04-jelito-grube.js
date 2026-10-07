@@ -156,6 +156,8 @@
     '221': 'przyokrężnicze — obszar MC', '222-rt': 'wzdłuż gałęzi prawej MC (pośrednie)', '222-lt': 'wzdłuż gałęzi lewej MC (pośrednie)', '223': 'u odejścia MC (główne)',
     '231': 'przyokrężnicze — obszar LC', '232': 'wzdłuż LC (pośrednie)', '241': 'przyokrężnicze — obszar esicy', '242': 'wzdłuż tętnic esiczych (pośrednie)',
     '251': 'przyodbytnicze, wzdłuż SRA', '252': 'wzdłuż pnia IMA (pośrednie)', '253': 'u odejścia IMA (główne)' };
+  // kolejność stacji w liście w panelu (jak w klasyfikacjach); grupy opisowe — w kolejności z modelu
+  var NG_ORDER = { jsccr: ['201', '202', '203', '211', '212', '213', '221', '222-rt', '222-lt', '223', '231', '232', '241', '242', '251', '252', '253'] };
   var NG_SYS = { jsccr: 'Numeracja JSCCR (Japanese Classification of Colorectal, Appendiceal, and Anal Carcinoma, 2019)', opis: 'Grupy opisowe (bez numeracji stacji)' };
   function nodeGroups(nodes, names, sys) {
     var G = {}, order = [];
@@ -163,6 +165,8 @@
       if (!n.g) return; var k = n.g + (n.removed ? '|R' : '|K');
       if (!G[k]) { G[k] = { g: n.g, removed: !!n.removed, ns: [] }; order.push(k); } G[k].ns.push(n);
     });
+    var ord = NG_ORDER[sys];
+    if (ord) order.sort(function (a, b) { return ord.indexOf(G[a].g) - ord.indexOf(G[b].g); });
     return { system: NG_SYS[sys], list: order.map(function (k) {
       var g = G[k], c = [0, 0, 0], nm = names[g.g], best = null, bd = 1e9;
       g.ns.forEach(function (n) { c[0] += n.p[0] / g.ns.length; c[1] += n.p[1] / g.ns.length; c[2] += n.p[2] / g.ns.length; });

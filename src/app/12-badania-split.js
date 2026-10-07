@@ -227,8 +227,14 @@
     return g;
   }
   // podpisy grup węzłów chłonnych (kod stacji + nazwa): widoczne przy włączonym przełączniku „Grupy węzłów chłonnych”, niezależnie od etykiet
+  // na modelu kompaktowy kod stacji (nazwa po najechaniu lub stuknięciu, pełna lista w panelu); wypełniony — z preparatem, obrys — zostaje;
+  // rozmieszczenie bez nakładania z linią odniesienia: placeNodes (11-rozmiar-render.js)
   function nodeGroupLabels(G) {
-    return (G ? G.list : []).map(function (g) { var el = mkLabel(g.code, g.name, '#4f9a6a', 'node'); return { el: el, p: v3(g.p), removed: g.removed, anchor: null, alpha: 0 }; });
+    return (G ? G.list : []).map(function (g) {
+      var el = mkLabel(g.code, g.name, '#4f9a6a', 'node'), ld = document.createElement('em');
+      ld.className = 'ldr'; el.insertBefore(ld, el.firstChild); if (g.removed) el.classList.add('lbl-node-r');
+      return { el: el, p: v3(g.p), removed: g.removed, anchor: null, alpha: 0 };
+    });
   }
   function makeMeso(d) {
     var all = new THREE.Group(), mov = new THREE.Group(), stay = new THREE.Group(), ties = new THREE.Group(), fadeG = new THREE.Group(), mobG = new THREE.Group(); all.add(mov, stay, ties, fadeG, mobG);

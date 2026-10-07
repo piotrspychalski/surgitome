@@ -12,6 +12,7 @@
     '5': 'nadodźwiernikowe (RGA)', '6': 'pododźwiernikowe (RGEA)', '7': 'wzdłuż LGA', '8a': 'wzdłuż CHA (przednio-górne)', '9': 'wokół pnia trzewnego',
     '10': 'we wnęce śledziony', '11p': 'wzdłuż bliższej części tętnicy śledzionowej', '11d': 'wzdłuż dalszej części tętnicy śledzionowej',
     '12a': 'więzadło wątrobowo-dwunastnicze — wzdłuż PHA' };
+  NG_ORDER.jgca = NG_ORDER.jps = ['1', '2', '3a', '3b', '4sa', '4sb', '4d', '5', '6', '7', '8a', '9', '10', '11p', '11d', '12a', '12b1', '12b2', '12c', '12p', '13a', '13b', '14a', '14b', '17a', '17b', '18'];
   NG_SYS.jgca = 'Numeracja JGCA (Japanese Gastric Cancer Association); zakres D2 wg wytycznych JGCA 2021';
   var UG = (function () {
     var V3 = THREE.Vector3;
@@ -220,6 +221,7 @@
     '4R': 'przytchawicze dolne prawe', '4L': 'przytchawicze dolne lewe', '7': 'podostrogowe', '8U': 'okołoprzełykowe — górna część piersiowa',
     '8M': 'okołoprzełykowe — środkowa część piersiowa', '8Lo': 'okołoprzełykowe — dolna część piersiowa', '9R': 'więzadło płucne prawe', '9L': 'więzadło płucne lewe',
     '15': 'przeponowe', '16': 'przywpustowe', '17': 'wzdłuż LGA', '18': 'wzdłuż CHA', '19': 'wzdłuż tętnicy śledzionowej', '20': 'wokół pnia trzewnego' };
+  NG_ORDER.ajcc = ['1R', '1L', '2R', '2L', '4R', '4L', '7', '8U', '8M', '8Lo', '9R', '9L', '15', '16', '17', '18', '19', '20'];
   NG_SYS.ajcc = 'Numeracja AJCC, 8. wyd. (mapa węzłów regionalnych przełyku)';
   var ST_ESO = {
     '1R': [[-1.1, 24.2, -0.6]], '1L': [[0.9, 24.2, -0.9]], '2R': [[-1.05, 21.4, -0.9]], '2L': [[0.9, 21.4, -1.4]], '4R': [[-1.05, 18.7, -1.2]], '4L': [[0.95, 18.6, -1.9]],

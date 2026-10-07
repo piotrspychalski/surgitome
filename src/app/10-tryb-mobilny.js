@@ -65,10 +65,27 @@
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');
     $('btnPlay').textContent = tr(t || '');
   }
+  // lista grup węzłów w panelu (przy włączonym przełączniku): kod, nazwa, czy z preparatem; grupa rozdzielona — „częściowo z preparatem”
+  function nodeList(ng) {
+    var ul = $('nodeList'); ul.innerHTML = ''; ul.hidden = !(ng && S.nodes);
+    if (!ng) return;
+    var key = document.createElement('li'); key.className = 'nkey'; setT(key, 'Wypełnione — usuwane z preparatem, obrysowane — pozostają. Nazwa grupy po najechaniu lub stuknięciu kodu na modelu.'); ul.appendChild(key);
+    var seen = {}, rows = [];
+    ng.list.forEach(function (g) { var r = seen[g.code]; if (!r) { r = seen[g.code] = { code: g.code, name: g.name, rem: 0, keep: 0 }; rows.push(r); } if (g.removed) r.rem++; else r.keep++; });
+    // kolejność stacji jak w klasyfikacji (NG_ORDER w danych)
+    rows.forEach(function (r) {
+      var li = document.createElement('li'), c = document.createElement('span'), t = document.createElement('span');
+      c.className = 'nc' + (r.rem && !r.keep ? ' r' : ''); c.textContent = r.code; setT(t, r.name || '');
+      li.appendChild(c); li.appendChild(t);
+      if (r.rem && r.keep) { var st = document.createElement('small'); st.className = 'ns'; setT(st, 'częściowo z preparatem'); t.appendChild(document.createTextNode(' ')); t.appendChild(st); }
+      ul.appendChild(li);
+    });
+  }
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     var ng = (an.cutTools || []).map(function (d) { return d.groups || (d.map && d.map.groups); }).filter(Boolean)[0];
     $('togNodes').hidden = $('nodeSys').hidden = !ng; if (ng) setT($('nodeSys'), ng.system);
+    nodeList(ng);
     $('togGuz').hidden = !an.tumour;
     $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver' || d.type === 'oltx' || d.type === 'lvres' || d.type === 'lvtumor'; });
     if (curProc().split) renderTrialPanel();
@@ -140,8 +157,11 @@
   $('optNodes').onchange = function () {
     S.nodes = this.checked; try { localStorage.setItem('surgitome-wezly', S.nodes ? '1' : '0'); } catch (e) {}
     if (S.nodes && !S.meso) { S.meso = true; $('optMeso').checked = true; try { localStorage.setItem('surgitome-meso', '1'); } catch (e) {} }
+    if (M) renderPanel(M.an);
     applyM();
   };
+  // kod grupy węzłów na modelu: stuknięcie lub kliknięcie pokazuje / chowa nazwę
+  document.addEventListener('click', function (e) { var n = e.target.closest && e.target.closest('.lbl-node'); if (n) { n.classList.toggle('open'); n._nw = 0; } });
   $('optDrift').onchange = function () { S.drift = this.checked; controls.autoRotate = S.drift && !reduced && !endo.active && !tw; };
 
   var panel = $('panel');
