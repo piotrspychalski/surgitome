@@ -32,6 +32,8 @@ For every procedure and variant a fixed sequence of frames:
 6. Postoperative endoscopy — first-person virtual endoscope, with a choice of route at forks (e.g. biliopancreatic vs alimentary limb) and a navigation minimap.
 7. Schematic cross-sectional CT with a slice-by-slice sweep.
 
+In oncological resections (small bowel, colon and rectum, stomach, pancreatoduodenal resections and distal pancreatectomy, oesophagectomy) an optional layer shows the mesentery or omentum with the supplying vessels, ligations and lymph nodes; the part removed with the specimen moves away with it. A separate switch (off by default) shows lymph node station numbers — JSCCR for the colon, JGCA for the stomach, JPS/ISGPS for the pancreas, AJCC 8 for the oesophagus — with a list in the description panel.
+
 Other features: rotatable 3D models, labels, Polish/English interface, favourites for teaching sessions, procedure search, mobile version, keyboard and presentation-clicker control, a short guided tour on the first visit.
 
 ### Procedures (29 operations, 57 variants)
@@ -130,6 +132,10 @@ Third-party components keep their own licences and are not part of this reposito
 **Autor:** dr n. med. Piotr Spychalski — chirurg kolorektalny i badacz kliniczny, adiunkt w Katedrze i Klinice Chirurgii Onkologicznej, Transplantacyjnej i Ogólnej Gdańskiego Uniwersytetu Medycznego · ORCID [0000-0001-7111-4660](https://orcid.org/0000-0001-7111-4660) · piotr.spychalski@gumed.edu.pl
 
 SURGITOME to interaktywny, schematyczny atlas 3D **anatomii przewodu pokarmowego po operacjach**, stworzony przez dr. Piotra Spychalskiego. Pokazuje krok po kroku zakres resekcji, rekonstrukcję i zespolenia (staplery liniowe i okrężne, szwy), obraz endoskopowy po operacji oraz schematyczne przekroje TK (tomografia komputerowa).
+
+## Krezka, naczynia i węzły chłonne
+
+W resekcjach onkologicznych (jelito cienkie, jelito grube i odbytnica, żołądek, pankreatoduodenektomie i pankreatektomia dystalna, esofagektomie) warstwa „Krezka, naczynia i węzły chłonne” pokazuje krezkę lub sieć z naczyniami zaopatrującymi, podwiązaniami i węzłami; część usuwana odjeżdża z preparatem. Osobny przełącznik (domyślnie wyłączony) pokazuje numerację grup węzłów — JSCCR (jelito grube), JGCA (żołądek), JPS/ISGPS (trzustka), AJCC 8 (przełyk) — z listą w panelu opisu.
 
 ## Dla kogo
 

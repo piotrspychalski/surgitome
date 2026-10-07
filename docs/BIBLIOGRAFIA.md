@@ -456,7 +456,7 @@ Różnice między źródłami, a także między źródłami a modelem, wynikają
 160. Hyidar Z, Ahmed U, Abid H, Ahmed I. A deviant anterior portal vein in the hepatoduodenal ligament with aberrant origin of hepatic arteries directly from the celiac trunk: A case report of two patients underwent pylorus preserving pancreatoduodenectomy (PPPD). Int J Surg Case Rep. 2023;108:108459. [PubMed 37413758](https://pubmed.ncbi.nlm.nih.gov/37413758/) · [doi:10.1016/j.ijscr.2023.108459](https://doi.org/10.1016/j.ijscr.2023.108459)  
    *anatomia* — Położenie struktur w więzadle wątrobowo-dwunastniczym: PV z tyłu, CBD bocznie, HA przyśrodkowo
 
-### Guz w wątrobie — metastazektomia lub resekcja anatomiczna (`lv-guz`)
+### Guz w wątrobie — resekcja nieanatomiczna lub anatomiczna (`lv-guz`)
 
 161. Strasberg SM, Belghiti J, Clavien PA, Gadzijev E, Garden JO, Lau WY, et al. The Brisbane 2000 terminology of liver anatomy and resections. HPB (Oxford). 2000;2(3):333-9. [doi:10.1016/S1365-182X(17)30755-4](https://doi.org/10.1016/S1365-182X(17)30755-4)  
    *wytyczne / konsensus* — Oryginalna terminologia IHPBA Brisbane 2000: segmenty, sekcje, hemiwątroby, nazwy resekcji
