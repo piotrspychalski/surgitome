@@ -19,6 +19,54 @@
       default: return { t: c, az: 10, el: 5, d: D };
     }
   }
+  // ochrona kontekstu: kadr zbliżony (focus, focusVar, stomach, upper) jest odsuwany w stronę widoku całości (ten sam kąt ujęcia),
+  // aż w kadrze znajdzie się ≥ CTX_MIN długości narządów widocznych na początku i na końcu animacji kadru oraz ≥ CTX_ORG dużych narządów
+  // (co najmniej w 40%); ekran pionowy (telefon) — progi wyższe, bo boki kadru są wąskie. Bez tego np. „Usunięcie” w resekcji odbytnicy
+  // pokazywało sam kikut i kątnicę. Audyt: tests/audyt_zoom.js.
+  function ctxMin(aspect) { return aspect < 1 ? { pts: 0.72, org: 0.6 } : { pts: 0.6, org: 0.5 }; }
+  var CTX_CAMS = { focus: 1, focusVar: 1, stomach: 1, upper: 1 }, ctxCam = new THREE.PerspectiveCamera(34, 1, 0.1, 800), ctxV = new V3();
+  function ctxSample(m) {
+    var out = [];
+    M.objs.forEach(function (o) {
+      if (kfNum(o.def.opacity, m, 1) <= 0.3) return;
+      var st = stateAt(o, morphF(o, m)), off = kfVec(o.def.offset, m, new V3()), L = st.len, n = Math.max(4, Math.round(L / 0.5)), pts = [];
+      for (var i = 0; i <= n; i++) pts.push(st.curve.getPointAt(i / n).add(off));
+      out.push({ pts: pts, big: L >= 3 });
+    });
+    return out;
+  }
+  function ctxScore(sets, p, aspect) {
+    ctxCam.aspect = aspect; ctxCam.fov = orbitCam.fov; ctxCam.updateProjectionMatrix(); placeCam(ctxCam, p.t, p.az, p.el, p.d); ctxCam.updateMatrixWorld();
+    var worst = { pts: 1, objs: 1 };
+    sets.forEach(function (objs) {
+      var n = 0, tot = 0, nb = 0, ov = 0;
+      objs.forEach(function (o) {
+        var k = 0; o.pts.forEach(function (q) { ctxV.copy(q).project(ctxCam); if (Math.abs(ctxV.x) <= 1 && Math.abs(ctxV.y) <= 1 && ctxV.z < 1) k++; });
+        tot += o.pts.length; n += k; if (o.big) { nb++; if (k / o.pts.length >= 0.4) ov++; }
+      });
+      var r = { pts: tot ? n / tot : 1, objs: nb ? ov / nb : 1 };
+      if (r.pts < worst.pts) worst.pts = r.pts; if (r.objs < worst.objs) worst.objs = r.objs;
+    });
+    return worst;
+  }
+  function ctxPreset(fr, aspect) {
+    var p = preset(fr.cam, aspect);
+    if (!CTX_CAMS[fr.cam] || !(fr.m1 > fr.m0) || !M || !M.objs) return p;
+    var th = ctxMin(aspect), sets = [ctxSample(fr.m0), ctxSample(fr.m1)], ok = function (q) { var r = ctxScore(sets, q, aspect); return r.pts >= th.pts && r.objs >= th.org; };
+    if (ok(p)) return p;
+    var full = preset('full', aspect), at = function (s) { return { t: p.t.clone().lerp(full.t, s), az: p.az, el: p.el, d: p.d + (Math.max(full.d, p.d) - p.d) * s }; };
+    var lo = 0, hi = 1;
+    if (!ok(at(1))) return at(1);
+    for (var i = 0; i < 7; i++) { var mid = (lo + hi) / 2; if (ok(at(mid))) hi = mid; else lo = mid; }
+    return at(hi);
+  }
+  // testy kadrów (tests/audyt_zoom.js): ujęcie kamery dla kadru i proporcji ekranu, wybór zabiegu/wariantu/kadru bez animacji
+  window.__sgTest.preset = function (name, aspect) { return preset(name, aspect); };
+  window.__sgTest.presetFor = function (fr, aspect) { return ctxPreset(fr, aspect); }; window.__sgTest.ctxMin = ctxMin;
+  window.__sgTest.frames = function () { return FR; };
+  window.__sgTest.model = function () { return M; };
+  window.__sgTest.open = function (an, vi, fi) { S.an = an; S.vi = vi; FR = framesFor(A.PROCS[an], vi); S.frame = fi; applyFrame(fi, true); return FR[fi]; };
+  window.__sgTest.at = function (m) { S.m = m; applyM(); };
   function placeCam(cam, t, az, el, d) {
     var a = az * Math.PI / 180, e = el * Math.PI / 180;
     cam.position.set(t.x + d * Math.cos(e) * Math.sin(a), t.y + d * Math.sin(e), t.z + d * Math.cos(e) * Math.cos(a));

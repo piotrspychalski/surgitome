@@ -1443,7 +1443,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   function sbmAnat(kind) {
     var an = sbAnat(kind), G = sbMesoGeo(kind), base = an.id;
     an.anastId = base; an.id = base.replace('sb-', 'sbm-'); an.sbMeso = G.tool;
-    an.focus = { t: [0.5, -10.6, 0.4], k: 0.26, az: 10, el: 22 }; // bliżej i nieco z góry: klin krezki nad resekowanym odcinkiem (odcinek półprzezroczysty)
+    an.focus = { t: [0.5, -10.6, 0.4], k: 0.34, az: 10, el: 20 }; // bliżej i nieco z góry: klin krezki nad resekowanym odcinkiem (odcinek półprzezroczysty)
     an.notes = an.notes.concat(SBM_NOTES);
     an.text = { normal: ['Anatomia prawidłowa', 'Jelito cienkie od więzadła Treitza do zastawki krętniczo-kątniczej, zawieszone na krezce; w korzeniu krezki naczynia krezkowe górne, w krezce arkady naczyniowe i węzły chłonne. Wokół rama jelita grubego.'],
       top: an.text.top };
@@ -2970,16 +2970,17 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       cha: [T, [0.0, 0.45, -2.45], [-1.0, 0.05, -2.3], G0],
       pha: [G0, [-2.05, 0.9, -2.0], [-2.35, 2.6, -1.9], [-2.6, 4.6, -1.85], [-2.75, 6.6, -1.8]],
       gda: [G0, [-2.0, -0.9, -1.4], [-2.3, -1.7, -0.5], [-2.45, -2.3, 0.15]],
-      spa: [T, [2.0, 0.15, -2.95], [3.6, -0.35, -3.3], [5.2, -0.05, -3.5], [6.6, 0.7, -3.5]],
+      spa: [T, [2.0, 0.15, -2.95], [3.6, -0.35, -3.3], [5.2, -0.05, -3.4], [5.95, 0.65, -3.05], [6.3, 1.35, -2.55]], // koniec we wnęce śledziony (powierzchnia przyśrodkowa)
       pv: [[-1.1, -2.6, -2.85], [-1.8, -0.6, -2.65], [-2.35, 1.6, -2.5], [-2.6, 4.0, -2.35], [-2.8, 6.6, -2.3]]
     };
-    var RGA0 = [-2.3, 1.9, -1.95], RGEA0 = P.gda[3], LGEA0 = [6.4, 0.5, -3.45];
+    var RGA0 = [-2.3, 1.9, -1.95], RGEA0 = P.gda[3], LGEA0 = [5.95, 0.65, -3.05];
     var LJ = 0.62, GJ = 0.55; // połączenie łuków: LGA–RGA na krzywiźnie mniejszej, LGEA–RGEA na większej
     P.rga = [RGA0, [-1.9, 1.95, -0.7], A(side(0.97, -1, 0.5))].concat(line(0.95, LJ, 10, -1, 0.5));
     P.lgaArc = line(0.17, LJ, 14, -1, 0.5);
     P.rgea = [RGEA0, [-2.0, -2.3, 0.9], A(side(0.97, 1, 0.55))].concat(line(0.95, GJ, 12, 1, 0.55));
-    P.lgea = [LGEA0, [6.9, 0.9, -2.2], [7.2, 1.0, -0.9], A(side(0.36, 1, 0.55))].concat(line(0.38, GJ, 6, 1, 0.55));
-    P.sg = [0.07, 0.15, 0.23].map(function (t, i) { var s = side(t, 1, 0.3); return [[6.6 - 0.1 * i, 0.9 + 0.25 * i, -3.45], [6.9 - 0.2 * i, 2.6 + 1.6 * i, -2.6 + 0.3 * i], A(s)]; });
+    P.lgea = [LGEA0, [6.0, 0.95, -1.9], [6.75, 1.05, -0.75], A(side(0.36, 1, 0.55))].concat(line(0.38, GJ, 6, 1, 0.55)); // przed biegunem dolnym śledziony
+    // krótkie tętnice żołądkowe: od wnęki śledziony (powierzchnia przyśrodkowa) więzadłem żołądkowo-śledzionowym do dna żołądka
+    P.sg = [0.07, 0.15, 0.23].map(function (t, i) { var s = side(t, 1, 0.3), h = [[6.45, 1.8, -2.1], [6.55, 2.35, -1.95], [6.6, 2.75, -1.85]][i]; return [h, [6.1 - 0.15 * i, 4.0 + 0.5 * i, -1.55 + 0.1 * i], A(s)]; });
     // gałęzie do ściany żołądka (krótkie, jak naczynia proste)
     function twigs(t0, t1, n, k) { var o = []; for (var i = 0; i <= n; i++) { var t = t0 + (t1 - t0) * i / n; o.push({ t: t, k: k, pts: [A(side(t, k, 0.5)), A(side(t, k, 0.02))] }); } return o; }
     var TW = twigs(0.2, 0.95, 22, -1).concat(twigs(0.36, 0.95, 18, 1));
@@ -3001,9 +3002,9 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       '7': [onV('lga', 0.3), onV('lga', 0.55)],
       '8a': [onV('cha', 0.35, [0, 0.3, 0.3]), onV('cha', 0.7, [0, 0.3, 0.3])],
       '9': [off(T, [-0.45, 0.25, -0.2]), off(T, [0.5, 0.3, -0.3])],
-      '10': [[6.0, 1.35, -2.95], [6.15, 0.55, -2.85]],
+      '10': [[5.7, 1.5, -2.4], [5.9, 2.3, -1.6]],
       '11p': [onV('spa', 0.25), onV('spa', 0.42)],
-      '11d': [onV('spa', 0.7), onV('spa', 0.86)],
+      '11d': [onV('spa', 0.6, [0, 0.3, 0.25]), onV('spa', 0.74, [-0.1, 0.3, 0.3])],
       '12a': [onV('pha', 0.45, [0.35, 0, 0.2]), onV('pha', 0.7, [0.35, 0, 0.2])]
     };
     // przecięcie naczynia w punkcie f: część pozostająca z podwiązaniem i część usuwana (kolejność: od początku naczynia)
@@ -3220,6 +3221,14 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     aki: 'Węzły (AJCC 8): w modelu limfadenektomia trzypolowa — także węzły szyjne (1R/1L), górne i dolne śródpiersie oraz jama brzuszna; zakres zależy od ośrodka i typu histologicznego.',
     the: 'Węzły (AJCC 8): dolne śródpiersie (8Lo, 15) i jama brzuszna (16–20), bez systematycznej limfadenektomii w klatce piersiowej.'
   };
+
+  // śledziona jako narząd odniesienia dla stacji 4sa, 10 i 11d (zachowana) — w modelach z warstwą węzłów górnego piętra;
+  // ta sama co w pankreatektomii dystalnej (tam usuwana z preparatem). Dodawana po przygotowaniu wariantu (bez kluczy czasowych).
+  function addSpleen(v) {
+    if (v.objects.some(function (o) { return o.id === 'spleen'; })) return;
+    v.objects.push({ id: 'spleen', name: 'Śledziona', organ: true, pre: { path: SPLEEN, r: SPLEEN_R }, color: '#8d3f4f', labels: [{ text: 'Śledziona', t: 0.5, sub: '', win: [-9, 100] }] });
+    v.ctMap.spleen = 'organ'; v.ctNames.spleen = 'Śledziona';
+  }
   /* =====================================================================
      NARZĘDZIA (stapler liniowy, stapler okrężny, szew V-Loc) i oś czasu
      m: 0-1 zakres, 1-2 przecięcie staplerem, 2-3 usunięcie, 3-4 ułożenie, 4-5 zespolenie
@@ -3425,11 +3434,11 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       // jelito cienkie (nowy model): krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sbm') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
-      LIST.forEach(function (p) { if (p.id === 'tg' || p.id === 'dg') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([gastricMeso(p.id, p.id === 'tg' ? [5, 2, 6] : [4, -1, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id]]); }); });
+      LIST.forEach(function (p) { if (p.id === 'tg' || p.id === 'dg') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([gastricMeso(p.id, p.id === 'tg' ? [5, 2, 6] : [4, -1, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id]]); addSpleen(v); }); });
       // trzustka (zabiegi onkologiczne): Whipple, PPPD, pankreatektomia dystalna — naczynia, mezopankreas, stacje JPS (ISGPS)
-      LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); }); });
+      LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); addSpleen(v); }); });
       // przełyk: esofagektomie z rurą żołądkową (bez interpozycji okrężnicy) — łuk RGEA za rurą, stacje AJCC 8
-      LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); } }); });
+      LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); addSpleen(v); } }); });
       var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart' };
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
@@ -5386,6 +5395,54 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       default: return { t: c, az: 10, el: 5, d: D };
     }
   }
+  // ochrona kontekstu: kadr zbliżony (focus, focusVar, stomach, upper) jest odsuwany w stronę widoku całości (ten sam kąt ujęcia),
+  // aż w kadrze znajdzie się ≥ CTX_MIN długości narządów widocznych na początku i na końcu animacji kadru oraz ≥ CTX_ORG dużych narządów
+  // (co najmniej w 40%); ekran pionowy (telefon) — progi wyższe, bo boki kadru są wąskie. Bez tego np. „Usunięcie” w resekcji odbytnicy
+  // pokazywało sam kikut i kątnicę. Audyt: tests/audyt_zoom.js.
+  function ctxMin(aspect) { return aspect < 1 ? { pts: 0.72, org: 0.6 } : { pts: 0.6, org: 0.5 }; }
+  var CTX_CAMS = { focus: 1, focusVar: 1, stomach: 1, upper: 1 }, ctxCam = new THREE.PerspectiveCamera(34, 1, 0.1, 800), ctxV = new V3();
+  function ctxSample(m) {
+    var out = [];
+    M.objs.forEach(function (o) {
+      if (kfNum(o.def.opacity, m, 1) <= 0.3) return;
+      var st = stateAt(o, morphF(o, m)), off = kfVec(o.def.offset, m, new V3()), L = st.len, n = Math.max(4, Math.round(L / 0.5)), pts = [];
+      for (var i = 0; i <= n; i++) pts.push(st.curve.getPointAt(i / n).add(off));
+      out.push({ pts: pts, big: L >= 3 });
+    });
+    return out;
+  }
+  function ctxScore(sets, p, aspect) {
+    ctxCam.aspect = aspect; ctxCam.fov = orbitCam.fov; ctxCam.updateProjectionMatrix(); placeCam(ctxCam, p.t, p.az, p.el, p.d); ctxCam.updateMatrixWorld();
+    var worst = { pts: 1, objs: 1 };
+    sets.forEach(function (objs) {
+      var n = 0, tot = 0, nb = 0, ov = 0;
+      objs.forEach(function (o) {
+        var k = 0; o.pts.forEach(function (q) { ctxV.copy(q).project(ctxCam); if (Math.abs(ctxV.x) <= 1 && Math.abs(ctxV.y) <= 1 && ctxV.z < 1) k++; });
+        tot += o.pts.length; n += k; if (o.big) { nb++; if (k / o.pts.length >= 0.4) ov++; }
+      });
+      var r = { pts: tot ? n / tot : 1, objs: nb ? ov / nb : 1 };
+      if (r.pts < worst.pts) worst.pts = r.pts; if (r.objs < worst.objs) worst.objs = r.objs;
+    });
+    return worst;
+  }
+  function ctxPreset(fr, aspect) {
+    var p = preset(fr.cam, aspect);
+    if (!CTX_CAMS[fr.cam] || !(fr.m1 > fr.m0) || !M || !M.objs) return p;
+    var th = ctxMin(aspect), sets = [ctxSample(fr.m0), ctxSample(fr.m1)], ok = function (q) { var r = ctxScore(sets, q, aspect); return r.pts >= th.pts && r.objs >= th.org; };
+    if (ok(p)) return p;
+    var full = preset('full', aspect), at = function (s) { return { t: p.t.clone().lerp(full.t, s), az: p.az, el: p.el, d: p.d + (Math.max(full.d, p.d) - p.d) * s }; };
+    var lo = 0, hi = 1;
+    if (!ok(at(1))) return at(1);
+    for (var i = 0; i < 7; i++) { var mid = (lo + hi) / 2; if (ok(at(mid))) hi = mid; else lo = mid; }
+    return at(hi);
+  }
+  // testy kadrów (tests/audyt_zoom.js): ujęcie kamery dla kadru i proporcji ekranu, wybór zabiegu/wariantu/kadru bez animacji
+  window.__sgTest.preset = function (name, aspect) { return preset(name, aspect); };
+  window.__sgTest.presetFor = function (fr, aspect) { return ctxPreset(fr, aspect); }; window.__sgTest.ctxMin = ctxMin;
+  window.__sgTest.frames = function () { return FR; };
+  window.__sgTest.model = function () { return M; };
+  window.__sgTest.open = function (an, vi, fi) { S.an = an; S.vi = vi; FR = framesFor(A.PROCS[an], vi); S.frame = fi; applyFrame(fi, true); return FR[fi]; };
+  window.__sgTest.at = function (m) { S.m = m; applyM(); };
   function placeCam(cam, t, az, el, d) {
     var a = az * Math.PI / 180, e = el * Math.PI / 180;
     cam.position.set(t.x + d * Math.cos(e) * Math.sin(a), t.y + d * Math.sin(e), t.z + d * Math.cos(e) * Math.cos(a));
@@ -5540,7 +5597,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     capHead();
     applyM();
     if (fr.kind === 'endo') { setCT(false); setEndo(true, fr.route); }
-    else { setEndo(false); setCT(fr.kind === 'ct'); updateView(); camTo(preset(fr.cam, view.w / view.h), snap ? 0 : 1.6); }
+    else { setEndo(false); setCT(fr.kind === 'ct'); updateView(); camTo(ctxPreset(fr, view.w / view.h), snap ? 0 : 1.6); }
     updateStrip(); updateDock();
   }
   function capHead() {

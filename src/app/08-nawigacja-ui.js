@@ -26,7 +26,7 @@
     capHead();
     applyM();
     if (fr.kind === 'endo') { setCT(false); setEndo(true, fr.route); }
-    else { setEndo(false); setCT(fr.kind === 'ct'); updateView(); camTo(preset(fr.cam, view.w / view.h), snap ? 0 : 1.6); }
+    else { setEndo(false); setCT(fr.kind === 'ct'); updateView(); camTo(ctxPreset(fr, view.w / view.h), snap ? 0 : 1.6); }
     updateStrip(); updateDock();
   }
   function capHead() {

@@ -238,7 +238,7 @@
   function sbmAnat(kind) {
     var an = sbAnat(kind), G = sbMesoGeo(kind), base = an.id;
     an.anastId = base; an.id = base.replace('sb-', 'sbm-'); an.sbMeso = G.tool;
-    an.focus = { t: [0.5, -10.6, 0.4], k: 0.26, az: 10, el: 22 }; // bliżej i nieco z góry: klin krezki nad resekowanym odcinkiem (odcinek półprzezroczysty)
+    an.focus = { t: [0.5, -10.6, 0.4], k: 0.34, az: 10, el: 20 }; // bliżej i nieco z góry: klin krezki nad resekowanym odcinkiem (odcinek półprzezroczysty)
     an.notes = an.notes.concat(SBM_NOTES);
     an.text = { normal: ['Anatomia prawidłowa', 'Jelito cienkie od więzadła Treitza do zastawki krętniczo-kątniczej, zawieszone na krezce; w korzeniu krezki naczynia krezkowe górne, w krezce arkady naczyniowe i węzły chłonne. Wokół rama jelita grubego.'],
       top: an.text.top };

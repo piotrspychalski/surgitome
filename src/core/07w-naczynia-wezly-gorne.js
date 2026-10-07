@@ -31,16 +31,17 @@
       cha: [T, [0.0, 0.45, -2.45], [-1.0, 0.05, -2.3], G0],
       pha: [G0, [-2.05, 0.9, -2.0], [-2.35, 2.6, -1.9], [-2.6, 4.6, -1.85], [-2.75, 6.6, -1.8]],
       gda: [G0, [-2.0, -0.9, -1.4], [-2.3, -1.7, -0.5], [-2.45, -2.3, 0.15]],
-      spa: [T, [2.0, 0.15, -2.95], [3.6, -0.35, -3.3], [5.2, -0.05, -3.5], [6.6, 0.7, -3.5]],
+      spa: [T, [2.0, 0.15, -2.95], [3.6, -0.35, -3.3], [5.2, -0.05, -3.4], [5.95, 0.65, -3.05], [6.3, 1.35, -2.55]], // koniec we wnęce śledziony (powierzchnia przyśrodkowa)
       pv: [[-1.1, -2.6, -2.85], [-1.8, -0.6, -2.65], [-2.35, 1.6, -2.5], [-2.6, 4.0, -2.35], [-2.8, 6.6, -2.3]]
     };
-    var RGA0 = [-2.3, 1.9, -1.95], RGEA0 = P.gda[3], LGEA0 = [6.4, 0.5, -3.45];
+    var RGA0 = [-2.3, 1.9, -1.95], RGEA0 = P.gda[3], LGEA0 = [5.95, 0.65, -3.05];
     var LJ = 0.62, GJ = 0.55; // połączenie łuków: LGA–RGA na krzywiźnie mniejszej, LGEA–RGEA na większej
     P.rga = [RGA0, [-1.9, 1.95, -0.7], A(side(0.97, -1, 0.5))].concat(line(0.95, LJ, 10, -1, 0.5));
     P.lgaArc = line(0.17, LJ, 14, -1, 0.5);
     P.rgea = [RGEA0, [-2.0, -2.3, 0.9], A(side(0.97, 1, 0.55))].concat(line(0.95, GJ, 12, 1, 0.55));
-    P.lgea = [LGEA0, [6.9, 0.9, -2.2], [7.2, 1.0, -0.9], A(side(0.36, 1, 0.55))].concat(line(0.38, GJ, 6, 1, 0.55));
-    P.sg = [0.07, 0.15, 0.23].map(function (t, i) { var s = side(t, 1, 0.3); return [[6.6 - 0.1 * i, 0.9 + 0.25 * i, -3.45], [6.9 - 0.2 * i, 2.6 + 1.6 * i, -2.6 + 0.3 * i], A(s)]; });
+    P.lgea = [LGEA0, [6.0, 0.95, -1.9], [6.75, 1.05, -0.75], A(side(0.36, 1, 0.55))].concat(line(0.38, GJ, 6, 1, 0.55)); // przed biegunem dolnym śledziony
+    // krótkie tętnice żołądkowe: od wnęki śledziony (powierzchnia przyśrodkowa) więzadłem żołądkowo-śledzionowym do dna żołądka
+    P.sg = [0.07, 0.15, 0.23].map(function (t, i) { var s = side(t, 1, 0.3), h = [[6.45, 1.8, -2.1], [6.55, 2.35, -1.95], [6.6, 2.75, -1.85]][i]; return [h, [6.1 - 0.15 * i, 4.0 + 0.5 * i, -1.55 + 0.1 * i], A(s)]; });
     // gałęzie do ściany żołądka (krótkie, jak naczynia proste)
     function twigs(t0, t1, n, k) { var o = []; for (var i = 0; i <= n; i++) { var t = t0 + (t1 - t0) * i / n; o.push({ t: t, k: k, pts: [A(side(t, k, 0.5)), A(side(t, k, 0.02))] }); } return o; }
     var TW = twigs(0.2, 0.95, 22, -1).concat(twigs(0.36, 0.95, 18, 1));
@@ -62,9 +63,9 @@
       '7': [onV('lga', 0.3), onV('lga', 0.55)],
       '8a': [onV('cha', 0.35, [0, 0.3, 0.3]), onV('cha', 0.7, [0, 0.3, 0.3])],
       '9': [off(T, [-0.45, 0.25, -0.2]), off(T, [0.5, 0.3, -0.3])],
-      '10': [[6.0, 1.35, -2.95], [6.15, 0.55, -2.85]],
+      '10': [[5.7, 1.5, -2.4], [5.9, 2.3, -1.6]],
       '11p': [onV('spa', 0.25), onV('spa', 0.42)],
-      '11d': [onV('spa', 0.7), onV('spa', 0.86)],
+      '11d': [onV('spa', 0.6, [0, 0.3, 0.25]), onV('spa', 0.74, [-0.1, 0.3, 0.3])],
       '12a': [onV('pha', 0.45, [0.35, 0, 0.2]), onV('pha', 0.7, [0.35, 0, 0.2])]
     };
     // przecięcie naczynia w punkcie f: część pozostająca z podwiązaniem i część usuwana (kolejność: od początku naczynia)
@@ -281,3 +282,11 @@
     aki: 'Węzły (AJCC 8): w modelu limfadenektomia trzypolowa — także węzły szyjne (1R/1L), górne i dolne śródpiersie oraz jama brzuszna; zakres zależy od ośrodka i typu histologicznego.',
     the: 'Węzły (AJCC 8): dolne śródpiersie (8Lo, 15) i jama brzuszna (16–20), bez systematycznej limfadenektomii w klatce piersiowej.'
   };
+
+  // śledziona jako narząd odniesienia dla stacji 4sa, 10 i 11d (zachowana) — w modelach z warstwą węzłów górnego piętra;
+  // ta sama co w pankreatektomii dystalnej (tam usuwana z preparatem). Dodawana po przygotowaniu wariantu (bez kluczy czasowych).
+  function addSpleen(v) {
+    if (v.objects.some(function (o) { return o.id === 'spleen'; })) return;
+    v.objects.push({ id: 'spleen', name: 'Śledziona', organ: true, pre: { path: SPLEEN, r: SPLEEN_R }, color: '#8d3f4f', labels: [{ text: 'Śledziona', t: 0.5, sub: '', win: [-9, 100] }] });
+    v.ctMap.spleen = 'organ'; v.ctNames.spleen = 'Śledziona';
+  }

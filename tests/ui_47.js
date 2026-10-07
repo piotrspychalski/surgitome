@@ -37,6 +37,13 @@ function ok(c,m){ if(!c) fails.push(m); }
   ok(/8U/.test(rem(E('eso-mck')))&&!/8U/.test(rem(E('eso-il'))),'McKeown: górne śródpiersie, Ivor Lewis: bez 8U');
   ok(/1L/.test(rem(E('eso-aki')))&&!/1L/.test(rem(E('eso-mck'))),'Akiyama: węzły szyjne');
   ok(!/\b7\b/.test(rem(E('eso-the')))&&/8Lo/.test(rem(E('eso-the'))),'przezrozworowa: bez podostrogowych, z 8Lo');
+  // śledziona jako narząd odniesienia (stacje 4sa, 10, 11d): zachowana w gastrektomiach, Whipple/PPPD i esofagektomiach z rurą; naczynia poza jej miąższem
+  ['tg','dg','whip','pppd'].forEach(id=>proc(id).variants.forEach(v=>ok(v.objects.some(o=>o.id==='spleen'&&o.organ&&!o.offset)&&v.ctMap.spleen==='organ',v.id+': brak śledziony')));
+  ok(eso.variants.filter(v=>v.id!=='eso-col').every(v=>v.objects.some(o=>o.id==='spleen')),'esofagektomia: brak śledziony');
+  { const T3=w.THREE, sc=A.curveOf([[6.9,0.6,-3.4],[7.9,2.2,-3.0],[8.3,3.9,-2.2]]), R=t=>t<0.2?0.3+t/0.2:t<0.6?1.3+(t-0.2)/0.4*0.2:1.5-(t-0.6)/0.4*1.2;
+    const inside=p=>{ const v=new T3.Vector3(...p); for(let i=0;i<=60;i++){ const t=i/60; if(sc.getPointAt(t).distanceTo(v)<R(t)-0.3) return true; } return false; };
+    const bad=tg.vessels.filter(x=>x.id!=='spa'&&(x.segs?[].concat(...x.segs):x.pts).some(inside)).map(x=>x.id).concat(tg.nodes.filter(n=>inside(n.p)).map(n=>'węzeł '+n.g));
+    ok(!bad.length,'naczynia lub węzły w miąższu śledziony: '+bad.join(', ')); }
   // bez warstwy w zabiegach nieonkologicznych i wątrobie
   ['sleeve','rygb','oagb','ds','bpd','gebp','hj','cdd','drain','liver','oltx','lvres'].forEach(id=>{ const p=proc(id); if(p) ok(p.variants.every(v=>!mesoOf(v)),id+': warstwa w zabiegu nieonkologicznym'); });
   // interfejs: przejście przez kadry, przełączniki widoczne, EN

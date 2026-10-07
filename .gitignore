@@ -2,3 +2,4 @@ node_modules/
 dist/
 zrzuty/*.png
 protocols/
+zrzuty/*.json
