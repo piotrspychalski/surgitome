@@ -76,6 +76,7 @@ Od v1.0.0 każde wydanie na GitHubie (`gh release create vX.Y.Z`, nie szkic) tra
 - `ui_41.js` — „Jak cytować”: link w panelu i w menu na telefonie, treść cytowania z DOI koncepcyjnym, kopiowanie, klawisze i Esc przy otwartym okienku, EN
 - `ui_43.js` — kod QR na telefonie: ikona QR w nagłówku menu, kod na pełnym ekranie, podpowiedź „Dotknij/Kliknij, aby zamknąć”, EN
 - `ui_44.js` — krezka i mezorektum w resekcjach lewostronnych: podwiązania, części usuwane i pozostające (TME/PME, dłuższy kikut przy zespoleniu na przedniej ścianie), przełącznik, kadry, EN; `i18n.js` sprawdza też teksty generowane przez `ANAT.resectionFor` (wszystkie położenia guza)
+- `ui_48.js` — przycisk „LNs” obok ⓘ i etykiet: skrót do przełącznika „Grupy węzłów chłonnych” (widoczny tylko przy zabiegach z grupami węzłów, stan wspólny z panelem i zapisany, EN)
 - `ui_42.js` — piśmiennictwo: każdy zabieg i wariant ma źródła z odnośnikiem, stopka z oświadczeniem o autorstwie (PL/EN), okno „Źródła” (wszystkie zabiegi i badania, Esc), „Jak cytować” w stopce
 - `klikany_chromium.py meso|guz` — zrzuty krezki z naczyniami i przeciągania guza
 - `klikany_chromium.py trials [ethos,scar]` — zrzuty widoku podzielonego: komputer, telefon pionowo i poziomo

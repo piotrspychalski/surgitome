@@ -84,7 +84,7 @@
   function renderPanel(an) {
     $('togMeso').hidden = !((an.cutTools || []).some(function (d) { return d.type === 'meso' && !d.always; }));
     var ng = (an.cutTools || []).map(function (d) { return d.groups || (d.map && d.map.groups); }).filter(Boolean)[0];
-    $('togNodes').hidden = $('nodeSys').hidden = !ng; if (ng) setT($('nodeSys'), ng.system);
+    $('togNodes').hidden = $('nodeSys').hidden = $('fLn').hidden = !ng; $('viewport').classList.toggle('lnon', !!ng); if (ng) setT($('nodeSys'), ng.system); // „LNs” obok ⓘ i etykiet — skrót do tego przełącznika
     nodeList(ng);
     $('togGuz').hidden = !an.tumour;
     $('togLvGlass').hidden = !(an.cutTools || []).some(function (d) { return d.type === 'liver' || d.type === 'oltx' || d.type === 'lvres' || d.type === 'lvtumor'; });
@@ -154,8 +154,12 @@
   $('optMeso').onchange = function () { S.meso = this.checked; try { localStorage.setItem('surgitome-meso', S.meso ? '1' : '0'); } catch (e) {} applyM(); };
   // grupy węzłów chłonnych: podpisy kodów stacji; włączenie pokazuje też krezkę (węzły są jej częścią)
   $('optNodes').checked = S.nodes;
+  function lnSync() { $('fLn').setAttribute('aria-pressed', S.nodes ? 'true' : 'false'); }
+  lnSync();
+  $('fLn').onclick = function () { $('optNodes').checked = !S.nodes; $('optNodes').onchange(); };
   $('optNodes').onchange = function () {
     S.nodes = this.checked; try { localStorage.setItem('surgitome-wezly', S.nodes ? '1' : '0'); } catch (e) {}
+    lnSync();
     if (S.nodes && !S.meso) { S.meso = true; $('optMeso').checked = true; try { localStorage.setItem('surgitome-meso', '1'); } catch (e) {} }
     if (M) renderPanel(M.an);
     applyM();

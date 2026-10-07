@@ -230,7 +230,8 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .fbtn{ width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:var(--pill); color:var(--text); display:grid; place-items:center; padding:0; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.25); }
 .fbtn svg{ width:22px; height:22px; }
 .ftext{ font-weight:700; font-size:14px; letter-spacing:.04em; }
-#fLbl[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+#fLn[hidden]{ display:none; } #fLn{ font-size:12.5px; letter-spacing:.02em; }
+#fLbl[aria-pressed="true"], #fLn[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
 .mobile #hud{ right:62px; }
 .mobile #mFloat{ top:10px; right:10px; }
 .mobile #viewport.ctmode #mFloat{ top:8px; }
@@ -367,6 +368,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 #viewport.ctmode #fbBtn{ bottom:64px; }
 .mobile #fbBtn{ top:160px; bottom:auto; right:10px; }
 .mobile #viewport.endo #fbBtn, .mobile #viewport.ctmode #fbBtn{ top:160px; bottom:auto; }
+.mobile #viewport.lnon #fbBtn{ top:210px; } /* pod przyciskiem „LNs”, gdy jest widoczny */
 #fb{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.55); }
 #fb[hidden]{ display:none; }
 #fb .introbox{ max-width:520px; gap:8px; }
@@ -534,6 +536,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <button id="fInfo" class="fbtn" aria-label="Opis zabiegu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/><rect x="10.9" y="10.4" width="2.2" height="7" rx="1" fill="currentColor"/></svg></button>
         <button id="fLang" class="fbtn ftext" aria-label="Język">PL</button>
         <button id="fLbl" class="fbtn" aria-pressed="true" aria-label="Etykiety"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12.2V4.5A1.5 1.5 0 0 1 4.5 3h7.7l8.8 8.8-9.2 9.2L3 12.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.8" cy="7.8" r="1.7" fill="currentColor"/></svg></button>
+        <button id="fLn" class="fbtn ftext" type="button" aria-pressed="false" aria-label="Grupy węzłów chłonnych" title="Grupy węzłów chłonnych" hidden>LNs</button>
       </div>
       <div id="vignette" hidden></div>
       <div id="hud" hidden><span class="sw" id="hudSw"></span><div><strong id="hudSeg"></strong><span id="hudNote"></span><span id="hudEnd" hidden>Brodawka Vatera w polu widzenia</span></div></div>
