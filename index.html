@@ -1357,14 +1357,17 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var wl = ts(ra, rb, 24);
     sheets.push({ rows: wl.map(function (t) { return [arr(E(t, false)), arr(Vpre(t)), t]; }), removed: true });
     sheets.push({ rows: wl.map(function (t) { return [arr(Vpre(t)), arr(R(t)), t]; }), post: wl.map(function (t) { return [arr(Vpost(t)), arr(R(t)), t]; }) });
-    // SMA i SMV: zstępują przed częścią poziomą dwunastnicy i biegną w korzeniu krezki; końcowa gałąź do okolicy krętniczo-kątniczej
-    var V = [], nodes = [], tSma0 = 0.26, rootTs = ts(tSma0, 1, 16);
-    var off = new V3(0, 0, 0.32), offV = new V3(-0.5, 0.05, 0.25);
-    var smaPts = SBM_SMA.concat(rootTs.map(function (t) { return arr(R(t).add(off)); })).concat([[-7.0, -21.0, -0.5]]);
-    var smvPts = SBM_SMA.map(function (p) { return [p[0] - 0.75, p[1] + 0.2, p[2] + 0.1]; }).concat(rootTs.map(function (t) { return arr(R(t).add(offV)); })).concat([[-6.6, -20.0, -1.0]]);
-    V.push({ id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: smaPts, at: 0.42 });
+    // SMA: przed częścią poziomą dwunastnicy, dalej blisko linii pośrodkowej łagodnym łukiem wypukłym w lewo, koniec w krezce końcowego
+    // odcinka jelita krętego (nie wzdłuż skośnego korzenia). IC odchodzi od prawego brzegu SMA i biegnie skośnie w prawo i w dół do zastawki
+    // krętniczo-kątniczej. SMV po prawej stronie SMA. Gałęzie jelitowe odchodzą od SMA do wachlarza krezki.
+    var V = [], nodes = [];
+    var smaPts = SBM_SMA.concat([[1.45, -8.6, -1.0], [1.4, -10.6, -1.45], [1.2, -12.8, -1.65], [0.95, -15.0, -1.7], [0.7, -17.0, -1.6], [0.45, -18.8, -1.4]]);
+    var smvPts = smaPts.map(function (p, i) { return i < SBM_SMA.length ? [p[0] - 0.75, p[1] + 0.2, p[2] + 0.1] : [p[0] - 0.72, p[1] + 0.1, p[2] + 0.05]; });
+    var C_SMA = curveOf(smaPts), fIC = nearestT(C_SMA, [1.3, -11.8, -1.55], 400), IC0 = arr(C_SMA.getPointAt(fIC));
+    var icPts = [IC0, [0.2, -12.4, -1.6], [-1.8, -13.6, -1.65], [-4.0, -15.6, -1.55], [-5.7, -18.0, -1.25], [-6.9, -19.9, -0.8], [-7.6, -21.0, -0.4]];
+    V.push({ id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: smaPts, at: 0.36 });
+    V.push({ id: 'ic', name: 'IC — tętnica krętniczo-okrężnicza', kind: 'a', r: 0.1, pts: icPts, at: 0.62 });
     V.push({ id: 'smv', name: '', kind: 'v', pts: smvPts });
-    var C_SMA = curveOf(smaPts);
     function addNode(t, f, g) { var o = { p: arr(X(t, f, false).add(new V3(0, 0, 0.12))), removed: cut(t, f), g: g }, q = arr(X(t, f, true).add(new V3(0, 0, 0.12))); if (moves([o.p], [q])) o.post = q; nodes.push(o); }
     function smaAt(t) { return C_SMA.getPointAt(nearestT(C_SMA, arr(R(t)), 400)); }
     // gałęzie co SBM_DT, jedna dokładnie w środku resekowanego odcinka (zaopatruje go — podwiązana u wierzchołka klina)
@@ -1410,7 +1413,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       [[0.2, 0.01, 'pos'], [0.55, -0.006, 'pj']].concat(isT ? [[0.68, 0.012, 'pj'], [0.7, -0.014, 'pj']] : []).forEach(function (q) { addNode(tk + q[1], q[0], q[2]); });
     });
     // węzły przy korzeniu (centralne)
-    [0.3, 0.55, 0.8].forEach(function (t) { nodes.push({ p: arr(R(t).add(new V3(0.35, 0.3, 0.55))), removed: false, g: 'cen' }); });
+    [0.42, 0.62, 0.82].forEach(function (f) { nodes.push({ p: arr(C_SMA.getPointAt(f).add(new V3(0.42, 0.2, 0.4))), removed: false, g: 'cen' }); }); // centralne — wzdłuż pnia SMA
     // arkady (rzędy), połączenia między rzędami, naczynia proste
     var tAll = ts(0.004, 0.996, 600);
     [0, 1, 2].forEach(function (i) {
