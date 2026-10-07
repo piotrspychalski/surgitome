@@ -202,6 +202,12 @@
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
       // jelito cienkie (nowy model): krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sbm') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
+      // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
+      LIST.forEach(function (p) { if (p.id === 'tg' || p.id === 'dg') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([gastricMeso(p.id, p.id === 'tg' ? [5, 2, 6] : [4, -1, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id]]); }); });
+      // trzustka (zabiegi onkologiczne): Whipple, PPPD, pankreatektomia dystalna — naczynia, mezopankreas, stacje JPS (ISGPS)
+      LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); }); });
+      // przełyk: esofagektomie z rurą żołądkową (bez interpozycji okrężnicy) — łuk RGEA za rurą, stacje AJCC 8
+      LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); } }); });
       var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart' };
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];

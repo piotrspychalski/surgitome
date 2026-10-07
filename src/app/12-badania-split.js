@@ -214,7 +214,7 @@
   // Opcje (jelito cienkie): d.sag — mnożnik zwisu arkuszy (0: wiersze proste, klin dzieli arkusz bez szwu); d.morph [m0, m1] — arkusze (sh.post),
   // naczynia (v.post / v.segsPost) i węzły (n.post) przechodzą do położenia po zespoleniu razem z jelitem; v.segs — wiele cienkich naczyń w jednej siatce;
   // rodzaj 'r' — naczynia proste (vasa recta); d.cutTint [[m, kolor], …] — barwa części usuwanej (np. klina krezki) w czasie
-  var MESO_COL = { a: '#b83227', v: '#3867b5', m: '#c9564b', r: '#c9564b' };
+  var MESO_COL = { a: '#b83227', v: '#3867b5', m: '#c9564b', r: '#c9564b', o: '#b8746c' }; // o — aorta (tło, stonowana)
   function mesoTubes(segs, r) {
     var pos = [], nor = [], idx = [], off = 0;
     segs.forEach(function (s) {
@@ -252,7 +252,7 @@
     });
     var labels = [];
     d.vessels.forEach(function (v) {
-      var c = new THREE.CatmullRomCurve3((v.pts || v.segs[0]).map(v3), false, 'centripetal'), r = v.kind === 'a' ? (v.id === 'sma' ? 0.16 : 0.085) : v.kind === 'v' ? 0.2 : v.kind === 'r' ? 0.032 : 0.05;
+      var c = new THREE.CatmullRomCurve3((v.pts || v.segs[0]).map(v3), false, 'centripetal'), r = v.r || (v.kind === 'a' ? (v.id === 'sma' ? 0.16 : 0.085) : v.kind === 'v' ? 0.2 : v.kind === 'r' ? 0.032 : 0.05);
       var g = v.segs ? mesoTubes(v.segs, r) : track(new THREE.TubeGeometry(c, v.pts.length * 12, r, 7, false));
       if (v.post || v.segsPost) {
         var g2 = v.segs ? mesoTubes(v.segsPost, r) : new THREE.TubeGeometry(new THREE.CatmullRomCurve3(v.post.map(v3), false, 'centripetal'), v.pts.length * 12, r, 7, false);
@@ -283,7 +283,8 @@
     // dodatkowe podpisy arkuszy (np. mezorektum)
     (d.labels || []).forEach(function (L) { labels.push({ el: mkLabel(L.name, L.sub || '', '#e8c25e', 'seg'), p: v3(L.p), removed: !!L.removed, fade: false }); });
     // podpis krezki przy części usuwanej (znika z preparatem), inaczej przy pozostającej; d.anchor — własny punkt podpisu
-    var shR = d.sheets.filter(function (s) { return s.removed; })[0], ref = (shR || d.sheets[0]).rows, mid = ref[Math.round(ref.length / 2)], anchor0 = d.anchor ? v3(d.anchor) : v3(mid[1]).lerp(v3(mid[0]), 0.55);
+    var shR = d.sheets.filter(function (s) { return s.removed; })[0], ref = (shR || d.sheets[0] || {}).rows, mid = ref && ref[Math.round(ref.length / 2)];
+    var anchor0 = d.anchor ? v3(d.anchor) : mid ? v3(mid[1]).lerp(v3(mid[0]), 0.55) : new V3(); // bez arkuszy: podpis w d.anchor
     var el = mkLabel(d.name, d.sub, '#e8c25e', 'seg');
     var groups = nodeGroupLabels(d.groups);
     var removedMats = [mSheetR, mNodeR].concat(Object.keys(matsR).map(function (k) { return matsR[k]; }));
@@ -299,7 +300,7 @@
         Object.keys(matsF).forEach(function (k) { matsF[k].opacity = op; }); fadeG.visible = op > 0.01;
         var opM = kfNum(d.mobOpacity, m, 1); mSheetM.opacity = 0.45 * opM; Object.keys(matsM).forEach(function (k) { matsM[k].opacity = opM; }); mobG.visible = opM > 0.01; // krezka odcinka przemieszczanego
         ties.visible = m >= d.tieT && op > 0.01 && d.vessels.some(function (v) { return v.tie != null; }); // podwiązania znikają razem z SMA/SMV
-        this.alpha = on ? (shR ? op : 1) : 0; this.anchor = shR ? anchor0.clone().add(mov.position) : anchor0;
+        var lr = shR || d.anchorRemoved; this.alpha = on ? (lr ? op : 1) : 0; this.anchor = lr ? anchor0.clone().add(mov.position) : anchor0;
         var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed || L.fade ? op : 1) : 0; });
         groups.forEach(function (G) { G.anchor = G.removed ? G.p.clone().add(mov.position) : G.p; G.alpha = on ? (G.removed ? op : 1) : 0; });
       } };
