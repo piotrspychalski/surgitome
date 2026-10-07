@@ -144,7 +144,7 @@
     V.push({ id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: smaPts, at: 0.42 });
     V.push({ id: 'smv', name: '', kind: 'v', pts: smvPts });
     var C_SMA = curveOf(smaPts);
-    function addNode(t, f) { var o = { p: arr(X(t, f, false).add(new V3(0, 0, 0.12))), removed: cut(t, f) }, q = arr(X(t, f, true).add(new V3(0, 0, 0.12))); if (moves([o.p], [q])) o.post = q; nodes.push(o); }
+    function addNode(t, f, g) { var o = { p: arr(X(t, f, false).add(new V3(0, 0, 0.12))), removed: cut(t, f), g: g }, q = arr(X(t, f, true).add(new V3(0, 0, 0.12))); if (moves([o.p], [q])) o.post = q; nodes.push(o); }
     function smaAt(t) { return C_SMA.getPointAt(nearestT(C_SMA, arr(R(t)), 400)); }
     // gałęzie co SBM_DT, jedna dokładnie w środku resekowanego odcinka (zaopatruje go — podwiązana u wierzchołka klina)
     var BR = [];
@@ -186,10 +186,10 @@
         V.push({ id: 'br' + i, name: 'Gałąź zaopatrująca odcinek', kind: 'a', pts: [O].concat(Ltop.pts), tie: 0.93, at: 0.45 });
         V.push({ id: 'br' + i + 'c', name: '', kind: 'a', pts: line([[tk, SBM_APEX], [tk, (SBM_APEX + f1) / 2], [tk, f1]]).pts, removed: true });
       } else V.push({ id: 'br' + i, name: name, kind: 'a', pts: pts, post: L0.post ? [O].concat(L0.post) : null, at: 0.5 });
-      [[0.2, 0.01], [0.55, -0.006]].concat(isT ? [[0.68, 0.012], [0.7, -0.014]] : []).forEach(function (q) { addNode(tk + q[1], q[0]); });
+      [[0.2, 0.01, 'pos'], [0.55, -0.006, 'pj']].concat(isT ? [[0.68, 0.012, 'pj'], [0.7, -0.014, 'pj']] : []).forEach(function (q) { addNode(tk + q[1], q[0], q[2]); });
     });
     // węzły przy korzeniu (centralne)
-    [0.3, 0.55, 0.8].forEach(function (t) { nodes.push({ p: arr(R(t).add(new V3(0.35, 0.3, 0.55))), removed: false }); });
+    [0.3, 0.55, 0.8].forEach(function (t) { nodes.push({ p: arr(R(t).add(new V3(0.35, 0.3, 0.55))), removed: false, g: 'cen' }); });
     // arkady (rzędy), połączenia między rzędami, naczynia proste
     var tAll = ts(0.004, 0.996, 600);
     [0, 1, 2].forEach(function (i) {
@@ -222,7 +222,9 @@
     // linia przecięcia krezki (V) i szew zamykający szczelinę krezki
     var vLine = ts(ra, rb, 16).map(function (t) { return arr(Vpre(t).add(new V3(0, 0, 0.06))); });
     var closure = ts(kind === 'e2e' ? 0.06 : 0, 0.96, 10).map(function (u) { return arr((kind === 'e2e' ? EaP.clone().lerp(Apex, u) : J.clone().lerp(Apex, u)).add(new V3(0, 0, 0.08))); });
-    var tool = { type: 'meso', sag: 0, sheets: sheets, vessels: V, nodes: nodes, name: 'Krezka jelita cienkiego', sub: 'klin usuwany z odcinkiem',
+    // grupy opisowe (jelito cienkie nie ma przyjętej numeracji stacji węzłowych)
+    var groups = nodeGroups(nodes, { pj: ['Węzły przyjelitowe', 'przy arkadach i naczyniach prostych'], pos: ['Węzły pośrednie', 'wzdłuż tętnic jelita czczego i krętego'], cen: ['Węzły centralne', 'u korzenia krezki, wzdłuż SMA'] }, 'opis');
+    var tool = { type: 'meso', sag: 0, sheets: sheets, vessels: V, nodes: nodes, groups: groups, name: 'Krezka jelita cienkiego', sub: 'klin usuwany z odcinkiem',
       labels: [{ name: 'Korzeń krezki', sub: 'od zgięcia dwunastniczo-czczego do okolicy krętniczo-kątniczej', p: arr(R(0.62).add(new V3(0.2, 0, 0.3))) }],
       offset: [[2.15, [0, 0, 0]], [2.9, [0, -2, 9]]], opacity: [[2.55, 1], [2.9, 0]], tieT: 1.25, morph: [3, 3.9], cutTint: [[0.2, '#e8c25e'], [0.8, '#ec8f4c']] };
     return { tool: tool, vLine: vLine, closure: closure };

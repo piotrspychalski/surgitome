@@ -101,6 +101,10 @@ button,select,input{ font:inherit; color:inherit; }
 /* etykiety po lewej stronie modelu: dymek na lewo od punktu */
 .lbl.lbl-left{ flex-direction:row-reverse; margin:-7px -3.5px 0 0; }
 .lbl-anast b{ font-weight:400; font-style:italic; }
+/* grupy węzłów chłonnych: kod stacji na zielonym tle */
+.lbl-node span{ background:#4f9a6a; } .lbl-node b{ color:#fff; } .lbl-node small{ color:rgba(255,255,255,.85); }
+.lbl-node i{ box-shadow:0 0 0 2px #fff; }
+.nodesys{ margin:-2px 0 6px 26px; }
 .lbl-anast i{ background:transparent !important; border:2px solid var(--text); }
 .lbl-ghost b{ font-weight:400; color:var(--muted); }
 
@@ -550,6 +554,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <label class="tog"><input type="checkbox" id="optCaps" checked> <span>Podpisy kadrów</span></label>
       <label class="tog"><input type="checkbox" id="optDrift" checked> <span>Powolny ruch kamery</span></label>
       <label class="tog" id="togMeso" hidden><input type="checkbox" id="optMeso" checked> <span>Krezka, naczynia i węzły chłonne</span></label>
+      <label class="tog" id="togNodes" hidden><input type="checkbox" id="optNodes"> <span>Grupy węzłów chłonnych (numeracja)</span></label>
+      <p class="hint nodesys" id="nodeSys" hidden></p>
       <label class="tog" id="togLvGlass" hidden><input type="checkbox" id="optLvGlass" checked> <span>Miąższ przezroczysty</span></label>
       <label class="tog" id="togGuz" hidden><input type="checkbox" id="optGuz" checked> <span>Guz (przesuń w kadrze „Prawidłowa”)</span></label>
       <button class="btn tourbtn" id="btnTour" type="button" data-pl="Pokaż samouczek">Pokaż samouczek</button>

@@ -226,6 +226,10 @@
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
     return g;
   }
+  // podpisy grup węzłów chłonnych (kod stacji + nazwa): widoczne przy włączonym przełączniku „Grupy węzłów chłonnych”, niezależnie od etykiet
+  function nodeGroupLabels(G) {
+    return (G ? G.list : []).map(function (g) { var el = mkLabel(g.code, g.name, '#4f9a6a', 'node'); return { el: el, p: v3(g.p), removed: g.removed, anchor: null, alpha: 0 }; });
+  }
   function makeMeso(d) {
     var all = new THREE.Group(), mov = new THREE.Group(), stay = new THREE.Group(), ties = new THREE.Group(), fadeG = new THREE.Group(), mobG = new THREE.Group(); all.add(mov, stay, ties, fadeG, mobG);
     var mSheet = track(new THREE.MeshStandardMaterial({ color: '#e8c25e', roughness: 0.7, transparent: true, opacity: 0.45, depthWrite: false, side: THREE.DoubleSide }));
@@ -281,9 +285,10 @@
     // podpis krezki przy części usuwanej (znika z preparatem), inaczej przy pozostającej; d.anchor — własny punkt podpisu
     var shR = d.sheets.filter(function (s) { return s.removed; })[0], ref = (shR || d.sheets[0]).rows, mid = ref[Math.round(ref.length / 2)], anchor0 = d.anchor ? v3(d.anchor) : v3(mid[1]).lerp(v3(mid[0]), 0.55);
     var el = mkLabel(d.name, d.sub, '#e8c25e', 'seg');
+    var groups = nodeGroupLabels(d.groups);
     var removedMats = [mSheetR, mNodeR].concat(Object.keys(matsR).map(function (k) { return matsR[k]; }));
     var cutCols = d.cutTint ? d.cutTint.map(function (c) { return [c[0], new THREE.Color(c[1])]; }) : null;
-    return { d: d, grp: all, overlay: false, el: el, labels: labels,
+    return { d: d, grp: all, overlay: false, el: el, labels: labels, groups: groups,
       update: function (m) {
         var on = d.always || S.meso, op = kfNum(d.opacity, m, 1);
         all.visible = on;
@@ -296,6 +301,7 @@
         ties.visible = m >= d.tieT && op > 0.01 && d.vessels.some(function (v) { return v.tie != null; }); // podwiązania znikają razem z SMA/SMV
         this.alpha = on ? (shR ? op : 1) : 0; this.anchor = shR ? anchor0.clone().add(mov.position) : anchor0;
         var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed || L.fade ? op : 1) : 0; });
+        groups.forEach(function (G) { G.anchor = G.removed ? G.p.clone().add(mov.position) : G.p; G.alpha = on ? (G.removed ? op : 1) : 0; });
       } };
   }
   function makeEftr(d) {

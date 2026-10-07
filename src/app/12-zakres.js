@@ -57,7 +57,8 @@
       });
       nodes.forEach(function (N) { var on = rem.indexOf(N.n.v) >= 0; N.m.color.set(on ? ZK_NODE : '#4f9a6a'); N.m.opacity = !rule || on ? 1 : 0.3; });
     }
-    return { d: d, grp: grp, overlay: false, el: null, labels: labels,
+    var groups = nodeGroupLabels(map.groups);
+    return { d: d, grp: grp, overlay: false, el: null, labels: labels, groups: groups,
       update: function () {
         var tu = M.tumour, b = tu && S.tumour ? tu.bind : null, id = b ? b.o.def.id : null;
         rule = b ? A.resectionFor(id === 'colon' ? b.t : 0, id) : null;
@@ -73,6 +74,7 @@
         if ($('capText').textContent !== tx) $('capText').textContent = tx;
         var rem = rule ? rule.removed.concat(rule.ties) : [];
         labels.forEach(function (L) { L.anchor = L.p; L.alpha = rem.indexOf(L.id) >= 0 || L.id === 'sma' || L.id === 'ima' ? 1 : 0; });
+        groups.forEach(function (G) { G.anchor = G.p; G.alpha = 1; });
       } };
   }
   TOOL_EXT.zakres = makeZakres;

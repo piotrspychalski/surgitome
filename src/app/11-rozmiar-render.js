@@ -90,31 +90,34 @@
       it.el.classList.toggle('lbl-moved', cur > 3);
     }
   }
+  // etykiety (przełącznik „Etykiety”) i podpisy grup węzłów chłonnych (przełącznik „Grupy węzłów chłonnych”) — niezależne od siebie;
+  // przy wyłączonych etykietach warstwa zostaje widoczna dla grup węzłów, a zwykłe etykiety są ukrywane pojedynczo (k = 0)
   function updateLabels(now) {
-    var show = S.labels && !endo.active;
-    labelsEl.style.display = show ? '' : 'none';
-    if (!show) return;
-    var m = S.m;
+    var show = S.labels && !endo.active, showN = S.nodes && !endo.active && (M.tools || []).some(function (t) { return t.groups && t.groups.length; });
+    labelsEl.style.display = show || showN ? '' : 'none';
+    if (!show && !showN) return;
+    var m = S.m, k = show ? 1 : 0;
     projV.copy(M.box.getCenter(tmpV)).project(orbitCam); lblCx = view.x + (projV.x + 1) / 2 * view.w; // środek modelu na ekranie
     M.objs.forEach(function (o) {
       o.labels.forEach(function (x) {
-        var a = winAlpha(x.L.win, m) * (o.op > 0.3 ? 1 : 0) * (o.faded ? 0.3 : 1);
-        placeLabel(x.el, tmpV.copy(o.st.curve.getPointAt(x.L.t)).add(o.grp.position), a);
+        var a = k * winAlpha(x.L.win, m) * (o.op > 0.3 ? 1 : 0) * (o.faded ? 0.3 : 1);
+        placeLabel(x.el, a ? tmpV.copy(o.st.curve.getPointAt(x.L.t)).add(o.grp.position) : tmpV, a);
       });
     });
     M.marks.forEach(function (mk) {
       var post = mk.el2 && m >= 2;
-      if (mk.el) placeLabel(mk.el, mk.anchor, post ? 0 : mk.op);
-      if (mk.el2) placeLabel(mk.el2, mk.anchor, post ? mk.op : 0);
+      if (mk.el) placeLabel(mk.el, mk.anchor, post ? 0 : k * mk.op);
+      if (mk.el2) placeLabel(mk.el2, mk.anchor, post ? k * mk.op : 0);
     });
     (M.tools || []).forEach(function (t) {
-      if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? t.alpha : 0);
-      if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? t.alpha : 0);
-      (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? L.alpha || 0 : 0); });
+      if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? k * t.alpha : 0);
+      if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? k * t.alpha : 0);
+      (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? k * (L.alpha || 0) : 0); });
+      (t.groups || []).forEach(function (G) { placeLabel(G.el, G.anchor || tmpV.set(0, 0, 0), showN && G.anchor ? G.alpha || 0 : 0); });
     });
     if (M.papLbl) {
       var pa = Math.max(winAlpha([-9, 0.4], m), winAlpha([2.7, 99], m)) * (M.byId[M.an.papilla.obj].op > 0.5 ? 1 : 0);
-      placeLabel(M.papLbl, M.extPap.getWorldPosition(tmpV), pa);
+      placeLabel(M.papLbl, M.extPap.getWorldPosition(tmpV), k * pa);
     }
     declutter();
   }

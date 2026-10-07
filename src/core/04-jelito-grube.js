@@ -145,6 +145,34 @@
     };
   })();
 
+  /* ---------- Grupy węzłów chłonnych (przełącznik „Grupy węzłów chłonnych” w panelu): kod stacji, nazwa, podpis przy węźle najbliższym środkowi grupy ----------
+     Jelito grube — numeracja JSCCR (Japanese Classification of Colorectal, Appendiceal, and Anal Carcinoma, 3. wyd. ang., J Anus Rectum Colon 2019):
+     2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; x: 0 IC, 1 RC, 2 MC (222-rt / 222-lt — gałęzie), 3 LC, 4 esicze, 5 IMA i SRA
+     (251 przyodbytnicze wzdłuż SRA, 252 pień IMA od odejścia LC do ostatniej tętnicy esiczej, 253 IMA od odejścia do odejścia LC).
+     names: kod → nazwa albo [wyświetlany kod, nazwa]; grupa dzielona na część usuwaną z preparatem i pozostającą. */
+  var NG_JSCCR = {
+    '201': 'przyokrężnicze — obszar IC', '202': 'wzdłuż IC (pośrednie)', '203': 'u odejścia IC (główne)',
+    '211': 'przyokrężnicze — obszar RC', '212': 'wzdłuż RC (pośrednie)', '213': 'u odejścia RC (główne)',
+    '221': 'przyokrężnicze — obszar MC', '222-rt': 'wzdłuż gałęzi prawej MC (pośrednie)', '222-lt': 'wzdłuż gałęzi lewej MC (pośrednie)', '223': 'u odejścia MC (główne)',
+    '231': 'przyokrężnicze — obszar LC', '232': 'wzdłuż LC (pośrednie)', '241': 'przyokrężnicze — obszar esicy', '242': 'wzdłuż tętnic esiczych (pośrednie)',
+    '251': 'przyodbytnicze, wzdłuż SRA', '252': 'wzdłuż pnia IMA (pośrednie)', '253': 'u odejścia IMA (główne)' };
+  var NG_SYS = { jsccr: 'Numeracja JSCCR (Japanese Classification of Colorectal, Appendiceal, and Anal Carcinoma, 2019)', opis: 'Grupy opisowe (bez numeracji stacji)' };
+  function nodeGroups(nodes, names, sys) {
+    var G = {}, order = [];
+    nodes.forEach(function (n) {
+      if (!n.g) return; var k = n.g + (n.removed ? '|R' : '|K');
+      if (!G[k]) { G[k] = { g: n.g, removed: !!n.removed, ns: [] }; order.push(k); } G[k].ns.push(n);
+    });
+    return { system: NG_SYS[sys], list: order.map(function (k) {
+      var g = G[k], c = [0, 0, 0], nm = names[g.g], best = null, bd = 1e9;
+      g.ns.forEach(function (n) { c[0] += n.p[0] / g.ns.length; c[1] += n.p[1] / g.ns.length; c[2] += n.p[2] / g.ns.length; });
+      g.ns.forEach(function (n) { var d = Math.pow(n.p[0] - c[0], 2) + Math.pow(n.p[1] - c[1], 2) + Math.pow(n.p[2] - c[2], 2); if (d < bd) { bd = d; best = n; } });
+      return { code: Array.isArray(nm) ? nm[0] : g.g, name: Array.isArray(nm) ? nm[1] : nm || '', p: best.p.slice(), removed: g.removed };
+    }) };
+  }
+  var JS_R = { ic: ['203', '202', '201'], rc: ['213', '212', '211'], mc: ['223'], rbmc: ['222-rt', '221'], lbmc: ['222-lt', '221'] };
+  var JS_L = { imaTop: ['253'], ima: ['253', '252'], lc: ['232', '232', '231'], lca: ['232', '231'], sb: ['242', '242', '241'], sb2: ['242', '241'], sra: ['251', '251', '251'], sraTop: ['251', '251'] };
+
   /* ---------- Krezka prawej połowy okrężnicy i poprzecznicy: naczynia i węzły chłonne ----------
      SMA/SMV; od SMA: IC (krętniczo-okrężnicza), RC (prawa okrężnicy), MC (środkowa okrężnicy) z gałęzią prawą (RBMC) i lewą (LBMC); łuk brzeżny.
      mode: 'keep' — nic nie usuwane (np. leczenie endoskopowe); 'rh' — hemikolektomia prawa: podwiązanie IC, RC i RBMC (pień MC i LBMC zostają);
@@ -190,9 +218,9 @@
     V.forEach(function (v) {
       if (!v.nodes) return;
       var c = curveOf(v.pts), fs = v.nodes === 'central' ? [0.35] : v.nodes === 'outer' ? [0.5, 0.86] : [0.15, 0.5, 0.86];
-      fs.forEach(function (f) { nodes.push({ p: c.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed }); });
+      fs.forEach(function (f, i) { nodes.push({ p: c.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed, g: (JS_R[v.id] || [])[i] }); });
     });
-    return { type: 'meso', sheets: [{ rows: sheetK }, { rows: sheetR, removed: true }].filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes,
+    return { type: 'meso', sheets: [{ rows: sheetK }, { rows: sheetR, removed: true }].filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes, groups: nodeGroups(nodes, NG_JSCCR, 'jsccr'),
       name: 'Krezka z węzłami chłonnymi', sub: rm ? 'usuwana z preparatem' : 'pozostaje',
       offset: [[2.15, [0, 0, 0]], [2.9, [-7, -1, 5]]], opacity: [[2.55, 1], [2.9, 0]], tieT: 1.25 };
   }
@@ -238,8 +266,11 @@
     var arc = []; for (var j = 0; j <= 50; j++) { var ta = 0.03 + (0.86 - 0.03) * j / 50; arc.push(ta < MESO_T1 ? mesoEdge(ta, 0.08).toArray() : new THREE.Vector3().fromArray(le(ta)).lerp(curveOf(ta < ST[0] ? LROOT : SROOT).getPointAt(Math.max(0, Math.min(1, ta < ST[0] ? (ta - LT[0]) / (LT[1] - LT[0]) : (ta - ST[0]) / (ST[1] - ST[0])))), 0.08).toArray()); }
     V.push({ id: 'arc', name: '', kind: 'm', pts: arc });
     var nodes = [];
-    V.forEach(function (v) { if (v.kind !== 'a' || v.id === 'sma') return; var c = curveOf(v.pts); [0.25, 0.6, 0.9].forEach(function (f) { nodes.push({ p: c.getPointAt(f).add(new THREE.Vector3(0, 0.2, 0.18)).toArray(), v: v.id }); }); });
-    return { sheets: sheets, vessels: V, nodes: nodes };
+    // grupy JSCCR: przy IMA węzeł u odejścia (253, przed odejściem LC) i wzdłuż pnia (252); pień MC — 223
+    var JS_Z = { ic: ['203', '202', '201'], rc: ['213', '212', '211'], mc: ['223', '223', '223'], rbmc: ['222-rt', '222-rt', '221'], lbmc: ['222-lt', '222-lt', '221'],
+      ima: ['253', '252', '252'], lc: ['232', '232', '231'], lca: ['232', '232', '231'], sb: ['242', '242', '241'], sb2: ['242', '242', '241'], sra: ['251', '251', '251'] };
+    V.forEach(function (v) { if (v.kind !== 'a' || v.id === 'sma') return; var c = curveOf(v.pts); (v.id === 'ima' ? [0.08, 0.5, 0.85] : [0.25, 0.6, 0.9]).forEach(function (f, i) { nodes.push({ p: c.getPointAt(f).add(new THREE.Vector3(0, 0.2, 0.18)).toArray(), v: v.id, g: (JS_Z[v.id] || [])[i] }); }); });
+    return { sheets: sheets, vessels: V, nodes: nodes, groups: nodeGroups(nodes, NG_JSCCR, 'jsccr') };
   }
   function via3(a, b, lift) { var m = new THREE.Vector3().fromArray(a).lerp(new THREE.Vector3().fromArray(b), 0.5); m.z += lift || 0; return m.toArray(); }
   // reguła: t — położenie guza na okrężnicy (0 kątnica … 1 odbyt); obj — odcinek z guzem ('colon', 'ti', 'app')
@@ -699,8 +730,8 @@
     var V = [];
     if (ht) { // podwiązanie IMA poniżej odejścia LC
       V.push({ id: 'imaTop', name: '', kind: 'a', pts: [IMA_O, LC_O], nodes: 'central', nodesRemoved: true }); // węzły u korzenia IMA usuwane (niskie podwiązanie z wycięciem węzłów wzdłuż IMA)
-      V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA.slice(1), removed: true, tie: 0.06, at: 0.5 });
-    } else V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA, removed: ar, tie: ar ? 0.05 : null, at: 0.3, nodes: 'central' });
+      V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA.slice(1), removed: true, tie: 0.06, at: 0.5, nodes: 'central', ng: ['252'] }); // pień IMA poniżej LC z preparatem
+    } else V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA, removed: ar, tie: ar ? 0.05 : null, at: 0.3, nodes: 'ima' }); // 253 przed odejściem LC, 252 wzdłuż pnia
     V.push({ id: 'lc', name: 'LC — tętnica lewa okrężnicy', kind: 'a', pts: [LC_O, via3(LC_O, LCB, 0.2), LCB, le(0.575)], removed: lh, tie: lh || ar ? 0.06 : null, at: 0.55, nodes: true });
     V.push({ id: 'lca', name: '', kind: 'a', pts: [LCB, [5.4, 1.8, -1.6], le(0.50)], removed: lh, nodes: 'outer' });
     V.push({ id: 'sb', name: 'SB — gałęzie esicze', kind: 'a', pts: [SB1_O, via3(SB1_O, le(0.76), 0.3), le(0.76)], removed: true, tie: lh ? 0.08 : null, at: 0.6, nodes: true });
@@ -720,11 +751,11 @@
     var nodes = [];
     V.forEach(function (v) {
       if (!v.nodes) return;
-      var cv = curveOf(v.pts), fs = v.nodes === 'central' ? [0.35] : v.nodes === 'outer' ? [0.5, 0.86] : v.nodes === 'meso' ? [0.35, 0.6, 0.85] : [0.15, 0.5, 0.86];
-      fs.forEach(function (f) { nodes.push({ p: cv.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed || !!v.nodesRemoved }); });
+      var cv = curveOf(v.pts), fs = v.nodes === 'central' ? [0.35] : v.nodes === 'outer' ? [0.5, 0.86] : v.nodes === 'meso' ? [0.35, 0.6, 0.85] : v.nodes === 'ima' ? [0.1, 0.6] : [0.15, 0.5, 0.86];
+      fs.forEach(function (f, i) { nodes.push({ p: cv.getPointAt(f).add(new V3(0, 0.22, 0.18)).toArray(), removed: !!v.removed || !!v.nodesRemoved, g: (v.ng || JS_L[v.id] || [])[i] }); });
     });
     var tm = ar ? 0.8 : (c.r[0] + c.r[1]) / 2, tR = 0.93;
-    return { type: 'meso', sheets: sheets.filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes,
+    return { type: 'meso', sheets: sheets.filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes, groups: nodeGroups(nodes, NG_JSCCR, 'jsccr'),
       name: 'Krezka z węzłami chłonnymi', sub: 'usuwana z preparatem', anchor: edge(tm, 0.45).toArray(),
       labels: [{ name: 'Mezorektum', sub: pme ? 'częściowo usuwane (PME)' : ar ? 'usuwane w całości (TME)' : ht ? 'pozostaje z kikutem odbytnicy' : 'pozostaje', p: edge(tR, 0.45).toArray(), removed: ar && !pme }],
       offset: [[2.15, [0, 0, 0]], [2.9, c.off]], opacity: [[2.55, 1], [2.9, 0]], mobOpacity: c.mob ? [[3.0, 1], [3.35, 0]] : null, tieT: 1.25 };
