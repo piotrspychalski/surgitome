@@ -32,7 +32,7 @@
   }
   function markIdx(an, name) { for (var i = 0; i < an.marks.length; i++) if (an.marks[i].name === name) return i; return -1; }
   function anastTools(an) {
-    var id = an.id, t = [];
+    var id = an.anastId || an.id, t = []; // anastId: wariant nowego modelu korzystający z narzędzi starego (np. sbm-e2e → sb-e2e)
     var LZ = markIdx(an, 'Linia zszywek (stapler liniowy)'), ZO = markIdx(an, 'Zamknięcie otworu po staplerze'), TA = markIdx(an, 'Zamknięcie poprzeczne końców (TA)');
     if (id === 'sb-iso') {
       t.push(giaAt([0, -11.0, 1.6], va([-1, 0, 0]), va([0, 1, 0]), 3.8, 0.65, { side: true, reveal: [LZ] }));
@@ -138,7 +138,7 @@
       var e = ana[0].w, tr = [[e[0], 1], [e[0] + 0.05, 0.3], [e[1] - 0.06, 0.3], [e[1], 1]];
       an.objects.forEach(function (o) { if (o.id === 'rect' || o.id === 'prox') o.opacity = tr; });
     }
-    an.cutTools = cuts.concat(lates); an.commonCuts = cuts.length; an.anastTools = ana; an.anastText = ANAST_TEXT[an.id] || null;
+    an.cutTools = cuts.concat(lates); an.commonCuts = cuts.length; an.anastTools = ana; an.anastText = ANAST_TEXT[an.anastId || an.id] || null;
     // TK: zawartość światła i opisy
     an.ctMap = {}; an.ctNames = {};
     var ov = an.ctOverride || {}, nm = (an.ct && an.ct.names) || {};
@@ -176,6 +176,7 @@
         multi('hpb', 'drain', 'Operacje drenujące (Puestow, Frey)', 'Przewlekłe zapalenie trzustki — operacje drenujące', [P(drainAnat(false), 'Puestow (Partington–Rochelle)'), P(drainAnat(true), 'Frey')]),
         one(CDD, 'Choledochoduodenostomia', 'Choledochoduodenostomia bok-do-boku'),
         multi('sb', 'sb', 'Resekcja jelita cienkiego', 'Resekcja jelita cienkiego — warianty zespolenia', [P(sbAnat('e2e'), 'Koniec-do-końca (szew)'), P(sbAnat('iso'), 'Izoperystaltyczne'), P(sbAnat('anti'), 'Antyperystaltyczne (FEEA)')]),
+        multi('sb', 'sbm', 'Resekcja jelita cienkiego (nowy model)', 'Resekcja jelita cienkiego z krezką i unaczynieniem — warianty zespolenia', [P(sbmAnat('e2e'), 'Koniec-do-końca (szew)'), P(sbmAnat('iso'), 'Izoperystaltyczne'), P(sbmAnat('anti'), 'Antyperystaltyczne (FEEA)')]),
         (function () {
           // wybór zakresu resekcji: jeden kadr, całe jelito grube z krezką i naczyniami, przesuwalny guz
           var z = prepare({ cat: 'colon', id: 'zakres', short: 'Wybór zakresu resekcji', title: 'Wybór zakresu resekcji w raku jelita grubego',
@@ -199,12 +200,14 @@
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
+      // jelito cienkie (nowy model): krezka z arkadami, naczyniami prostymi i węzłami
+      LIST.forEach(function (p) { if (p.id === 'sbm') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart' };
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
-        'sb', 'zakres', 'rh', 'lh', 'ar', 'ira', 'ipaa', 'hartmann', 'ileo'];
+        'sb', 'sbm', 'zakres', 'rh', 'lh', 'ar', 'ira', 'ipaa', 'hartmann', 'ileo'];
       return LIST.map(function (p, i) { var s = SEQ.indexOf(p.id); return [ORDER.indexOf(p.cat) * 100 + (s < 0 ? 90 + i : s), p]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; });
     })(),
     PANC: PANC, PANC_R: PANC_R,

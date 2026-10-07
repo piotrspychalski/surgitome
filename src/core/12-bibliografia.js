@@ -293,6 +293,14 @@
         ["steichen1968", "original", "Opis oryginalny zespolenia bok-do-boku staplerem liniowym"]],
       "sb-anti": [
         ["steichen1968", "original", "Opis oryginalny FEEA: stapler liniowy i poprzeczne zamknięcie końców"]],
+      "sbm": [
+        ["choy2011", "outcomes", "Stapler vs szew ręczny: mniej nieszczelności po staplerze (Cochrane; zespolenia krętniczo-okrężnicze)"]],
+      "sbm-e2e": [
+        ["burch2000", "technique", "Szew jednowarstwowy ciągły równie bezpieczny jak dwuwarstwowy, krótszy czas (RCT)"]],
+      "sbm-iso": [
+        ["steichen1968", "original", "Opis oryginalny zespolenia bok-do-boku staplerem liniowym"]],
+      "sbm-anti": [
+        ["steichen1968", "original", "Opis oryginalny FEEA: stapler liniowy i poprzeczne zamknięcie końców"]],
       "zakres": [
         ["vogel2022", "guideline", "Zakres resekcji wg drenażu chłonnego; podwiązanie naczynia zaopatrującego u odejścia"],
         ["you2020", "guideline", "Odbytnica: PME w górnej, TME w środkowej i dolnej części; APR"],

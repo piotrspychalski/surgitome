@@ -9,7 +9,7 @@
     var c = M.box.getCenter(new V3()), D = fitDist(aspect || orbitCam.aspect);
     switch (name) {
       case 'upper': return { t: c.clone().add(new V3(0.8, 2.2, 0)), az: 16, el: 8, d: D * 0.85 };
-      case 'focus': return { t: new V3().fromArray(M.an.focus.t), az: 16, el: 8, d: D * M.an.focus.k };
+      case 'focus': return { t: new V3().fromArray(M.an.focus.t), az: M.an.focus.az != null ? M.an.focus.az : 16, el: M.an.focus.el != null ? M.an.focus.el : 8, d: D * M.an.focus.k };
       case 'focusVar': return { t: new V3().fromArray(M.an.focusVar.t), az: 16, el: 8, d: D * M.an.focusVar.k };
       case 'stomach': return { t: new V3(1.8, 3.0, 0.5), az: 18, el: 8, d: D * 0.55 };
       case 'full': return { t: c, az: 18, el: 8, d: D };
