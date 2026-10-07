@@ -24,7 +24,8 @@
     anti: { tail: [[-3.8, -10.8, 1.3], [-1.8, -10.35, 1.6], [0.4, -10.35, 1.6], [2.6, -10.35, 1.6]],
       head: [[2.6, -11.65, 1.6], [0.4, -11.65, 1.6], [-1.8, -11.65, 1.6], [-3.4, -12.2, 2.3], [-2.0, -12.6, 3.6], [1.0, -12.6, 3.9], [3.8, -12.3, 3.4], [5.4, -12.0, 2.0]] }
   };
-  function sbAnat(kind) {
+  // podstawa wariantu: jelito, linie przecięcia, zespolenie i trasa endoskopowa (krezkę dokłada sbAnat)
+  function sbBase(kind) {
     var loc = LOC[kind], pPath = SBP_HEAD.concat(loc.tail), dPath = loc.head.concat(SBD_TAIL);
     var P = kind === 'e2e' ? { path: pPath, r: flat(1.0) } : { path: pPath, r: STUMP_END };
     var D = kind === 'e2e' ? { path: dPath, r: flat(1.0) } : { path: dPath, r: STUMP_START(lenOf(dPath)) };
@@ -87,7 +88,7 @@
   }
 
 
-  /* ---------- Resekcja jelita cienkiego — nowy model (test, obok starego): krezka z unaczynieniem i węzłami chłonnymi ----------
+  /* ---------- Resekcja jelita cienkiego: krezka z unaczynieniem i węzłami chłonnymi ----------
      Krezka jak w jelicie grubym (narzędzie 'meso'): wachlarz od korzenia (od zgięcia dwunastniczo-czczego skośnie w dół na prawo,
      do okolicy krętniczo-kątniczej) do brzegu krezkowego jelita. W korzeniu SMA (przed częścią poziomą dwunastnicy) i SMV;
      tętnice jelita czczego i krętego od SMA łączą się w arkady — ku jelitu krętemu więcej rzędów arkad i krótsze naczynia proste.
@@ -238,9 +239,9 @@
     'Z odcinkiem usuwa się klin krezki (V): arkady przecięte i podwiązane na brzegach klina, gałąź zaopatrująca odcinek podwiązana u wierzchołka. Przy zmianie łagodnej klin może być płytki, przy jelicie; przy nowotworze sięga głębiej, z węzłami chłonnymi.',
     'Po zespoleniu szczelinę w krezce zwykle zamyka się szwem, aby zapobiec przepuklinie wewnętrznej.'
   ];
-  function sbmAnat(kind) {
-    var an = sbAnat(kind), G = sbMesoGeo(kind), base = an.id;
-    an.anastId = base; an.id = base.replace('sb-', 'sbm-'); an.sbMeso = G.tool;
+  function sbAnat(kind) {
+    var an = sbBase(kind), G = sbMesoGeo(kind);
+    an.sbMeso = G.tool;
     an.focus = { t: [0.5, -10.6, 0.4], k: 0.34, az: 10, el: 20 }; // bliżej i nieco z góry: klin krezki nad resekowanym odcinkiem (odcinek półprzezroczysty)
     an.notes = an.notes.concat(SBM_NOTES);
     an.text = { normal: ['Anatomia prawidłowa', 'Jelito cienkie od więzadła Treitza do zastawki krętniczo-kątniczej, zawieszone na krezce; w korzeniu krezki naczynia krezkowe górne, w krezce arkady naczyniowe i węzły chłonne. Wokół rama jelita grubego.'],

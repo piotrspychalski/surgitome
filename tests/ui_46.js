@@ -49,9 +49,9 @@ function ok(c,m){ if(!c) fails.push(m); }
   $('optNodes').click(); await sleep(100); ok($('nodeList').hidden,'lista grup widoczna przy wyłączonym przełączniku'); $('optNodes').click(); await sleep(100);
   // zabieg bez krezki: przełącznik ukryty
   [...$('tabs').children].find(b=>b.textContent.startsWith('Ileostomia')).click(); await sleep(400); ok($('togNodes').hidden,'przełącznik grup przy zabiegu bez krezki');
-  // jelito cienkie (nowy model): grupy opisowe; wybór zakresu: JSCCR
+  // jelito cienkie: grupy opisowe; wybór zakresu: JSCCR
   [...$('cats').children].find(b=>b.textContent==='Jelito cienkie').click(); await sleep(400);
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja jelita cienkiego (nowy model)')).click(); await sleep(500);
+  [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja jelita cienkiego')).click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(300);
   ok(nodeLbl().includes('Węzły centralne')&&/opisowe/.test($('nodeSys').textContent),'jelito cienkie: brak grup opisowych');
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
