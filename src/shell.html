@@ -93,10 +93,10 @@ button,select,input{ font:inherit; color:inherit; }
 .lbl{ position:absolute; left:0; top:0; will-change:transform; }
 .lbl > *{ }
 .lbl{ display:flex; align-items:flex-start; gap:5px; }
-.lbl i{ width:7px; height:7px; border-radius:50%; margin-top:4px; flex:none; box-shadow:0 0 0 2px var(--pill); }
+.lbl i{ width:7px; height:7px; border-radius:50%; margin-top:3.5px; flex:none; box-shadow:0 0 0 2px var(--pill); }
 .lbl span{ display:flex; flex-direction:column; background:var(--pill); padding:2px 6px 3px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
-.lbl b{ font-size:11.5px; line-height:1.25; white-space:nowrap; }
-.lbl small{ font-size:10px; color:var(--muted); white-space:nowrap; }
+.lbl b{ font-size:10.5px; line-height:1.25; white-space:nowrap; }
+.lbl small{ font-size:9.5px; color:var(--muted); white-space:nowrap; }
 .lbl{ margin:-7px 0 0 -3.5px; }
 /* etykiety po lewej stronie modelu: dymek na lewo od punktu */
 .lbl.lbl-left{ flex-direction:row-reverse; margin:-7px -3.5px 0 0; }
@@ -105,13 +105,13 @@ button,select,input{ font:inherit; color:inherit; }
    nazwa po najechaniu (komputer) lub stuknięciu (telefon); pełna lista w panelu */
 .lbl.lbl-node{ display:block; margin:0; z-index:2; }
 .lbl-node i{ position:absolute; left:-4.5px; top:-4.5px; width:9px; height:9px; margin:0; background:#3f8a5c !important; box-shadow:0 0 0 2px #fff; }
-.lbl-node span{ position:absolute; left:0; top:0; display:block; padding:1px 7px 2px; border-radius:9px; background:var(--pill); border:1.5px solid #3f8a5c; box-shadow:0 1px 4px rgba(0,0,0,.25); pointer-events:auto; cursor:help; white-space:nowrap; }
-.lbl-node b{ display:block; font-size:12.5px; line-height:1.3; font-weight:700; color:var(--node-ink); }
+.lbl-node span{ position:absolute; left:0; top:0; display:block; padding:0 6px 1px; border-radius:8px; background:var(--pill); border:1.5px solid #3f8a5c; box-shadow:0 1px 4px rgba(0,0,0,.25); pointer-events:auto; cursor:help; white-space:nowrap; }
+.lbl-node b{ display:block; font-size:11px; line-height:1.3; font-weight:700; color:var(--node-ink); }
 .lbl-node small{ display:none; }
 .lbl-node-r span{ background:#3f8a5c; } .lbl-node-r b{ color:#fff; } .lbl-node-r small{ color:rgba(255,255,255,.9); }
 .lbl-node:hover, .lbl-node.open{ z-index:7; } .lbl-node:hover small, .lbl-node.open small, .mobile .lbl-node.open small{ display:block; }
 .lbl-node .ldr{ position:absolute; left:0; top:-0.75px; height:1.5px; background:#3f8a5c; transform-origin:0 50%; display:none; pointer-events:none; }
-.mobile .lbl-node b{ font-size:12px; }
+.mobile .lbl-node b{ font-size:10.5px; }
 .nodesys{ margin:-2px 0 6px 26px; }
 .nodelist{ margin:0 0 8px 26px; padding:0; list-style:none; font-size:12px; line-height:1.35; color:var(--text); }
 .nodelist li{ display:grid; grid-template-columns:auto 1fr; gap:7px; align-items:baseline; margin:3px 0; }
@@ -283,7 +283,7 @@ html:not(.mobile) #viewport.ctmode #mFloat{ right:calc(50% + 12px); }
 .mobile #cap.open::after{ content:"▴"; }
 .mobile #viewport.endo #cap{ max-width:none; }
 .mobile .lbl-cut, .mobile .lbl-ghost{ display:none !important; }
-.mobile .lbl b{ font-size:10.5px; } .mobile .lbl small{ display:none; }
+.mobile .lbl b{ font-size:10px; } .mobile .lbl small{ display:none; }
 .mobile #hud{ top:8px; left:10px; right:10px; }
 .mobile #hud strong{ font-size:14px; } .mobile #hud #hudNote{ font-size:12.5px; }
 .mobile #inset{ width:34vw; max-width:170px; top:auto; bottom:64px; right:10px; }
