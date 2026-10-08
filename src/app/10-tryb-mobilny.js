@@ -151,7 +151,7 @@
   viewport.addEventListener('pointerleave', function () { $('cap').classList.remove('faded'); });
   $('optMeso').checked = S.meso;
   $('optGuz').checked = S.tumour;
-  $('optGuz').onchange = function () { S.tumour = this.checked; try { localStorage.setItem('surgitome-guz', S.tumour ? '1' : '0'); } catch (e) {} applyM(); };
+  $('optGuz').onchange = function () { S.tumour = this.checked; try { localStorage.setItem('surgitome-guz', S.tumour ? '1' : '0'); } catch (e) {} applyM(); rebuildForTumour(); };
   $('optMeso').onchange = function () { S.meso = this.checked; try { localStorage.setItem('surgitome-meso', S.meso ? '1' : '0'); } catch (e) {} applyM(); };
   // grupy węzłów chłonnych: podpisy kodów stacji; włączenie pokazuje też krezkę (węzły są jej częścią)
   $('optNodes').checked = S.nodes;

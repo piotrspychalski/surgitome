@@ -37,6 +37,20 @@
       } };
     M.tools.push(tool); M.tumour = tool;
   }
+  // linie cięcia za guzem: położenie guza na jelicie grubym (t na osi C_COL) → wariant przebudowany przez v.adapt (dane, lista zabiegów); wyniki zapamiętane
+  var ADAPT_C = {}, gtK = null, gtV = null;
+  function guzT() {
+    var p = guzPos(), k = p.join(',');
+    if (k !== gtK) { var C = A._lib.C_COL, P = new V3().fromArray(p), t = A.nearestT(C, P, 800); gtK = k; gtV = C.getPointAt(t).distanceTo(P) < A._lib.COL_R(t) + 1.0 ? Math.round(t / 0.002) * 0.002 : null; }
+    return gtV;
+  }
+  function adaptedVar(v) {
+    var t = S.tumour ? guzT() : null; if (t === null) return v;
+    var k = v.id + ':' + t.toFixed(3); if (!(k in ADAPT_C)) ADAPT_C[k] = v.adapt(t) || v;
+    return ADAPT_C[k];
+  }
+  // po przesunięciu lub wyłączeniu guza: model z nowymi liniami cięcia, bez zmiany kadru i kamery
+  function rebuildForTumour() { if (!M || SPLIT.on || curProc().split) return; var need = curVar(); if (need === M.an) return; var m = S.m; build(need); S.m = m; applyM(); updateDock(); }
   // przeciąganie: tylko w kadrze z anatomią prawidłową (m = 0), poza endoskopią, TK i widokiem podzielonym
   window.__sgTest.tumour = function () { return M && M.tumour && M.tumour.mesh.visible ? M.tumour.mesh.position.toArray() : null; };
   var guzRay = new THREE.Raycaster(), guzNdc = new THREE.Vector2(), guzDrag = null;
@@ -64,6 +78,7 @@
     if (!guzDrag) return;
     guzDrag = null; viewport.style.cursor = ''; viewport.classList.remove('dragging'); if (!tw) controls.enabled = true;
     if (M && M.tumour && M.tumour.last) try { localStorage.setItem(GUZ_KEY, JSON.stringify(M.tumour.last.map(function (x) { return +x.toFixed(3); }))); } catch (e) {}
+    rebuildForTumour();
   }
   viewport.addEventListener('pointerup', guzEnd, true);
   viewport.addEventListener('pointercancel', guzEnd, true);

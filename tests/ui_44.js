@@ -36,7 +36,7 @@ function ok(c,m){ if(!c) fails.push(m); }
   }
   // zabiegi: każdy wariant ma krezkę, przełącznik widoczny, przejście przez wszystkie kadry bez błędów; hemikolektomia prawa bez zmian
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
-  for(const [tab,n] of [['Hemikolektomia lewa',3],['Resekcja odbytnicy',3],['Hartmann',1]]){
+  for(const [tab,n] of [['Hemikolektomia lewa',3],['Resekcja odbytnicy',4],['Hartmann',1]]){
     [...$('tabs').children].find(b=>b.textContent.startsWith(tab)).click(); await sleep(500);
     const vb=[...$('variants').querySelectorAll('.vbtn')]; ok(Math.max(1,vb.length)===n,tab+': zła liczba wariantów');
     for(let i=0;i<n;i++){

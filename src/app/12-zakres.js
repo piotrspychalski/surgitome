@@ -67,7 +67,6 @@
         var P = A.PROCS[T.pi], v = P.variants[T.vi], nm = tr(P.short) + (P.variants.length > 1 && v.vshort ? ' — ' + tr(v.vshort) : '');
         $('zkGo').textContent = tr('Przejdź do resekcji') + ': ' + nm + ' →';
         $('zkGo').onclick = function () { switchAn(T.pi, 0, T.vi); };
-        setT($('zkNote'), T.near ? 'Brak osobnego modelu tej resekcji — otwiera się najbliższy.' : '');
       }
       updateDock();
     }
@@ -91,11 +90,11 @@
         goUpdate();
       } };
   }
-  // reguła zakresu (ANAT.resectionFor) → wariant zabiegu; zagięcie śledzionowe i esica nie mają osobnego modelu — najbliższy: hemikolektomia lewa, wysoka przednia resekcja z PME
-  var ZK_GO = { rh: 'rh-iso', rhx: 'rh-ext', sf: 'lh', lh: 'lh', sig: 'ar-side', pme: 'ar-side', tme: 'ar-center', apr: 'apr' }, ZK_NEAR = { sf: 1, sig: 1 };
+  // reguła zakresu (ANAT.resectionFor) → wariant zabiegu; linie cięcia w zabiegu dopasowują się do guza (v.adapt)
+  var ZK_GO = { rh: 'rh-iso', rhx: 'rh-ext', sf: 'sf', lh: 'lh', sig: 'sig', pme: 'ar-side', tme: 'ar-center', ular: 'ar-ular', apr: 'apr' };
   function zkTarget(id) {
     var vid = ZK_GO[id]; if (!vid) return null;
-    for (var i = 0; i < A.PROCS.length; i++) for (var j = 0; j < A.PROCS[i].variants.length; j++) if (A.PROCS[i].variants[j].id === vid) return { pi: i, vi: j, vid: vid, near: !!ZK_NEAR[id] };
+    for (var i = 0; i < A.PROCS.length; i++) for (var j = 0; j < A.PROCS[i].variants.length; j++) if (A.PROCS[i].variants[j].id === vid) return { pi: i, vi: j, vid: vid };
     return null;
   }
   TOOL_EXT.zakres = makeZakres;

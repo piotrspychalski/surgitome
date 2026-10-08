@@ -1,6 +1,7 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Amputacja brzuszno-kroczowa (APR): kadry, preparat do odbytu, krezka (IMA u odejścia, całe mezorektum), krocze (cięcie, rana, zamknięcie), endoskopia tylko przez kolostomię, piśmiennictwo;
-// „Wybór zakresu resekcji” → przycisk „Przejdź do resekcji”: właściwy zabieg i wariant dla każdego odcinka, guz w tym samym miejscu i usuwany z preparatem, EN
+// „Wybór zakresu resekcji” → przycisk „Przejdź do resekcji”: właściwy zabieg i wariant dla każdego odcinka, guz w tym samym miejscu i usuwany z preparatem,
+// linie cięcia dopasowane do guza (marginesy), przebudowa modelu po zmianie położenia guza, EN
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -41,20 +42,31 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
   w.__sgTest.at(4); const all=tool().grp.children[0].children.filter(c=>c.geometry&&c.geometry.type==='TorusGeometry'&&c.visible).length;
   console.log('szwy węzełkowe skóry: w połowie',half,'| na końcu',all); ok(half>0&&half<all&&all===kr.stitches,'APR: szwy krocza nie zakładane po kolei');
   // --- przycisk „Przejdź do resekcji”: każdy odcinek
-  const C=L.C_COL, R=L.COL_R, onWall=t=>{ const p=C.getPointAt(t), n=new T.Vector3(0,0,1); return p.addScaledVector(n,R(t)).toArray().map(x=>+x.toFixed(3)); };
-  const CASES=[[0.10,'rh-iso','Hemikolektomia prawa'],[0.30,'rh-ext','Poszerzona'],[0.45,'lh','Hemikolektomia lewa'],[0.60,'lh','Hemikolektomia lewa'],[0.78,'ar-side','Przednia ściana'],[0.88,'ar-side','Przednia ściana'],[0.93,'ar-center','Linia przez środek'],[0.99,'apr','Amputacja']];
-  for (const [t,vid,txt] of CASES) {
+  const C=L.C_COL, R=L.COL_R, onWall=t=>{ const p=C.getPointAt(t), tg=C.getTangentAt(t), n=new T.Vector3(0,0,1); n.addScaledVector(tg,-n.dot(tg)).normalize(); return p.addScaledVector(n,R(t)).toArray().map(x=>+x.toFixed(3)); }; // przednia ściana, prostopadle do osi
+  // [t guza, wariant, napis, minimalny margines proksymalny, dystalny] (0,045 t ≈ 5 cm); null — bez sprawdzania
+  const CASES=[[0.10,'rh-iso','Hemikolektomia prawa',null,null],[0.30,'rh-ext','Poszerzona',null,0.05],[0.38,'rh-ext','Poszerzona',null,0.05],[0.42,'sf','zagięcia śledzionowego',0.05,0.05],[0.50,'sf','zagięcia śledzionowego',0.05,0.05],
+    [0.60,'lh','Hemikolektomia lewa',0.05,0.05],[0.72,'sig','Resekcja esicy',0.04,0.05],[0.86,'sig','Resekcja esicy',0.05,0.04],[0.88,'ar-side','Przednia ściana',0.05,0.04],[0.93,'ar-center','Linia przez środek',0.05,0.017],
+    [0.955,'ar-ular','Ultraniska',0.05,0.009],[0.97,'ar-ular','Ultraniska',0.05,0.009],[0.99,'apr','Amputacja',0.05,null]];
+  const tOn=(C,p)=>A.nearestT(C,new T.Vector3(...p),1500);
+  for (const [t,vid,txt,mP,mD] of CASES) {
     w=boot(onWall(t)); await sleep(300); await search(w,'wybór zakresu'); const $=id=>w.document.getElementById(id);
-    const g0=w.__sgTest.tumour(), shown=!$('ctxZakres').hidden&&!$('ctxRow').hidden, lbl=$('zkGo').textContent, note=$('zkNote').textContent;
+    const g0=w.__sgTest.tumour(), shown=!$('ctxZakres').hidden&&!$('ctxRow').hidden, lbl=$('zkGo').textContent;
     $('zkGo').click(); await sleep(400);
-    const S=w.__sgTest.state(), f0=S.frame, vv=w.ANAT.PROCS[S.an].variants[S.vi], g1=w.__sgTest.tumour();
+    const S=w.__sgTest.state(), f0=S.frame, vv=w.ANAT.PROCS[S.an].variants[S.vi], g1=w.__sgTest.tumour(), an=w.__sgTest.model().an;
+    const spec=an.objects.filter(o=>/^spec/.test(o.id)&&o.id!=='specTi').map(o=>[tOn(C,o.pre.path[0]),tOn(C,o.pre.path[o.pre.path.length-1])]).sort((a,b)=>a[0]-b[0]), tg=tOn(C,onWall(t));
+    const s0=spec.length?spec[0][0]:0, s1=spec.length?spec[spec.length-1][1]:1;
     const fr=w.__sgTest.frames(); w.__sgTest.open(S.an,S.vi,fr.length-2); w.__sgTest.at(fr[fr.length-2].m0); const gEnd=w.__sgTest.tumour();
-    console.log('t',t,'→',vv.id,'|',lbl,note?'| '+note:'','| guz przesunięty o',g0&&g1?dist(g0,g1).toFixed(2):'?','| po operacji:',gEnd?'zostaje':'usunięty');
+    console.log('t',t,'→',vv.id+(an.adapted!=null?' (linie za guzem)':''),'|',lbl,'| preparat',s0.toFixed(3)+'–'+s1.toFixed(3),'| marginesy',(tg-s0).toFixed(3),(s1-tg).toFixed(3),'| guz przesunięty o',g0&&g1?dist(g0,g1).toFixed(2):'?','| po operacji:',gEnd?'zostaje':'usunięty');
+    if (mP!=null) ok(tg-s0>=mP,'t '+t+': margines proksymalny '+(tg-s0).toFixed(3)); if (mD!=null) ok(s1-tg>=mD,'t '+t+': margines dystalny '+(s1-tg).toFixed(3));
     ok(shown,'t '+t+': brak przycisku'); ok(lbl.indexOf(txt)>=0,'t '+t+': zły napis '+lbl); ok(vv.id===vid,'t '+t+': otwiera '+vv.id+' zamiast '+vid);
     ok(f0===0,'t '+t+': nie pierwszy kadr'); ok(g0&&g1&&dist(g0,g1)<0.6,'t '+t+': guz nie odziedziczony'); ok(!gEnd,'t '+t+': guz zostaje w pacjencie');
-    ok((t===0.45||t===0.78)===!!note,'t '+t+': uwaga o najbliższym modelu');
     ok($('ctxZakres').hidden,'t '+t+': przycisk widoczny poza slajdem zakresu');
   }
+  // przebudowa po zmianie położenia guza (tu: wyłączenie i włączenie przełącznika z nowym położeniem) — linia przecięcia odbytnicy schodzi niżej
+  w=boot(onWall(0.90)); await sleep(300); await search(w,'resekcja odbytnicy'); { const $=id=>w.document.getElementById(id), cut=()=>{ const r=w.__sgTest.model().an.marks.find(m=>m.name==='Przecięcie odbytnicy'); return r.pos[1]; };
+    const y0=cut(), a0=w.__sgTest.model().an.adapted; w.localStorage.setItem('surgitome-guz-pos',JSON.stringify(onWall(0.95))); $('optGuz').click(); await sleep(50); const y1=cut(); $('optGuz').click(); await sleep(50); const y2=cut(), a2=w.__sgTest.model().an.adapted;
+    console.log('przecięcie odbytnicy (y): guz w t 0,90 →',y0.toFixed(2),'| guz wyłączony →',y1.toFixed(2),'| guz w t 0,95 →',y2.toFixed(2));
+    ok(a0==null&&y1===y0&&a2!=null&&y2<y0-0.3,'przebudowa po zmianie położenia guza'); ok(w.__sgTest.state().frame===0,'przebudowa zmieniła kadr'); }
   // bez guza — bez przycisku; EN
   w=boot(null); await sleep(300); await search(w,'wybór zakresu'); w.document.getElementById('optGuz').click(); await sleep(100);
   ok(w.document.getElementById('ctxZakres').hidden,'przycisk bez guza');

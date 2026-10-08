@@ -1,7 +1,8 @@
   /* ---------- nawigacja ---------- */
   var busy = false, queued = null;
   function curProc() { return A.PROCS[S.an]; }
-  function curVar() { return curProc().variants[S.vi || 0]; }
+  // wariant z linią cięcia dopasowaną do guza (v.adapt, 12-guz) albo bazowy
+  function curVar() { var v = curProc().variants[S.vi || 0]; return v.adapt ? adaptedVar(v) : v; }
   function goTo(i, opts) {
     opts = opts || {};
     if (busy) { queued = [i, opts]; return; }

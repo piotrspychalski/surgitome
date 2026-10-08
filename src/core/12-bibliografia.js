@@ -41,6 +41,11 @@
       "donovan1982": { c: "Donovan IA, Fielding JW, Bradby H, Sorgi M, Harding LK. Bile diversion after total gastrectomy. Br J Surg. 1982;69(7):389-90.", pmid: "7104607", doi: "10.1002/bjs.1800690711", y: 1982 },
       "heald1982": { c: "Heald RJ, Husband EM, Ryall RD. The mesorectum in rectal cancer surgery--the clue to pelvic recurrence? Br J Surg. 1982;69(10):613-6.", pmid: "6751457", doi: "10.1002/bjs.1800691019", y: 1982 },
       "miles1971": { c: "Miles WE. A method of performing abdomino-perineal excision for carcinoma of the rectum and of the terminal portion of the pelvic colon (1908). CA Cancer J Clin. 1971;21(6):361-4.", pmid: "5001853", doi: "10.3322/canjclin.21.6.361", y: 1971 },
+      "hajibandeh2020": { c: "Hajibandeh S, Hajibandeh S, Hussain I, Zubairu A, Akbar F, Maw A. Comparison of extended right hemicolectomy, left hemicolectomy and segmental colectomy for splenic flexure colon cancer: a systematic review and meta-analysis. Colorectal Dis. 2020;22(12):1885-907.", pmid: "32757361", doi: "10.1111/codi.15292", y: 2020 },
+      "lennon2023": { c: "Lennon D, Donnelly M, Mahon J, Ryan ÉJ, Ryan OK, Davey MG, et al. Surgical management strategies for colorectal malignancies of the splenic flexure - A systematic review and network meta-analysis. Eur J Surg Oncol. 2023;49(11):107087.", pmid: "37793302", doi: "10.1016/j.ejso.2023.107087", y: 2023 },
+      "rullier2013": { c: "Rullier E, Denost Q, Vendrely V, Rullier A, Laurent C. Low rectal cancer: classification and standardization of surgery. Dis Colon Rectum. 2013;56(5):560-7.", pmid: "23575394", doi: "10.1097/DCR.0b013e31827c4a8c", y: 2013 },
+      "bujko2012": { c: "Bujko K, Rutkowski A, Chang GJ, Michalski W, Chmielik E, Kusnierz J. Is the 1-cm rule of distal bowel resection margin in rectal cancer based on clinical evidence? A systematic review. Ann Surg Oncol. 2012;19(3):801-8.", pmid: "21879269", doi: "10.1245/s10434-011-2035-2", y: 2012 },
+      "yan2022": { c: "Yan H, Wang PY, Wu YC, Liu YC. Is a Distal Resection Margin of ≤ 1 cm Safe in Patients with Intermediate- to Low-Lying Rectal Cancer? A Systematic Review and Meta-Analysis. J Gastrointest Surg. 2022;26(8):1791-803.", pmid: "35501549", doi: "10.1007/s11605-022-05342-9", y: 2022 },
       "musters2017": { c: "Musters GD, Klaver CEL, Bosker RJI, Burger JWA, van Duijvendijk P, van Etten B, et al. Biological Mesh Closure of the Pelvic Floor After Extralevator Abdominoperineal Resection for Rectal Cancer: A Multicenter Randomized Controlled Trial (the BIOPEX-study). Ann Surg. 2017;265(6):1074-81.", pmid: "27768621", doi: "10.1097/SLA.0000000000002020", y: 2017 },
       "cohen1983": { c: "Cohen Z, Myers E, Langer B, Taylor B, Railton RH, Jamieson C. Double stapling technique for low anterior resection. Dis Colon Rectum. 1983;26(4):231-5.", pmid: "6839891", doi: "10.1007/BF02562484", y: 1983 },
       "koskas1985": { c: "Koskas F, Gayet B. Anatomical study of retrosternal gastric esophagoplasties. Anat Clin. 1985;7(4):237-56.", pmid: "3833287", doi: "10.1007/BF01784641", y: 1985 },
@@ -328,6 +333,18 @@
         ["vogel2022", "guideline", "Zakres resekcji z krezką i podwiązaniem naczyń u odejścia (ASCRS 2022)"],
         ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w lewej połowie okrężnicy"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
+      "sf": [
+        ["vogel2022", "guideline", "Zagięcie śledzionowe: resekcja segmentarna (LC i LBMC u odejścia) równoważna poszerzonym hemikolektomiom (ASCRS 2022)"],
+        ["hajibandeh2020", "outcomes", "Metaanaliza: resekcja segmentarna vs poszerzona hemikolektomia prawa lub lewa w raku zagięcia śledzionowego"],
+        ["lennon2023", "outcomes", "Metaanaliza sieciowa strategii chirurgicznych w raku zagięcia śledzionowego"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (221–223 wzdłuż MC, 231–232 wzdłuż LC) — przełącznik „Grupy węzłów chłonnych”"]],
+      "sig": [
+        ["vogel2022", "guideline", "Rak esicy: resekcja z krezką i podwiązaniem naczyń u odejścia, margines 5 cm (ASCRS 2022)"],
+        ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w resekcji esicy"],
+        ["knight1980", "original", "Opis oryginalny podwójnego staplowania: stapler okrężny przez zamknięty kikut odbytnicy"],
+        ["cohen1983", "technique", "Technika podwójnego staplowania w zespoleniu okrężniczo-odbytniczym"],
+        ["hall2020", "guideline", "Zapalenie uchyłków: planowa resekcja esicy z zespoleniem"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (241–242 wzdłuż gałęzi esiczych, 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "lh-anti": [
         ["steichen1968", "original", "Opis oryginalny FEEA staplerem liniowym z poprzecznym zamknięciem końców"]],
       "ar": [
@@ -344,6 +361,10 @@
       "ar-racket": [
         ["lee2017", "outcomes", "Mniej skrzyżowań linii zszywek — mniej powikłań zespolenia (analiza jednoczynnikowa)"],
         ["cavallaro2024", "outcomes", "Kolec staplera w rogu linii kikuta vs przez środek: podobna szczelność"]],
+      "ar-ular": [
+        ["rullier2013", "technique", "Rak dolnej odbytnicy: klasyfikacja i standaryzacja zabiegów oszczędzających zwieracze (ULAR, ISR) i APR"],
+        ["bujko2012", "outcomes", "Margines dystalny 1 cm w raku odbytnicy — przegląd systematyczny"],
+        ["yan2022", "outcomes", "Margines dystalny ≤ 1 cm w raku środkowej i dolnej odbytnicy — metaanaliza"]],
       "ar-side": [
         ["cavallaro2024", "technique", "Koniec okrężnicy do przedniej ściany odbytnicy („reverse Baker”) bez skrzyżowań linii zszywek"]],
       "apr": [

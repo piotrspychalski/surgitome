@@ -57,6 +57,8 @@
       if (an.sideSut) t.push({ type: 'vloc', pts: an.sideSut.pts, n: an.sideSut.n, stitches: 7, hole: true, reveal: [ZO] });
     } else if (id === 'gebp') {
       t.push(giaAt(an.gebp.at, va(an.gebp.j), va(an.gebp.s), 3.2, 0.7, { side: true, reveal: [LZ] }));
+    } else if (an.e2eRing) {
+      t.push({ type: 'vloc', ring: an.e2eRing, stitches: 16, reveal: [markIdx(an, 'Szew ręczny koniec-do-końca')] });
     } else if (id === 'ipaa') {
       t.push(giaAt(an.pouchGia.at, va(an.pouchGia.j), va(an.pouchGia.s), 3.6, 0.7, { side: true, reveal: [LZ] }));
     }
@@ -78,6 +80,7 @@
     'rh-iso': 'Branże staplera w jelicie krętym i poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'rh-anti': 'Branże staplera w obu końcach — wspólne światło; końce zamknięte poprzecznie drugim staplerem liniowym.',
     'rh-ext': 'Branże staplera w jelicie krętym i lewej części poprzecznicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
+    'sf': 'Szew ciągły nicią z zadziorami (typu V-Loc) na całym obwodzie — koniec poprzecznicy do końca zstępnicy.',
     'b2br': 'Branże staplera w pętli doprowadzającej i odprowadzającej — wspólne światło; otwór zamknięty szwem ciągłym (typu V-Loc).'
   };
   // uniesienie w trakcie przenoszenia: punkt wędruje łukiem w kierunku dir, o k × długość drogi (maks. max) — omija narządy po drodze
@@ -183,7 +186,8 @@
             notes: ['Zakres resekcji odpowiada drenażowi chłonnemu: usuwa się odcinek jelita z krezką do odejścia naczynia zaopatrującego, z marginesem 5–7 cm od guza (ASCRS 2022).',
               'Kątnica i wstępnica: hemikolektomia prawa (IC, RC — jeśli obecna, RBMC). Zagięcie wątrobowe i poprzecznica: zakres ustalany indywidualnie — najczęściej poszerzona hemikolektomia prawa (pień MC), w środkowej części także resekcja poprzecznicy.',
               'Zagięcie śledzionowe: resekcja segmentarna (LC, LBMC) lub poszerzone hemikolektomie. Zstępnica: hemikolektomia lewa (LC, gałęzie esicze). Esica: resekcja esicy (SRA, LC).',
-              'Odbytnica: górna część — przednia resekcja z częściowym wycięciem mezorektum (PME); środkowa i dolna — TME; guz naciekający zwieracze lub gdy nie da się ich zachować — amputacja brzuszno-kroczowa.',
+              'Odbytnica: górna część — przednia resekcja z częściowym wycięciem mezorektum (PME); środkowa — niska przednia resekcja z TME; dolna — ultraniska przednia resekcja (ULAR) z TME, gdy zwieracze są wolne od nacieku; guz naciekający zwieracze lub gdy nie da się ich zachować — amputacja brzuszno-kroczowa.',
+              'Przycisk „Przejdź do resekcji” otwiera zabieg odpowiedni dla położenia guza; linie cięcia dopasowują się tam do guza (margines dystalny ok. 5 cm w esicy i górnej odbytnicy, 1–2 cm w dolnej odbytnicy).',
               'Schemat edukacyjny: granice między odcinkami są umowne, a zakres ustala się indywidualnie (m.in. naczynia zaopatrujące guz, stan chorego, wyniki obrazowania).'],
             text: COL_TEXT, frames: { resect: ['', '', ''], remove: ['', '', ''], post: '', endoPost: '' },
             objects: [tiObj({}), appObj({}), colObj('colon', 0, 1, { name: 'Jelito grube' })], marks: [] });
@@ -191,8 +195,10 @@
           return { cat: 'colon', id: 'zakres', short: z.short, title: z.title, variants: [z] };
         })(),
         multi('colon', 'rh', 'Hemikolektomia prawa', 'Prawostronna hemikolektomia — warianty zespolenia', [P(rhAnat(true), 'Izoperystaltyczne'), P(rhAnat(false), 'Antyperystaltyczne (FEEA)'), P(RHX, 'Poszerzona — izoperystaltyczne')]),
+        one(sfAnat()),
         multi('colon', 'lh', 'Hemikolektomia lewa', 'Lewostronna hemikolektomia — warianty zespolenia', [P(LH, 'Koniec-do-końca (EEA)'), P(lhSide(true), 'Izoperystaltyczne'), P(lhSide(false), 'Antyperystaltyczne (FEEA)')]),
-        multi('colon', 'ar', 'Resekcja odbytnicy', 'Resekcja odbytnicy — warianty zespolenia EEA', [P(arVariant('center'), 'Linia przez środek'), P(arVariant('racket'), 'Rakieta tenisowa'), P(arVariant('side'), 'Przednia ściana')]),
+        one(sigAnat()),
+        multi('colon', 'ar', 'Resekcja odbytnicy', 'Resekcja odbytnicy — warianty zespolenia EEA', [P(arVariant('center'), 'Linia przez środek'), P(arVariant('racket'), 'Rakieta tenisowa'), P(arVariant('side'), 'Przednia ściana'), P(arVariant('ular'), 'Ultraniska (ULAR)')]),
         one(APR),
         one(IRA, 'Kolektomia całkowita (IRA)', 'Kolektomia całkowita z zespoleniem krętniczo-odbytniczym'),
         one(IPAA, 'Zbiornik J (IPAA)', 'Proktokolektomia ze zbiornikiem J (IPAA)'),
@@ -208,16 +214,33 @@
       LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); addSpleen(v); }); });
       // przełyk: esofagektomie z rurą żołądkową (bez interpozycji okrężnicy) — łuk RGEA za rurą, stacje AJCC 8
       LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); addSpleen(v); } }); });
-      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr' };
+      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr', sig: 'sig', sf: 'sf' };
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       // APR: krocze — cięcie wokół odbytu, rana i jej zamknięcie (po krezce, czasy w skali po przygotowaniu)
       LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
       // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
-      LIST.forEach(function (p) { if (p.id === 'lh' || p.id === 'ar' || p.id === 'apr') p.variants.forEach(function (v) { v.tumour = true; }); });
+      LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf)$/.test(p.id)) p.variants.forEach(function (v) { v.tumour = true; }); });
+      // linie cięcia dopasowane do guza (t — położenie guza na jelicie grubym, z aplikacji): margines dystalny 5 cm w esicy i przy PME, 2 cm w TME, ok. 1 cm w ULAR,
+      // ok. 6 cm w poprzecznicy i zagięciu śledzionowym (0,045 t ≈ 5 cm); przecięcia proksymalne wyznaczone podwiązaniem naczyń (bez zmian), poza esicą i zagięciem.
+      // null — guz poza zasięgiem albo przecięcia domyślne (wtedy zostaje wariant bazowy)
+      function cl(x, a, b) { return Math.max(a, Math.min(b, x)); }
+      var ADAPT = {
+        'ar-center': function (t) { var d = cl(t + 0.018, tL, T_LOW); return d > tL + 1e-3 ? [arVariant('center', d), mesoLeft('ar')] : null; },
+        'ar-racket': function (t) { var d = cl(t + 0.018, tL, T_LOW); return d > tL + 1e-3 ? [arVariant('racket', d), mesoLeft('ar')] : null; },
+        'ar-ular': function (t) { var d = cl(t + 0.011, tU, T_LOW); return d > tU + 1e-3 ? [arVariant('ular', d), mesoLeft('ar')] : null; },
+        'ar-side': function (t) { var d = cl(t + 0.045, tLs, 0.95); return d > tLs + 1e-3 ? [arVariant('side', d), mesoLeft('arp', [tA, d])] : null; },
+        'sig': function (t) { if (t < tA - 0.02) return null; var p = cl(t - 0.045, tPJ + 0.015, tA), d = cl(t + 0.045, tH, 0.93); return p < tA - 1e-3 || d > tH + 1e-3 ? [sigAnat(p, d), mesoLeft('sig', [p, d])] : null; },
+        'sf': function (t) { if (t < 0.3 || t > 0.7) return null; var p = cl(t - 0.055, 0.33, SF_T[0]), d = cl(t + 0.055, SF_T[1], 0.66); return p < SF_T[0] - 1e-3 || d > SF_T[1] + 1e-3 ? [sfAnat(p, d), mesoLeft('sf', [p, d])] : null; },
+        'rh-ext': function (t) { if (t < 0.2) return null; var d = cl(t + 0.055, RHX_T, 0.44); return d > RHX_T + 1e-3 ? [rhxAnat(d), mesoRight('ext', d)] : null; }
+      };
+      LIST.forEach(function (p) { p.variants.forEach(function (v) {
+        var f = ADAPT[v.id]; if (!f) return;
+        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.adapted = t; return a; };
+      }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
-        'sb', 'zakres', 'rh', 'lh', 'ar', 'apr', 'ira', 'ipaa', 'hartmann', 'ileo'];
+        'sb', 'zakres', 'rh', 'sf', 'lh', 'sig', 'ar', 'apr', 'ira', 'ipaa', 'hartmann', 'ileo'];
       return LIST.map(function (p, i) { var s = SEQ.indexOf(p.id); return [ORDER.indexOf(p.cat) * 100 + (s < 0 ? 90 + i : s), p]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; });
     })(),
     PANC: PANC, PANC_R: PANC_R,
