@@ -59,7 +59,8 @@
     var fr = FR[S.frame]; if (!fr) return;
     var isEndo = fr.kind === 'endo', anim = fr.kind === 'orbit' && fr.m1 > fr.m0;
     var lvSeg = !!(M && M.liver && !SPLIT.on && fr.k === 'segs'); // wątroba: suwak rozsunięcia i przyciski segmentów
-    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg);
+    var zk = !!(M && M.zakresGo && !SPLIT.on); // „Wybór zakresu resekcji”: przejście do zabiegu z guzem w tym samym miejscu
+    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('ctxZakres').hidden = !zk; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg || zk);
     var t;
     if (isEndo) t = endo.playing ? 'Pauza' : (endo.route && endo.s >= endo.route.total - 0.01 ? 'Powtórz' : 'Dalej');
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');

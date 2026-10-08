@@ -643,12 +643,19 @@
     };
   })();
 
+  /* ---------- Kolostomia końcowa w lewym dole biodrowym (Hartmann, APR): zstępnica przeprowadzona przez powłoki ---------- */
+  var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.3, -6.3, 2.2], [6.4, -7.4, 3.9], [6.0, -7.6, 5.6]]);
+  var COLO_R = (function () { var cc = curveOf(COLO_PATH), tj = nearestT(cc, [7.9, -2.0, -0.6]); return function (t) { return t <= tj ? COL_R(t / tj * tPJ) : 1.15 + (1.05 - 1.15) * sm01((t - tj) / (1 - tj)); }; })();
+  function coloMarks(stomaOp) {
+    return [{ kind: 'wall', name: 'Powłoki brzuszne', center: [5.0, -7.0, 5.6], size: [12, 11], holes: [{ c: [6.0, -7.6], rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
+      { kind: 'stoma', name: 'Kolostomia końcowa', center: [6.0, -7.6, 5.8], rx: 1.15, ry: 1.15, opacity: stomaOp }];
+  }
+
   /* ---------- Operacja Hartmanna ---------- */
   var tH = ct([0.5, -12.8, 0.9]);
   var HART = (function () {
     var rtop = COL_R(tH), D = stumpDome(tH, rtop, 0.6);
-    var proxPath = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.3, -6.3, 2.2], [6.4, -7.4, 3.9], [6.0, -7.6, 5.6]]);
-    var proxR = (function () { var cc = curveOf(proxPath), tj = nearestT(cc, [7.9, -2.0, -0.6]); return function (t) { return t <= tj ? COL_R(t / tj * tPJ) : 1.15 + (1.05 - 1.15) * sm01((t - tj) / (1 - tj)); }; })();
+    var proxPath = COLO_PATH, proxR = COLO_R;
     return {
       cat: 'colon', id: 'hartmann', short: 'Hartmann',
       title: 'Operacja Hartmanna', sub: 'Resekcja esicy, kolostomia końcowa, zamknięty kikut odbytnicy',
@@ -675,10 +682,8 @@
       ],
       marks: [
         ringOn(C_COL, COL_R, tA, { name: 'Przecięcie okrężnicy', color: COL.cut, opacity: CUT_OP_JEJ }),
-        ringOn(C_COL, COL_R, tH, { name: 'Przecięcie na wysokości połączenia esiczo-odbytniczego', color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.2, 1], [1.4, 0]] }),
-        { kind: 'wall', name: 'Powłoki brzuszne', center: [5.0, -7.0, 5.6], size: [12, 11], holes: [{ c: [6.0, -7.6], rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
-        { kind: 'stoma', name: 'Kolostomia końcowa', center: [6.0, -7.6, 5.8], rx: 1.15, ry: 1.15, opacity: [[2.5, 0], [2.9, 1]] }
-      ].concat(domeLines(D, 0, null, 'Zamknięcie kikuta (stapler liniowy)', [[1.3, 0], [1.6, 1]])),
+        ringOn(C_COL, COL_R, tH, { name: 'Przecięcie na wysokości połączenia esiczo-odbytniczego', color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.2, 1], [1.4, 0]] })
+      ].concat(coloMarks([[2.5, 0], [2.9, 1]])).concat(domeLines(D, 0, null, 'Zamknięcie kikuta (stapler liniowy)', [[1.3, 0], [1.6, 1]])),
       endTarget: { pre: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
       routePost: { prefix: [], branches: [
@@ -689,15 +694,60 @@
     };
   })();
 
+  /* ---------- Amputacja brzuszno-kroczowa odbytnicy (APR, operacja Milesa) ----------
+     Etap brzuszny jak w resekcji odbytnicy: IMA podwiązana u odejścia, przecięcie na granicy zstępnicy i esicy, TME do dna miednicy.
+     Etap kroczowy: eliptyczne cięcie skóry wokół odbytu, preparat (esica, odbytnica z mezorektum, kanał odbytu ze zwieraczami) usuwany przez krocze,
+     rana krocza zamknięta warstwowo (narzędzie „krocze”, czasy w skali po przygotowaniu); stała kolostomia końcowa w lewym dole biodrowym. */
+  var APR_OFF = [0, -7, 7];
+  var APR = (function () {
+    // płaszczyzna krocza prostopadła do kanału odbytu, schematycznie odchylona ku przodowi (lepiej widoczna z przodu)
+    var A1 = C_COL.getPointAt(1), N = C_COL.getTangentAt(1).normalize().add(new THREE.Vector3(0, 0, 0.6)).normalize(), AP = new THREE.Vector3(0, 0, 1);
+    AP.sub(N.clone().multiplyScalar(AP.dot(N))).normalize(); // oś przednio-tylna w płaszczyźnie krocza (do przodu)
+    return {
+      cat: 'colon', id: 'apr', short: 'Amputacja brzuszno-kroczowa (APR)',
+      title: 'Amputacja brzuszno-kroczowa odbytnicy (APR)', sub: 'Operacja Milesa: odbytnica z mezorektum i kanałem odbytu usunięta z dostępu brzusznego i kroczowego; stała kolostomia końcowa',
+      notes: [
+        'Wskazanie: rak dolnej części odbytnicy naciekający zwieracze lub dźwigacze albo gdy nie da się zachować czynności zwieraczy (także rak płaskonabłonkowy odbytu po nieskutecznej chemioradioterapii).',
+        'Etap brzuszny jak w resekcji odbytnicy: IMA podwiązana u odejścia (alternatywnie poniżej odejścia LC) z usunięciem węzłów u jej korzenia, okrężnica przecięta na granicy zstępnicy i esicy, odbytnica wypreparowana z całym mezorektum (TME) do dna miednicy.',
+        'Etap kroczowy: eliptyczne cięcie skóry wokół odbytu; kanał odbytu ze zwieraczami i przyczepami dźwigaczy odbytu wycięty, preparat wydobyty przez krocze. Model przedstawia wariant klasyczny (bez poszerzonego wycięcia dźwigaczy — ELAPE).',
+        'Rana krocza zamknięta warstwowo (mięśnie, tkanka podskórna, skóra szwami węzełkowymi); przy dużym ubytku lub po radioterapii zamknięcie płatem albo siatką biologiczną.',
+        'Zstępnica wyprowadzona jako stała kolostomia końcowa w lewym dole biodrowym. Endoskopia tylko przez kolostomię — odbytu już nie ma.'
+      ],
+      focus: { t: [1.0, -15.0, 2], k: 0.7 }, text: COL_TEXT,
+      frames: {
+        resect: ['Zakres resekcji', 'Esica, odbytnica z całym mezorektum i kanał odbytu ze zwieraczami; przecięcie okrężnicy na granicy zstępnicy i esicy, IMA podwiązana u odejścia; na kroczu eliptyczne cięcie wokół odbytu.', 'Zakres'],
+        remove: ['Usunięcie preparatu przez krocze', 'Preparat — esica, odbytnica z mezorektum i kanał odbytu — wydobyty przez ranę krocza.', 'Usunięcie'],
+        recon: ['Zamknięcie krocza i kolostomia', 'Rana krocza zamknięta warstwowo, skóra szwami węzełkowymi od przodu do tyłu; koniec zstępnicy przeprowadzony przez powłoki w lewym dole biodrowym i wszyty w skórę jako stała kolostomia końcowa.', 'Krocze, kolostomia'],
+        post: 'Stała kolostomia końcowa w lewym dole biodrowym; odbytnica i odbyt usunięte, krocze zamknięte.',
+        endoPost: 'Kolonoskopia przez kolostomię — jedyna droga po amputacji odbytnicy.'
+      },
+      endoTitles: ['Kolonoskopia: anatomia prawidłowa', 'Endoskopia przez kolostomię'],
+      objects: [
+        tiObj({}), appObj({}),
+        colObj('prox', 0, tA, { name: 'Okrężnica', post: { path: COLO_PATH, r: COLO_R }, morph: [2.45, 2.95], open: [false, true] }),
+        colObj('specS', tA, 1, { name: 'Esica, odbytnica i kanał odbytu (preparat)', colors: [[0, COLC.colon], [0.7, COL.spec]], opacity: SPEC_OP, offset: [[1.15, [0, 0, 0]], [1.9, APR_OFF]], win: [-9, 1.4] })
+      ],
+      marks: [ringOn(C_COL, COL_R, tA, { name: 'Przecięcie okrężnicy', color: COL.cut, opacity: CUT_OP_JEJ })].concat(coloMarks([[2.85, 0], [2.95, 1]])),
+      // krocze: skóra, cięcie eliptyczne wokół odbytu, rana i jej zamknięcie (TOOL_EXT.krocze); czasy po przygotowaniu (m: 2–3 usunięcie, 3–4 rekonstrukcja)
+      krocze: { type: 'krocze', c: A1.clone().addScaledVector(N, 0.05).toArray(), n: N.toArray(), ap: AP.toArray(), a: 2.6, b: 1.8, skin: [5.6, 5.0], anus: COL_R(1) + 0.05,
+        inc: [0.3, 0.95], open: [2.1, 2.35], close: [3.0, 3.5], stitches: 7, off: APR_OFF, offT: [2.15, 2.9] },
+      endTarget: { pre: ICV, post: ICV },
+      endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia', post: 'Zastawka krętniczo-kątnicza w polu widzenia' },
+      routePost: [{ pt: [6.0, -7.6, 9.2], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
+        { obj: 'prox', from: [7.9, -1.5, -0.7], to: 0.04, note: 'Poprzecznica i wstępnica do kątnicy' }]
+    };
+  })();
+
   /* ---------- Krezka lewej połowy okrężnicy i mezorektum w resekcjach lewostronnych (jak mesoRight): część usuwana z preparatem i pozostająca.
      Arkusze od połowy poprzecznicy do dna miednicy (krezka poprzecznicy, zstępnicy, esicy, mezorektum — korzenie jak w „Wyborze zakresu resekcji”).
      mode: 'lh' — hemikolektomia lewa: LC i pierwsze gałęzie esicze podwiązane u odejścia z IMA (pień IMA, dalsze gałęzie esicze i SRA zostają);
      'ar' — resekcja odbytnicy: IMA podwiązana u odejścia (z węzłami u korzenia), esica i całe mezorektum (TME); LC przecięta u odejścia, zstępnica ukrwiona z łuku brzeżnego;
      'arp' — resekcja wysoka (zespolenie na przedniej ścianie, dłuższy kikut): jak 'ar', ale mezorektum przecięte na wysokości przecięcia odbytnicy (PME), dolna część z SRA zostaje;
      'hart' — Hartmann: IMA podwiązana poniżej odejścia LC, krezka esicy z gałęziami esiczymi; mezorektum z dolną częścią SRA zostaje z kikutem odbytnicy.
+     'apr' — amputacja brzuszno-kroczowa: jak 'ar', całe mezorektum z odbytnicą i kanałem odbytu; preparat usuwany przez krocze (APR_OFF).
      mob: krezka zstępnicy na odcinku sprowadzanym do miednicy lub do stomii (tPJ–tA) zanika, gdy jelito się przemieszcza. Czasy jak w mesoRight. */
   function mesoLeft(mode) {
-    var V3 = THREE.Vector3, c = { lh: { r: [tTL, tSg2], off: [7, 1, 5] }, ar: { r: [tA, RT[1]], off: [-6, 2, 6], mob: [tPJ, tA] }, arp: { r: [tA, tLs], off: [-6, 2, 6], mob: [tPJ, tA] }, hart: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] } }[mode];
+    var V3 = THREE.Vector3, c = { lh: { r: [tTL, tSg2], off: [7, 1, 5] }, ar: { r: [tA, RT[1]], off: [-6, 2, 6], mob: [tPJ, tA] }, arp: { r: [tA, tLs], off: [-6, 2, 6], mob: [tPJ, tA] }, hart: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] }, apr: { r: [tA, 1], off: APR_OFF, mob: [tPJ, tA] } }[mode];
     var T0 = ct([0.6, 3.4, 2.8]), SEG = [[T0, MESO_T1, null, 14], [LT[0], LT[1], LROOT, 24], [ST[0], ST[1], SROOT, 16], [RT[0], RT[1], RROOT, 16]];
     SEG.forEach(function (g) { if (g[2]) g[4] = curveOf(g[2]); });
     function edge(tc, k) {
@@ -729,7 +779,7 @@
       });
     });
     var IMA_O = [0.6, -3.4, -2.7], LC_O = [0.8, -4.3, -2.6], LCB = [3.6, -2.4, -1.9], SB1_O = [1.0, -6.2, -2.4], SB2_O = [0.95, -7.4, -2.4], SRA_O = [0.9, -8.2, -2.5];
-    var le = function (tc) { return edge(tc).toArray(); }, lh = mode === 'lh', ar = mode === 'ar' || mode === 'arp', pme = mode === 'arp', ht = mode === 'hart';
+    var le = function (tc) { return edge(tc).toArray(); }, lh = mode === 'lh', ar = mode === 'ar' || mode === 'arp' || mode === 'apr', pme = mode === 'arp', ht = mode === 'hart';
     var IMA = [IMA_O, LC_O, [1.0, -6.0, -2.4], SRA_O], SRA = [SRA_O, [0.6, -11.0, -2.5], [0.25, -14.0, -2.9], [0.1, -16.6, -3.0]];
     var V = [];
     if (ht) { // podwiązanie IMA poniżej odejścia LC
@@ -761,7 +811,7 @@
     var tm = ar ? 0.8 : (c.r[0] + c.r[1]) / 2, tR = 0.93;
     return { type: 'meso', sheets: sheets.filter(function (s) { return s.rows.length > 1; }), vessels: V, nodes: nodes, groups: nodeGroups(nodes, NG_JSCCR, 'jsccr'),
       name: 'Krezka z węzłami chłonnymi', sub: 'usuwana z preparatem', anchor: edge(tm, 0.45).toArray(),
-      labels: [{ name: 'Mezorektum', sub: pme ? 'częściowo usuwane (PME)' : ar ? 'usuwane w całości (TME)' : ht ? 'pozostaje z kikutem odbytnicy' : 'pozostaje', p: edge(tR, 0.45).toArray(), removed: ar && !pme }],
+      labels: [{ name: 'Mezorektum', sub: pme ? 'częściowo usuwane (PME)' : mode === 'apr' ? 'usuwane w całości z odbytnicą i kanałem odbytu' : ar ? 'usuwane w całości (TME)' : ht ? 'pozostaje z kikutem odbytnicy' : 'pozostaje', p: edge(tR, 0.45).toArray(), removed: ar && !pme }],
       offset: [[2.15, [0, 0, 0]], [2.9, c.off]], opacity: [[2.55, 1], [2.9, 0]], mobOpacity: c.mob ? [[3.0, 1], [3.35, 0]] : null, tieT: 1.25 };
   }
 

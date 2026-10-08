@@ -455,7 +455,11 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 .step[aria-current="step"]{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); font-weight:700; }
 .step[aria-current="step"] em{ background:var(--accent); color:var(--accent-ink); }
 .ctxrow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden]{ display:none; }
+.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden], #ctxZakres[hidden]{ display:none; }
+#ctxZakres{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:1; min-width:0; }
+#zkNote{ font-size:13px; color:var(--muted); }
+.mobile #zkGo{ padding:7px 12px; font-size:13px; }
+.mobile #zkNote{ font-size:12px; }
 #ctxLiver{ display:flex; gap:8px; align-items:center; flex:1; flex-wrap:wrap; min-width:220px; }
 #lvExplode{ flex:1; min-width:120px; max-width:320px; }
 .lvlbl{ font-size:13px; opacity:.8; }
@@ -601,6 +605,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <button class="btn" id="btnOther" hidden>Druga droga</button>
         <select id="speed" aria-label="Prędkość"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select>
       </div>
+      <div id="ctxZakres" hidden><button class="btn primary" id="zkGo" type="button"></button><span id="zkNote"></span></div>
       <div id="ctxLiver" hidden><label class="lvlbl" for="lvExplode" data-pl="Rozsunięcie">Rozsunięcie</label><input type="range" id="lvExplode" min="0" max="1000" value="0" aria-label="Rozsunięcie segmentów"><div id="lvSegs" role="group" aria-label="Segmenty"></div></div>
     </div>
   </footer>

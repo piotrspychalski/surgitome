@@ -40,6 +40,8 @@
       "bismuth1982": { c: "Bismuth H. Surgical anatomy and anatomical surgery of the liver. World J Surg. 1982;6(1):3-9.", pmid: "7090393", doi: "10.1007/BF01656368", y: 1982 },
       "donovan1982": { c: "Donovan IA, Fielding JW, Bradby H, Sorgi M, Harding LK. Bile diversion after total gastrectomy. Br J Surg. 1982;69(7):389-90.", pmid: "7104607", doi: "10.1002/bjs.1800690711", y: 1982 },
       "heald1982": { c: "Heald RJ, Husband EM, Ryall RD. The mesorectum in rectal cancer surgery--the clue to pelvic recurrence? Br J Surg. 1982;69(10):613-6.", pmid: "6751457", doi: "10.1002/bjs.1800691019", y: 1982 },
+      "miles1971": { c: "Miles WE. A method of performing abdomino-perineal excision for carcinoma of the rectum and of the terminal portion of the pelvic colon (1908). CA Cancer J Clin. 1971;21(6):361-4.", pmid: "5001853", doi: "10.3322/canjclin.21.6.361", y: 1971 },
+      "musters2017": { c: "Musters GD, Klaver CEL, Bosker RJI, Burger JWA, van Duijvendijk P, van Etten B, et al. Biological Mesh Closure of the Pelvic Floor After Extralevator Abdominoperineal Resection for Rectal Cancer: A Multicenter Randomized Controlled Trial (the BIOPEX-study). Ann Surg. 2017;265(6):1074-81.", pmid: "27768621", doi: "10.1097/SLA.0000000000002020", y: 2017 },
       "cohen1983": { c: "Cohen Z, Myers E, Langer B, Taylor B, Railton RH, Jamieson C. Double stapling technique for low anterior resection. Dis Colon Rectum. 1983;26(4):231-5.", pmid: "6839891", doi: "10.1007/BF02562484", y: 1983 },
       "koskas1985": { c: "Koskas F, Gayet B. Anatomical study of retrosternal gastric esophagoplasties. Anat Clin. 1985;7(4):237-56.", pmid: "3833287", doi: "10.1007/BF01784641", y: 1985 },
       "makuuchi1985": { c: "Makuuchi M, Hasegawa H, Yamazaki S. Ultrasonically guided subsegmentectomy. Surg Gynecol Obstet. 1985;161(4):346-50.", pmid: "2996162", y: 1985 },
@@ -344,6 +346,14 @@
         ["cavallaro2024", "outcomes", "Kolec staplera w rogu linii kikuta vs przez środek: podobna szczelność"]],
       "ar-side": [
         ["cavallaro2024", "technique", "Koniec okrężnicy do przedniej ściany odbytnicy („reverse Baker”) bez skrzyżowań linii zszywek"]],
+      "apr": [
+        ["miles1971", "original", "Opis oryginalny amputacji brzuszno-kroczowej (Miles 1908, przedruk)"],
+        ["you2020", "guideline", "APR przy guzie naciekającym zwieracze lub gdy nie da się ich zachować; TME także w APR"],
+        ["langenfeld2024", "guideline", "Aktualizacja 2023 wytycznych ASCRS dla raka odbytnicy"],
+        ["heald1982", "technique", "TME — wycięcie odbytnicy z całym mezorektum w etapie brzusznym"],
+        ["musters2017", "outcomes", "BIOPEX: zamknięcie krocza pierwotne vs siatka biologiczna (po ELAPE) — gojenie rany krocza"],
+        ["davis2022", "guideline", "Wytyczne ASCRS: wyłonienie i lokalizacja stomii (kolostomia końcowa)"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ira": [
         ["poylin2024", "guideline", "Polipowatość: kolektomia z IRA przy oszczędzonej odbytnicy; nadzór endoskopowy odbytnicy"],
         ["holubar2021", "guideline", "WZJG: kolektomia z IRA jako opcja u wybranych chorych"],

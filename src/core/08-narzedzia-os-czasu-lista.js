@@ -193,6 +193,7 @@
         multi('colon', 'rh', 'Hemikolektomia prawa', 'Prawostronna hemikolektomia — warianty zespolenia', [P(rhAnat(true), 'Izoperystaltyczne'), P(rhAnat(false), 'Antyperystaltyczne (FEEA)'), P(RHX, 'Poszerzona — izoperystaltyczne')]),
         multi('colon', 'lh', 'Hemikolektomia lewa', 'Lewostronna hemikolektomia — warianty zespolenia', [P(LH, 'Koniec-do-końca (EEA)'), P(lhSide(true), 'Izoperystaltyczne'), P(lhSide(false), 'Antyperystaltyczne (FEEA)')]),
         multi('colon', 'ar', 'Resekcja odbytnicy', 'Resekcja odbytnicy — warianty zespolenia EEA', [P(arVariant('center'), 'Linia przez środek'), P(arVariant('racket'), 'Rakieta tenisowa'), P(arVariant('side'), 'Przednia ściana')]),
+        one(APR),
         one(IRA, 'Kolektomia całkowita (IRA)', 'Kolektomia całkowita z zespoleniem krętniczo-odbytniczym'),
         one(IPAA, 'Zbiornik J (IPAA)', 'Proktokolektomia ze zbiornikiem J (IPAA)'),
         one(HART),
@@ -207,12 +208,16 @@
       LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); addSpleen(v); }); });
       // przełyk: esofagektomie z rurą żołądkową (bez interpozycji okrężnicy) — łuk RGEA za rurą, stacje AJCC 8
       LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); addSpleen(v); } }); });
-      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart' };
+      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr' };
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
+      // APR: krocze — cięcie wokół odbytu, rana i jej zamknięcie (po krezce, czasy w skali po przygotowaniu)
+      LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
+      // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
+      LIST.forEach(function (p) { if (p.id === 'lh' || p.id === 'ar' || p.id === 'apr') p.variants.forEach(function (v) { v.tumour = true; }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
       var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
-        'sb', 'zakres', 'rh', 'lh', 'ar', 'ira', 'ipaa', 'hartmann', 'ileo'];
+        'sb', 'zakres', 'rh', 'lh', 'ar', 'apr', 'ira', 'ipaa', 'hartmann', 'ileo'];
       return LIST.map(function (p, i) { var s = SEQ.indexOf(p.id); return [ORDER.indexOf(p.cat) * 100 + (s < 0 ? 90 + i : s), p]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; });
     })(),
     PANC: PANC, PANC_R: PANC_R,

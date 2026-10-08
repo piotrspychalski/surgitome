@@ -57,7 +57,20 @@
       });
       nodes.forEach(function (N) { var on = rem.indexOf(N.n.v) >= 0; N.m.color.set(on ? ZK_NODE : '#4f9a6a'); N.m.opacity = !rule || on ? 1 : 0.3; });
     }
-    var groups = nodeGroupLabels(map.groups);
+    var groups = nodeGroupLabels(map.groups), goKey = null;
+    // przycisk „Przejdź do resekcji” (pasek pod modelem): zabieg i wariant dla bieżącej reguły; guz w zabiegu wczytuje to samo zapisane położenie
+    function goUpdate() {
+      var T = rule ? zkTarget(rule.id) : null, k = T ? T.vid + LANG : null;
+      M.zakresGo = T;
+      if (k === goKey) return; goKey = k;
+      if (T) {
+        var P = A.PROCS[T.pi], v = P.variants[T.vi], nm = tr(P.short) + (P.variants.length > 1 && v.vshort ? ' — ' + tr(v.vshort) : '');
+        $('zkGo').textContent = tr('Przejdź do resekcji') + ': ' + nm + ' →';
+        $('zkGo').onclick = function () { switchAn(T.pi, 0, T.vi); };
+        setT($('zkNote'), T.near ? 'Brak osobnego modelu tej resekcji — otwiera się najbliższy.' : '');
+      }
+      updateDock();
+    }
     return { d: d, grp: grp, overlay: false, el: null, labels: labels, groups: groups,
       update: function () {
         var tu = M.tumour, b = tu && S.tumour ? tu.bind : null, id = b ? b.o.def.id : null;
@@ -75,6 +88,14 @@
         var rem = rule ? rule.removed.concat(rule.ties) : [];
         labels.forEach(function (L) { L.anchor = L.p; L.alpha = rem.indexOf(L.id) >= 0 || L.id === 'sma' || L.id === 'ima' ? 1 : 0; });
         groups.forEach(function (G) { G.anchor = G.p; G.alpha = 1; });
+        goUpdate();
       } };
+  }
+  // reguła zakresu (ANAT.resectionFor) → wariant zabiegu; zagięcie śledzionowe i esica nie mają osobnego modelu — najbliższy: hemikolektomia lewa, wysoka przednia resekcja z PME
+  var ZK_GO = { rh: 'rh-iso', rhx: 'rh-ext', sf: 'lh', lh: 'lh', sig: 'ar-side', pme: 'ar-side', tme: 'ar-center', apr: 'apr' }, ZK_NEAR = { sf: 1, sig: 1 };
+  function zkTarget(id) {
+    var vid = ZK_GO[id]; if (!vid) return null;
+    for (var i = 0; i < A.PROCS.length; i++) for (var j = 0; j < A.PROCS[i].variants.length; j++) if (A.PROCS[i].variants[j].id === vid) return { pi: i, vi: j, vid: vid, near: !!ZK_NEAR[id] };
+    return null;
   }
   TOOL_EXT.zakres = makeZakres;
