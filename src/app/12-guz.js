@@ -23,7 +23,7 @@
     var el = mkLabel('Guz', 'przeciągnij, aby przesunąć', '#b3263a', 'seg'), el2 = mkLabel('Guz', '', '#b3263a', 'seg');
     var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos()),
       update: function (m) {
-        var b = this.bind, o = b && b.o, on = S.tumour && !!o;
+        var b = this.bind, o = b && b.o, on = S.tumour && !!o && m > -1e-3; // na slajdzie „Dostęp” (m < 0) guz ukryty
         if (!on) { mesh.visible = false; this.alpha = 0; return; }
         var st = o.st, P = st.curve.getPointAt(b.t);
         mesh.position.copy(P).addScaledVector(b.n, st.r(b.t) * 0.88).add(o.grp.position);
@@ -60,7 +60,7 @@
     guzNdc.set(x / view.w * 2 - 1, -(y / view.h) * 2 + 1); guzRay.setFromCamera(guzNdc, orbitCam);
     return guzRay.intersectObjects(targets, false);
   }
-  function guzActive() { return M && M.tumour && S.tumour && !SPLIT.on && !endo.active && !ct.on && S.m < 1e-3 && M.tumour.mesh.visible; }
+  function guzActive() { return M && M.tumour && S.tumour && !SPLIT.on && !endo.active && !ct.on && S.m < 1e-3 && S.m > -1e-3 && M.tumour.mesh.visible; } // nie na slajdzie „Dostęp” (m < 0)
   function guzSurfaces() { return M.objs.filter(function (o) { return o.grp.visible && !o.def.solid && !o.def.organ; }).map(function (o) { return o.outer; }); }
   viewport.addEventListener('pointerdown', function (e) {
     if (!guzActive() || !guzPick(e, [M.tumour.mesh]).length) return;

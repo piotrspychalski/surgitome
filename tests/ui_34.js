@@ -14,7 +14,9 @@ function boot(pos){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendT
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }
 async function run(w, label){ const $=id=>w.document.getElementById(id), q=$('q');
   q.value='hemikolektomia prawa'; q.dispatchEvent(new w.Event('input')); q.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter'})); await sleep(600);
-  const at0=w.__sgTest.tumour(); $('strip').querySelectorAll('.step')[4].click(); await sleep(300); $('btnNext').click(); await sleep(100);
+  // kadr 1 — „Dostęp” (guz ukryty), kadr 2 — anatomia prawidłowa
+  $('strip').querySelectorAll('.step')[1].click(); await sleep(300);
+  const at0=w.__sgTest.tumour(); $('strip').querySelectorAll('.step')[5].click(); await sleep(300); $('btnNext').click(); await sleep(100);
   const at1=w.__sgTest.tumour(); console.log(label,'| start:',at0&&at0.map(x=>x.toFixed(1)).join(','),'| po zespoleniu:',at1?at1.map(x=>x.toFixed(1)).join(','):'niewidoczny', '| przełącznik:',!$('togGuz').hidden);
   return [at0,at1,$]; }
 (async()=>{

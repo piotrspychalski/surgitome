@@ -180,7 +180,8 @@
     var show = S.labels && !endo.active, showN = S.nodes && !endo.active && (M.tools || []).some(function (t) { return t.groups && t.groups.length; });
     labelsEl.style.display = show || showN ? '' : 'none';
     if (!show && !showN) return;
-    var m = S.m, k = show ? 1 : 0;
+    var m = S.m, k = show ? 1 : 0, kAcc = k;
+    if (M.access && m < -1e-3) { k = 0; showN = false; } // slajd „Dostęp”: tylko etykiety powłok, cięć i trokarów
     projV.copy(M.box.getCenter(tmpV)).project(orbitCam); lblCx = view.x + (projV.x + 1) / 2 * view.w; // środek modelu na ekranie
     M.objs.forEach(function (o) {
       o.labels.forEach(function (x) {
@@ -194,9 +195,10 @@
       if (mk.el2) placeLabel(mk.el2, mk.anchor, post ? k * mk.op : 0);
     });
     (M.tools || []).forEach(function (t) {
-      if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? k * t.alpha : 0);
-      if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? k * t.alpha : 0);
-      (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? k * (L.alpha || 0) : 0); });
+      var kt = t === M.access ? kAcc : k;
+      if (t.el) placeLabel(t.el, t.anchor || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor ? kt * t.alpha : 0);
+      if (t.el2) placeLabel(t.el2, t.anchor2 || tmpV.set(0, 0, 0), t.alpha > 0.3 && t.anchor2 ? kt * t.alpha : 0);
+      (t.labels || []).forEach(function (L) { placeLabel(L.el, L.anchor || tmpV.set(0, 0, 0), L.anchor ? kt * (L.alpha || 0) : 0); });
       (t.groups || []).forEach(function (G) { placeNode(G.el, G.anchor || tmpV.set(0, 0, 0), showN && G.anchor ? G.alpha || 0 : 0); });
     });
     if (M.papLbl) {

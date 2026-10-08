@@ -455,7 +455,20 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 .step[aria-current="step"]{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); font-weight:700; }
 .step[aria-current="step"] em{ background:var(--accent); color:var(--accent-ink); }
 .ctxrow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden], #ctxZakres[hidden]{ display:none; }
+.ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden], #ctxZakres[hidden], #ctxAcc[hidden]{ display:none; }
+/* okno wyboru dostępu (slajd „Dostęp”): nad modelem, pasek nawigacji dostępny */
+#acc{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; background:rgba(20,26,30,.38); padding:16px; }
+#acc[hidden]{ display:none; }
+#acc .accbox{ background:var(--surface); color:var(--text); border-radius:16px; box-shadow:0 18px 50px rgba(0,0,0,.28); padding:22px 22px 18px; width:min(560px,100%); }
+#acc h2{ margin:0 0 4px; font-size:24px; }
+#acc p{ margin:0 0 14px; color:var(--muted); font-size:15px; }
+#acc .accopts{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+#acc .accopt{ display:flex; flex-direction:column; align-items:flex-start; gap:4px; text-align:left; padding:12px 12px 11px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--text); cursor:pointer; font:inherit; }
+#acc .accopt b{ font-size:16px; } #acc .accopt small{ color:var(--muted); font-size:12.5px; line-height:1.3; }
+#acc .accopt kbd{ font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:4px; padding:0 4px; }
+#acc .accopt:hover, #acc .accopt:focus-visible{ border-color:var(--accent); outline:none; }
+#acc .accopt[aria-pressed="true"]{ border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+.mobile #acc .accopts{ grid-template-columns:1fr; } .mobile #acc h2{ font-size:20px; }
 #ctxZakres{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:1; min-width:0; }
 .mobile #zkGo{ padding:7px 12px; font-size:13px; }
 
@@ -545,6 +558,15 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <div id="hud" hidden><span class="sw" id="hudSw"></span><div><strong id="hudSeg"></strong><span id="hudNote"></span><span id="hudEnd" hidden>Brodawka Vatera w polu widzenia</span></div></div>
       <div id="inset" hidden><canvas id="insetCv"></canvas></div>
       <div id="cap"><span id="capNum"></span><h2 id="capTitle"></h2><p id="capText"></p></div>
+      <div id="acc" hidden role="dialog" aria-modal="true" aria-labelledby="accTitle"><div class="accbox">
+        <h2 id="accTitle" data-pl="Dostęp?">Dostęp?</h2>
+        <p data-pl="Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.">Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.</p>
+        <div class="accopts">
+          <button class="accopt" type="button" data-acc="open" aria-pressed="false"><b data-pl="Otwarty">Otwarty</b><small data-pl="cięcie poprzeczne prawostronne">cięcie poprzeczne prawostronne</small><kbd>1</kbd></button>
+          <button class="accopt" type="button" data-acc="lap" aria-pressed="false"><b data-pl="Laparoskopowy">Laparoskopowy</b><small data-pl="4 trokary, wydobycie przez cięcie Pfannenstiela">4 trokary, wydobycie przez cięcie Pfannenstiela</small><kbd>2</kbd></button>
+          <button class="accopt" type="button" data-acc="rob" aria-pressed="false"><b data-pl="Robotyczny">Robotyczny</b><small data-pl="da Vinci Xi, porty w jednej linii">da Vinci Xi, porty w jednej linii</small><kbd>3</kbd></button>
+        </div>
+      </div></div>
       <div id="choice" hidden><p id="choiceTitle">Rozwidlenie — którą drogą dalej?</p><div id="choiceBtns"></div><p class="choicehint">Klawisze 1 / 2, pilot: „dalej” wybiera pierwszą</p></div>
       <div id="ctPanel" hidden>
         <div class="cthead"><b>TK (schemat)</b><span id="ctLvlTxt"></span><span class="ctwin">okno brzuszne</span></div>
@@ -604,6 +626,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <button class="btn" id="btnOther" hidden>Druga droga</button>
         <select id="speed" aria-label="Prędkość"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select>
       </div>
+      <div id="ctxAcc" hidden><button class="btn" id="accChange" type="button" data-pl="Zmień dostęp">Zmień dostęp</button></div>
       <div id="ctxZakres" hidden><button class="btn primary" id="zkGo" type="button"></button></div>
       <div id="ctxLiver" hidden><label class="lvlbl" for="lvExplode" data-pl="Rozsunięcie">Rozsunięcie</label><input type="range" id="lvExplode" min="0" max="1000" value="0" aria-label="Rozsunięcie segmentów"><div id="lvSegs" role="group" aria-label="Segmenty"></div></div>
     </div>

@@ -60,7 +60,7 @@
     var isEndo = fr.kind === 'endo', anim = fr.kind === 'orbit' && fr.m1 > fr.m0;
     var lvSeg = !!(M && M.liver && !SPLIT.on && fr.k === 'segs'); // wątroba: suwak rozsunięcia i przyciski segmentów
     var zk = !!(M && M.zakresGo && !SPLIT.on); // „Wybór zakresu resekcji”: przejście do zabiegu z guzem w tym samym miejscu
-    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('ctxZakres').hidden = !zk; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg || zk);
+    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('ctxZakres').hidden = !zk; $('ctxAcc').hidden = fr.k !== 'access'; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg || zk);
     var t;
     if (isEndo) t = endo.playing ? 'Pauza' : (endo.route && endo.s >= endo.route.total - 0.01 ? 'Powtórz' : 'Dalej');
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');
@@ -215,6 +215,7 @@
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
     if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
+    if (!$('acc').hidden) { accKey(e); return; } // okno wyboru dostępu: 1 / 2 / 3, Esc
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('cite').hidden) { if (e.key === 'Escape') { e.preventDefault(); citeShow(false); } return; } // okienko cytowania: Tab/Enter na przyciskach
     if (!$('bib').hidden) { if (e.key === 'Escape') { e.preventDefault(); bibShow(false); } return; } // okno „Źródła”: klawisze do przewijania

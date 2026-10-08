@@ -47,6 +47,7 @@
     var toolOv = new THREE.Group(); toolScene.add(toolOv); M.toolOv = toolOv;
     M.tools = buildTools(an); M.tools.forEach(function (t) { (t.overlay ? toolOv : toolG).add(t.grp); if (t.ov) toolOv.add(t.ov); });
     if (!keep && an.tumour) tumourAttach();
+    if (!keep && an.access) accessAttach(an.access);
     if (!keep) renderPanel(an);
   }
 
@@ -106,6 +107,9 @@
         short: fx.recon[2], title: fx.recon[0], cap: fx.recon[1], caps: caps });
     } else F[F.length - 1].caps = [[2, fx.remove[1]], [3, fx.post]];
     F.push({ k: 'endo', vi: v, kind: 'endo', m0: an.mEnd, route: 'post', short: 'Endoskopia', title: (an.endoTitles || [])[1] || 'Endoskopia po operacji', cap: fx.endoPost });
+    // dostęp operacyjny (okno wyboru, powłoki, cięcia i trokary): przed anatomią prawidłową, oś czasu m −1 → −0,02
+    if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: { t: [-3.2, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
+      cap: 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.' });
     F.push({ k: 'ct', vi: v, kind: 'ct', m0: an.mEnd, m1: an.mEnd, cam: 'front', short: 'TK', title: 'TK — przekroje poprzeczne (schemat)',
       cap: 'Przekroje od najwyższego. Suwak, kółko myszy nad obrazem lub strzałki ↑/↓ zmieniają poziom; „Przejazd” (spacja) prowadzi z góry na dół. Kontrast doustny wypełnia drogę pokarmową; odcinki wyłączone i drogi żółciowe zawierają płyn.' });
     F.forEach(function (fr, i) { fr.num = String(i + 1); });

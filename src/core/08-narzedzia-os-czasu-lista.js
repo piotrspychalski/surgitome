@@ -205,7 +205,7 @@
         one(HART),
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
-      LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
+      LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; v.access = 'rh'; }); }); // access — slajd „Dostęp” (ACCESS.rh)
       // jelito cienkie: krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sb') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
@@ -247,7 +247,7 @@
     })(),
     PANC: PANC, PANC_R: PANC_R,
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
-    resectionFor: resectionFor, COL: COL, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
+    resectionFor: resectionFor, COL: COL, BODY: BODY, ACCESS: ACCESS, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
     // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
     _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, mesoLeft: mesoLeft, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
       C_COL: C_COL, COL_R: COL_R, colT: ct, colors: function () { return { COL: COL, COLC: COLC, MUC: MUC, MUC_C: MUC_C, STAPLE: STAPLE, SUT: SUT }; },

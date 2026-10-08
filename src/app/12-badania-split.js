@@ -297,7 +297,7 @@
     var cutCols = d.cutTint ? d.cutTint.map(function (c) { return [c[0], new THREE.Color(c[1])]; }) : null;
     return { d: d, grp: all, overlay: false, el: el, labels: labels, groups: groups,
       update: function (m) {
-        var on = d.always || S.meso, op = kfNum(d.opacity, m, 1);
+        var on = (d.always || S.meso) && m > -1e-3, op = kfNum(d.opacity, m, 1); // m < 0 — slajd „Dostęp”: krezka ukryta
         all.visible = on;
         if (d.morph && (morphs.length || nodesM.length)) { var fm = sm((m - d.morph[0]) / (d.morph[1] - d.morph[0])); if (Math.abs(fm - lastF) > 1e-4 || (fm === 1) !== (lastF === 1) || (fm === 0) !== (lastF === 0)) { lastF = fm; morphTo(fm); } }
         kfVec(d.offset, m, mov.position); mov.visible = op > 0.01;

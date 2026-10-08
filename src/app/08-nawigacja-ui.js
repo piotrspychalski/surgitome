@@ -24,6 +24,7 @@
     if (!M || M.an !== need) build(need);
     S.frame = i;
     S.m = fr.m0; S.playing = true;
+    accFrame(fr); // slajd „Dostęp”: okno wyboru albo animacja wybranego dostępu
     capHead();
     applyM();
     if (fr.kind === 'endo') { setCT(false); setEndo(true, fr.route); }

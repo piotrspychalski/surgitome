@@ -52,7 +52,9 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     w=boot(onWall(t)); await sleep(300); await search(w,'wybór zakresu'); const $=id=>w.document.getElementById(id);
     const g0=w.__sgTest.tumour(), shown=!$('ctxZakres').hidden&&!$('ctxRow').hidden, lbl=$('zkGo').textContent;
     $('zkGo').click(); await sleep(400);
-    const S=w.__sgTest.state(), f0=S.frame, vv=w.ANAT.PROCS[S.an].variants[S.vi], g1=w.__sgTest.tumour(), an=w.__sgTest.model().an;
+    const S=w.__sgTest.state(), f0=S.frame, vv=w.ANAT.PROCS[S.an].variants[S.vi];
+    if (w.__sgTest.frames()[0].k==='access') { w.__sgTest.open(S.an,S.vi,1); w.__sgTest.at(0); } // slajd „Dostęp”: guz ukryty — położenie na anatomii prawidłowej
+    const g1=w.__sgTest.tumour(), an=w.__sgTest.model().an;
     const spec=an.objects.filter(o=>/^spec/.test(o.id)&&o.id!=='specTi').map(o=>[tOn(C,o.pre.path[0]),tOn(C,o.pre.path[o.pre.path.length-1])]).sort((a,b)=>a[0]-b[0]), tg=tOn(C,onWall(t));
     const s0=spec.length?spec[0][0]:0, s1=spec.length?spec[spec.length-1][1]:1;
     const fr=w.__sgTest.frames(); w.__sgTest.open(S.an,S.vi,fr.length-2); w.__sgTest.at(fr[fr.length-2].m0); const gEnd=w.__sgTest.tumour();
