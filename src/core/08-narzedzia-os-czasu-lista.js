@@ -214,7 +214,9 @@
       LIST.forEach(function (p) { if (p.id === 'whip' || p.id === 'pppd' || p.id === 'dp') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([pancMeso(p.id, p.id === 'dp' ? [6, 1, 5] : [-6, -3, 6])]); v.notes = v.notes.concat([UP_NOTES[p.id === 'dp' ? 'dp' : 'pd']]); addSpleen(v); }); });
       // przełyk: esofagektomie z rurą żołądkową (bez interpozycji okrężnicy) — łuk RGEA za rurą, stacje AJCC 8
       LIST.forEach(function (p) { if (p.id === 'esoph') p.variants.forEach(function (v) { var k = v.id.split('-')[1], st = v.objects.filter(function (o) { return o.id === 'stom' && o.post; })[0]; if (k !== 'col' && st) { v.cutTools = v.cutTools.concat([esoMeso(k, st, [-7, 2, 7])]); v.notes = v.notes.concat([UP_NOTES.eso, UP_NOTES[k]]); addSpleen(v); } }); });
-      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr', sig: 'sig', sf: 'sf' };
+      var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr', sig: 'sig', sf: 'sf', ira: 'ira', ipaa: 'ipaa' };
+      // ileostomie: krezka końcowego odcinka jelita krętego przechodzi z pętlą do stomii
+      LIST.forEach(function (p) { if (p.id === 'ileo') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.ileoMeso]); delete v.ileoMeso; }); });
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       // APR: krocze — cięcie wokół odbytu, rana i jej zamknięcie (po krezce, czasy w skali po przygotowaniu)
       LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });

@@ -22,7 +22,8 @@ function ok(c,m){ if(!c) fails.push(m); }
   ok(['253*','252*','251*'].every(c=>has(L.mesoLeft('ar'),c)),'resekcja odbytnicy: 253/252/251 nie z preparatem: '+g(L.mesoLeft('ar')));
   ok(['253','252'].every(c=>has(L.mesoLeft('lh'),c)),'hemikolektomia lewa: 253/252 powinny zostać: '+g(L.mesoLeft('lh')));
   ok(L.mesoRight('rh').groups.system.startsWith('Numeracja JSCCR'),'brak nazwy systemu numeracji');
-  ok(A.PROCS.filter(p=>!p.split).every(p=>p.variants.every(v=>!v.cutTools.some(t=>t.type==='meso')||v.cutTools.some(t=>t.type==='meso'&&t.groups&&t.groups.list.length))),'zabieg z krezką bez grup węzłów');
+  // krezka z węzłami ma grupy (krezka bez węzłów — np. przy ileostomii, zabieg nieonkologiczny — ich nie potrzebuje)
+  ok(A.PROCS.filter(p=>!p.split).every(p=>p.variants.every(v=>!v.cutTools.some(t=>t.type==='meso'&&t.nodes.length)||v.cutTools.some(t=>t.type==='meso'&&t.groups&&t.groups.list.length))),'zabieg z krezką bez grup węzłów');
   // interfejs: domyślnie wyłączone, przełącznik widoczny przy krezce, podpisy niezależne od etykiet
   ok(!$('optNodes').checked&&w.localStorage.getItem('surgitome-wezly')===null,'grupy węzłów domyślnie włączone');
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);

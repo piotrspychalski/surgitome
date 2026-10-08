@@ -1,5 +1,6 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Krezka i mezorektum w resekcjach lewostronnych (hemikolektomia lewa, resekcja odbytnicy — TME, przednia ściana — PME z dłuższym kikutem, Hartmann): podwiązania, część usuwana i pozostająca, przełącznik, kadry, EN
+// Krezka i mezorektum w resekcjach lewostronnych (hemikolektomia lewa, resekcja odbytnicy — TME, przednia ściana — PME z dłuższym kikutem, Hartmann): podwiązania, część usuwana i pozostająca, przełącznik, kadry, EN;
+// kolektomia całkowita (IRA, IPAA — krezka całej okrężnicy, grupy JSCCR) i ileostomie (krezka jelita krętego za pętlą, bez podwiązań i węzłów)
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true,url:'https://x.test/'}); Object.defineProperty(dom.window.navigator,'languages',{value:['pl-PL']}); Object.defineProperty(dom.window.navigator,'language',{value:'pl-PL'});  const w=dom.window;
@@ -53,7 +54,15 @@ function ok(c,m){ if(!c) fails.push(m); }
   console.log('początek kikuta (t): środek',stump('ar-center').toFixed(3),'| przednia ściana',stump('ar-side').toFixed(3));
   ok(stump('ar-side')<stump('ar-center')-0.02,'przednia ściana: kikut odbytnicy nie jest dłuższy niż w zespoleniu koniec-do-końca');
   ok(procs.length===3&&procs.every(p=>p.variants.every(v=>v.cutTools.filter(t=>t.type==='meso').length===1)),'nie każdy wariant lewostronny ma krezkę');
-  ok(w.ANAT.PROCS.filter(p=>['ira','ipaa','ileo'].includes(p.id)).every(p=>p.variants.every(v=>!v.cutTools.some(t=>t.type==='meso'))),'krezka w zabiegu, w którym jej nie dodawano');
+  // kolektomia całkowita (wersja onkologiczna): krezka całej okrężnicy; IRA — mezorektum zostaje, IPAA — TME; ileostomie — krezka jelita krętego za pętlą, bez podwiązań i węzłów
+  const ms=id=>w.ANAT.PROCS.find(p=>p.id===id).variants.map(v=>v.cutTools.filter(t=>t.type==='meso'));
+  for(const id of ['ira','ipaa']){ const M=ms(id)[0], d=M[0], ties=d.vessels.filter(v=>v.tie!=null).map(v=>v.id), remA=d.vessels.filter(v=>v.removed&&v.kind==='a').map(v=>v.id), codes=d.groups.list.map(g=>g.code);
+    console.log(id,'— podwiązania:',ties.join(','),'| z preparatem:',remA.join(','),'| mezorektum:',d.labels[0].sub,'| grup:',codes.length);
+    ok(M.length===1&&['ic','rc','mc','ima'].every(x=>ties.includes(x))&&['rbmc','lbmc','sb','sb2'].every(x=>remA.includes(x)),id+': niepełna krezka okrężnicy');
+    ok(['203','223','253'].every(c=>codes.includes(c)),id+': brak grup JSCCR');
+    ok(id==='ira'?d.labels[0].sub==='pozostaje'&&!d.labels[0].removed:d.labels[0].sub==='usuwane w całości (TME)'&&remA.includes('sra'),id+': zły zakres mezorektum'); }
+  ms('ileo').forEach((M,i)=>{ const d=M[0]; ok(M.length===1&&d.morph&&d.sheets.every(s=>s.post)&&!d.vessels.some(v=>v.tie!=null)&&!d.nodes.length&&!d.groups,'ileostomia '+i+': krezka jelita krętego');
+    ok(d.sheets.every(s=>s.post.every(r=>r[0][2]<=5.0)),'ileostomia '+i+': krezka ponad powłokami'); });
   // EN: podpisy krezki i mezorektum przetłumaczone
   [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja odbytnicy')).click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(200);

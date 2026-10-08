@@ -380,7 +380,8 @@
         ["holubar2021", "guideline", "WZJG: kolektomia z IRA jako opcja u wybranych chorych"],
         ["spinelli2022", "guideline", "ECCO 2022: miejsce IRA w chirurgicznym leczeniu WZJG"],
         ["herzig2017", "guideline", "Zespół Lyncha: kolektomia całkowita z IRA jako opcja przy raku okrężnicy"],
-        ["alavi2024", "guideline", "Zaparcie z inercją okrężnicy: kolektomia całkowita z IRA u wybranych"]],
+        ["alavi2024", "guideline", "Zaparcie z inercją okrężnicy: kolektomia całkowita z IRA u wybranych"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 201–253 wzdłuż IC, RC, MC, LC, gałęzi esiczych, SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ipaa": [
         ["parks1978", "original", "Opis oryginalny proktokolektomii odtwórczej ze zbiornikiem z jelita krętego"],
         ["utsunomiya1980", "original", "Opis oryginalny zbiornika J z zespoleniem krętniczo-odbytowym"],
@@ -392,7 +393,8 @@
         ["shen2024", "endoscopy", "Pouchoskopia: anatomia zbiornika, szczyt J, wlot pętli, mankiet"],
         ["shen2021", "endoscopy", "Konsensus: punkty orientacyjne endoskopii po IPAA i innych operacjach w IBD"],
         ["elder2013", "endoscopy", "Endoskopowy obraz „sowich oczu” i mankietu a niewydolność zbiornika"],
-        ["hembree2022", "endoscopy", "Zapalenie mankietu (cuffitis): rozpoznanie endoskopowe i leczenie"]],
+        ["hembree2022", "endoscopy", "Zapalenie mankietu (cuffitis): rozpoznanie endoskopowe i leczenie"],
+        ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 201–253 wzdłuż IC, RC, MC, LC, gałęzi esiczych, SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "hartmann": [
         ["hall2020", "guideline", "Zapalenie uchyłków z zapaleniem otrzewnej: Hartmann lub resekcja z zespoleniem"],
         ["hawkins2026", "guideline", "Aktualizacja 2026 wytycznych ASCRS dla lewostronnego zapalenia uchyłków okrężnicy"],

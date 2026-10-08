@@ -835,13 +835,16 @@
      'hart' — Hartmann: IMA podwiązana poniżej odejścia LC, krezka esicy z gałęziami esiczymi; mezorektum z dolną częścią SRA zostaje z kikutem odbytnicy.
      'apr' — amputacja brzuszno-kroczowa: jak 'ar', całe mezorektum z odbytnicą i kanałem odbytu; preparat usuwany przez krocze (APR_OFF).
      'sig' — resekcja esicy: IMA u odejścia (z LC), krezka esicy; SRA i mezorektum przecięte na wysokości przecięcia jelita (zwykle mezorektum zostaje).
+     'ira' / 'ipaa' — kolektomia całkowita (wersja onkologiczna): krezka całej okrężnicy, IC, RC, MC i IMA u odejścia; IRA — SRA i mezorektum przecięte na wysokości
+     połączenia esiczo-odbytniczego (mezorektum zostaje), IPAA — całe mezorektum (TME).
      'sf' — resekcja zagięcia śledzionowego: LC i gałąź lewa MC (LBMC) u odejścia, pień MC, IMA, gałęzie esicze i SRA zostają.
      rr — [t przecięcia proksymalnego, t dystalnego] zamiast domyślnych (linie cięcia dopasowane do guza).
      mob: krezka zstępnicy na odcinku sprowadzanym do miednicy lub do stomii (tPJ–tA) zanika, gdy jelito się przemieszcza. Czasy jak w mesoRight. */
   function mesoLeft(mode, rr) {
-    var V3 = THREE.Vector3, c = { sig: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] }, sf: { r: SF_T, off: SF_OFF }, lh: { r: [tTL, tSg2], off: [7, 1, 5] }, ar: { r: [tA, RT[1]], off: [-6, 2, 6], mob: [tPJ, tA] }, arp: { r: [tA, tLs], off: [-6, 2, 6], mob: [tPJ, tA] }, hart: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] }, apr: { r: [tA, 1], off: APR_OFF, mob: [tPJ, tA] } }[mode];
+    var V3 = THREE.Vector3, c = { ira: { r: [MESO_T0, tSig], off: [0, 3, 7] }, ipaa: { r: [MESO_T0, ct([0, -18.2, -1.0])], off: [0, 3, 8] }, sig: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] }, sf: { r: SF_T, off: SF_OFF }, lh: { r: [tTL, tSg2], off: [7, 1, 5] }, ar: { r: [tA, RT[1]], off: [-6, 2, 6], mob: [tPJ, tA] }, arp: { r: [tA, tLs], off: [-6, 2, 6], mob: [tPJ, tA] }, hart: { r: [tA, tH], off: [-6, 2, 6], mob: [tPJ, tA] }, apr: { r: [tA, 1], off: APR_OFF, mob: [tPJ, tA] } }[mode];
     if (rr) { c = { r: rr, off: c.off, mob: c.mob ? [tPJ, rr[0]] : null }; } // linie cięcia dopasowane do guza
-    var T0 = ct([0.6, 3.4, 2.8]), SEG = [[T0, MESO_T1, null, 14], [LT[0], LT[1], LROOT, 24], [ST[0], ST[1], SROOT, 16], [RT[0], RT[1], RROOT, 16]];
+    var tot = mode === 'ira' || mode === 'ipaa'; // kolektomia całkowita: krezka całej okrężnicy (prawa część jak w mesoRight)
+    var T0 = tot ? MESO_T0 : ct([0.6, 3.4, 2.8]), SEG = [[T0, MESO_T1, null, tot ? 40 : 14], [LT[0], LT[1], LROOT, 24], [ST[0], ST[1], SROOT, 16], [RT[0], RT[1], RROOT, 16]];
     SEG.forEach(function (g) { if (g[2]) g[4] = curveOf(g[2]); });
     function edge(tc, k) {
       var g = tc < (MESO_T1 + LT[0]) / 2 ? SEG[0] : tc < ST[0] ? SEG[1] : tc < RT[0] ? SEG[2] : SEG[3];
@@ -872,7 +875,7 @@
       });
     });
     var IMA_O = [0.6, -3.4, -2.7], LC_O = [0.8, -4.3, -2.6], LCB = [3.6, -2.4, -1.9], SB1_O = [1.0, -6.2, -2.4], SB2_O = [0.95, -7.4, -2.4], SRA_O = [0.9, -8.2, -2.5];
-    var le = function (tc) { return edge(tc).toArray(); }, lh = mode === 'lh', sg = mode === 'sig', sfm = mode === 'sf', ar = mode === 'ar' || mode === 'arp' || mode === 'apr' || sg, pme = mode === 'arp', ht = mode === 'hart';
+    var le = function (tc) { return edge(tc).toArray(); }, lh = mode === 'lh', sg = mode === 'sig' || mode === 'ira', sfm = mode === 'sf', ar = mode === 'ar' || mode === 'arp' || mode === 'apr' || mode === 'ipaa' || sg, pme = mode === 'arp', ht = mode === 'hart';
     var IMA = [IMA_O, LC_O, [1.0, -6.0, -2.4], SRA_O], SRA = [SRA_O, [0.6, -11.0, -2.5], [0.25, -14.0, -2.9], [0.1, -16.6, -3.0]];
     var V = [];
     if (ht) { // podwiązanie IMA poniżej odejścia LC
@@ -896,7 +899,9 @@
       V.push({ id: 'sraTop', name: '', kind: 'a', pts: up, removed: true, nodes: 'outer' });
       V.push({ id: 'sra', name: 'SRA — tętnica odbytnicza górna', kind: 'a', pts: low, tie: 0.03, at: 0.5, nodes: 'meso' });
     } else V.push({ id: 'sra', name: 'SRA — tętnica odbytnicza górna', kind: 'a', pts: SRA, removed: ar, at: 0.6, nodes: 'meso' });
-    var TA = T0 + 0.004, TB = 0.86; // łuk brzeżny (do esicy; odbytnicę zaopatruje SRA)
+    // kolektomia całkowita: naczynia prawej połowy i poprzecznicy jak w poszerzonej hemikolektomii prawej (IC, RC, pień MC u odejścia z SMA; RBMC i LBMC z preparatem)
+    if (tot) V = mesoRight('ext').vessels.filter(function (v) { return !/^arc/.test(v.id); }).map(function (v) { var w = {}; for (var k in v) w[k] = v[k]; w.ng = JS_R[v.id]; return w; }).concat(V);
+    var TA = T0 + (tot ? 0.02 : 0.004), TB = 0.86; // łuk brzeżny (do esicy; odbytnicę zaopatruje SRA)
     runs(TA, TB, 50, function (ta) { return edge(ta, 0.08).toArray(); }).forEach(function (r, i) {
       if (r.pts.length > 1) V.push({ id: 'arc' + i, name: '', kind: 'm', pts: r.pts, removed: r.k === 'R', mob: r.k === 'M' });
     });
@@ -916,6 +921,33 @@
   /* ---------- Ileostomia pętlowa / dwulufowa ---------- */
   var ILE = [[3.5, -0.5, 0.4], [0.5, -0.8, 1.0], [-2.8, -1.6, 1.2], [-3.6, -3.6, 1.4], [-1.0, -4.4, 1.6], [2.2, -4.0, 1.6], [4.2, -5.4, 1.0], [1.2, -6.2, 1.4], [-2.0, -7.2, 1.4], [-4.4, -7.8, 1.0], [-6.0, -7.9, 0.6]];
   var C_ILE = curveOf(ILE);
+  /* krezka końcowego odcinka jelita krętego przy ileostomii: wachlarz od korzenia (skośnie ku okolicy krętniczo-kątniczej) do brzegu krezkowego,
+     tętnice jelita krętego i łuk arkad; bez podwiązań i węzłów (zabieg nieonkologiczny). Przy wyprowadzeniu krezka podąża za ramionami do otworu
+     w powłokach (morph, czasy jak przemieszczenie jelita); brzeg nie wychodzi ponad powłoki. P, Dd — ramiona po operacji, cut — miejsce stomii na C_ILE. */
+  var ILE_ROOT = curveOf([[1.8, -1.4, -1.9], [0.2, -3.4, -1.8], [-1.6, -5.4, -1.5], [-3.4, -7.0, -1.1], [-4.6, -7.6, -0.6]]);
+  function ileoMeso(P, Dd, cut) {
+    var cP = curveOf(P), cD = curveOf(Dd), ZW = 4.9;
+    function root(t) { return ILE_ROOT.getPointAt(Math.max(0, Math.min(1, t))); }
+    function bowel(t, post) { return !post ? [C_ILE.getPointAt(t), C_ILE.getTangentAt(t)] : t <= cut ? [cP.getPointAt(t / cut), cP.getTangentAt(t / cut)] : [cD.getPointAt((t - cut) / (1 - cut)), cD.getTangentAt((t - cut) / (1 - cut))]; }
+    function E(t, post, k) {
+      var b = bowel(t, post), Rt = root(t), d = Rt.clone().sub(b[0]); d.sub(b[1].multiplyScalar(d.dot(b[1]))).normalize();
+      var e = b[0].addScaledVector(d, 0.83); if (k) e.lerp(Rt, k); if (post && e.z > ZW) e.z = ZW; return e.toArray();
+    }
+    function ts(t0, t1, n) { var o = []; for (var i = 0; i <= n; i++) o.push(t0 + (t1 - t0) * i / n); return o; }
+    var sheets = [], V = [];
+    [[0.03, cut - 0.03, 30], [cut + 0.03, 0.985, 30]].forEach(function (g, gi) {
+      var L = ts(g[0], g[1], g[2]);
+      sheets.push({ rows: L.map(function (t) { return [E(t, false), root(t).toArray(), t]; }), post: L.map(function (t) { return [E(t, true), root(t).toArray(), t]; }) });
+      var A = ts(g[0], g[1], 24); // łuk arkad przy brzegu krezkowym
+      V.push({ id: 'arc' + gi, name: '', kind: 'm', pts: A.map(function (t) { return E(t, false, 0.2); }), post: A.map(function (t) { return E(t, true, 0.2); }) });
+      [0.2, 0.5, 0.8].forEach(function (f, j) { // tętnice jelita krętego od korzenia (gałęzie SMA) do łuku
+        var t = g[0] + (g[1] - g[0]) * f, r0 = root(t).toArray(), a = E(t, false, 0.2), b = E(t, true, 0.2);
+        V.push({ id: 'il' + gi + j, name: gi === 0 && j === 1 ? 'Tętnice jelita krętego' : '', kind: 'a', pts: [r0, via3(r0, a, 0.2), a], post: [r0, via3(r0, b, 0.2), b], at: 0.5 });
+      });
+    });
+    return { type: 'meso', sheets: sheets, vessels: V, nodes: [], name: 'Krezka jelita krętego', sub: 'przechodzi z pętlą do otworu w powłokach',
+      anchor: E(0.3, false, 0.5), morph: [2.1, 2.9], opacity: [[0, 1]], tieT: 99 };
+  }
   // loop: pętlowa (ramiona zbiegają się w jedną stomię, wspólne światło) / dwulufowa (dwa osobne otwory)
   // up: ramię wydzielnicze (proksymalne) w górnej części stomii; inaczej w dolnej
   function ileoAnat(loop, up) {
@@ -984,7 +1016,7 @@
           : { name: 'Przecięcie jelita krętego', color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.4, 1], [1.7, 0]] }),
         { kind: 'wall', name: 'Powłoki brzuszne', center: [-4.0, -5.0, 5.6], size: [11, 11], holes: holes, opacity: [[0.3, 0], [0.8, 1]] }
       ].concat(stomas),
-      endTarget: { pre: null },
+      endTarget: { pre: null }, ileoMeso: ileoMeso(P, Dd, cut),
       routePost: { prefix: [], branches: [
         { label: 'Ramię wydzielnicze', sub: 'proksymalne — jelito kręte', steps: [{ pt: [X, yP, 9.2], note: 'Stomia — światło wydzielnicze' }, { obj: 'prox', from: 1, to: 0.6, note: 'Jelito kręte, w górę strumienia treści' }] },
         { label: 'Ramię odprowadzające', sub: 'dystalne — do zastawki i jelita grubego', steps: [{ pt: [X, yD, 9.2], note: 'Stomia — światło odprowadzające' }, { obj: 'dist', note: 'Wyłączony odcinek jelita krętego do zastawki' }, { obj: 'colon', from: 0.035, to: 0.07, note: 'Kątnica' }] }
