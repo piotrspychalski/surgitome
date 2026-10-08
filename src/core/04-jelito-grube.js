@@ -683,27 +683,32 @@
     var tAn = ct([0, -18.2, -1.0]), J = eeaJoin({ tD: tAn, R: 0.95, H: 0.5, kind: 'center', rc: 0.72, base: [[4.0, -5.2, 0.8]], tail: [], rBase: flat(1), rEnd: 1 });
     var D = J.D, up = D.T0.clone().negate(), s = D.n.clone(); if (s.x < 0) s.negate();
     var Q = D.P0.clone().addScaledVector(up, 0.35), Lc = C_COL.getLength();
-    // punkty zbiornika wzdłuż dawnego łoża odbytnicy (krzywizna kości krzyżowej), przesunięte bocznie o ks
+    // punkty zbiornika wzdłuż dawnego łoża odbytnicy (krzywizna kości krzyżowej), przesunięte bocznie o ks; powyżej KU zbiornik biegnie
+    // prosto ku górze i lekko do przodu (wychodzi z miednicy). Długość ramion ok. 11 jednostek ≈ 18 cm (skala 0,045 t ≈ 5 cm)
+    var KU = 5.5, qK = (function () { var p = C_COL.getPointAt(Math.max(0, tAn - (KU + 0.35) / Lc)); p.z += 0.5; return p; })(), dUp = new THREE.Vector3(0.05, 0.95, 0.32).normalize();
     var qa = function (ks, ku) {
       if (ku <= 0.4) return Q.clone().addScaledVector(s, ks).addScaledVector(up, ku).toArray();
+      if (ku > KU) return qK.clone().addScaledVector(dUp, ku - KU).addScaledVector(s, ks).toArray();
       var p = C_COL.getPointAt(Math.max(0, tAn - (ku + 0.35) / Lc)); p.z += 0.5; return p.addScaledVector(s, ks).toArray();
     };
-    var AFFJ = [[4.0, -5.2, 0.8], [3.2, -8.0, 1.3], [2.0, -10.6, 1.0], qa(0.8, 5.2), qa(0.8, 2.2), qa(0.5, 0.5), qa(0.1, 0.0)];
-    var JL = [qa(-0.1, 0.05), qa(-0.55, 0.55), qa(-0.8, 2.2), qa(-0.8, 4.8)];
-    var tJ = 0.72, POUCH_R = profile([[0, 0.9], [0.55, 1.0], [0.72, 1.15], [1, 1.15]]), JL_R = profile([[0, 1.15], [0.9, 1.15], [1, 0.08]]);
-    var LZ = [qa(0, 0.9), qa(0, 2.6), qa(0, 4.3)];
+    var PL = 11.0; // długość zbiornika J (ok. 18 cm — trzy odpalenia staplera liniowego)
+    var AFFJ = [[4.0, -5.2, 0.8], [3.0, -6.6, 2.2], qa(0.9, PL + 0.6), qa(0.8, PL - 1.2), qa(0.8, 8.0), qa(0.8, 5.2), qa(0.8, 2.2), qa(0.5, 0.5), qa(0.1, 0.0)];
+    var JL = [qa(-0.1, 0.05), qa(-0.55, 0.55), qa(-0.8, 2.2), qa(-0.8, 5.2), qa(-0.8, 8.0), qa(-0.8, PL)];
+    var tJ = 0.5, POUCH_R = profile([[0, 0.9], [0.2, 1.0], [0.3, 1.15], [1, 1.15]]), JL_R = profile([[0, 1.15], [0.94, 1.15], [1, 0.08]]);
+    // linia zszywek w przegrodzie zbiornika: trzy odpalenia staplera liniowego od dna ku górze
+    var LZS = [[0.9, 4.1], [4.1, 7.3], [7.3, 10.5]].map(function (r) { return [qa(0, r[0]), qa(0, (r[0] + r[1]) / 2), qa(0, r[1])]; });
     return {
       eea: J.eea, cat: 'colon', id: 'ipaa', short: 'Zbiornik J (IPAA)', title: 'Proktokolektomia ze zbiornikiem J i zespoleniem krętniczo-odbytowym',
       sub: 'IPAA (ileal pouch–anal anastomosis) — zbiornik J z końcowego odcinka jelita krętego, zespolenie staplerem okrężnym z kanałem odbytu',
       notes: ['Usunięta cała okrężnica i odbytnica; zachowany kanał odbytu ze zwieraczami (przy staplowaniu krótki mankiet strefy przejściowej).',
-        'Zbiornik J: dwa ramiona końcowego odcinka jelita krętego (po ok. 15–20 cm) zespolone bok-do-boku staplerem liniowym; szczyt J to ślepy koniec jelita.',
+        'Zbiornik J: dwa ramiona końcowego odcinka jelita krętego (po co najmniej 18 cm) zespolone bok-do-boku staplerem liniowym — zwykle trzy odpalenia; szczyt J to ślepy koniec jelita.',
         'Najczęściej z ochronną ileostomią pętlową. Wskazania: wrzodziejące zapalenie jelita grubego, rodzinna polipowatość gruczolakowata.',
         'W endoskopii zbiornika (pouchoskopii): zespolenie, wspólne światło zbiornika, wlot pętli doprowadzającej i ślepy szczyt J; ocena zapalenia zbiornika, mankietu i jelita krętego nad zbiornikiem.'],
-      focus: { t: [0.5, -14, 0.5], k: 0.55 }, text: COL_TEXT,
+      focus: { t: [0.8, -11.2, 1.2], k: 0.7 }, text: COL_TEXT,
       frames: {
         resect: ['Zakres resekcji', 'Cała okrężnica i odbytnica; jelito kręte przecięte przy zastawce, odbytnica tuż nad kanałem odbytu.', 'Zakres resekcji'],
         remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; odbytnica zamknięta poprzecznie staplerem liniowym na wysokości połączenia odbytniczo-odbytowego (mankiet ok. 1–2 cm nad linią zębatą).', 'Usunięcie'],
-        recon: ['Zbiornik J i zespolenie', 'Końcowy odcinek jelita krętego złożony w J; ramiona zespolone staplerem liniowym we wspólny zbiornik, dno zbiornika (zagięcie pętli) zespolone staplerem okrężnym z kanałem odbytu.', 'Zbiornik J'],
+        recon: ['Zbiornik J i zespolenie', 'Końcowy odcinek jelita krętego złożony w J (ramiona co najmniej 18 cm); ramiona zespolone staplerem liniowym (trzy odpalenia) we wspólny zbiornik, dno zbiornika (zagięcie pętli) zespolone staplerem okrężnym z kanałem odbytu.', 'Zbiornik J'],
         post: 'Zbiornik J w miednicy nad kanałem odbytu: u góry, obok siebie, wlot pętli doprowadzającej i ślepy szczyt J (w pouchoskopii obraz „oczu sowy”).',
         endoPost: 'Od odbytu przez zespolenie do zbiornika; wybór: wlot pętli doprowadzającej albo ślepy szczyt J.'
       },
@@ -721,12 +726,11 @@
       marks: [
         ringOn(C_TI, flat(0.9), 0.985, { name: 'Przecięcie jelita krętego przy zastawce', color: COL.cut, opacity: CUT_OP_JEJ }),
         ringOn(C_COL, COL_R, tAn, { name: 'Przecięcie nad kanałem odbytu', stumpCut: true, color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.2, 1], [1.4, 0]] }),
-        { kind: 'line', name: 'Linia zszywek (stapler liniowy)', color: STAPLE, opacity: ANAST_OP, endo: true, dash: 0.14, pts: LZ, endoPts: LZ }
-      ].concat(J.marks),
-      pouchGia: { at: qa(0, 2.6), j: up.clone().negate().toArray(), s: s.toArray() },
+      ].concat(LZS.map(function (lz, i) { return { kind: 'line', name: i === 0 ? 'Linia zszywek (stapler liniowy)' : '', pouchLine: i, color: STAPLE, opacity: ANAST_OP, endo: true, dash: 0.14, pts: lz, endoPts: lz }; })).concat(J.marks),
+      pouchGia: LZS.map(function (lz) { var a = new THREE.Vector3().fromArray(lz[0]), b = new THREE.Vector3().fromArray(lz[2]); return { at: lz[1], j: a.clone().sub(b).normalize().toArray(), s: s.toArray(), len: a.distanceTo(b) + 0.4 }; }),
       endTarget: { pre: ICV }, endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
       routePost: { prefix: [{ obj: 'rect', from: 1, to: J.stumpTo, note: 'Kanał odbytu — pierścień zszywek z linią zamknięcia po obu stronach' }], branches: [
-        { label: 'Pętla doprowadzająca', sub: 'wlot jelita krętego do zbiornika', steps: [{ obj: 'aff', from: 1, to: 0.62, note: 'Zbiornik, dalej wlot pętli doprowadzającej' }] },
+        { label: 'Pętla doprowadzająca', sub: 'wlot jelita krętego do zbiornika', steps: [{ obj: 'aff', from: 1, to: qa(0.8, PL - 0.4), note: 'Zbiornik, dalej wlot pętli doprowadzającej' }] },
         { label: 'Szczyt J', sub: 'ślepy koniec zbiornika', steps: [{ obj: 'jl', from: 0.02, to: 0.93, note: 'Ślepy szczyt J — miejsce możliwej nieszczelności' }], target: JL[JL.length - 1], endText: 'Ślepy szczyt J z linią zszywek' }
       ] }
     };
@@ -882,8 +886,8 @@
       V.push({ id: 'imaTop', name: '', kind: 'a', pts: [IMA_O, LC_O], nodes: 'central', nodesRemoved: true }); // węzły u korzenia IMA usuwane (niskie podwiązanie z wycięciem węzłów wzdłuż IMA)
       V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA.slice(1), removed: true, tie: 0.06, at: 0.5, nodes: 'central', ng: ['252'] }); // pień IMA poniżej LC z preparatem
     } else V.push({ id: 'ima', name: 'IMA — tętnica krezkowa dolna', kind: 'a', pts: IMA, removed: ar, tie: ar ? 0.05 : null, at: 0.3, nodes: 'ima' }); // 253 przed odejściem LC, 252 wzdłuż pnia
-    V.push({ id: 'lc', name: 'LC — tętnica lewa okrężnicy', kind: 'a', pts: [LC_O, via3(LC_O, LCB, 0.2), LCB, le(0.575)], removed: lh || sfm, tie: lh || ar || sfm ? 0.06 : null, at: 0.55, nodes: true });
-    V.push({ id: 'lca', name: '', kind: 'a', pts: [LCB, [5.4, 1.8, -1.6], le(0.50)], removed: lh || sfm, nodes: 'outer' });
+    V.push({ id: 'lc', name: 'LC — tętnica lewa okrężnicy', kind: 'a', pts: [LC_O, via3(LC_O, LCB, 0.2), LCB, le(0.575)], removed: lh || sfm || tot, tie: lh || ar || sfm ? 0.06 : null, at: 0.55, nodes: true });
+    V.push({ id: 'lca', name: '', kind: 'a', pts: [LCB, [5.4, 1.8, -1.6], le(0.50)], removed: lh || sfm || tot, nodes: 'outer' });
     V.push({ id: 'sb', name: 'SB — gałęzie esicze', kind: 'a', pts: [SB1_O, via3(SB1_O, le(0.76), 0.3), le(0.76)], removed: !sfm, tie: lh ? 0.08 : null, at: 0.6, nodes: true });
     V.push({ id: 'sb2', name: '', kind: 'a', pts: [SB2_O, via3(SB2_O, le(0.82), 0.3), le(0.82)], removed: !lh && !sfm, nodes: 'outer' });
     if (sfm) { // resekcja zagięcia śledzionowego: pień MC zostaje, gałąź lewa MC (LBMC) podwiązana u odejścia

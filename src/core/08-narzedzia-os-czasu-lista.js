@@ -59,8 +59,8 @@
       t.push(giaAt(an.gebp.at, va(an.gebp.j), va(an.gebp.s), 3.2, 0.7, { side: true, reveal: [LZ] }));
     } else if (an.e2eRing) {
       t.push({ type: 'vloc', ring: an.e2eRing, stitches: 16, reveal: [markIdx(an, 'Szew ręczny koniec-do-końca')] });
-    } else if (id === 'ipaa') {
-      t.push(giaAt(an.pouchGia.at, va(an.pouchGia.j), va(an.pouchGia.s), 3.6, 0.7, { side: true, reveal: [LZ] }));
+    } else if (id === 'ipaa') { // zbiornik J: trzy odpalenia staplera liniowego, każde odsłania swój odcinek linii zszywek
+      an.pouchGia.forEach(function (G, i) { var mi = -1; an.marks.forEach(function (mk, j) { if (mk.pouchLine === i) mi = j; }); t.push(giaAt(G.at, va(G.j), va(G.s), G.len, 0.7, { side: true, reveal: [mi] })); });
     }
     if (an.eea) {
       t.push({ type: 'eea', face: an.eea.face, dir: an.eea.dir, anvil: an.eea.anvil, path: an.eea.path, reveal: [markIdx(an, 'Zespolenie okrężne staplerem (EEA)'), markIdx(an, 'Zespolenie staplerem okrężnym na przedniej ścianie odbytnicy')].filter(function (x) { return x >= 0; }) });
@@ -73,7 +73,7 @@
     'lh-iso': 'Branże staplera w poprzecznicy i esicy — wspólne światło; otwór po staplerze zamknięty szwem ciągłym (typu V-Loc).',
     'lh-anti': 'Branże staplera w obu końcach — wspólne światło; końce zamknięte poprzecznie drugim staplerem liniowym.',
     'gebp': 'Branże staplera liniowego w żołądku i pętli jelita — wspólne światło; otwór po staplerze zamknięty szwem.',
-    'ipaa': 'Stapler liniowy przez otwór w zagięciu pętli łączy oba ramiona we wspólny zbiornik; kowadełko w dnie zbiornika, stapler okrężny przez odbyt.',
+    'ipaa': 'Stapler liniowy przez otwór w zagięciu pętli — trzy odpalenia — łączy oba ramiona (co najmniej 18 cm) we wspólny zbiornik; kowadełko w dnie zbiornika, stapler okrężny przez odbyt.',
     'sb-iso': 'Branże staplera liniowego w obu ramionach — po odpaleniu wspólne światło. Otwór po staplerze zamknięty szwem ciągłym nicią z zadziorami (typu V-Loc).',
     'sb-anti': 'Branże staplera w obu końcach — po odpaleniu wspólne światło; wspólny otwór końców zamknięty poprzecznie drugim staplerem liniowym.',
     'sb-e2e': 'Szew ciągły nicią z zadziorami (typu V-Loc) na całym obwodzie.',
