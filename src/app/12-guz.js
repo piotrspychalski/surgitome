@@ -2,7 +2,8 @@
      Położenie zapisane we współrzędnych anatomii prawidłowej (localStorage); przy budowie modelu przypinane do najbliższego odcinka (obiekt, t, kierunek),
      więc guz przesuwa się i znika razem ze swoim odcinkiem (np. z preparatem). */
   var GUZ_KEY = 'surgitome-guz-pos', GUZ_DEF = [-6.64, -1.5, 1.57];
-  function guzPos() { try { var p = JSON.parse(localStorage.getItem(GUZ_KEY)); if (Array.isArray(p) && p.length === 3) return p; } catch (e) {} return GUZ_DEF.slice(); }
+  // zapisane położenie (wspólne dla zabiegów), a bez niego domyślne dla wariantu (v.tumourDef) albo GUZ_DEF (wstępnica)
+  function guzPos(v) { try { var p = JSON.parse(localStorage.getItem(GUZ_KEY)); if (Array.isArray(p) && p.length === 3) return p; } catch (e) {} var d = (v || (M && M.an) || {}).tumourDef; return d ? d.slice() : GUZ_DEF.slice(); }
   function guzBind(P0, only) {
     var p = new V3().fromArray(P0), best = null;
     M.objs.forEach(function (o) {
@@ -21,7 +22,7 @@
     var mat = track(new THREE.MeshStandardMaterial({ color: '#7a1522', roughness: 0.55, transparent: true })), mesh = new THREE.Mesh(track(guzGeo()), mat);
     M.group.add(mesh);
     var el = mkLabel('Guz', 'przeciągnij, aby przesunąć', '#b3263a', 'seg'), el2 = mkLabel('Guz', '', '#b3263a', 'seg');
-    var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos()),
+    var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos(M.an)),
       update: function (m) {
         var b = this.bind, o = b && b.o, on = S.tumour && !!o && m > -1e-3; // na slajdzie „Dostęp” (m < 0) guz ukryty
         if (!on) { mesh.visible = false; this.alpha = 0; return; }
@@ -39,13 +40,13 @@
   }
   // linie cięcia za guzem: położenie guza na jelicie grubym (t na osi C_COL) → wariant przebudowany przez v.adapt (dane, lista zabiegów); wyniki zapamiętane
   var ADAPT_C = {}, gtK = null, gtV = null;
-  function guzT() {
-    var p = guzPos(), k = p.join(',');
+  function guzT(v) {
+    var p = guzPos(v), k = p.join(',');
     if (k !== gtK) { var C = A._lib.C_COL, P = new V3().fromArray(p), t = A.nearestT(C, P, 800); gtK = k; gtV = C.getPointAt(t).distanceTo(P) < A._lib.COL_R(t) + 1.0 ? Math.round(t / 0.002) * 0.002 : null; }
     return gtV;
   }
   function adaptedVar(v) {
-    var t = S.tumour ? guzT() : null; if (t === null) return v;
+    var t = S.tumour ? guzT(v) : null; if (t === null) return v;
     var k = v.id + ':' + t.toFixed(3); if (!(k in ADAPT_C)) ADAPT_C[k] = v.adapt(t) || v;
     return ADAPT_C[k];
   }

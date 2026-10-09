@@ -140,6 +140,7 @@
     M.marks.forEach(function (mk) {
       var op = kfNum(mk.def.opacity, m, 1);
       mk.op = op; mk.mat.opacity = op * mk.baseOp; mk.mesh.visible = op > 0.01;
+      if (mk.subMats) mk.subMats.forEach(function (q) { q[0].opacity = op * q[1]; }); // np. mięśnie proste w powłokach
       kfCol(mk.cols, m, mk.mat.color);
       if (mk.kind === 'ring') mk.mat.emissive.copy(mk.mat.color).multiplyScalar(0.35);
     });

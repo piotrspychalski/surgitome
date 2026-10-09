@@ -1511,6 +1511,92 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     return an;
   }
   /* =====================================================================
+     POWŁOKI BRZUCHA — wspólny model przedniej ściany tułowia w układzie jelita grubego (x+ lewa strona chorego, y+ dogłowowo, z+ do przodu)
+     Skóra jako powierzchnia z(x, y): połowa szerokości W(y) i głębokość D(y) od osi ciała (zc), zagłębienie pępka i bruzda kresy białej;
+     głębokość w śródbrzuszu jak w konturze TK jelita grubego (zc 0,3, B 6,0). Punkty orientacyjne: wyrostek mieczykowaty, łuki żebrowe, pępek,
+     kolce biodrowe przednie górne, grzebienie biodrowe, więzadła pachwinowe, spojenie łonowe. Pod skórą mięśnie proste brzucha (kresa biała,
+     smugi ścięgniste) i naczynia nabrzuszne dolne (od pachwiny skośnie do pochewki mięśnia prostego, w jego bocznej części) i górne.
+     lift — uniesienie powłok przy odmie otrzewnowej (0–1). ACCESS — dostęp operacyjny dla zabiegu: cięcia i trokary (współrzędne x, y na skórze).
+     ===================================================================== */
+  var BODY = (function () {
+    var ZC = 0.3;
+    function tab(T, y) { if (y >= T[0][0]) return T[0][1]; for (var i = 1; i < T.length; i++) if (y >= T[i][0]) { var a = T[i - 1], b = T[i], u = (y - b[0]) / (a[0] - b[0]); u = u * u * (3 - 2 * u); return b[1] + (a[1] - b[1]) * u; } return T[T.length - 1][1]; }
+    var WT = [[13, 11.6], [8, 11.2], [2, 10.6], [-4, 10.9], [-9, 11.9], [-13, 11.7], [-18, 10.4]];   // połowa szerokości (do linii pachowej środkowej)
+    var DT = [[13, 5.7], [9.5, 5.4], [7.5, 5.2], [4, 5.6], [-2, 6.05], [-6, 6.2], [-10, 5.85], [-13, 5.2], [-15.5, 4.6], [-18, 3.9]]; // głębokość od osi
+    var Y0 = -17.6, Y1 = 12.5;
+    function W(y) { return tab(WT, y); }
+    function D(y) { return tab(DT, y); }
+    function lift(x, y) { var q = (x / 9.5) * (x / 9.5) + ((y + 3.5) / 11) * ((y + 3.5) / 11); return q >= 1 ? 0 : 1.5 * (1 - q) * (1 - q); }
+    function z(x, y, k) {
+      var w = W(y), q = Math.max(0, 1 - (x / w) * (x / w)), r2 = x * x + (y + 5.5) * (y + 5.5);
+      var zz = ZC + D(y) * Math.sqrt(q) - 0.42 * Math.exp(-r2 / 0.2) + 0.12 * Math.exp(-r2 / 0.9) * (1 - Math.exp(-r2 / 0.2)) * 2;  // pępek: zagłębienie z wałem
+      if (y > -15 && y < 8) zz -= 0.07 * Math.exp(-x * x / 0.35);  // kresa biała
+      return zz + (k ? k * lift(x, y) : 0);
+    }
+    // punkt na skórze (off — w głąb, wzdłuż normalnej) i normalna zewnętrzna
+    function nrm(x, y, k) { var e = 0.02, dx = (z(x + e, y, k) - z(x - e, y, k)) / (2 * e), dy = (z(x, y + e, k) - z(x, y - e, k)) / (2 * e); var n = new THREE.Vector3(-dx, -dy, 1); return n.normalize(); }
+    function at(x, y, off, k) { var p = new THREE.Vector3(x, y, z(x, y, k)); if (off) p.addScaledVector(nrm(x, y, k), -off); return p; }
+    // punkty orientacyjne (x, y na skórze)
+    var LM = {
+      xiph: [0, 8.7], umb: [0, -5.5], pubis: [0, -15.4], asisL: [8.7, -10.4], asisR: [-8.7, -10.4],
+      costalL: [[0.6, 8.5], [2.2, 7.6], [4.0, 6.1], [6.0, 4.4], [8.0, 2.4], [9.7, 0.3], [10.6, -1.2]],
+      crestL: [[8.7, -10.4], [9.8, -9.2], [10.8, -8.2], [11.5, -7.6]],
+      ingL: [[8.7, -10.4], [6.6, -12.3], [4.4, -14.0], [2.2, -15.5], [1.2, -15.7]]
+    };
+    function mir(a) { return a.map(function (p) { return [-p[0], p[1]]; }); }
+    LM.costalR = mir(LM.costalL); LM.crestR = mir(LM.crestL); LM.ingR = mir(LM.ingL);
+    // mięsień prosty brzucha: od spojenia (wąski) do łuku żebrowego (szerszy); brzeg przyśrodkowy przy kresie białej
+    var RY0 = -15.2, RY1 = 7.0;
+    function rectLat(y) { return 2.5 + (y - RY0) / (RY1 - RY0) * 3.6; }
+    var RECT_MED = 0.55, TEND = [4.6, 1.6, -1.9];   // smugi ścięgniste (nad pępkiem)
+    // naczynia nabrzuszne: dolne — od tętnicy biodrowej zewnętrznej (punkt środkowy pachwiny) do pochewki mięśnia prostego (kresa łukowata) i w górę
+    // w jego bocznej części; górne — od łuku żebrowego w dół; [x, y, głębokość pod skórą]
+    var EPI_INF = [[5.3, -14.0, 1.6], [4.7, -11.6, 1.2], [4.2, -9.0, 0.95], [3.8, -5.5, 0.85], [3.55, -1.5, 0.85], [3.4, 1.4, 0.85]];
+    var EPI_SUP = [[3.3, 6.6, 0.85], [3.35, 4.0, 0.85], [3.4, 1.4, 0.85]];
+    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP };
+  })();
+
+  /* ---------- Dostęp operacyjny (slajd „Dostęp” przed anatomią prawidłową). Oś czasu kadru m: −1 → −0,02 (poza nią model powłok niewidoczny).
+     open — cięcia [x, y] na skórze z czasem rysowania (t) i otwierania rany (open); lap / rob — trokary: at [x, y], mm, rola; first — trokar wprowadzony
+     techniką otwartą przed odmą; odma (insuf) unosi powłoki; ext — planowane cięcie do wydobycia preparatu (linia przerywana).
+     Hemikolektomia prawa: otwarty — cięcie poprzeczne prawostronne nad pępkiem; laparoskopia — 2 × 12 mm przez lewy mięsień prosty (optyka w połowie
+     wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym, drugi wyżej), 5 mm w linii cięcia Pfannenstiela i 5 mm pod wyrostkiem
+     mieczykowatym (praktyka autora), wydobycie przez cięcie Pfannenstiela; robot da Vinci Xi — porty w linii skośnej od lewego łuku żebrowego do okolicy
+     nadłonowej co 6–10 cm (najniższy w linii Pfannenstiela), port asystenta w lewym boku między dolnymi portami. ---------- */
+  var PFANN = [[-2.4, -13.35], [-1.2, -13.72], [0, -13.85], [1.2, -13.72], [2.4, -13.35]];
+  var ACCESS = {
+    rh: {
+      target: [-4.6, -3.2, 0.6],
+      open: {
+        title: 'Dostęp otwarty: cięcie poprzeczne',
+        text: 'Cięcie poprzeczne w prawej połowie brzucha, ok. 2–3 cm nad pępkiem, od linii pośrodkowej do prawej linii pachowej przedniej, z przecięciem prawego mięśnia prostego. Dobry dostęp do prawej połowy okrężnicy i zagięcia wątrobowego; jelito wyprowadzone przez ranę, zespolenie (FEEA) poza jamą brzuszną.',
+        cuts: [{ pts: [[0.7, -3.55], [-1.6, -3.7], [-4.0, -3.72], [-6.4, -3.55], [-8.6, -3.15]], name: 'Cięcie poprzeczne prawostronne', sub: 'nad pępkiem, przez prawy mięsień prosty', t: [-0.86, -0.46], open: [-0.42, -0.12], w: 0.85 }],
+        ports: []
+      },
+      lap: {
+        title: 'Dostęp laparoskopowy',
+        text: 'Dwa trokary 12 mm przez lewy mięsień prosty: optyka w połowie wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym (wprowadzona techniką otwartą, potem odma otrzewnowa), drugi nieco wyżej; dwa trokary 5 mm — w linii cięcia Pfannenstiela i pod wyrostkiem mieczykowatym. Zespolenie wewnątrzbrzuszne (izoperystaltyczne), preparat wydobyty przez cięcie Pfannenstiela.',
+        first: 0, insuf: [-0.76, -0.62],
+        ports: [{ at: [2.4, -3.6], mm: 12, name: '12 mm — optyka (kamera)', sub: 'przez lewy mięsień prosty' },
+          { at: [2.8, 2.7], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'przez lewy mięsień prosty, wyżej' },
+          { at: [0.9, -13.75], mm: 5, name: '5 mm — narzędzie', sub: 'w linii cięcia Pfannenstiela' },
+          { at: [0, 6.9], mm: 5, name: '5 mm — pomocniczy', sub: 'pod wyrostkiem mieczykowatym' }],
+        ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
+      },
+      rob: {
+        title: 'Dostęp robotyczny (da Vinci Xi)',
+        text: 'Cztery porty robota w jednej linii skośnej od lewego łuku żebrowego (linia środkowo-obojczykowa) do okolicy nadłonowej, co 6–10 cm: 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w lewym boku, między dolnymi portami. Zespolenie wewnątrzbrzuszne, preparat wydobyty przez cięcie Pfannenstiela.',
+        first: 1, insuf: [-0.76, -0.62], robot: true,
+        ports: [{ at: [6.2, 2.7], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'pod lewym łukiem żebrowym' },
+          { at: [4.4, -2.85], mm: 8, name: '8 mm — optyka (kamera)', sub: 'port środkowy' },
+          { at: [2.6, -8.3], mm: 8, name: '8 mm — ramię robota', sub: '' },
+          { at: [0.8, -13.75], mm: 8, name: '8 mm — ramię robota', sub: 'w linii cięcia Pfannenstiela' },
+          { at: [7.9, -8.4], mm: 12, name: '12 mm — port asystenta', sub: 'lewy bok, między dolnymi portami', assist: true }],
+        ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
+      }
+    }
+  };
+  /* =====================================================================
      JELITO GRUBE
      ===================================================================== */
   var COLON = [[-7.0, -9.6, 0.6], [-7.4, -7.5, 0.4], [-7.6, -4, 0.2], [-7.4, -0.5, 0], [-7.0, 3, 0], [-6.2, 5.6, 0.2], [-4.4, 5.8, 1.6], [-2, 4.2, 2.6], [0.6, 3.4, 2.8],
@@ -2249,11 +2335,13 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   })();
 
   /* ---------- Kolostomia końcowa w lewym dole biodrowym (Hartmann, APR): zstępnica przeprowadzona przez powłoki ---------- */
-  var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.3, -6.3, 2.2], [6.4, -7.4, 3.9], [6.0, -7.6, 5.6]]);
+  // miejsce stomii: lewy dół biodrowy, przez lewy mięsień prosty (model powłok BODY), na wysokości skóry
+  var COLO_S = [3.0, -7.6], COLO_Z = BODY.z(COLO_S[0], COLO_S[1]);
+  var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.2, -6.3, 2.2], [5.5, -7.4, 3.9], [3.6, -7.6, COLO_Z - 0.75], [COLO_S[0], COLO_S[1], COLO_Z]]);
   var COLO_R = (function () { var cc = curveOf(COLO_PATH), tj = nearestT(cc, [7.9, -2.0, -0.6]); return function (t) { return t <= tj ? COL_R(t / tj * tPJ) : 1.15 + (1.05 - 1.15) * sm01((t - tj) / (1 - tj)); }; })();
   function coloMarks(stomaOp) {
-    return [{ kind: 'wall', name: 'Powłoki brzuszne', center: [5.0, -7.0, 5.6], size: [12, 11], holes: [{ c: [6.0, -7.6], rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
-      { kind: 'stoma', name: 'Kolostomia końcowa', center: [6.0, -7.6, 5.8], rx: 1.15, ry: 1.15, opacity: stomaOp }];
+    return [{ kind: 'body', name: 'Powłoki brzuszne', holes: [{ c: COLO_S, rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
+      { kind: 'stoma', name: 'Kolostomia końcowa', center: [COLO_S[0], COLO_S[1], COLO_Z + 0.2], rx: 1.15, ry: 1.15, opacity: stomaOp }];
   }
 
   /* ---------- Operacja Hartmanna ---------- */
@@ -2292,7 +2380,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       endTarget: { pre: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
       routePost: { prefix: [], branches: [
-        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [6.0, -7.6, 9.2], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
+        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
         { label: 'Przez odbyt', sub: 'do kikuta odbytnicy', steps: [{ obj: 'rect', from: 1, to: addV(D.P0.toArray(), D.T0, 1.3), note: 'Kikut odbytnicy — ślepo zakończony, u szczytu linia zszywek' }],
           target: D.P0.toArray(), endText: 'Szczyt kikuta z linią zszywek' }
       ] }
@@ -2338,7 +2426,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         inc: [0.3, 0.95], open: [2.1, 2.35], close: [3.0, 3.5], stitches: 7, off: APR_OFF, offT: [2.15, 2.9] },
       endTarget: { pre: ICV, post: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia', post: 'Zastawka krętniczo-kątnicza w polu widzenia' },
-      routePost: [{ pt: [6.0, -7.6, 9.2], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
+      routePost: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
         { obj: 'prox', from: [7.9, -1.5, -0.7], to: 0.04, note: 'Poprzecznica i wstępnica do kątnicy' }]
     };
   })();
@@ -2441,8 +2529,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
      tętnice jelita krętego i łuk arkad; bez podwiązań i węzłów (zabieg nieonkologiczny). Przy wyprowadzeniu krezka podąża za ramionami do otworu
      w powłokach (morph, czasy jak przemieszczenie jelita); brzeg nie wychodzi ponad powłoki. P, Dd — ramiona po operacji, cut — miejsce stomii na C_ILE. */
   var ILE_ROOT = curveOf([[1.8, -1.4, -1.9], [0.2, -3.4, -1.8], [-1.6, -5.4, -1.5], [-3.4, -7.0, -1.1], [-4.6, -7.6, -0.6]]);
-  function ileoMeso(P, Dd, cut) {
-    var cP = curveOf(P), cD = curveOf(Dd), ZW = 4.9;
+  function ileoMeso(P, Dd, cut, ZW) {
+    var cP = curveOf(P), cD = curveOf(Dd);
     function root(t) { return ILE_ROOT.getPointAt(Math.max(0, Math.min(1, t))); }
     function bowel(t, post) { return !post ? [C_ILE.getPointAt(t), C_ILE.getTangentAt(t)] : t <= cut ? [cP.getPointAt(t / cut), cP.getTangentAt(t / cut)] : [cD.getPointAt((t - cut) / (1 - cut)), cD.getTangentAt((t - cut) / (1 - cut))]; }
     function E(t, post, k) {
@@ -2478,12 +2566,17 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       P = [[3.5, -0.5, 0.4], [0.5, -0.8, 1.0], [-2.8, -1.6, 1.2], [-2.6, -3.6, 1.6], [-2.0, -5.6, 2.2], [-3.1, yP - 0.9, 3.6], [X + 0.1, yP - 0.1, 4.8], [X, yP, 5.5], sp];
       Dd = [sd, [X - 0.1, yD + 0.2, 4.9], [-5.1, yD - 0.3, 3.7], [-5.1, -5.9, 3.0], [-4.7, -7.2, 2.0], [-4.4, -7.8, 1.0], [-6.0, -7.9, 0.6]];
     }
+    // miejsce stomii na powłokach (BODY): prawy dół biodrowy, przez prawy mięsień prosty. Geometria zbudowana dla (X, yc, Z) przesunięta płynnie:
+    // pełne przesunięcie przy powłokach, zero w głębi jamy brzusznej (ułożenie jelita w środku bez zmian)
+    var XS = -2.8, YS = -6.9, ZS = BODY.z(XS, YS), dX = XS - X, dY = YS - yc, dZ = ZS - Z;
+    function mv(p) { var w = sm01((p[2] - 1.4) / 2.6); return [p[0] + w * dX, p[1] + w * dY, p[2] + w * dZ]; }
+    P = P.map(mv); Dd = Dd.map(mv);
     var split = splitBy(C_ILE, 0.9, [P, Dd]), cut = split.cuts[0];
-    var holes = loop ? [{ c: [X, yc], rx: 1.25, ry: 1.75 }] : [{ c: [X, yP], rx: 1.1, ry: 1.1 }, { c: [X, yD], rx: 1.1, ry: 1.1 }];
+    var holes = (loop ? [{ c: [X, yc], rx: 1.25, ry: 1.75 }] : [{ c: [X, yP], rx: 1.1, ry: 1.1 }, { c: [X, yD], rx: 1.1, ry: 1.1 }]).map(function (h) { h.c = [h.c[0] + dX, h.c[1] + dY]; return h; });
     var ST = [[2.4, 0], [2.85, 1]];
-    var stomas = loop ? [{ kind: 'stoma', name: 'Ileostomia pętlowa — jedna stomia, dwa światła', center: [X, yc, Z + 0.2], rx: 1.25, ry: 1.75, opacity: ST }]
-      : [{ kind: 'stoma', name: 'Otwór wydzielniczy (proksymalny)', center: [X, yP, Z + 0.3], rx: 1.1, ry: 1.1, opacity: ST },
-         { kind: 'stoma', name: 'Otwór odprowadzający (dystalny)', center: [X, yD, Z + 0.15], rx: 1.05, ry: 1.05, opacity: ST }];
+    var stomas = loop ? [{ kind: 'stoma', name: 'Ileostomia pętlowa — jedna stomia, dwa światła', center: mv([X, yc, Z + 0.2]), rx: 1.25, ry: 1.75, opacity: ST }]
+      : [{ kind: 'stoma', name: 'Otwór wydzielniczy (proksymalny)', center: mv([X, yP, Z + 0.3]), rx: 1.1, ry: 1.1, opacity: ST },
+         { kind: 'stoma', name: 'Otwór odprowadzający (dystalny)', center: mv([X, yD, Z + 0.15]), rx: 1.05, ry: 1.05, opacity: ST }];
     var pos = up ? 'górne' : 'dolne', posM = up ? 'górny' : 'dolny', posL = up ? 'górnym' : 'dolnym', posG = up ? 'górnej' : 'dolnej', posO = up ? 'dolnej' : 'górnej';
     var objs = [
       { id: 'colon', name: 'Jelito grube', pre: { path: COLON, r: COL_R }, color: COLC.colon, mucosa: 'haustra', tint: MUC_C,
@@ -2495,7 +2588,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         color: COLC.ti, mucosa: 'circular', tint: MUC.bowel, labels: [L('Ramię odprowadzające', 0.4, POST)] }
     ];
     // pętla wyprowadzona w całości (szczyt nad skórą) do chwili otwarcia — widać, że jelito nie jest przecięte
-    if (loop) objs.push({ id: 'apex', name: 'Szczyt pętli', noEndo: true, pre: { path: [[X, yP, Z + 0.3], [X, yc + (yP - yc) * 0.3, Z + 1.35], [X, yc + (yD - yc) * 0.3, Z + 1.35], [X, yD, Z + 0.3]], r: flat(0.88) },
+    if (loop) objs.push({ id: 'apex', name: 'Szczyt pętli', noEndo: true, pre: { path: [[X, yP, Z + 0.3], [X, yc + (yP - yc) * 0.3, Z + 1.35], [X, yc + (yD - yc) * 0.3, Z + 1.35], [X, yD, Z + 0.3]].map(mv), r: flat(0.88) },
       color: COLC.ti, mucosa: 'circular', tint: MUC.bowel, opacity: [[1.7, 0], [1.95, 1], [2.45, 1], [2.75, 0]], labels: [L('Pętla wyprowadzona — nieprzecięta', 0.5, [1.95, 2.45])] });
     return {
       cat: 'colon', id: 'ileo-' + (loop ? 'loop' : 'double') + (up ? '-up' : '-dn'), short: loop ? 'Ileostomia pętlowa' : 'Ileostomia dwulufowa',
@@ -2511,7 +2604,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         'Otwór wydzielniczy (proksymalny) wywinięty; odprowadzający (dystalny) płaski — przetoka śluzowa.',
         'Oba końce w jednym miejscu — łatwiejsze późniejsze odtworzenie ciągłości.'
       ]).concat(['Ramię wydzielnicze w ' + posG + ' części stomii, odprowadzające w ' + posO + '. Ułożenie zależy od obrotu pętli i preferencji ośrodka; ważne, by worek dobrze obejmował światło wydzielnicze.']),
-      focus: { t: [-3.5, -4.5, 3], k: 0.6 }, text: COL_TEXT,
+      focus: { t: [-2.8, -6.0, 3.4], k: 0.6 }, text: COL_TEXT,
       frames: loop ? {
         resect: ['Wybór pętli', 'Pętla końcowego odcinka jelita krętego, ok. 20–30 cm od zastawki; otwór w powłokach w prawym dole biodrowym.', 'Wybór pętli'],
         remove: ['Wyprowadzenie pętli', 'Nieprzecięta pętla przeciągnięta przez powłoki; ramię wydzielnicze w ' + posG + ' części otworu, czasem (np. u otyłych) podparta pręcikiem — rutynowo niekonieczne.', 'Wyprowadzenie'],
@@ -2530,12 +2623,12 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       marks: [
         ringOn(C_ILE, flat(0.9), cut, loop ? { name: 'Pętla na stomię', color: COL.mark, opacity: [[0.05, 0], [0.55, 1], [1.4, 1], [1.7, 0]] }
           : { name: 'Przecięcie jelita krętego', color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.4, 1], [1.7, 0]] }),
-        { kind: 'wall', name: 'Powłoki brzuszne', center: [-4.0, -5.0, 5.6], size: [11, 11], holes: holes, opacity: [[0.3, 0], [0.8, 1]] }
+        { kind: 'body', name: 'Powłoki brzuszne', holes: holes, opacity: [[0.3, 0], [0.8, 1]] }
       ].concat(stomas),
-      endTarget: { pre: null }, ileoMeso: ileoMeso(P, Dd, cut),
+      endTarget: { pre: null }, ileoMeso: ileoMeso(P, Dd, cut, ZS - 1.0),
       routePost: { prefix: [], branches: [
-        { label: 'Ramię wydzielnicze', sub: 'proksymalne — jelito kręte', steps: [{ pt: [X, yP, 9.2], note: 'Stomia — światło wydzielnicze' }, { obj: 'prox', from: 1, to: 0.6, note: 'Jelito kręte, w górę strumienia treści' }] },
-        { label: 'Ramię odprowadzające', sub: 'dystalne — do zastawki i jelita grubego', steps: [{ pt: [X, yD, 9.2], note: 'Stomia — światło odprowadzające' }, { obj: 'dist', note: 'Wyłączony odcinek jelita krętego do zastawki' }, { obj: 'colon', from: 0.035, to: 0.07, note: 'Kątnica' }] }
+        { label: 'Ramię wydzielnicze', sub: 'proksymalne — jelito kręte', steps: [{ pt: [X + dX, yP + dY, 9.2 + dZ], note: 'Stomia — światło wydzielnicze' }, { obj: 'prox', from: 1, to: 0.6, note: 'Jelito kręte, w górę strumienia treści' }] },
+        { label: 'Ramię odprowadzające', sub: 'dystalne — do zastawki i jelita grubego', steps: [{ pt: [X + dX, yD + dY, 9.2 + dZ], note: 'Stomia — światło odprowadzające' }, { obj: 'dist', note: 'Wyłączony odcinek jelita krętego do zastawki' }, { obj: 'colon', from: 0.035, to: 0.07, note: 'Kątnica' }] }
       ] }
     };
   }
@@ -2557,92 +2650,6 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 
 
 
-  /* =====================================================================
-     POWŁOKI BRZUCHA — wspólny model przedniej ściany tułowia w układzie jelita grubego (x+ lewa strona chorego, y+ dogłowowo, z+ do przodu)
-     Skóra jako powierzchnia z(x, y): połowa szerokości W(y) i głębokość D(y) od osi ciała (zc), zagłębienie pępka i bruzda kresy białej;
-     głębokość w śródbrzuszu jak w konturze TK jelita grubego (zc 0,3, B 6,0). Punkty orientacyjne: wyrostek mieczykowaty, łuki żebrowe, pępek,
-     kolce biodrowe przednie górne, grzebienie biodrowe, więzadła pachwinowe, spojenie łonowe. Pod skórą mięśnie proste brzucha (kresa biała,
-     smugi ścięgniste) i naczynia nabrzuszne dolne (od pachwiny skośnie do pochewki mięśnia prostego, w jego bocznej części) i górne.
-     lift — uniesienie powłok przy odmie otrzewnowej (0–1). ACCESS — dostęp operacyjny dla zabiegu: cięcia i trokary (współrzędne x, y na skórze).
-     ===================================================================== */
-  var BODY = (function () {
-    var ZC = 0.3;
-    function tab(T, y) { if (y >= T[0][0]) return T[0][1]; for (var i = 1; i < T.length; i++) if (y >= T[i][0]) { var a = T[i - 1], b = T[i], u = (y - b[0]) / (a[0] - b[0]); u = u * u * (3 - 2 * u); return b[1] + (a[1] - b[1]) * u; } return T[T.length - 1][1]; }
-    var WT = [[13, 11.6], [8, 11.2], [2, 10.6], [-4, 10.9], [-9, 11.9], [-13, 11.7], [-18, 10.4]];   // połowa szerokości (do linii pachowej środkowej)
-    var DT = [[13, 5.7], [9.5, 5.4], [7.5, 5.2], [4, 5.6], [-2, 6.05], [-6, 6.2], [-10, 5.85], [-13, 5.2], [-15.5, 4.6], [-18, 3.9]]; // głębokość od osi
-    var Y0 = -17.6, Y1 = 12.5;
-    function W(y) { return tab(WT, y); }
-    function D(y) { return tab(DT, y); }
-    function lift(x, y) { var q = (x / 9.5) * (x / 9.5) + ((y + 3.5) / 11) * ((y + 3.5) / 11); return q >= 1 ? 0 : 1.5 * (1 - q) * (1 - q); }
-    function z(x, y, k) {
-      var w = W(y), q = Math.max(0, 1 - (x / w) * (x / w)), r2 = x * x + (y + 5.5) * (y + 5.5);
-      var zz = ZC + D(y) * Math.sqrt(q) - 0.42 * Math.exp(-r2 / 0.2) + 0.12 * Math.exp(-r2 / 0.9) * (1 - Math.exp(-r2 / 0.2)) * 2;  // pępek: zagłębienie z wałem
-      if (y > -15 && y < 8) zz -= 0.07 * Math.exp(-x * x / 0.35);  // kresa biała
-      return zz + (k ? k * lift(x, y) : 0);
-    }
-    // punkt na skórze (off — w głąb, wzdłuż normalnej) i normalna zewnętrzna
-    function nrm(x, y, k) { var e = 0.02, dx = (z(x + e, y, k) - z(x - e, y, k)) / (2 * e), dy = (z(x, y + e, k) - z(x, y - e, k)) / (2 * e); var n = new THREE.Vector3(-dx, -dy, 1); return n.normalize(); }
-    function at(x, y, off, k) { var p = new THREE.Vector3(x, y, z(x, y, k)); if (off) p.addScaledVector(nrm(x, y, k), -off); return p; }
-    // punkty orientacyjne (x, y na skórze)
-    var LM = {
-      xiph: [0, 8.7], umb: [0, -5.5], pubis: [0, -15.4], asisL: [8.7, -10.4], asisR: [-8.7, -10.4],
-      costalL: [[0.6, 8.5], [2.2, 7.6], [4.0, 6.1], [6.0, 4.4], [8.0, 2.4], [9.7, 0.3], [10.6, -1.2]],
-      crestL: [[8.7, -10.4], [9.8, -9.2], [10.8, -8.2], [11.5, -7.6]],
-      ingL: [[8.7, -10.4], [6.6, -12.3], [4.4, -14.0], [2.2, -15.5], [1.2, -15.7]]
-    };
-    function mir(a) { return a.map(function (p) { return [-p[0], p[1]]; }); }
-    LM.costalR = mir(LM.costalL); LM.crestR = mir(LM.crestL); LM.ingR = mir(LM.ingL);
-    // mięsień prosty brzucha: od spojenia (wąski) do łuku żebrowego (szerszy); brzeg przyśrodkowy przy kresie białej
-    var RY0 = -15.2, RY1 = 7.0;
-    function rectLat(y) { return 2.5 + (y - RY0) / (RY1 - RY0) * 3.6; }
-    var RECT_MED = 0.55, TEND = [4.6, 1.6, -1.9];   // smugi ścięgniste (nad pępkiem)
-    // naczynia nabrzuszne: dolne — od tętnicy biodrowej zewnętrznej (punkt środkowy pachwiny) do pochewki mięśnia prostego (kresa łukowata) i w górę
-    // w jego bocznej części; górne — od łuku żebrowego w dół; [x, y, głębokość pod skórą]
-    var EPI_INF = [[5.3, -14.0, 1.6], [4.7, -11.6, 1.2], [4.2, -9.0, 0.95], [3.8, -5.5, 0.85], [3.55, -1.5, 0.85], [3.4, 1.4, 0.85]];
-    var EPI_SUP = [[3.3, 6.6, 0.85], [3.35, 4.0, 0.85], [3.4, 1.4, 0.85]];
-    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP };
-  })();
-
-  /* ---------- Dostęp operacyjny (slajd „Dostęp” przed anatomią prawidłową). Oś czasu kadru m: −1 → −0,02 (poza nią model powłok niewidoczny).
-     open — cięcia [x, y] na skórze z czasem rysowania (t) i otwierania rany (open); lap / rob — trokary: at [x, y], mm, rola; first — trokar wprowadzony
-     techniką otwartą przed odmą; odma (insuf) unosi powłoki; ext — planowane cięcie do wydobycia preparatu (linia przerywana).
-     Hemikolektomia prawa: otwarty — cięcie poprzeczne prawostronne nad pępkiem; laparoskopia — 2 × 12 mm przez lewy mięsień prosty (optyka w połowie
-     wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym, drugi wyżej), 5 mm w linii cięcia Pfannenstiela i 5 mm pod wyrostkiem
-     mieczykowatym (praktyka autora), wydobycie przez cięcie Pfannenstiela; robot da Vinci Xi — porty w linii skośnej od lewego łuku żebrowego do okolicy
-     nadłonowej co 6–10 cm (najniższy w linii Pfannenstiela), port asystenta w lewym boku między dolnymi portami. ---------- */
-  var PFANN = [[-2.4, -13.35], [-1.2, -13.72], [0, -13.85], [1.2, -13.72], [2.4, -13.35]];
-  var ACCESS = {
-    rh: {
-      target: [-4.6, -3.2, 0.6],
-      open: {
-        title: 'Dostęp otwarty: cięcie poprzeczne',
-        text: 'Cięcie poprzeczne w prawej połowie brzucha, ok. 2–3 cm nad pępkiem, od linii pośrodkowej do prawej linii pachowej przedniej, z przecięciem prawego mięśnia prostego. Dobry dostęp do prawej połowy okrężnicy i zagięcia wątrobowego; jelito wyprowadzone przez ranę, zespolenie (FEEA) poza jamą brzuszną.',
-        cuts: [{ pts: [[0.7, -3.55], [-1.6, -3.7], [-4.0, -3.72], [-6.4, -3.55], [-8.6, -3.15]], name: 'Cięcie poprzeczne prawostronne', sub: 'nad pępkiem, przez prawy mięsień prosty', t: [-0.86, -0.46], open: [-0.42, -0.12], w: 0.85 }],
-        ports: []
-      },
-      lap: {
-        title: 'Dostęp laparoskopowy',
-        text: 'Dwa trokary 12 mm przez lewy mięsień prosty: optyka w połowie wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym (wprowadzona techniką otwartą, potem odma otrzewnowa), drugi nieco wyżej; dwa trokary 5 mm — w linii cięcia Pfannenstiela i pod wyrostkiem mieczykowatym. Zespolenie wewnątrzbrzuszne (izoperystaltyczne), preparat wydobyty przez cięcie Pfannenstiela.',
-        first: 0, insuf: [-0.76, -0.62],
-        ports: [{ at: [2.4, -3.6], mm: 12, name: '12 mm — optyka (kamera)', sub: 'przez lewy mięsień prosty' },
-          { at: [2.8, 2.7], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'przez lewy mięsień prosty, wyżej' },
-          { at: [0.9, -13.75], mm: 5, name: '5 mm — narzędzie', sub: 'w linii cięcia Pfannenstiela' },
-          { at: [0, 6.9], mm: 5, name: '5 mm — pomocniczy', sub: 'pod wyrostkiem mieczykowatym' }],
-        ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
-      },
-      rob: {
-        title: 'Dostęp robotyczny (da Vinci Xi)',
-        text: 'Cztery porty robota w jednej linii skośnej od lewego łuku żebrowego (linia środkowo-obojczykowa) do okolicy nadłonowej, co 6–10 cm: 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w lewym boku, między dolnymi portami. Zespolenie wewnątrzbrzuszne, preparat wydobyty przez cięcie Pfannenstiela.',
-        first: 1, insuf: [-0.76, -0.62], robot: true,
-        ports: [{ at: [6.2, 2.7], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'pod lewym łukiem żebrowym' },
-          { at: [4.4, -2.85], mm: 8, name: '8 mm — optyka (kamera)', sub: 'port środkowy' },
-          { at: [2.6, -8.3], mm: 8, name: '8 mm — ramię robota', sub: '' },
-          { at: [0.8, -13.75], mm: 8, name: '8 mm — ramię robota', sub: 'w linii cięcia Pfannenstiela' },
-          { at: [7.9, -8.4], mm: 12, name: '12 mm — port asystenta', sub: 'lewy bok, między dolnymi portami', assist: true }],
-        ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
-      }
-    }
-  };
   /* =====================================================================
      TRZUSTKA I DROGI ŻÓŁCIOWE: Whipple, Traverso-Longmire (PPPD), HJ na pętli Roux
      ===================================================================== */
@@ -3779,6 +3786,10 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
       // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
       LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf)$/.test(p.id)) p.variants.forEach(function (v) { v.tumour = true; }); });
+      // domyślne położenie guza (dopóki nie zapisano własnego): typowe dla zabiegu, na przedniej ścianie jelita
+      function onWall(t) { var P = C_COL.getPointAt(t), T = C_COL.getTangentAt(t), n = new THREE.Vector3(0, 0, 1); n.addScaledVector(T, -n.dot(T)).normalize(); return P.addScaledVector(n, COL_R(t)).toArray().map(function (x) { return +x.toFixed(3); }); }
+      var TDEF = { sf: 0.47, lh: 0.6, 'lh-iso': 0.6, 'lh-anti': 0.6, sig: 0.78, 'ar-center': 0.93, 'ar-racket': 0.93, 'ar-side': 0.885, 'ar-ular': 0.96, apr: 0.985 };
+      LIST.forEach(function (p) { p.variants.forEach(function (v) { if (TDEF[v.id] != null) v.tumourDef = onWall(TDEF[v.id]); }); });
       // linie cięcia dopasowane do guza (t — położenie guza na jelicie grubym, z aplikacji): margines dystalny 5 cm w esicy i przy PME, 2 cm w TME, ok. 1 cm w ULAR,
       // ok. 6 cm w poprzecznicy i zagięciu śledzionowym (0,045 t ≈ 5 cm); przecięcia proksymalne wyznaczone podwiązaniem naczyń (bez zmian), poza esicą i zagięciem.
       // null — guz poza zasięgiem albo przecięcia domyślne (wtedy zostaje wariant bazowy)
@@ -5422,7 +5433,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       : at;
   }
   function makeMark(d) {
-    var defCol = d.color || (d.kind === 'wall' ? '#e2b59c' : d.kind === 'stoma' ? '#d0555a' : '#ffffff');
+    var defCol = d.color || (d.kind === 'stoma' ? '#d0555a' : '#ffffff'); // 'body' — barwa skóry w kolorach wierzchołków
     var mk = { def: d, kind: d.kind, baseOp: 1, cols: (d.colors || [[0, defCol]]).map(function (c) { return [c[0], new THREE.Color(c[1])]; }) };
     if (d.kind === 'ring') {
       var mat = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], emissive: mk.cols[0][1].clone().multiplyScalar(0.35), roughness: 0.4, transparent: true }));
@@ -5447,16 +5458,14 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         var ec = new THREE.CatmullRomCurve3(d.endoPts.map(function (p) { return new V3().fromArray(p); }), closed, 'centripetal');
         mk.endoMesh = new THREE.Mesh(track(new THREE.TubeGeometry(ec, closed ? 144 : 120, 0.05, 6, closed)), dashMat(d.color || '#8f99a3', ec.getLength(), d.dash || 0.14, true));
       }
-    } else if (d.kind === 'wall') {
-      var w = d.size[0], h = d.size[1], cx = d.center[0], cy = d.center[1];
-      var shape = new THREE.Shape(); shape.moveTo(-w / 2, -h / 2); shape.lineTo(w / 2, -h / 2); shape.lineTo(w / 2, h / 2); shape.lineTo(-w / 2, h / 2); shape.closePath();
-      d.holes.forEach(function (ho) { var p = new THREE.Path(); p.absellipse(ho.c[0] - cx, ho.c[1] - cy, ho.rx, ho.ry, 0, Math.PI * 2, true); shape.holes.push(p); });
-      var sg = track(new THREE.ShapeGeometry(shape, 48));
-      var wm = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.8, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide }));
-      mk.mesh = new THREE.Mesh(sg, wm); mk.mesh.position.fromArray(d.center); mk.mat = wm; mk.baseOp = 0.28;
-      mk.endoMesh = new THREE.Mesh(sg, track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.75, side: THREE.DoubleSide })));
-      mk.endoMesh.position.fromArray(d.center);
-      mk.anchor = new V3(cx + w / 2 - 1.2, cy + h / 2 - 0.8, d.center[2]);
+    } else if (d.kind === 'body') { // powłoki brzucha (wspólny model ANAT.BODY, 12-dostep): skóra i mięśnie proste z otworami stomii
+      var bg = track(bodySkinGeo(0, d.holes)), bmat = track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.85, transparent: true, opacity: 0.4, depthWrite: false, side: THREE.DoubleSide }));
+      mk.mesh = new THREE.Mesh(bg, bmat); mk.mat = bmat; mk.baseOp = 0.4;
+      var rmat = track(new THREE.MeshStandardMaterial({ color: '#b04a42', roughness: 0.7, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
+      [1, -1].forEach(function (sd) { mk.mesh.add(new THREE.Mesh(track(bodyRectusGeo(sd, 0, d.holes)), rmat)); });
+      mk.subMats = [[rmat, 0.22]];
+      mk.endoMesh = new THREE.Mesh(bg, track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.75, side: THREE.DoubleSide })));
+      var h0 = d.holes[0].c; mk.anchor = A.BODY.at(h0[0] + 2.2 * (h0[0] < 0 ? -1 : 1), h0[1] + 2.0, -0.1, 0);
     } else if (d.kind === 'stoma') {
       var sgm = track(new THREE.TorusGeometry(1, 0.3, 16, 64)), smat = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.35, transparent: true }));
       mk.mesh = new THREE.Mesh(sgm, smat); mk.mesh.position.fromArray(d.center); mk.mesh.scale.set(d.rx, d.ry, 1); mk.mat = smat;
@@ -5464,7 +5473,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       mk.endoMesh.position.copy(mk.mesh.position); mk.endoMesh.scale.copy(mk.mesh.scale);
       mk.anchor = new V3(d.center[0] + d.rx + 0.4, d.center[1], d.center[2]);
     }
-    var lk = d.kind === 'ring' && !mk.cut ? 'anast' : d.kind === 'wall' ? 'ghost' : d.kind === 'stoma' ? 'seg' : 'cut';
+    var lk = d.kind === 'ring' && !mk.cut ? 'anast' : d.kind === 'body' ? 'ghost' : d.kind === 'stoma' ? 'seg' : 'cut';
     mk.el = d.name ? mkLabel(d.name, '', mk.cols[0][1].getStyle(), lk) : null;
     if (d.postName) mk.el2 = mkLabel(d.postName, '', A.COL.staple, 'cut');
     return mk;
@@ -5774,6 +5783,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     M.marks.forEach(function (mk) {
       var op = kfNum(mk.def.opacity, m, 1);
       mk.op = op; mk.mat.opacity = op * mk.baseOp; mk.mesh.visible = op > 0.01;
+      if (mk.subMats) mk.subMats.forEach(function (q) { q[0].opacity = op * q[1]; }); // np. mięśnie proste w powłokach
       kfCol(mk.cols, m, mk.mat.color);
       if (mk.kind === 'ring') mk.mat.emissive.copy(mk.mat.color).multiplyScalar(0.35);
     });
@@ -7213,6 +7223,36 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
+  /* wspólny model powłok (slajd „Dostęp” i zabiegi ze stomią — znacznik 'body'): siatka (y, u) na powierzchni skóry ANAT.BODY z zanikaniem przy brzegach
+     (kolory RGBA); holes — otwory [{ c: [x, y], rx, ry }]: wierzchołki wewnątrz przesunięte na brzeg otworu, trójkąty całkowicie w środku pominięte */
+  function holeSnap(x, y, holes) {
+    for (var h = 0; h < (holes || []).length; h++) { var H = holes[h], dx = (x - H.c[0]) / H.rx, dy = (y - H.c[1]) / H.ry, d = Math.sqrt(dx * dx + dy * dy); if (d < 1) return { x: H.c[0] + dx / Math.max(d, 1e-4) * H.rx, y: H.c[1] + dy / Math.max(d, 1e-4) * H.ry, inside: true }; }
+    return { x: x, y: y, inside: false };
+  }
+  function gridGeo(NY, NX, fXY, off, k, holes, alphaFn) {
+    var B = A.BODY, pos = [], col = [], idx = [], ins = [], base = new THREE.Color(ACC_SKIN);
+    for (var i = 0; i <= NY; i++) for (var j = 0; j <= NX; j++) {
+      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, off, k);
+      pos.push(p.x, p.y, p.z); ins.push(h.inside); if (alphaFn) col.push(base.r, base.g, base.b, alphaFn(i / NY, j / NX));
+    }
+    for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NX; j2++) {
+      var a0 = i2 * (NX + 1) + j2, b0 = a0 + NX + 1;
+      if (!(ins[a0] && ins[b0] && ins[a0 + 1])) idx.push(a0, b0, a0 + 1);
+      if (!(ins[b0] && ins[b0 + 1] && ins[a0 + 1])) idx.push(b0, b0 + 1, a0 + 1);
+    }
+    var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    if (alphaFn) g.setAttribute('color', new THREE.Float32BufferAttribute(col, 4));
+    g.computeVertexNormals(); return g;
+  }
+  function bodySkinGeo(k, holes) {
+    var B = A.BODY;
+    return gridGeo(72, 52, function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v; return [(-1 + 2 * u) * B.W(y) * 0.985, y]; }, 0, k, holes,
+      function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v, uu = -1 + 2 * u; return sm((1 - Math.abs(uu)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6); });
+  }
+  function bodyRectusGeo(sd, k, holes) {
+    var B = A.BODY;
+    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, 0.5, k, holes, null);
+  }
   function accessAttach(key) {
     var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [];
     function skinP(x, y, off, k) { return B.at(x, y, off || 0, k); }
@@ -7220,19 +7260,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     function tubeOn(pts2, off, r, k) { return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts2.map(function (p) { return skinP(p[0], p[1], off, k); }), false, 'centripetal'), Math.max(12, pts2.length * 10), r, 6, false); }
     function mat(col, op, extra) { var m = track(new THREE.MeshStandardMaterial(Object.assign({ color: col, roughness: 0.7, transparent: true, opacity: op, depthWrite: false, side: THREE.DoubleSide }, extra || {}))); m.userData.op = op; return m; }
     // skóra: siatka (y, u) z zanikaniem przy brzegach (kolory RGBA)
-    var NY = 64, NU = 44, base = new THREE.Color(ACC_SKIN);
-    var skinG = morphGeo(function (k) {
-      var pos = [], col = [], idx = [];
-      for (var i = 0; i <= NY; i++) {
-        var y = B.Y0 + (B.Y1 - B.Y0) * i / NY, w = B.W(y) * 0.985;
-        for (var j = 0; j <= NU; j++) {
-          var u = -1 + 2 * j / NU, x = u * w, p = skinP(x, y, 0, k), a = sm((1 - Math.abs(u)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6);
-          pos.push(p.x, p.y, p.z); col.push(base.r, base.g, base.b, a);
-        }
-      }
-      for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NU; j2++) { var a0 = i2 * (NU + 1) + j2, b0 = a0 + NU + 1; idx.push(a0, b0, a0 + 1, b0, b0 + 1, a0 + 1); }
-      var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 4)); g.computeVertexNormals(); return g;
-    }, true);
+    var skinG = morphGeo(function (k) { return bodySkinGeo(k, null); }, true);
     var skinM = mat('#ffffff', 0.74, { vertexColors: true, roughness: 0.85 });
     grp.add(new THREE.Mesh(skinG, skinM));
     // mięśnie proste: pasma pod skórą od spojenia do łuku żebrowego; smugi ścięgniste
@@ -7241,12 +7269,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     function sideOf() { return !ACC.kind ? 0 : ACC.kind === 'open' ? -1 : 1; }
     [1, -1].forEach(function (sd) {
       var musM = musBy[String(sd)];
-      grp.add(new THREE.Mesh(morphGeo(function (k) {
-        var pos = [], idx = [], NR = 40, NC = 6;
-        for (var i = 0; i <= NR; i++) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * i / NR; for (var j = 0; j <= NC; j++) { var x = sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * j / NC), p = skinP(x, y, 0.5, k); pos.push(p.x, p.y, p.z); } }
-        for (var i2 = 0; i2 < NR; i2++) for (var j2 = 0; j2 < NC; j2++) { var a0 = i2 * (NC + 1) + j2, b0 = a0 + NC + 1; idx.push(a0, b0, a0 + 1, b0, b0 + 1, a0 + 1); }
-        var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals(); return g;
-      }, true), musM));
+      grp.add(new THREE.Mesh(morphGeo(function (k) { return bodyRectusGeo(sd, k, null); }, true), musM));
       B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], 0.46, 0.05, k); }), tendM)); });
       // naczynia nabrzuszne (tętnica i żyła obok)
       [['a', '#b83227', 0], ['v', '#3867b5', 0.16]].forEach(function (vv) {
@@ -7387,7 +7410,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
      Położenie zapisane we współrzędnych anatomii prawidłowej (localStorage); przy budowie modelu przypinane do najbliższego odcinka (obiekt, t, kierunek),
      więc guz przesuwa się i znika razem ze swoim odcinkiem (np. z preparatem). */
   var GUZ_KEY = 'surgitome-guz-pos', GUZ_DEF = [-6.64, -1.5, 1.57];
-  function guzPos() { try { var p = JSON.parse(localStorage.getItem(GUZ_KEY)); if (Array.isArray(p) && p.length === 3) return p; } catch (e) {} return GUZ_DEF.slice(); }
+  // zapisane położenie (wspólne dla zabiegów), a bez niego domyślne dla wariantu (v.tumourDef) albo GUZ_DEF (wstępnica)
+  function guzPos(v) { try { var p = JSON.parse(localStorage.getItem(GUZ_KEY)); if (Array.isArray(p) && p.length === 3) return p; } catch (e) {} var d = (v || (M && M.an) || {}).tumourDef; return d ? d.slice() : GUZ_DEF.slice(); }
   function guzBind(P0, only) {
     var p = new V3().fromArray(P0), best = null;
     M.objs.forEach(function (o) {
@@ -7406,7 +7430,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var mat = track(new THREE.MeshStandardMaterial({ color: '#7a1522', roughness: 0.55, transparent: true })), mesh = new THREE.Mesh(track(guzGeo()), mat);
     M.group.add(mesh);
     var el = mkLabel('Guz', 'przeciągnij, aby przesunąć', '#b3263a', 'seg'), el2 = mkLabel('Guz', '', '#b3263a', 'seg');
-    var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos()),
+    var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos(M.an)),
       update: function (m) {
         var b = this.bind, o = b && b.o, on = S.tumour && !!o && m > -1e-3; // na slajdzie „Dostęp” (m < 0) guz ukryty
         if (!on) { mesh.visible = false; this.alpha = 0; return; }
@@ -7424,13 +7448,13 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   }
   // linie cięcia za guzem: położenie guza na jelicie grubym (t na osi C_COL) → wariant przebudowany przez v.adapt (dane, lista zabiegów); wyniki zapamiętane
   var ADAPT_C = {}, gtK = null, gtV = null;
-  function guzT() {
-    var p = guzPos(), k = p.join(',');
+  function guzT(v) {
+    var p = guzPos(v), k = p.join(',');
     if (k !== gtK) { var C = A._lib.C_COL, P = new V3().fromArray(p), t = A.nearestT(C, P, 800); gtK = k; gtV = C.getPointAt(t).distanceTo(P) < A._lib.COL_R(t) + 1.0 ? Math.round(t / 0.002) * 0.002 : null; }
     return gtV;
   }
   function adaptedVar(v) {
-    var t = S.tumour ? guzT() : null; if (t === null) return v;
+    var t = S.tumour ? guzT(v) : null; if (t === null) return v;
     var k = v.id + ':' + t.toFixed(3); if (!(k in ADAPT_C)) ADAPT_C[k] = v.adapt(t) || v;
     return ADAPT_C[k];
   }

@@ -92,7 +92,7 @@
       : at;
   }
   function makeMark(d) {
-    var defCol = d.color || (d.kind === 'wall' ? '#e2b59c' : d.kind === 'stoma' ? '#d0555a' : '#ffffff');
+    var defCol = d.color || (d.kind === 'stoma' ? '#d0555a' : '#ffffff'); // 'body' — barwa skóry w kolorach wierzchołków
     var mk = { def: d, kind: d.kind, baseOp: 1, cols: (d.colors || [[0, defCol]]).map(function (c) { return [c[0], new THREE.Color(c[1])]; }) };
     if (d.kind === 'ring') {
       var mat = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], emissive: mk.cols[0][1].clone().multiplyScalar(0.35), roughness: 0.4, transparent: true }));
@@ -117,16 +117,14 @@
         var ec = new THREE.CatmullRomCurve3(d.endoPts.map(function (p) { return new V3().fromArray(p); }), closed, 'centripetal');
         mk.endoMesh = new THREE.Mesh(track(new THREE.TubeGeometry(ec, closed ? 144 : 120, 0.05, 6, closed)), dashMat(d.color || '#8f99a3', ec.getLength(), d.dash || 0.14, true));
       }
-    } else if (d.kind === 'wall') {
-      var w = d.size[0], h = d.size[1], cx = d.center[0], cy = d.center[1];
-      var shape = new THREE.Shape(); shape.moveTo(-w / 2, -h / 2); shape.lineTo(w / 2, -h / 2); shape.lineTo(w / 2, h / 2); shape.lineTo(-w / 2, h / 2); shape.closePath();
-      d.holes.forEach(function (ho) { var p = new THREE.Path(); p.absellipse(ho.c[0] - cx, ho.c[1] - cy, ho.rx, ho.ry, 0, Math.PI * 2, true); shape.holes.push(p); });
-      var sg = track(new THREE.ShapeGeometry(shape, 48));
-      var wm = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.8, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide }));
-      mk.mesh = new THREE.Mesh(sg, wm); mk.mesh.position.fromArray(d.center); mk.mat = wm; mk.baseOp = 0.28;
-      mk.endoMesh = new THREE.Mesh(sg, track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.75, side: THREE.DoubleSide })));
-      mk.endoMesh.position.fromArray(d.center);
-      mk.anchor = new V3(cx + w / 2 - 1.2, cy + h / 2 - 0.8, d.center[2]);
+    } else if (d.kind === 'body') { // powłoki brzucha (wspólny model ANAT.BODY, 12-dostep): skóra i mięśnie proste z otworami stomii
+      var bg = track(bodySkinGeo(0, d.holes)), bmat = track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.85, transparent: true, opacity: 0.4, depthWrite: false, side: THREE.DoubleSide }));
+      mk.mesh = new THREE.Mesh(bg, bmat); mk.mat = bmat; mk.baseOp = 0.4;
+      var rmat = track(new THREE.MeshStandardMaterial({ color: '#b04a42', roughness: 0.7, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
+      [1, -1].forEach(function (sd) { mk.mesh.add(new THREE.Mesh(track(bodyRectusGeo(sd, 0, d.holes)), rmat)); });
+      mk.subMats = [[rmat, 0.22]];
+      mk.endoMesh = new THREE.Mesh(bg, track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.75, side: THREE.DoubleSide })));
+      var h0 = d.holes[0].c; mk.anchor = A.BODY.at(h0[0] + 2.2 * (h0[0] < 0 ? -1 : 1), h0[1] + 2.0, -0.1, 0);
     } else if (d.kind === 'stoma') {
       var sgm = track(new THREE.TorusGeometry(1, 0.3, 16, 64)), smat = track(new THREE.MeshStandardMaterial({ color: mk.cols[0][1], roughness: 0.35, transparent: true }));
       mk.mesh = new THREE.Mesh(sgm, smat); mk.mesh.position.fromArray(d.center); mk.mesh.scale.set(d.rx, d.ry, 1); mk.mat = smat;
@@ -134,7 +132,7 @@
       mk.endoMesh.position.copy(mk.mesh.position); mk.endoMesh.scale.copy(mk.mesh.scale);
       mk.anchor = new V3(d.center[0] + d.rx + 0.4, d.center[1], d.center[2]);
     }
-    var lk = d.kind === 'ring' && !mk.cut ? 'anast' : d.kind === 'wall' ? 'ghost' : d.kind === 'stoma' ? 'seg' : 'cut';
+    var lk = d.kind === 'ring' && !mk.cut ? 'anast' : d.kind === 'body' ? 'ghost' : d.kind === 'stoma' ? 'seg' : 'cut';
     mk.el = d.name ? mkLabel(d.name, '', mk.cols[0][1].getStyle(), lk) : null;
     if (d.postName) mk.el2 = mkLabel(d.postName, '', A.COL.staple, 'cut');
     return mk;

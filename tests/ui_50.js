@@ -1,7 +1,7 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Slajd „Dostęp” (hemikolektomia prawa): pierwszy kadr, okno „Dostęp?” (przyciski, klawisze 1/2/3, Esc), zapis wyboru, dostęp wybiera wariant zespolenia
 // (otwarty → FEEA, laparoskopia/robot → izoperystaltyczne), trokary po lewej stronie chorego (2 × 12 mm przez lewy mięsień prosty), cięcie poprzeczne po prawej,
-// „Zmień dostęp”, powłoki niewidoczne poza slajdem, brak slajdu w innych zabiegach, EN
+// „Zmień dostęp”, powłoki niewidoczne poza slajdem, brak slajdu w innych zabiegach, EN; zabiegi ze stomią: te same powłoki (znacznik 'body'), stomia przez mięsień prosty
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -50,6 +50,12 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   ok(!w.__sgTest.model().access.grp.visible&&$('acc').hidden&&$('ctxAcc').hidden,'powłoki lub okno widoczne poza slajdem „Dostęp”');
   // inne zabiegi bez slajdu
   await search(w,'hemikolektomia lewa'); ok(w.__sgTest.frames()[0].k==='normal'&&$('acc').hidden,'slajd „Dostęp” w hemikolektomii lewej');
+  // zabiegi ze stomią: wspólny model powłok, otwór stomii w obrębie mięśnia prostego (kolostomia — lewy, ileostomia — prawy), bez starego prostokąta
+  const marks=A.PROCS.filter(p=>['hartmann','apr','ileo'].includes(p.id)).flatMap(p=>p.variants.map(v=>[v.id,v.marks]));
+  marks.forEach(([id,mk])=>{ const b=mk.filter(m=>m.kind==='body'); ok(b.length===1&&!mk.some(m=>m.kind==='wall'),id+': brak powłok (body) albo stary prostokąt');
+    (b[0]?b[0].holes:[]).forEach(h=>{ const x=Math.abs(h.c[0]); ok(x>B.RECT_MED+0.3&&x<B.rectLat(h.c[1]),id+': stomia poza mięśniem prostym ('+h.c.map(v=>v.toFixed(1))+')'); });
+    const st=mk.filter(m=>m.kind==='stoma'); ok(st.length&&st.every(s=>Math.abs(s.center[2]-B.z(s.center[0],s.center[1]))<0.5),id+': stomia nie na skórze'); });
+  console.log('zabiegi ze stomią — powłoki:',marks.length,'| kolostomia x:',marks[0][1].find(m=>m.kind==='body').holes[0].c[0],'| ileostomia x:',marks.find(m=>/^ileo/.test(m[0]))[1].find(m=>m.kind==='body').holes[0].c[0].toFixed(1));
   // EN
   w=boot('en'); await sleep(300); await search(w,'right hemicolectomy'); const t=w.document.getElementById('accTitle').textContent, b=[...w.document.querySelectorAll('#acc .accopt b')].map(x=>x.textContent).join(',');
   console.log('EN:',t,'|',b); ok(t==='Approach?'&&b==='Open,Laparoscopic,Robotic','EN: okno wyboru');

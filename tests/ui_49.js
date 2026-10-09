@@ -69,6 +69,12 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     const y0=cut(), a0=w.__sgTest.model().an.adapted; w.localStorage.setItem('surgitome-guz-pos',JSON.stringify(onWall(0.95))); $('optGuz').click(); await sleep(50); const y1=cut(); $('optGuz').click(); await sleep(50); const y2=cut(), a2=w.__sgTest.model().an.adapted;
     console.log('przecięcie odbytnicy (y): guz w t 0,90 →',y0.toFixed(2),'| guz wyłączony →',y1.toFixed(2),'| guz w t 0,95 →',y2.toFixed(2));
     ok(a0==null&&y1===y0&&a2!=null&&y2<y0-0.3,'przebudowa po zmianie położenia guza'); ok(w.__sgTest.state().frame===0,'przebudowa zmieniła kadr'); }
+  // bez zapisanego położenia: guz domyślny dla zabiegu (w preparacie) — usuwany
+  for (const q of ['amputacja brzuszno','resekcja esicy','zagięcia śledzionowego','hemikolektomia lewa']) {
+    w=boot(null); await sleep(300); await search(w,q); const S=w.__sgTest.state(), fr=w.__sgTest.frames(), g0=w.__sgTest.tumour();
+    w.__sgTest.open(S.an,S.vi,fr.length-2); w.__sgTest.at(fr[fr.length-2].m0); const gE=w.__sgTest.tumour();
+    console.log('domyślny guz —',q,':',g0?g0.map(x=>x.toFixed(1)).join(','):'brak','| po operacji:',gE?'zostaje':'usunięty'); ok(g0&&!gE,q+': domyślny guz nie w preparacie');
+  }
   // bez guza — bez przycisku; EN
   w=boot(null); await sleep(300); await search(w,'wybór zakresu'); w.document.getElementById('optGuz').click(); await sleep(100);
   ok(w.document.getElementById('ctxZakres').hidden,'przycisk bez guza');

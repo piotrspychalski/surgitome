@@ -737,11 +737,13 @@
   })();
 
   /* ---------- Kolostomia końcowa w lewym dole biodrowym (Hartmann, APR): zstępnica przeprowadzona przez powłoki ---------- */
-  var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.3, -6.3, 2.2], [6.4, -7.4, 3.9], [6.0, -7.6, 5.6]]);
+  // miejsce stomii: lewy dół biodrowy, przez lewy mięsień prosty (model powłok BODY), na wysokości skóry
+  var COLO_S = [3.0, -7.6], COLO_Z = BODY.z(COLO_S[0], COLO_S[1]);
+  var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.2, -6.3, 2.2], [5.5, -7.4, 3.9], [3.6, -7.6, COLO_Z - 0.75], [COLO_S[0], COLO_S[1], COLO_Z]]);
   var COLO_R = (function () { var cc = curveOf(COLO_PATH), tj = nearestT(cc, [7.9, -2.0, -0.6]); return function (t) { return t <= tj ? COL_R(t / tj * tPJ) : 1.15 + (1.05 - 1.15) * sm01((t - tj) / (1 - tj)); }; })();
   function coloMarks(stomaOp) {
-    return [{ kind: 'wall', name: 'Powłoki brzuszne', center: [5.0, -7.0, 5.6], size: [12, 11], holes: [{ c: [6.0, -7.6], rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
-      { kind: 'stoma', name: 'Kolostomia końcowa', center: [6.0, -7.6, 5.8], rx: 1.15, ry: 1.15, opacity: stomaOp }];
+    return [{ kind: 'body', name: 'Powłoki brzuszne', holes: [{ c: COLO_S, rx: 1.15, ry: 1.15 }], opacity: [[0.3, 0], [0.8, 1]] },
+      { kind: 'stoma', name: 'Kolostomia końcowa', center: [COLO_S[0], COLO_S[1], COLO_Z + 0.2], rx: 1.15, ry: 1.15, opacity: stomaOp }];
   }
 
   /* ---------- Operacja Hartmanna ---------- */
@@ -780,7 +782,7 @@
       endTarget: { pre: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
       routePost: { prefix: [], branches: [
-        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [6.0, -7.6, 9.2], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
+        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
         { label: 'Przez odbyt', sub: 'do kikuta odbytnicy', steps: [{ obj: 'rect', from: 1, to: addV(D.P0.toArray(), D.T0, 1.3), note: 'Kikut odbytnicy — ślepo zakończony, u szczytu linia zszywek' }],
           target: D.P0.toArray(), endText: 'Szczyt kikuta z linią zszywek' }
       ] }
@@ -826,7 +828,7 @@
         inc: [0.3, 0.95], open: [2.1, 2.35], close: [3.0, 3.5], stitches: 7, off: APR_OFF, offT: [2.15, 2.9] },
       endTarget: { pre: ICV, post: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia', post: 'Zastawka krętniczo-kątnicza w polu widzenia' },
-      routePost: [{ pt: [6.0, -7.6, 9.2], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
+      routePost: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
         { obj: 'prox', from: [7.9, -1.5, -0.7], to: 0.04, note: 'Poprzecznica i wstępnica do kątnicy' }]
     };
   })();
@@ -929,8 +931,8 @@
      tętnice jelita krętego i łuk arkad; bez podwiązań i węzłów (zabieg nieonkologiczny). Przy wyprowadzeniu krezka podąża za ramionami do otworu
      w powłokach (morph, czasy jak przemieszczenie jelita); brzeg nie wychodzi ponad powłoki. P, Dd — ramiona po operacji, cut — miejsce stomii na C_ILE. */
   var ILE_ROOT = curveOf([[1.8, -1.4, -1.9], [0.2, -3.4, -1.8], [-1.6, -5.4, -1.5], [-3.4, -7.0, -1.1], [-4.6, -7.6, -0.6]]);
-  function ileoMeso(P, Dd, cut) {
-    var cP = curveOf(P), cD = curveOf(Dd), ZW = 4.9;
+  function ileoMeso(P, Dd, cut, ZW) {
+    var cP = curveOf(P), cD = curveOf(Dd);
     function root(t) { return ILE_ROOT.getPointAt(Math.max(0, Math.min(1, t))); }
     function bowel(t, post) { return !post ? [C_ILE.getPointAt(t), C_ILE.getTangentAt(t)] : t <= cut ? [cP.getPointAt(t / cut), cP.getTangentAt(t / cut)] : [cD.getPointAt((t - cut) / (1 - cut)), cD.getTangentAt((t - cut) / (1 - cut))]; }
     function E(t, post, k) {
@@ -966,12 +968,17 @@
       P = [[3.5, -0.5, 0.4], [0.5, -0.8, 1.0], [-2.8, -1.6, 1.2], [-2.6, -3.6, 1.6], [-2.0, -5.6, 2.2], [-3.1, yP - 0.9, 3.6], [X + 0.1, yP - 0.1, 4.8], [X, yP, 5.5], sp];
       Dd = [sd, [X - 0.1, yD + 0.2, 4.9], [-5.1, yD - 0.3, 3.7], [-5.1, -5.9, 3.0], [-4.7, -7.2, 2.0], [-4.4, -7.8, 1.0], [-6.0, -7.9, 0.6]];
     }
+    // miejsce stomii na powłokach (BODY): prawy dół biodrowy, przez prawy mięsień prosty. Geometria zbudowana dla (X, yc, Z) przesunięta płynnie:
+    // pełne przesunięcie przy powłokach, zero w głębi jamy brzusznej (ułożenie jelita w środku bez zmian)
+    var XS = -2.8, YS = -6.9, ZS = BODY.z(XS, YS), dX = XS - X, dY = YS - yc, dZ = ZS - Z;
+    function mv(p) { var w = sm01((p[2] - 1.4) / 2.6); return [p[0] + w * dX, p[1] + w * dY, p[2] + w * dZ]; }
+    P = P.map(mv); Dd = Dd.map(mv);
     var split = splitBy(C_ILE, 0.9, [P, Dd]), cut = split.cuts[0];
-    var holes = loop ? [{ c: [X, yc], rx: 1.25, ry: 1.75 }] : [{ c: [X, yP], rx: 1.1, ry: 1.1 }, { c: [X, yD], rx: 1.1, ry: 1.1 }];
+    var holes = (loop ? [{ c: [X, yc], rx: 1.25, ry: 1.75 }] : [{ c: [X, yP], rx: 1.1, ry: 1.1 }, { c: [X, yD], rx: 1.1, ry: 1.1 }]).map(function (h) { h.c = [h.c[0] + dX, h.c[1] + dY]; return h; });
     var ST = [[2.4, 0], [2.85, 1]];
-    var stomas = loop ? [{ kind: 'stoma', name: 'Ileostomia pętlowa — jedna stomia, dwa światła', center: [X, yc, Z + 0.2], rx: 1.25, ry: 1.75, opacity: ST }]
-      : [{ kind: 'stoma', name: 'Otwór wydzielniczy (proksymalny)', center: [X, yP, Z + 0.3], rx: 1.1, ry: 1.1, opacity: ST },
-         { kind: 'stoma', name: 'Otwór odprowadzający (dystalny)', center: [X, yD, Z + 0.15], rx: 1.05, ry: 1.05, opacity: ST }];
+    var stomas = loop ? [{ kind: 'stoma', name: 'Ileostomia pętlowa — jedna stomia, dwa światła', center: mv([X, yc, Z + 0.2]), rx: 1.25, ry: 1.75, opacity: ST }]
+      : [{ kind: 'stoma', name: 'Otwór wydzielniczy (proksymalny)', center: mv([X, yP, Z + 0.3]), rx: 1.1, ry: 1.1, opacity: ST },
+         { kind: 'stoma', name: 'Otwór odprowadzający (dystalny)', center: mv([X, yD, Z + 0.15]), rx: 1.05, ry: 1.05, opacity: ST }];
     var pos = up ? 'górne' : 'dolne', posM = up ? 'górny' : 'dolny', posL = up ? 'górnym' : 'dolnym', posG = up ? 'górnej' : 'dolnej', posO = up ? 'dolnej' : 'górnej';
     var objs = [
       { id: 'colon', name: 'Jelito grube', pre: { path: COLON, r: COL_R }, color: COLC.colon, mucosa: 'haustra', tint: MUC_C,
@@ -983,7 +990,7 @@
         color: COLC.ti, mucosa: 'circular', tint: MUC.bowel, labels: [L('Ramię odprowadzające', 0.4, POST)] }
     ];
     // pętla wyprowadzona w całości (szczyt nad skórą) do chwili otwarcia — widać, że jelito nie jest przecięte
-    if (loop) objs.push({ id: 'apex', name: 'Szczyt pętli', noEndo: true, pre: { path: [[X, yP, Z + 0.3], [X, yc + (yP - yc) * 0.3, Z + 1.35], [X, yc + (yD - yc) * 0.3, Z + 1.35], [X, yD, Z + 0.3]], r: flat(0.88) },
+    if (loop) objs.push({ id: 'apex', name: 'Szczyt pętli', noEndo: true, pre: { path: [[X, yP, Z + 0.3], [X, yc + (yP - yc) * 0.3, Z + 1.35], [X, yc + (yD - yc) * 0.3, Z + 1.35], [X, yD, Z + 0.3]].map(mv), r: flat(0.88) },
       color: COLC.ti, mucosa: 'circular', tint: MUC.bowel, opacity: [[1.7, 0], [1.95, 1], [2.45, 1], [2.75, 0]], labels: [L('Pętla wyprowadzona — nieprzecięta', 0.5, [1.95, 2.45])] });
     return {
       cat: 'colon', id: 'ileo-' + (loop ? 'loop' : 'double') + (up ? '-up' : '-dn'), short: loop ? 'Ileostomia pętlowa' : 'Ileostomia dwulufowa',
@@ -999,7 +1006,7 @@
         'Otwór wydzielniczy (proksymalny) wywinięty; odprowadzający (dystalny) płaski — przetoka śluzowa.',
         'Oba końce w jednym miejscu — łatwiejsze późniejsze odtworzenie ciągłości.'
       ]).concat(['Ramię wydzielnicze w ' + posG + ' części stomii, odprowadzające w ' + posO + '. Ułożenie zależy od obrotu pętli i preferencji ośrodka; ważne, by worek dobrze obejmował światło wydzielnicze.']),
-      focus: { t: [-3.5, -4.5, 3], k: 0.6 }, text: COL_TEXT,
+      focus: { t: [-2.8, -6.0, 3.4], k: 0.6 }, text: COL_TEXT,
       frames: loop ? {
         resect: ['Wybór pętli', 'Pętla końcowego odcinka jelita krętego, ok. 20–30 cm od zastawki; otwór w powłokach w prawym dole biodrowym.', 'Wybór pętli'],
         remove: ['Wyprowadzenie pętli', 'Nieprzecięta pętla przeciągnięta przez powłoki; ramię wydzielnicze w ' + posG + ' części otworu, czasem (np. u otyłych) podparta pręcikiem — rutynowo niekonieczne.', 'Wyprowadzenie'],
@@ -1018,12 +1025,12 @@
       marks: [
         ringOn(C_ILE, flat(0.9), cut, loop ? { name: 'Pętla na stomię', color: COL.mark, opacity: [[0.05, 0], [0.55, 1], [1.4, 1], [1.7, 0]] }
           : { name: 'Przecięcie jelita krętego', color: COL.cut, opacity: [[0.05, 0], [0.55, 1], [1.4, 1], [1.7, 0]] }),
-        { kind: 'wall', name: 'Powłoki brzuszne', center: [-4.0, -5.0, 5.6], size: [11, 11], holes: holes, opacity: [[0.3, 0], [0.8, 1]] }
+        { kind: 'body', name: 'Powłoki brzuszne', holes: holes, opacity: [[0.3, 0], [0.8, 1]] }
       ].concat(stomas),
-      endTarget: { pre: null }, ileoMeso: ileoMeso(P, Dd, cut),
+      endTarget: { pre: null }, ileoMeso: ileoMeso(P, Dd, cut, ZS - 1.0),
       routePost: { prefix: [], branches: [
-        { label: 'Ramię wydzielnicze', sub: 'proksymalne — jelito kręte', steps: [{ pt: [X, yP, 9.2], note: 'Stomia — światło wydzielnicze' }, { obj: 'prox', from: 1, to: 0.6, note: 'Jelito kręte, w górę strumienia treści' }] },
-        { label: 'Ramię odprowadzające', sub: 'dystalne — do zastawki i jelita grubego', steps: [{ pt: [X, yD, 9.2], note: 'Stomia — światło odprowadzające' }, { obj: 'dist', note: 'Wyłączony odcinek jelita krętego do zastawki' }, { obj: 'colon', from: 0.035, to: 0.07, note: 'Kątnica' }] }
+        { label: 'Ramię wydzielnicze', sub: 'proksymalne — jelito kręte', steps: [{ pt: [X + dX, yP + dY, 9.2 + dZ], note: 'Stomia — światło wydzielnicze' }, { obj: 'prox', from: 1, to: 0.6, note: 'Jelito kręte, w górę strumienia treści' }] },
+        { label: 'Ramię odprowadzające', sub: 'dystalne — do zastawki i jelita grubego', steps: [{ pt: [X + dX, yD + dY, 9.2 + dZ], note: 'Stomia — światło odprowadzające' }, { obj: 'dist', note: 'Wyłączony odcinek jelita krętego do zastawki' }, { obj: 'colon', from: 0.035, to: 0.07, note: 'Kątnica' }] }
       ] }
     };
   }

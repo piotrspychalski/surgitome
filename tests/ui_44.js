@@ -62,7 +62,7 @@ function ok(c,m){ if(!c) fails.push(m); }
     ok(['203','223','253'].every(c=>codes.includes(c)),id+': brak grup JSCCR');
     ok(id==='ira'?d.labels[0].sub==='pozostaje'&&!d.labels[0].removed:d.labels[0].sub==='usuwane w całości (TME)'&&remA.includes('sra'),id+': zły zakres mezorektum'); }
   ms('ileo').forEach((M,i)=>{ const d=M[0]; ok(M.length===1&&d.morph&&d.sheets.every(s=>s.post)&&!d.vessels.some(v=>v.tie!=null)&&!d.nodes.length&&!d.groups,'ileostomia '+i+': krezka jelita krętego');
-    ok(d.sheets.every(s=>s.post.every(r=>r[0][2]<=5.0)),'ileostomia '+i+': krezka ponad powłokami'); });
+    const B=w.ANAT.BODY; ok(d.sheets.every(s=>s.post.every(r=>r[0][2]<=B.z(r[0][0],r[0][1])-0.6)),'ileostomia '+i+': krezka ponad powłokami'); });
   // EN: podpisy krezki i mezorektum przetłumaczone
   [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja odbytnicy')).click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(200);

@@ -7,6 +7,36 @@
   try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
+  /* wspólny model powłok (slajd „Dostęp” i zabiegi ze stomią — znacznik 'body'): siatka (y, u) na powierzchni skóry ANAT.BODY z zanikaniem przy brzegach
+     (kolory RGBA); holes — otwory [{ c: [x, y], rx, ry }]: wierzchołki wewnątrz przesunięte na brzeg otworu, trójkąty całkowicie w środku pominięte */
+  function holeSnap(x, y, holes) {
+    for (var h = 0; h < (holes || []).length; h++) { var H = holes[h], dx = (x - H.c[0]) / H.rx, dy = (y - H.c[1]) / H.ry, d = Math.sqrt(dx * dx + dy * dy); if (d < 1) return { x: H.c[0] + dx / Math.max(d, 1e-4) * H.rx, y: H.c[1] + dy / Math.max(d, 1e-4) * H.ry, inside: true }; }
+    return { x: x, y: y, inside: false };
+  }
+  function gridGeo(NY, NX, fXY, off, k, holes, alphaFn) {
+    var B = A.BODY, pos = [], col = [], idx = [], ins = [], base = new THREE.Color(ACC_SKIN);
+    for (var i = 0; i <= NY; i++) for (var j = 0; j <= NX; j++) {
+      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, off, k);
+      pos.push(p.x, p.y, p.z); ins.push(h.inside); if (alphaFn) col.push(base.r, base.g, base.b, alphaFn(i / NY, j / NX));
+    }
+    for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NX; j2++) {
+      var a0 = i2 * (NX + 1) + j2, b0 = a0 + NX + 1;
+      if (!(ins[a0] && ins[b0] && ins[a0 + 1])) idx.push(a0, b0, a0 + 1);
+      if (!(ins[b0] && ins[b0 + 1] && ins[a0 + 1])) idx.push(b0, b0 + 1, a0 + 1);
+    }
+    var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    if (alphaFn) g.setAttribute('color', new THREE.Float32BufferAttribute(col, 4));
+    g.computeVertexNormals(); return g;
+  }
+  function bodySkinGeo(k, holes) {
+    var B = A.BODY;
+    return gridGeo(72, 52, function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v; return [(-1 + 2 * u) * B.W(y) * 0.985, y]; }, 0, k, holes,
+      function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v, uu = -1 + 2 * u; return sm((1 - Math.abs(uu)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6); });
+  }
+  function bodyRectusGeo(sd, k, holes) {
+    var B = A.BODY;
+    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, 0.5, k, holes, null);
+  }
   function accessAttach(key) {
     var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [];
     function skinP(x, y, off, k) { return B.at(x, y, off || 0, k); }
@@ -14,19 +44,7 @@
     function tubeOn(pts2, off, r, k) { return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts2.map(function (p) { return skinP(p[0], p[1], off, k); }), false, 'centripetal'), Math.max(12, pts2.length * 10), r, 6, false); }
     function mat(col, op, extra) { var m = track(new THREE.MeshStandardMaterial(Object.assign({ color: col, roughness: 0.7, transparent: true, opacity: op, depthWrite: false, side: THREE.DoubleSide }, extra || {}))); m.userData.op = op; return m; }
     // skóra: siatka (y, u) z zanikaniem przy brzegach (kolory RGBA)
-    var NY = 64, NU = 44, base = new THREE.Color(ACC_SKIN);
-    var skinG = morphGeo(function (k) {
-      var pos = [], col = [], idx = [];
-      for (var i = 0; i <= NY; i++) {
-        var y = B.Y0 + (B.Y1 - B.Y0) * i / NY, w = B.W(y) * 0.985;
-        for (var j = 0; j <= NU; j++) {
-          var u = -1 + 2 * j / NU, x = u * w, p = skinP(x, y, 0, k), a = sm((1 - Math.abs(u)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6);
-          pos.push(p.x, p.y, p.z); col.push(base.r, base.g, base.b, a);
-        }
-      }
-      for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NU; j2++) { var a0 = i2 * (NU + 1) + j2, b0 = a0 + NU + 1; idx.push(a0, b0, a0 + 1, b0, b0 + 1, a0 + 1); }
-      var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 4)); g.computeVertexNormals(); return g;
-    }, true);
+    var skinG = morphGeo(function (k) { return bodySkinGeo(k, null); }, true);
     var skinM = mat('#ffffff', 0.74, { vertexColors: true, roughness: 0.85 });
     grp.add(new THREE.Mesh(skinG, skinM));
     // mięśnie proste: pasma pod skórą od spojenia do łuku żebrowego; smugi ścięgniste
@@ -35,12 +53,7 @@
     function sideOf() { return !ACC.kind ? 0 : ACC.kind === 'open' ? -1 : 1; }
     [1, -1].forEach(function (sd) {
       var musM = musBy[String(sd)];
-      grp.add(new THREE.Mesh(morphGeo(function (k) {
-        var pos = [], idx = [], NR = 40, NC = 6;
-        for (var i = 0; i <= NR; i++) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * i / NR; for (var j = 0; j <= NC; j++) { var x = sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * j / NC), p = skinP(x, y, 0.5, k); pos.push(p.x, p.y, p.z); } }
-        for (var i2 = 0; i2 < NR; i2++) for (var j2 = 0; j2 < NC; j2++) { var a0 = i2 * (NC + 1) + j2, b0 = a0 + NC + 1; idx.push(a0, b0, a0 + 1, b0, b0 + 1, a0 + 1); }
-        var g = new THREE.BufferGeometry(); g.setIndex(idx); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals(); return g;
-      }, true), musM));
+      grp.add(new THREE.Mesh(morphGeo(function (k) { return bodyRectusGeo(sd, k, null); }, true), musM));
       B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], 0.46, 0.05, k); }), tendM)); });
       // naczynia nabrzuszne (tętnica i żyła obok)
       [['a', '#b83227', 0], ['v', '#3867b5', 0.16]].forEach(function (vv) {

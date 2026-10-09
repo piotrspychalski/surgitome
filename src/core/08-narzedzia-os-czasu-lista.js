@@ -222,6 +222,10 @@
       LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
       // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
       LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf)$/.test(p.id)) p.variants.forEach(function (v) { v.tumour = true; }); });
+      // domyślne położenie guza (dopóki nie zapisano własnego): typowe dla zabiegu, na przedniej ścianie jelita
+      function onWall(t) { var P = C_COL.getPointAt(t), T = C_COL.getTangentAt(t), n = new THREE.Vector3(0, 0, 1); n.addScaledVector(T, -n.dot(T)).normalize(); return P.addScaledVector(n, COL_R(t)).toArray().map(function (x) { return +x.toFixed(3); }); }
+      var TDEF = { sf: 0.47, lh: 0.6, 'lh-iso': 0.6, 'lh-anti': 0.6, sig: 0.78, 'ar-center': 0.93, 'ar-racket': 0.93, 'ar-side': 0.885, 'ar-ular': 0.96, apr: 0.985 };
+      LIST.forEach(function (p) { p.variants.forEach(function (v) { if (TDEF[v.id] != null) v.tumourDef = onWall(TDEF[v.id]); }); });
       // linie cięcia dopasowane do guza (t — położenie guza na jelicie grubym, z aplikacji): margines dystalny 5 cm w esicy i przy PME, 2 cm w TME, ok. 1 cm w ULAR,
       // ok. 6 cm w poprzecznicy i zagięciu śledzionowym (0,045 t ≈ 5 cm); przecięcia proksymalne wyznaczone podwiązaniem naczyń (bez zmian), poza esicą i zagięciem.
       // null — guz poza zasięgiem albo przecięcia domyślne (wtedy zostaje wariant bazowy)
