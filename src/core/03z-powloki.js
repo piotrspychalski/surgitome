@@ -35,13 +35,14 @@
     LM.costalR = mir(LM.costalL); LM.crestR = mir(LM.crestL); LM.ingR = mir(LM.ingL);
     // mięsień prosty brzucha: od spojenia (wąski) do łuku żebrowego (szerszy); brzeg przyśrodkowy przy kresie białej
     var RY0 = -15.2, RY1 = 7.0;
-    function rectLat(y) { return 2.5 + (y - RY0) / (RY1 - RY0) * 3.6; }
+    function rectLat(y) { return 3.0 + (y - RY0) / (RY1 - RY0) * 3.4; }   // brzeg boczny (kresa półksiężycowata): ok. 5 cm od pośrodkowej przy spojeniu, ok. 10 cm przy łuku żebrowym
     var RECT_MED = 0.55, TEND = [4.6, 1.6, -1.9];   // smugi ścięgniste (nad pępkiem)
     // naczynia nabrzuszne: dolne — od tętnicy biodrowej zewnętrznej (punkt środkowy pachwiny) do pochewki mięśnia prostego (kresa łukowata) i w górę
     // w jego bocznej części; górne — od łuku żebrowego w dół; [x, y, głębokość pod skórą]
-    var EPI_INF = [[5.3, -14.0, 1.6], [4.7, -11.6, 1.2], [4.2, -9.0, 0.95], [3.8, -5.5, 0.85], [3.55, -1.5, 0.85], [3.4, 1.4, 0.85]];
-    var EPI_SUP = [[3.3, 6.6, 0.85], [3.35, 4.0, 0.85], [3.4, 1.4, 0.85]];
-    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP };
+    var EPI_INF = [[5.6, -14.0, 1.6], [5.0, -11.6, 1.2], [4.6, -9.0, 0.95], [4.4, -5.5, 0.85], [4.35, -1.5, 0.85], [4.3, 1.4, 0.85]];
+    var EPI_SUP = [[4.2, 6.6, 0.85], [4.25, 4.0, 0.85], [4.3, 1.4, 0.85]];
+    var MCL = 6.9;   // linia środkowo-obojczykowa (x); na łuku żebrowym ok. y 3,5
+    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP, MCL: MCL };
   })();
 
   /* ---------- Dostęp operacyjny (slajd „Dostęp” przed anatomią prawidłową). Oś czasu kadru m: −1 → −0,02 (poza nią model powłok niewidoczny).
@@ -49,8 +50,8 @@
      techniką otwartą przed odmą; odma (insuf) unosi powłoki; ext — planowane cięcie do wydobycia preparatu (linia przerywana).
      Hemikolektomia prawa: otwarty — cięcie poprzeczne prawostronne nad pępkiem; laparoskopia — 2 × 12 mm przez lewy mięsień prosty (optyka w połowie
      wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym, drugi wyżej), 5 mm w linii cięcia Pfannenstiela i 5 mm pod wyrostkiem
-     mieczykowatym (praktyka autora), wydobycie przez cięcie Pfannenstiela; robot da Vinci Xi — porty w linii skośnej od lewego łuku żebrowego do okolicy
-     nadłonowej co 6–10 cm (najniższy w linii Pfannenstiela), port asystenta w lewym boku między dolnymi portami. ---------- */
+     mieczykowatym (praktyka autora; porty laparoskopowe w brzuścu mięśnia prostego, przyśrodkowo od naczyń nabrzusznych), wydobycie przez cięcie Pfannenstiela; robot da Vinci Xi — porty w linii od lewej linii środkowo-obojczykowej
+     na wysokości łuku żebrowego do spojenia łonowego, co 6–10 cm (najniższy w linii Pfannenstiela), port asystenta w lewym boku między dolnymi portami. ---------- */
   var PFANN = [[-2.4, -13.35], [-1.2, -13.72], [0, -13.85], [1.2, -13.72], [2.4, -13.35]];
   var ACCESS = {
     rh: {
@@ -65,21 +66,21 @@
         title: 'Dostęp laparoskopowy',
         text: 'Dwa trokary 12 mm przez lewy mięsień prosty: optyka w połowie wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym (wprowadzona techniką otwartą, potem odma otrzewnowa), drugi nieco wyżej; dwa trokary 5 mm — w linii cięcia Pfannenstiela i pod wyrostkiem mieczykowatym. Zespolenie wewnątrzbrzuszne (izoperystaltyczne), preparat wydobyty przez cięcie Pfannenstiela.',
         first: 0, insuf: [-0.76, -0.62],
-        ports: [{ at: [2.4, -3.6], mm: 12, name: '12 mm — optyka (kamera)', sub: 'przez lewy mięsień prosty' },
-          { at: [2.8, 2.7], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'przez lewy mięsień prosty, wyżej' },
+        ports: [{ at: [3.6, -3.6], mm: 12, name: '12 mm — optyka (kamera)', sub: 'przez lewy mięsień prosty' },
+          { at: [3.9, 2.4], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'przez lewy mięsień prosty, wyżej' },
           { at: [0.9, -13.75], mm: 5, name: '5 mm — narzędzie', sub: 'w linii cięcia Pfannenstiela' },
           { at: [0, 6.9], mm: 5, name: '5 mm — pomocniczy', sub: 'pod wyrostkiem mieczykowatym' }],
         ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
       },
       rob: {
         title: 'Dostęp robotyczny (da Vinci Xi)',
-        text: 'Cztery porty robota w jednej linii skośnej od lewego łuku żebrowego (linia środkowo-obojczykowa) do okolicy nadłonowej, co 6–10 cm: 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w lewym boku, między dolnymi portami. Zespolenie wewnątrzbrzuszne, preparat wydobyty przez cięcie Pfannenstiela.',
-        first: 1, insuf: [-0.76, -0.62], robot: true,
-        ports: [{ at: [6.2, 2.7], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'pod lewym łukiem żebrowym' },
-          { at: [4.4, -2.85], mm: 8, name: '8 mm — optyka (kamera)', sub: 'port środkowy' },
-          { at: [2.6, -8.3], mm: 8, name: '8 mm — ramię robota', sub: '' },
-          { at: [0.8, -13.75], mm: 8, name: '8 mm — ramię robota', sub: 'w linii cięcia Pfannenstiela' },
-          { at: [7.9, -8.4], mm: 12, name: '12 mm — port asystenta', sub: 'lewy bok, między dolnymi portami', assist: true }],
+        text: 'Cztery porty robota w jednej linii od lewej linii środkowo-obojczykowej na wysokości łuku żebrowego do spojenia łonowego, co 6–10 cm: 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w lewym boku, między dolnymi portami. Zespolenie wewnątrzbrzuszne, preparat wydobyty przez cięcie Pfannenstiela.',
+        first: 1, insuf: [-0.76, -0.62], robot: true, line: [[6.9, 3.5], [0, -15.4]],
+        ports: [{ at: [6.21, 1.61], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'pod lewym łukiem żebrowym, linia środkowo-obojczykowa' },
+          { at: [4.35, -3.69], mm: 8, name: '8 mm — optyka (kamera)', sub: 'port środkowy' },
+          { at: [2.48, -8.98], mm: 8, name: '8 mm — ramię robota', sub: '' },
+          { at: [0.6, -13.75], mm: 8, name: '8 mm — ramię robota', sub: 'w linii cięcia Pfannenstiela' },
+          { at: [8.4, -8.6], mm: 12, name: '12 mm — port asystenta', sub: 'lewy bok, między dolnymi portami', assist: true }],
         ext: { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu po zespoleniu wewnątrzbrzusznym' }
       }
     }

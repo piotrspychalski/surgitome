@@ -679,6 +679,9 @@
 
 
   /* ---------- Proktokolektomia ze zbiornikiem J i zespoleniem krętniczo-odbytowym (IPAA) ---------- */
+  // jelito cienkie w modelu jelita grubego (IPAA): od zgięcia dwunastniczo-czczego (lewa strona, z tyłu) pętlami do początku końcowego odcinka jelita krętego
+  var SB_IPAA = [[1.8, 1.8, -0.6], [4.2, 1.5, 0.6], [5.4, 0.2, 1.6], [4.4, -1.0, 2.6], [1.8, -0.3, 3.0], [-0.8, 0.6, 2.6], [-3.2, 0.2, 2.0], [-4.6, -1.2, 1.8],
+    [-3.6, -2.8, 2.6], [-1.0, -2.4, 3.2], [1.6, -3.0, 3.4], [3.8, -2.6, 2.8], [5.4, -3.4, 1.8], [5.0, -4.5, 1.1], [4.0, -5.2, 0.8]];
   var IPAA = (function () {
     var tAn = ct([0, -18.2, -1.0]), J = eeaJoin({ tD: tAn, R: 0.95, H: 0.5, kind: 'center', rc: 0.72, base: [[4.0, -5.2, 0.8]], tail: [], rBase: flat(1), rEnd: 1 });
     var D = J.D, up = D.T0.clone().negate(), s = D.n.clone(); if (s.x < 0) s.negate();
@@ -704,7 +707,7 @@
         'Zbiornik J: dwa ramiona końcowego odcinka jelita krętego (po co najmniej 18 cm) zespolone bok-do-boku staplerem liniowym — zwykle trzy odpalenia; szczyt J to ślepy koniec jelita.',
         'Najczęściej z ochronną ileostomią pętlową. Wskazania: wrzodziejące zapalenie jelita grubego, rodzinna polipowatość gruczolakowata.',
         'W endoskopii zbiornika (pouchoskopii): zespolenie, wspólne światło zbiornika, wlot pętli doprowadzającej i ślepy szczyt J; ocena zapalenia zbiornika, mankietu i jelita krętego nad zbiornikiem.'],
-      focus: { t: [0.8, -11.2, 1.2], k: 0.7 }, text: COL_TEXT,
+      focus: { t: [0.8, -8.2, 1.4], k: 0.88 }, text: COL_TEXT,
       frames: {
         resect: ['Zakres resekcji', 'Cała okrężnica i odbytnica; jelito kręte przecięte przy zastawce, odbytnica tuż nad kanałem odbytu.', 'Zakres resekcji'],
         remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; odbytnica zamknięta poprzecznie staplerem liniowym na wysokości połączenia odbytniczo-odbytowego (mankiet ok. 1–2 cm nad linią zębatą).', 'Usunięcie'],
@@ -721,7 +724,11 @@
         colSpec('specC', 0, tAn, 'Okrężnica i odbytnica (preparat)', [[1.15, [0, 0, 0]], [1.9, [0, 3, 8]]]),
         appObj({ colors: [[0, COLC.app], [0.7, COL.spec]], opacity: SPEC_OP, offset: [[1.15, [0, 0, 0]], [1.9, [0, 3, 8]]] }),
         colObj('rect', tAn, 1, { name: 'Kanał odbytu', postName: 'Kanał odbytu', color: COLC.rect, post: { path: D.s.path, r: D.rPost }, morph: [1.2, 1.6],
-          opacity: [[2.05, 1], [2.2, 0.35], [2.85, 0.35], [3, 1]] })
+          opacity: [[2.05, 1], [2.2, 0.35], [2.85, 0.35], [3, 1]] }),
+        // jelito cienkie w całości (od zgięcia dwunastniczo-czczego pętlami w jamie brzusznej do pętli doprowadzającej) — po usunięciu jelita grubego,
+        // na etapie budowy zbiornika i po operacji
+        { id: 'sbF', name: 'Jelito cienkie', pre: { path: SB_IPAA, r: flat(0.9) }, color: COLC.ti, mucosa: 'circular', tint: MUC.bowel, opacity: [[2.0, 0], [2.4, 1]],
+          labels: [L('Jelito cienkie', 0.45, [2.3, 99]), L('Zgięcie dwunastniczo-czcze', 0.02, [2.3, 99])] }
       ],
       marks: [
         ringOn(C_TI, flat(0.9), 0.985, { name: 'Przecięcie jelita krętego przy zastawce', color: COL.cut, opacity: CUT_OP_JEJ }),

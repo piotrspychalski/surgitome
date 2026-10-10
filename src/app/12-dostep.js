@@ -99,15 +99,23 @@
       (D.ports || []).forEach(function (p, i) {
         var r = p.mm >= 12 ? 0.36 : p.mm >= 8 ? 0.27 : 0.2, robot = D.robot && !p.assist, tg = new THREE.Group();
         var cm = mat(robot ? '#c9ced3' : '#9aa3ab', 1, { metalness: 0.6, roughness: 0.35, depthWrite: true, side: THREE.FrontSide }), hm = mat(robot ? '#1e2327' : p.mm >= 12 ? '#2c3338' : '#3d6e8f', 1, { roughness: 0.5, depthWrite: true, side: THREE.FrontSide });
-        var can = new THREE.Mesh(track(new THREE.CylinderGeometry(r, r, 6.4, 18)), cm); can.position.y = -1.5;   // od +1,7 (na zewnątrz) do −4,7 (w jamie brzusznej)
+        var can = new THREE.Mesh(track(new THREE.CylinderGeometry(r, r, 4.1, 18)), cm); can.position.y = -0.35;   // od +1,7 (na zewnątrz) do −2,4 (w jamie brzusznej)
         var head = new THREE.Mesh(track(new THREE.CylinderGeometry(r * 2.3, r * 2.0, 0.9, 20)), hm); head.position.y = 2.15;
         tg.add(can, head);
         if (robot) { var ring = new THREE.Mesh(track(new THREE.TorusGeometry(r * 1.25, 0.07, 6, 18)), mat('#2f78c4', 1, { depthWrite: true })); ring.rotation.x = Math.PI / 2; ring.position.y = 1.3; tg.add(ring); }
         g.add(tg);
+        var ent = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.14, 0.055, 6, 22)), mat('#3b2a24', 0.9, { depthWrite: true })); g.add(ent); // miejsce wkłucia na skórze
         var w = i === D.first ? [-0.9, -0.8] : (function () { var j = order.indexOf(i), a = -0.6, b = -0.22, s = (b - a) / Math.max(1, order.length); return [a + j * s, a + (j + 0.85) * s]; })();
         var Lp = lab(p.name, p.sub, robot ? '#2f78c4' : '#56636f', 'seg', function () { return tg.position.clone().add(new V3(0, 0, 0)).addScaledVector(tg.userData.out || new V3(0, 0, 1), 2.8); });
-        set.ports.push({ p: p, g: tg, mats: [cm, hm], w: w, L: Lp });
+        set.ports.push({ p: p, g: tg, ent: ent, mats: [cm, hm], w: w, L: Lp });
       });
+      if (D.line) { // robot: linia portów (od linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego), przerywana
+        var lg = new THREE.Group(), L0 = D.line[0], L1 = D.line[1], lpts = [];
+        for (var lu = 0; lu <= 24; lu++) { var fu = lu / 24; lpts.push(skinP(L0[0] + (L1[0] - L0[0]) * fu, L0[1] + (L1[1] - L0[1]) * fu, -0.04, 1)); }
+        var lc = new THREE.CatmullRomCurve3(lpts), lm2 = mat('#2f78c4', 0.55, { depthWrite: true });
+        for (var ls = 0; ls < 24; ls += 2) { var lp = []; for (var lt = 0; lt <= 4; lt++) lp.push(lc.getPointAt((ls + lt / 4) / 24)); lg.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lp), 6, 0.045, 5, false)), lm2)); }
+        g.add(lg); set.line = lg;
+      }
       if (D.ext) {
         var eg = new THREE.Group(), segs = 9, ec = new THREE.CatmullRomCurve3(D.ext.pts.map(function (p) { return skinP(p[0], p[1], -0.05, 1); }), false, 'centripetal'), em = mat(A.COL.cut, 0.95, { depthWrite: true });
         for (var s = 0; s < segs; s++) { if (s % 2) continue; var pts = []; for (var t = 0; t <= 6; t++) pts.push(ec.getPointAt((s + t / 6) / segs)); eg.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 8, 0.07, 6, false)), em)); }
@@ -148,12 +156,14 @@
             c.L.anchor = c.L.fn(); c.L.alpha = tt > 0.3 ? 1 : 0;
           });
           set.ports.forEach(function (P) {
-            var f = sm((m - P.w[0]) / (P.w[1] - P.w[0])), x = P.p.at[0], y = P.p.at[1], E = skinP(x, y, 0, k), ax = TGT.clone().sub(E).normalize().multiplyScalar(0.35).addScaledVector(B.nrm(x, y, k), -0.65).normalize(), out = ax.clone().negate();
+            var f = sm((m - P.w[0]) / (P.w[1] - P.w[0])), x = P.p.at[0], y = P.p.at[1], E = skinP(x, y, 0, k), Nn = B.nrm(x, y, k), ax = TGT.clone().sub(E).normalize().multiplyScalar(0.15).addScaledVector(Nn, -0.85).normalize(), out = ax.clone().negate();
+            P.ent.visible = f > 0.5; P.ent.position.copy(E).addScaledVector(Nn, 0.03); P.ent.quaternion.setFromUnitVectors(new V3(0, 0, 1), Nn);
             P.g.visible = f > 0.01; P.g.userData.out = out;
             P.g.quaternion.setFromUnitVectors(new V3(0, 1, 0), out); P.g.position.copy(E).addScaledVector(out, (1 - f) * 6);
             P.mats.forEach(function (mm) { mm.opacity = f; });
             P.L.anchor = P.L.fn(); P.L.alpha = f > 0.6 ? 1 : 0;
           });
+          if (set.line) set.line.visible = m > -0.62;
           if (set.ext) { var fe = sm((m + 0.17) / 0.12); set.ext.g.visible = fe > 0.01; set.ext.g.children.forEach(function (c, i) { c.visible = fe * set.ext.g.children.length > i; }); set.ext.L.anchor = set.ext.L.fn(); set.ext.L.alpha = fe > 0.5 ? 1 : 0; }
         }
         if (FR[S.frame] && FR[S.frame].k === 'access') {
