@@ -202,7 +202,8 @@
   var BLIND = profile([[0, 0.05], [0.04, 1.0], [1, 1.0]]);
 
   var ROUX_TG = [[3.2, 6.8, 0.6], [2.2, 6.3, 0.5], [1.4, 5.4, 0.6], [1.2, 3.6, 1.1], [1.4, 1.4, 1.6], [0.6, -0.6, 2.0], [1.8, -2.4, 2.3], [3.2, -3.8, 2.4], [2.4, -5.6, 2.5], [0.6, -6.8, 2.4], [1.0, -8.6, 2.0], [2.6, -9.4, 1.7], [3.4, -9.9, 1.4]];
-  var ROUX_R = [[0.4, 5.2, 2.0], [1.3, 4.4, 2.2], [2.2, 3.4, 2.3], [2.4, 1.6, 2.8], [1.4, -0.2, 3.5], [2.6, -2.0, 3.5], [3.8, -3.6, 3.2], [2.6, -5.2, 3.2], [0.6, -5.8, 3.0], [-0.4, -7.4, 2.8], [0.8, -8.8, 2.4], [2.6, -9.4, 1.9], [3.4, -9.9, 1.4]];
+  // RYGB: pętla Roux podchodzi od dołu do zespolenia GJ (1,8; 3,9); ślepy koniec za zespoleniem („kluczka”) biegnie w lewo i ku górze wzdłuż zbiornika — w stronę śledziony
+  var ROUX_R = [[3.5, 5.2, 2.7], [2.7, 4.6, 2.6], [1.8, 3.9, 2.25], [1.3, 3.0, 2.45], [1.3, 1.6, 2.85], [1.4, -0.2, 3.5], [2.6, -2.0, 3.5], [3.8, -3.6, 3.2], [2.6, -5.2, 3.2], [0.6, -5.8, 3.0], [-0.4, -7.4, 2.8], [0.8, -8.8, 2.4], [2.6, -9.4, 1.9], [3.4, -9.9, 1.4]];
   var POUCH_R = [[1.6, 7, -0.2], [1.8, 6.3, 0.5], [1.9, 5.3, 1.1], [1.95, 4.6, 1.4]];
   var POUCH_R_R = profile([[0, 0.9], [0.3, 1.25], [0.75, 1.3], [1, 0.95]]);
   var REM_R = [[3.8, 7.4, -1.2], [4.9, 5.4, -0.9], [5.0, 2.8, -0.4], [4.4, 0.4, 0.3], [2.9, -1.3, 0.6], [0.6, -1.5, 0.9], [-0.6, -0.6, 1.1], [-1.6, 0.2, 1.0]];
@@ -309,7 +310,7 @@
       { id: 'bp', name: 'Jelito czcze', postName: 'Pętla biliopankreatyczna', lenPost: 'typowo 50–100 cm', pre: rySplit.parts[0], post: { path: BP, r: flat(1.0) }, morph: [2, 3],
         colors: [[2, COL.bowel], [2.9, COL.bp]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Pętla biliopankreatyczna', 0.45, POST, 'typowo 50–100 cm')] },
       { id: 'roux', name: 'Jelito czcze', postName: 'Pętla Roux (alimentacyjna)', lenPost: 'typowo 100–150 cm', pre: rySplit.parts[1], post: { path: ROUX_R, r: BLIND }, morph: [2, 3],
-        colors: [[2, COL.bowel], [2.9, COL.roux]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Jelito czcze', 0.5, PRE), L('Pętla Roux (alimentacyjna)', 0.45, POST, 'typowo 100–150 cm')] },
+        colors: [[2, COL.bowel], [2.9, COL.roux]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Jelito czcze', 0.5, PRE), L('Pętla Roux (alimentacyjna)', 0.45, POST, 'typowo 100–150 cm'), L('Ślepy koniec pętli Roux', 0.012, POST, 'w stronę śledziony')] },
       { id: 'cc', name: 'Jelito czcze', postName: 'Kanał wspólny', pre: rySplit.parts[2], post: { path: CC, r: flat(1.0) }, morph: [2, 3],
         colors: [[2, COL.bowel], [2.9, COL.common]], mucosa: 'circular', tint: MUC.bowel, labels: [L('Kanał wspólny', 0.5, POST)] }
     ],
