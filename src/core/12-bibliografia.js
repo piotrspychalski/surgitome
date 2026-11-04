@@ -43,6 +43,7 @@
       "miles1971": { c: "Miles WE. A method of performing abdomino-perineal excision for carcinoma of the rectum and of the terminal portion of the pelvic colon (1908). CA Cancer J Clin. 1971;21(6):361-4.", pmid: "5001853", doi: "10.3322/canjclin.21.6.361", y: 1971 },
       "wei2024": { c: "Wei P, Li Y, Gao J, Wu S, Shu W, Yao H, et al. Intracorporeal versus Extracorporeal Anastomosis in Laparoscopic Right Hemicolectomy: An Updated Systematic Review and Meta-Analysis of Randomized Control Trials. Dig Surg. 2024;41(5-6):224-44.", pmid: "39342943", doi: "10.1159/000541373", y: 2024 },
       "lee2017h": { c: "Lee L, Abou-Khalil M, Liberman S, Boutros M, Fried GM, Feldman LS. Incidence of incisional hernia in the specimen extraction site for laparoscopic colorectal surgery: systematic review and meta-analysis. Surg Endosc. 2017;31(12):5083-93.", pmid: "28444496", doi: "10.1007/s00464-017-5573-2", y: 2017 },
+      "morrell2021": { c: "Morrell ALG, Morrell-Junior AC, Morrell AG, Almeida-Filho EC, Ribeiro DMFR, Ribeiro GMPA, et al. Technical essential aspects in robotic colorectal surgery: mastering the Da Vinci Si and Xi platforms. Rev Col Bras Cir. 2021;48:e20213007.", pmid: "34586205", doi: "10.1590/0100-6991e-20213007", y: 2021 },
       "lee2020": { c: "Lee JL, Alsaleem HA, Kim JC. Robotic surgery for colorectal disease: review of current port placement and future perspectives. Ann Surg Treat Res. 2020;98(1):31-43.", pmid: "31909048", doi: "10.4174/astr.2020.98.1.31", y: 2020 },
       "hajibandeh2020": { c: "Hajibandeh S, Hajibandeh S, Hussain I, Zubairu A, Akbar F, Maw A. Comparison of extended right hemicolectomy, left hemicolectomy and segmental colectomy for splenic flexure colon cancer: a systematic review and meta-analysis. Colorectal Dis. 2020;22(12):1885-907.", pmid: "32757361", doi: "10.1111/codi.15292", y: 2020 },
       "lennon2023": { c: "Lennon D, Donnelly M, Mahon J, Ryan ÉJ, Ryan OK, Davey MG, et al. Surgical management strategies for colorectal malignancies of the splenic flexure - A systematic review and network meta-analysis. Eur J Surg Oncol. 2023;49(11):107087.", pmid: "37793302", doi: "10.1016/j.ejso.2023.107087", y: 2023 },
@@ -336,15 +337,23 @@
         ["milone2019", "outcomes", "Rak poprzecznicy: resekcja segmentarna vs poszerzona — porównywalne wyniki onkologiczne"],
         ["morarasu2021", "outcomes", "Rak poprzecznicy: poszerzona daje więcej węzłów, przeżycie i nawroty podobne"]],
       "lh": [
+        ["morrell2021", "technique", "Slajd „Dostęp”: da Vinci Xi w zabiegach lewostronnych — porty w linii od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera na linii pośrodkowej (wytyczne producenta)"],
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["vogel2022", "guideline", "Zakres resekcji z krezką i podwiązaniem naczyń u odejścia (ASCRS 2022)"],
         ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w lewej połowie okrężnicy"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "sf": [
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["vogel2022", "guideline", "Zagięcie śledzionowe: resekcja segmentarna (LC i LBMC u odejścia) równoważna poszerzonym hemikolektomiom (ASCRS 2022)"],
         ["hajibandeh2020", "outcomes", "Metaanaliza: resekcja segmentarna vs poszerzona hemikolektomia prawa lub lewa w raku zagięcia śledzionowego"],
         ["lennon2023", "outcomes", "Metaanaliza sieciowa strategii chirurgicznych w raku zagięcia śledzionowego"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (221–223 wzdłuż MC, 231–232 wzdłuż LC) — przełącznik „Grupy węzłów chłonnych”"]],
       "sig": [
+        ["morrell2021", "technique", "Slajd „Dostęp”: da Vinci Xi w zabiegach lewostronnych — porty w linii od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera na linii pośrodkowej (wytyczne producenta)"],
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["vogel2022", "guideline", "Rak esicy: resekcja z krezką i podwiązaniem naczyń u odejścia, margines 5 cm (ASCRS 2022)"],
         ["hohenberger2009", "technique", "CME z centralnym podwiązaniem naczyń — także w resekcji esicy"],
         ["knight1980", "original", "Opis oryginalny podwójnego staplowania: stapler okrężny przez zamknięty kikut odbytnicy"],
@@ -354,6 +363,9 @@
       "lh-anti": [
         ["steichen1968", "original", "Opis oryginalny FEEA staplerem liniowym z poprzecznym zamknięciem końców"]],
       "ar": [
+        ["morrell2021", "technique", "Slajd „Dostęp”: da Vinci Xi w zabiegach lewostronnych — porty w linii od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera na linii pośrodkowej (wytyczne producenta)"],
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["you2020", "guideline", "Przednia resekcja z TME, margines dystalny, ileostomia protekcyjna przy niskim zespoleniu"],
         ["langenfeld2024", "guideline", "Aktualizacja 2023 wytycznych ASCRS dla raka odbytnicy"],
         ["heald1982", "original", "TME — wycięcie odbytnicy z całym mezorektum (opis oryginalny)"],
@@ -374,6 +386,8 @@
       "ar-side": [
         ["cavallaro2024", "technique", "Koniec okrężnicy do przedniej ściany odbytnicy („reverse Baker”) bez skrzyżowań linii zszywek"]],
       "apr": [
+        ["morrell2021", "technique", "Slajd „Dostęp”: da Vinci Xi w zabiegach lewostronnych — porty w linii od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera na linii pośrodkowej (wytyczne producenta)"],
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
         ["miles1971", "original", "Opis oryginalny amputacji brzuszno-kroczowej (Miles 1908, przedruk)"],
         ["you2020", "guideline", "APR przy guzie naciekającym zwieracze lub gdy nie da się ich zachować; TME także w APR"],
         ["langenfeld2024", "guideline", "Aktualizacja 2023 wytycznych ASCRS dla raka odbytnicy"],
@@ -382,6 +396,8 @@
         ["davis2022", "guideline", "Wytyczne ASCRS: wyłonienie i lokalizacja stomii (kolostomia końcowa)"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 251–253 wzdłuż SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ira": [
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["poylin2024", "guideline", "Polipowatość: kolektomia z IRA przy oszczędzonej odbytnicy; nadzór endoskopowy odbytnicy"],
         ["holubar2021", "guideline", "WZJG: kolektomia z IRA jako opcja u wybranych chorych"],
         ["spinelli2022", "guideline", "ECCO 2022: miejsce IRA w chirurgicznym leczeniu WZJG"],
@@ -389,6 +405,8 @@
         ["alavi2024", "guideline", "Zaparcie z inercją okrężnicy: kolektomia całkowita z IRA u wybranych"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 201–253 wzdłuż IC, RC, MC, LC, gałęzi esiczych, SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "ipaa": [
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["parks1978", "original", "Opis oryginalny proktokolektomii odtwórczej ze zbiornikiem z jelita krętego"],
         ["utsunomiya1980", "original", "Opis oryginalny zbiornika J z zespoleniem krętniczo-odbytowym"],
         ["holubar2021", "guideline", "WZJG: IPAA zabiegiem z wyboru, zwykle z ileostomią protekcyjną"],
@@ -402,6 +420,9 @@
         ["hembree2022", "endoscopy", "Zapalenie mankietu (cuffitis): rozpoznanie endoskopowe i leczenie"],
         ["japanesesocietyf2019", "anatomy", "Numeracja grup węzłów chłonnych JSCCR (2x1 przyokrężnicze, 2x2 pośrednie, 2x3 główne; 201–253 wzdłuż IC, RC, MC, LC, gałęzi esiczych, SRA i IMA) — przełącznik „Grupy węzłów chłonnych”"]],
       "hartmann": [
+        ["morrell2021", "technique", "Slajd „Dostęp”: da Vinci Xi w zabiegach lewostronnych — porty w linii od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera na linii pośrodkowej (wytyczne producenta)"],
+        ["lee2020", "technique", "Slajd „Dostęp”: rozmieszczenie portów w robotycznej chirurgii jelita grubego (da Vinci S, Si, Xi)"],
+        ["lee2017h", "outcomes", "Slajd „Dostęp”: przepuklina w miejscu wydobycia preparatu — po cięciu Pfannenstiela rzadziej niż po pośrodkowym"],
         ["hall2020", "guideline", "Zapalenie uchyłków z zapaleniem otrzewnej: Hartmann lub resekcja z zespoleniem"],
         ["hawkins2026", "guideline", "Aktualizacja 2026 wytycznych ASCRS dla lewostronnego zapalenia uchyłków okrężnicy"],
         ["sartelli2020", "guideline", "WSES 2020: Hartmann u chorych niestabilnych lub z kałowym zapaleniem otrzewnej"],

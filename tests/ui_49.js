@@ -34,7 +34,7 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
   // --- APR: interfejs i animacja krocza
   await search(w,'amputacja brzuszno'); const $=id=>w.document.getElementById(id);
   ok(/Amputacja brzuszno-kroczowa/.test($('pTitle').textContent),'wyszukiwarka nie otwiera APR: '+$('pTitle').textContent);
-  const ks=w.__sgTest.frames().map(f=>f.k).join(','); ok(ks==='normal,resect,cut,remove,var,endo,ct','APR: kadry '+ks);
+  const ks=w.__sgTest.frames().map(f=>f.k).join(','); ok(ks==='access,normal,resect,cut,remove,var,endo,ct','APR: kadry '+ks);
   const tool=()=>w.__sgTest.model().tools.find(t=>t.d.type==='krocze'), lab=m=>{ w.__sgTest.at(m); return tool().labels.map(L=>L.alpha?1:0).join(''); };
   const seq=[0.6,2.6,3.25,4].map(lab).join(' '); console.log('krocze — etykiety (cięcie, rana, zamknięcie) przy m 0,6 / 2,6 / 3,25 / 4:',seq);
   ok(seq==='100 010 001 001','APR: kolejność cięcie → rana → zamknięcie: '+seq);
@@ -71,7 +71,7 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     ok(a0==null&&y1===y0&&a2!=null&&y2<y0-0.3,'przebudowa po zmianie położenia guza'); ok(w.__sgTest.state().frame===0,'przebudowa zmieniła kadr'); }
   // bez zapisanego położenia: guz domyślny dla zabiegu (w preparacie) — usuwany
   for (const q of ['amputacja brzuszno','resekcja esicy','zagięcia śledzionowego','hemikolektomia lewa']) {
-    w=boot(null); await sleep(300); await search(w,q); const S=w.__sgTest.state(), fr=w.__sgTest.frames(), g0=w.__sgTest.tumour();
+    w=boot(null); await sleep(300); await search(w,q); const S=w.__sgTest.state(), fr=w.__sgTest.frames(), ni=fr.findIndex(f=>f.k==='normal'); w.__sgTest.open(S.an,S.vi,ni); w.__sgTest.at(fr[ni].m0); const g0=w.__sgTest.tumour();
     w.__sgTest.open(S.an,S.vi,fr.length-2); w.__sgTest.at(fr[fr.length-2].m0); const gE=w.__sgTest.tumour();
     console.log('domyślny guz —',q,':',g0?g0.map(x=>x.toFixed(1)).join(','):'brak','| po operacji:',gE?'zostaje':'usunięty'); ok(g0&&!gE,q+': domyślny guz nie w preparacie');
   }

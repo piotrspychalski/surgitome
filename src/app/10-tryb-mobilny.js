@@ -215,12 +215,12 @@
   $('qrOverlay').onclick = function () { qrShow(false); };
   document.addEventListener('keydown', function (e) {
     if (TOUR.on) { tourKey(e); return; } // samouczek: klawisze przechodzą między krokami
-    if (!$('acc').hidden) { accKey(e); return; } // okno wyboru dostępu: 1 / 2 / 3, Esc
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('cite').hidden) { if (e.key === 'Escape') { e.preventDefault(); citeShow(false); } return; } // okienko cytowania: Tab/Enter na przyciskach
     if (!$('bib').hidden) { if (e.key === 'Escape') { e.preventDefault(); bibShow(false); } return; } // okno „Źródła”: klawisze do przewijania
     if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
+    if (!$('acc').hidden) { accKey(e); return; } // okno wyboru dostępu: 1 / 2 / 3, Esc (pod oknami „Źródła”, cytowania, uwag)
     var tg = e.target, tag = tg && tg.tagName;
     if (tag === 'INPUT' && tg.type === 'search') return;
     if (e.key === '/' && !e.ctrlKey && !e.metaKey && !MOBILE) { e.preventDefault(); $('q').focus(); return; }

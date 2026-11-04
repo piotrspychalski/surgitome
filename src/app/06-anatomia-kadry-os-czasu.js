@@ -108,7 +108,7 @@
     } else F[F.length - 1].caps = [[2, fx.remove[1]], [3, fx.post]];
     F.push({ k: 'endo', vi: v, kind: 'endo', m0: an.mEnd, route: 'post', short: 'Endoskopia', title: (an.endoTitles || [])[1] || 'Endoskopia po operacji', cap: fx.endoPost });
     // dostęp operacyjny (okno wyboru, powłoki, cięcia i trokary): przed anatomią prawidłową, oś czasu m −1 → −0,02
-    if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: { t: [-3.2, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
+    if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: A.ACCESS[an.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
       cap: 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.' });
     F.push({ k: 'ct', vi: v, kind: 'ct', m0: an.mEnd, m1: an.mEnd, cam: 'front', short: 'TK', title: 'TK — przekroje poprzeczne (schemat)',
       cap: 'Przekroje od najwyższego. Suwak, kółko myszy nad obrazem lub strzałki ↑/↓ zmieniają poziom; „Przejazd” (spacja) prowadzi z góry na dół. Kontrast doustny wypełnia drogę pokarmową; odcinki wyłączone i drogi żółciowe zawierają płyn.' });

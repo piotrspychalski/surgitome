@@ -205,7 +205,9 @@
         one(HART),
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
-      LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; v.access = 'rh'; }); }); // access — slajd „Dostęp” (ACCESS.rh)
+      LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
+      // access — slajd „Dostęp” przed anatomią prawidłową (ANAT.ACCESS[klucz]): wszystkie zabiegi jelitowe
+      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = p.id; }); });
       // jelito cienkie: krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sb') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
@@ -241,7 +243,7 @@
       };
       LIST.forEach(function (p) { p.variants.forEach(function (v) {
         var f = ADAPT[v.id]; if (!f) return;
-        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.adapted = t; return a; };
+        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.adapted = t; a.access = v.access; return a; };
       }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });

@@ -1,8 +1,10 @@
   /* ---------- slajd „Dostęp” (an.access → ANAT.ACCESS[key], model powłok ANAT.BODY): okno wyboru „Dostęp?” (otwarty / laparoskopowy / robotyczny),
      potem animacja na osi m −1 → −0,02: powłoki z punktami orientacyjnymi, mięśniami prostymi i naczyniami nabrzusznymi; cięcia rysowane na skórze
      i rana otwierana; trokary wprowadzane po kolei wzdłuż osi skierowanej na pole operacyjne, odma unosi powłoki; planowane cięcie do wydobycia
-     preparatu (linia przerywana). Poza osią m < 0 model powłok jest niewidoczny. Wybór zapamiętany (surgitome-dostep); w hemikolektomii prawej
-     dostęp wybiera wariant zespolenia: otwarty → FEEA, laparoskopia i robot → izoperystaltyczne (wewnątrzbrzuszne). ---------- */
+     preparatu (linia przerywana), miejsce stomii (okrąg przerywany), trepanacja (okrągłe wycięcie skóry). Poza osią m < 0 model powłok jest niewidoczny.
+     Wybór zapamiętany (surgitome-dostep); dostęp nieoferowany w danym zabiegu (np. robot w ileostomii) — przycisk ukryty. W hemikolektomii prawej
+     dostęp wybiera wariant zespolenia: otwarty → FEEA, laparoskopia i robot → izoperystaltyczne (wewnątrzbrzuszne). Jelito cienkie: powłoki przeniesione
+     do układu modelu (X.xf: skala, przesunięcie grupy; kotwice etykiet przeliczane). ---------- */
   var ACC_KEY = 'surgitome-dostep', ACC = { kind: null, skip: false };
   try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
@@ -38,7 +40,9 @@
     return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, 0.5, k, holes, null);
   }
   function accessAttach(key) {
-    var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [];
+    var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [], XF = X.xf || { s: 1, d: [0, 0, 0] };
+    grp.scale.setScalar(XF.s); grp.position.fromArray(XF.d);
+    function W(v) { return v.multiplyScalar(XF.s).add(new V3().fromArray(XF.d)); }   // kotwica etykiety: z układu powłok do układu modelu
     function skinP(x, y, off, k) { return B.at(x, y, off || 0, k); }
     function morphGeo(build, sheet) { var g0 = track(build(0)), g1 = build(1); morphs.push({ g: g0, a: Float32Array.from(g0.attributes.position.array), b: Float32Array.from(g1.attributes.position.array), sheet: sheet }); g1.dispose(); return g0; }
     function tubeOn(pts2, off, r, k) { return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts2.map(function (p) { return skinP(p[0], p[1], off, k); }), false, 'centripetal'), Math.max(12, pts2.length * 10), r, 6, false); }
@@ -50,7 +54,7 @@
     // mięśnie proste: pasma pod skórą od spojenia do łuku żebrowego; smugi ścięgniste
     // mięśnie proste: wyróżniony ten, przez który się wchodzi — laparoskopia i robot: lewy (kontralateralny, trokary), dostęp otwarty: prawy (przecinany)
     var musBy = { '1': mat('#b04a42', 0.24), '-1': mat('#b04a42', 0.24) }, tendM = mat('#e7c9b8', 0.6);
-    function sideOf() { return !ACC.kind ? 0 : ACC.kind === 'open' ? -1 : 1; }
+    function sideOf() { var D = ACC.kind && X[ACC.kind]; return D ? (D.side || 0) : 0; }
     [1, -1].forEach(function (sd) {
       var musM = musBy[String(sd)];
       grp.add(new THREE.Mesh(morphGeo(function (k) { return bodyRectusGeo(sd, k, null); }, true), musM));
@@ -75,15 +79,26 @@
       lab('Łuk żebrowy', '', '#7d6152', 'ghost', function (k) { return skinP(LM.costalR[4][0], LM.costalR[4][1], -0.1, k); }),
       lab('Kolec biodrowy przedni górny', '', '#7d6152', 'ghost', function (k) { return skinP(LM.asisR[0], LM.asisR[1], -0.1, k); }),
       lab('Spojenie łonowe', '', '#7d6152', 'ghost', function (k) { return skinP(LM.pubis[0], LM.pubis[1], -0.1, k); }),
-      lab('Mięsień prosty brzucha', '', '#b04a42', 'ghost', function (k) { return sideOf() > 0 ? skinP(2.2, -9.2, 0.3, k) : skinP(-3.2, 4.2, 0.3, k); }),
+      lab('Mięsień prosty brzucha', '', '#b04a42', 'ghost', function (k) { return sideOf() >= 0 ? skinP(2.2, -9.2, 0.3, k) : skinP(-2.2, -9.2, 0.3, k); }),
       lab('Prawa strona chorego', '', '#56636f', 'ghost', function (k) { return skinP(-9.6, 10.5, -0.2, k); }),
       lab('Lewa strona chorego', '', '#56636f', 'ghost', function (k) { return skinP(9.6, 10.5, -0.2, k); }),
-      lab('Naczynia nabrzuszne dolne', '', '#b83227', 'ghost', function (k) { return sideOf() > 0 ? skinP(4.7, -11.8, 1.0, k) : skinP(-4.5, -11.0, 0.9, k); })];
+      lab('Naczynia nabrzuszne dolne', '', '#b83227', 'ghost', function (k) { return sideOf() >= 0 ? skinP(4.7, -11.8, 1.0, k) : skinP(-4.7, -11.8, 1.0, k); })];
     // dostęp: cięcia, rany, trokary, linia wydobycia (osobny zestaw dla każdego rodzaju)
     var SETS = {};
     ['open', 'lap', 'rob'].forEach(function (kind) {
-      var D = X[kind], g = new THREE.Group(), set = { d: D, g: g, cuts: [], ports: [], ext: null }; g.visible = false; grp.add(g); SETS[kind] = set;
+      var D = X[kind]; if (!D) return;
+      var g = new THREE.Group(), set = { d: D, g: g, cuts: [], ports: [], ext: null, stoma: null }; g.visible = false; grp.add(g); SETS[kind] = set;
       (D.cuts || []).forEach(function (c) {
+        if (c.disc) { // trepanacja: okrąg na skórze, wycięty krążek skóry (ciemny) rośnie przy otwieraniu
+          var cpts = []; for (var ci = 0; ci <= 40; ci++) { var ca = ci / 40 * Math.PI * 2; cpts.push([c.c[0] + c.r * Math.cos(ca), c.c[1] + c.r * Math.sin(ca)]); }
+          var dl = track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cpts.map(function (p) { return skinP(p[0], p[1], -0.05, 0); }), true), 60, 0.075, 6, true));
+          var dm = new THREE.Mesh(dl, mat(A.COL.cut, 1, { emissive: A.COL.cut, emissiveIntensity: 0.25, depthWrite: true })); g.add(dm);
+          var hole = new THREE.Mesh(track(new THREE.CircleGeometry(c.r * 0.92, 32)), track(new THREE.MeshBasicMaterial({ color: '#4a1010', side: THREE.DoubleSide }))); g.add(hole);
+          hole.position.copy(skinP(c.c[0], c.c[1], -0.04, 0)); hole.quaternion.setFromUnitVectors(new V3(0, 0, 1), B.nrm(c.c[0], c.c[1], 0));
+          var Ld = lab(c.name, c.sub, A.COL.cut, 'cut', function () { return skinP(c.c[0], c.c[1], 0, 0).add(new V3(0, c.r + 0.7, 0.3)); });
+          set.cuts.push({ c: c, disc: true, line: dl, mesh: dm, wm: hole, L: Ld });
+          return;
+        }
         var line = tubeOn(c.pts, -0.05, 0.075, 0); track(line);
         var lm = mat(A.COL.cut, 1, { emissive: A.COL.cut, emissiveIntensity: 0.25, depthWrite: true }), lineMesh = new THREE.Mesh(line, lm); g.add(lineMesh);
         // rana: pas wokół linii cięcia, rozchylany
@@ -116,6 +131,11 @@
         for (var ls = 0; ls < 24; ls += 2) { var lp = []; for (var lt = 0; lt <= 4; lt++) lp.push(lc.getPointAt((ls + lt / 4) / 24)); lg.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lp), 6, 0.045, 5, false)), lm2)); }
         g.add(lg); set.line = lg;
       }
+      if (D.stoma) { // miejsce stomii oznaczone przed operacją: okrąg przerywany
+        var sg = new THREE.Group(), SC = D.stoma, sm2 = mat(A.COL.cut, 0.95, { depthWrite: true });
+        for (var si = 0; si < 16; si += 2) { var sp = []; for (var sk = 0; sk <= 4; sk++) { var sa = (si + sk / 4) / 16 * Math.PI * 2; sp.push(skinP(SC.at[0] + SC.r * Math.cos(sa), SC.at[1] + SC.r * Math.sin(sa), -0.05, 1)); } sg.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(sp), 6, 0.06, 5, false)), sm2)); }
+        g.add(sg); set.stoma = { g: sg, L: lab(SC.name, SC.sub, A.COL.cut, 'cut', function () { return skinP(SC.at[0], SC.at[1], 0, 1).add(new V3(0, -SC.r - 0.6, 0.3)); }) };
+      }
       if (D.ext) {
         var eg = new THREE.Group(), segs = 9, ec = new THREE.CatmullRomCurve3(D.ext.pts.map(function (p) { return skinP(p[0], p[1], -0.05, 1); }), false, 'centripetal'), em = mat(A.COL.cut, 0.95, { depthWrite: true });
         for (var s = 0; s < segs; s++) { if (s % 2) continue; var pts = []; for (var t = 0; t <= 6; t++) pts.push(ec.getPointAt((s + t / 6) / segs)); eg.add(new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 8, 0.07, 6, false)), em)); }
@@ -133,19 +153,20 @@
       update: function (m) {
         var on = m < -0.001 && !SPLIT.on; grp.visible = on;
         if (!on) { labels.forEach(function (L) { L.alpha = 0; }); return; }
-        var kind = ACC.kind, set = kind && $('acc').hidden ? SETS[kind] : null, D = set ? set.d : null;
+        var kind = ACC.kind, set = kind && SETS[kind] && $('acc').hidden ? SETS[kind] : null, D = set ? set.d : null;
         var vis = sm((m + 1) / 0.12); // powłoki pojawiają się na początku kadru
         var k = D && D.insuf ? sm((m - D.insuf[0]) / (D.insuf[1] - D.insuf[0])) : 0;
         setK(k);
         var sdA = set ? sideOf() : 0; musBy['1'].userData.op = sdA > 0 ? 0.36 : sdA < 0 ? 0.14 : 0.24; musBy['-1'].userData.op = sdA < 0 ? 0.36 : sdA > 0 ? 0.14 : 0.24;
         grp.traverse(function (o) { if (o.material && o.material.userData && o.material.userData.op != null) o.material.opacity = o.material.userData.op * vis; });
         Object.keys(SETS).forEach(function (id) { SETS[id].g.visible = !!set && SETS[id] === set; });
-        LL.forEach(function (L) { L.anchor = L.fn(k); L.alpha = vis > 0.5 ? 1 : 0; });
-        Object.keys(SETS).forEach(function (id) { var st = SETS[id]; st.cuts.forEach(function (c) { c.L.alpha = 0; }); st.ports.forEach(function (P) { P.L.alpha = 0; }); if (st.ext) st.ext.L.alpha = 0; });
+        LL.forEach(function (L) { L.anchor = W(L.fn(k)); L.alpha = vis > 0.5 ? 1 : 0; });
+        Object.keys(SETS).forEach(function (id) { var st = SETS[id]; st.cuts.forEach(function (c) { c.L.alpha = 0; }); st.ports.forEach(function (P) { P.L.alpha = 0; }); if (st.ext) st.ext.L.alpha = 0; if (st.stoma) st.stoma.L.alpha = 0; });
         if (set) {
           set.cuts.forEach(function (c) {
             var tt = clamp01((m - c.c.t[0]) / (c.c.t[1] - c.c.t[0])), op = sm((m - c.c.open[0]) / (c.c.open[1] - c.c.open[0]));
             c.mesh.visible = tt > 0; c.line.setDrawRange(0, Math.round(tt * c.line.parameters.tubularSegments) * c.line.parameters.radialSegments * 6);
+            if (c.disc) { c.wm.visible = op > 0.01; c.wm.scale.setScalar(Math.max(op, 0.01)); c.L.anchor = W(c.L.fn()); c.L.alpha = tt > 0.3 ? 1 : 0; return; }
             c.wm.visible = op > 0.01;
             if (c.wm.visible) for (var q = 0; q <= c.NW; q++) {
               var u = q / c.NW, P = c.cc.getPointAt(u), T = c.cc.getTangentAt(u), N = B.nrm(P.x, P.y, 0), sd = new V3().crossVectors(N, T).normalize(), w = c.c.w * Math.pow(Math.sin(Math.PI * u), 0.6) * op;
@@ -153,7 +174,7 @@
               c.wp.set([a.x, a.y, a.z, b.x, b.y, b.z], q * 6);
             }
             c.wg.attributes.position.needsUpdate = true; c.wg.computeBoundingSphere();
-            c.L.anchor = c.L.fn(); c.L.alpha = tt > 0.3 ? 1 : 0;
+            c.L.anchor = W(c.L.fn()); c.L.alpha = tt > 0.3 ? 1 : 0;
           });
           set.ports.forEach(function (P) {
             var f = sm((m - P.w[0]) / (P.w[1] - P.w[0])), x = P.p.at[0], y = P.p.at[1], E = skinP(x, y, 0, k), Nn = B.nrm(x, y, k), ax = TGT.clone().sub(E).normalize().multiplyScalar(0.15).addScaledVector(Nn, -0.85).normalize(), out = ax.clone().negate();
@@ -161,10 +182,11 @@
             P.g.visible = f > 0.01; P.g.userData.out = out;
             P.g.quaternion.setFromUnitVectors(new V3(0, 1, 0), out); P.g.position.copy(E).addScaledVector(out, (1 - f) * 6);
             P.mats.forEach(function (mm) { mm.opacity = f; });
-            P.L.anchor = P.L.fn(); P.L.alpha = f > 0.6 ? 1 : 0;
+            P.L.anchor = W(P.L.fn()); P.L.alpha = f > 0.6 ? 1 : 0;
           });
           if (set.line) set.line.visible = m > -0.62;
-          if (set.ext) { var fe = sm((m + 0.17) / 0.12); set.ext.g.visible = fe > 0.01; set.ext.g.children.forEach(function (c, i) { c.visible = fe * set.ext.g.children.length > i; }); set.ext.L.anchor = set.ext.L.fn(); set.ext.L.alpha = fe > 0.5 ? 1 : 0; }
+          if (set.ext) { var fe = sm((m + 0.17) / 0.12); set.ext.g.visible = fe > 0.01; set.ext.g.children.forEach(function (c, i) { c.visible = fe * set.ext.g.children.length > i; }); set.ext.L.anchor = W(set.ext.L.fn()); set.ext.L.alpha = fe > 0.5 ? 1 : 0; }
+          if (set.stoma) { var fs = sm((m + 0.3) / 0.12); set.stoma.g.visible = fs > 0.01; set.stoma.g.children.forEach(function (c, i) { c.visible = fs * set.stoma.g.children.length > i; }); set.stoma.L.anchor = W(set.stoma.L.fn()); set.stoma.L.alpha = fs > 0.5 ? 1 : 0; }
         }
         if (FR[S.frame] && FR[S.frame].k === 'access') {
           var tt2 = tr(D ? D.title : 'Dostęp operacyjny'), tx2 = tr(D ? D.text : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.');
@@ -175,10 +197,16 @@
     M.group.add(grp); M.tools.push(tool); M.access = tool;
   }
   // okno wyboru: przy wejściu na slajd „Dostęp” (chyba że wybór właśnie zmienił wariant — skip); inne kadry chowają okno
+  function accX() { var v = curVar(); return v && v.access ? A.ACCESS[v.access] : null; }
   function accShow(on) {
     $('acc').hidden = !on;
-    document.querySelectorAll('#acc .accopt').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.acc === ACC.kind ? 'true' : 'false'); });
-    if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
+    var X = accX();
+    document.querySelectorAll('#acc .accopt').forEach(function (b) {
+      var D = X && X[b.dataset.acc], sm0 = b.querySelector('small');
+      b.hidden = !D; b.setAttribute('aria-pressed', b.dataset.acc === ACC.kind && D ? 'true' : 'false');
+      if (D && D.short && sm0.dataset.pl !== D.short) { sm0.dataset.pl = D.short; sm0.textContent = tr(D.short); }
+    });
+    if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt:not([hidden])'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
   }
   function accFrame(fr) {
     if (fr.k !== 'access') { if (!$('acc').hidden) accShow(false); return; }
@@ -186,6 +214,7 @@
     accShow(true);
   }
   function accChoose(kind) {
+    var X = accX(); if (X && !X[kind]) return;
     ACC.kind = kind; try { localStorage.setItem(ACC_KEY, kind); } catch (e) {}
     accShow(false);
     // hemikolektomia prawa: dostęp wybiera wariant zespolenia (otwarty → FEEA, laparoskopia i robot → izoperystaltyczne, wewnątrzbrzuszne)
@@ -196,7 +225,7 @@
   function accKey(e) {
     var map = { '1': 'open', '2': 'lap', '3': 'rob' };
     if (map[e.key]) { e.preventDefault(); accChoose(map[e.key]); }
-    else if (e.key === 'Escape') { e.preventDefault(); accChoose(ACC.kind || 'lap'); }
+    else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : 'lap'); }
   }
   document.querySelectorAll('#acc .accopt').forEach(function (b) { b.onclick = function () { accChoose(b.dataset.acc); }; });
   $('accChange').onclick = function () { accShow(true); };

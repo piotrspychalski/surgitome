@@ -1,7 +1,10 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
 // Slajd „Dostęp” (hemikolektomia prawa): pierwszy kadr, okno „Dostęp?” (przyciski, klawisze 1/2/3, Esc), zapis wyboru, dostęp wybiera wariant zespolenia
 // (otwarty → FEEA, laparoskopia/robot → izoperystaltyczne), trokary po lewej stronie chorego (2 × 12 mm przez lewy mięsień prosty), cięcie poprzeczne po prawej,
-// „Zmień dostęp”, powłoki niewidoczne poza slajdem, brak slajdu w innych zabiegach, EN; zabiegi ze stomią: te same powłoki (znacznik 'body'), stomia przez mięsień prosty
+// „Zmień dostęp”, powłoki niewidoczne poza slajdem, EN; wszystkie zabiegi jelitowe ze slajdem „Dostęp” (lewostronne: laparoskopia — lustrzanie przez prawy
+// mięsień prosty, robot — linia od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera przy linii pośrodkowej, porty
+// co ≥ 6 cm), robot nieoferowany w ileostomii i jelicie cienkim (przycisk ukryty), podpisy okna wg zabiegu; inne narządy bez slajdu;
+// zabiegi ze stomią: te same powłoki (znacznik 'body'), stomia przez mięsień prosty
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -48,8 +51,33 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   // poza slajdem: powłoki ukryte, okno i przycisk schowane
   $('strip').querySelectorAll('.step')[1].click(); await sleep(400);
   ok(!w.__sgTest.model().access.grp.visible&&$('acc').hidden&&$('ctxAcc').hidden,'powłoki lub okno widoczne poza slajdem „Dostęp”');
-  // inne zabiegi bez slajdu
-  await search(w,'hemikolektomia lewa'); ok(w.__sgTest.frames()[0].k==='normal'&&$('acc').hidden,'slajd „Dostęp” w hemikolektomii lewej');
+  // wszystkie zabiegi jelitowe: slajd „Dostęp”; porty na skórze, w obrębie powłok, co ≥ 6 cm (3,66 j.), trokary laparoskopowe 12 mm w mięśniu prostym
+  const BOW=['sb','rh','sf','lh','sig','ar','apr','ira','ipaa','hartmann','ileo'], CM=1/1.64;
+  A.PROCS.filter(p=>p.cat==='colon'||p.cat==='sb').forEach(p=>{ if(p.id==='zakres') return; ok(BOW.includes(p.id),'zabieg jelitowy bez slajdu „Dostęp”: '+p.id); });
+  BOW.forEach(id=>{ const X=A.ACCESS[id]; ok(X&&X.open&&X.lap,id+': brak dostępu otwartego lub laparoskopowego');
+    A.PROCS.find(p=>p.id===id).variants.forEach(v=>ok(v.access===id,v.id+': brak slajdu „Dostęp”'));
+    ['open','lap','rob'].forEach(k=>{ const D=X[k]; if(!D) return;
+      ok(D.title&&D.text&&D.short,id+'/'+k+': brak tytułu, opisu lub podpisu w oknie');
+      (D.ports||[]).forEach((P,i)=>{ ok(Math.abs(P.at[0])<B.W(P.at[1])*0.85&&P.at[1]<B.LM.xiph[1]&&P.at[1]>B.LM.pubis[1]+1.2,id+'/'+k+': port '+i+' poza powłokami brzucha');
+        (D.ports||[]).forEach((Q,j)=>{ if(j>i){ const d=Math.hypot(P.at[0]-Q.at[0],P.at[1]-Q.at[1]); ok(d>6*CM,id+'/'+k+': porty '+i+' i '+j+' bliżej niż 6 cm ('+(d/CM).toFixed(1)+' cm)'); } }); });
+      if(k==='lap') D.ports.filter(P=>P.mm===12).forEach(P=>{ const x=Math.abs(P.at[0]); ok(x>B.RECT_MED&&x<B.rectLat(P.at[1]),id+': trokar 12 mm poza mięśniem prostym'); });
+      if(D.line){ const [a,b]=D.line; D.ports.filter(P=>!P.assist).forEach((P,i)=>{ const cr=((b[0]-a[0])*(P.at[1]-a[1])-(b[1]-a[1])*(P.at[0]-a[0]))/Math.hypot(b[0]-a[0],b[1]-a[1]); ok(Math.abs(cr)<0.15,id+': port robota '+i+' poza linią portów'); }); } }); });
+  ['sf','lh','sig','ar','apr','hartmann'].forEach(id=>{ const L=A.ACCESS[id].lap; ok(L.ports.filter(P=>P.mm===12).every(P=>P.at[0]<0)&&L.side===-1,id+': laparoskopia nie lustrzana (12 mm nie przez prawy mięsień prosty)'); });
+  ['lh','sig','ar','apr','hartmann'].forEach(id=>{ const R=A.ACCESS[id].rob, [a,b]=R.line, cam=R.ports.find(P=>/kamera/.test(P.name));
+    ok(Math.abs(a[0]+5.6)<0.5&&a[1]<B.LM.asisR[1]&&Math.abs(b[0]-B.MCL)<0.1&&Math.abs(b[1]-3.5)<0.3,id+': linia portów robota nie od prawej głowy kości udowej do lewej linii środkowo-obojczykowej');
+    ok(cam&&Math.abs(cam.at[0])<0.6,id+': kamera robota nie przy linii pośrodkowej');
+    const as=R.ports.find(P=>P.assist); ok(as&&as.at[0]<-B.MCL,id+': port asystenta nie bocznie od prawej linii środkowo-obojczykowej'); });
+  ok(!A.ACCESS.ileo.rob&&!A.ACCESS.sb.rob,'robot w ileostomii lub resekcji jelita cienkiego');
+  await search(w,'hemikolektomia lewa'); ok(w.__sgTest.frames()[0].k==='access'&&!$('acc').hidden,'brak slajdu „Dostęp” w hemikolektomii lewej');
+  const sub=k=>w.document.querySelector('#acc .accopt[data-acc="'+k+'"] small').textContent;
+  ok(sub('open')==='laparotomia pośrodkowa','hemikolektomia lewa: podpis dostępu otwartego w oknie: '+sub('open'));
+  key(w,'3'); await sleep(200); w.__sgTest.at(-0.02); const lr=w.__sgTest.model().access.sets.rob; ok(lr.g.visible&&vis(lr)===5,'hemikolektomia lewa: zestaw portów robota');
+  await search(w,'ileostomia'); ok(!$('acc').hidden&&w.document.querySelector('#acc .accopt[data-acc="rob"]').hidden,'ileostomia: przycisk robota widoczny');
+  key(w,'3'); await sleep(200); ok(!$('acc').hidden,'ileostomia: klawisz 3 wybiera nieoferowany dostęp');
+  key(w,'1'); await sleep(300); w.__sgTest.at(-0.02); const io=w.__sgTest.model().access.sets.open; ok(io.cuts.length===1&&io.cuts[0].disc&&io.cuts[0].wm.visible,'ileostomia: brak trepanacji');
+  await search(w,'resekcja jelita cienkiego'); ok(w.__sgTest.frames()[0].k==='access','resekcja jelita cienkiego: brak slajdu „Dostęp”');
+  // inne narządy bez slajdu
+  await search(w,'gastrektomia całkowita'); ok(w.__sgTest.frames()[0].k!=='access'&&$('acc').hidden,'slajd „Dostęp” w gastrektomii');
   // zabiegi ze stomią: wspólny model powłok, otwór stomii w obrębie mięśnia prostego (kolostomia — lewy, ileostomia — prawy), bez starego prostokąta
   const marks=A.PROCS.filter(p=>['hartmann','apr','ileo'].includes(p.id)).flatMap(p=>p.variants.map(v=>[v.id,v.marks]));
   marks.forEach(([id,mk])=>{ const b=mk.filter(m=>m.kind==='body'); ok(b.length===1&&!mk.some(m=>m.kind==='wall'),id+': brak powłok (body) albo stary prostokąt');
