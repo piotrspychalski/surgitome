@@ -52,7 +52,7 @@
     });
     var NL = navList(), np = NL.indexOf(S.an), P = curProc(), lastV = P.split || (S.vi || 0) === P.variants.length - 1, firstV = P.split || !(S.vi || 0);
     $('btnPrev').disabled = S.frame === 0 && firstV && np <= 0;
-    $('btnNext').disabled = S.frame === FR.length - 1 && lastV && (np < 0 || np === NL.length - 1);
+    $('btnNext').disabled = S.frame === FR.length - 1 && lastV && (np < 0 || np === NL.length - 1) && !(M && M.zakresGo && !SPLIT.on);
     updateMobile();
   }
   function updateDock() {

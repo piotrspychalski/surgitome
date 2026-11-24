@@ -42,6 +42,8 @@
     if (fr.kind === 'orbit' && S.m < fr.m1 - 1e-4) { S.m = fr.m1; applyM(); if (tw) { tw.time = tw.dur; camStep(0); } updateDock(); return; }
     if (S.frame < FR.length - 1) goTo(S.frame + 1);
     else if (!curProc().split && (S.vi || 0) < curProc().variants.length - 1) switchVariant((S.vi || 0) + 1, curProc().distinct ? 'first' : 'firstVar');
+    // „Wybór zakresu resekcji”: dalej — do resekcji wskazanej przez położenie guza (jak przycisk „Przejdź do resekcji”), nie do kolejnego zabiegu na liście
+    else if (M && M.zakresGo && !SPLIT.on) switchAn(M.zakresGo.pi, 0, M.zakresGo.vi);
     else { var L = navList(), p = L.indexOf(S.an); if (p >= 0 && p < L.length - 1) switchAn(L[p + 1], 0); }
   }
   function prev() {

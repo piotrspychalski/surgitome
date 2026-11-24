@@ -55,9 +55,9 @@
      przednim górnym a łukiem żebrowym, drugi wyżej), 5 mm w linii cięcia Pfannenstiela i 5 mm pod wyrostkiem mieczykowatym; lewostronne — odbicie lustrzane;
      wydobycie zawsze przez cięcie Pfannenstiela (APR — przez krocze). Otwarty — krótkie cięcia pośrodkowe, hemikolektomia prawa — cięcie poprzeczne.
      Robot da Vinci Xi (wytyczne producenta): prawostronna kolektomia — linia od lewej linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego;
-     lewostronna kolektomia, esica, odbytnica — linia od rzutu prawej głowy kości udowej (boczny brzeg trójkąta pachwinowego) do lewej linii
+     esica, odbytnica — linia od rzutu prawej głowy kości udowej (boczny brzeg trójkąta pachwinowego) do lewej linii
      środkowo-obojczykowej na łuku żebrowym, kamera na przecięciu z linią pośrodkową, porty co 7–8 cm, asystent bocznie od prawej linii
-     środkowo-obojczykowej; zagięcie śledzionowe — układ lustrzany do prawostronnej; kolektomia całkowita — linia poprzeczna poniżej pępka. ---------- */
+     środkowo-obojczykowej; zagięcie śledzionowe i hemikolektomia lewa — układ lustrzany do prawostronnej (robR); kolektomia całkowita — linia poprzeczna poniżej pępka. ---------- */
   var PFANN = [[-2.4, -13.35], [-1.2, -13.72], [0, -13.85], [1.2, -13.72], [2.4, -13.35]];
   var COLO_SITE = [3.0, -7.6], ILEO_SITE = [-2.8, -6.9];   // jak COLO_S i ileostomia (XS, YS) w 04-jelito-grube.js
   var CAM0 = { t: [-10.5, -4.6, 0.8], tp: [0, -4.6, 0.8], az: 0, el: 12, k: 1.14 };   // ciało przesunięte w prawo ekranu — po lewej podpis kadru; tp — ekran pionowy (wyśrodkowane)
@@ -85,7 +85,7 @@
   }
   var LAP_L_TXT = 'Dwa trokary 12 mm przez prawy mięsień prosty: optyka w połowie wysokości między kolcem biodrowym przednim górnym a łukiem żebrowym (wprowadzona techniką otwartą, potem odma otrzewnowa), drugi nieco wyżej; dwa trokary 5 mm — w linii cięcia Pfannenstiela i pod wyrostkiem mieczykowatym (układ lustrzany do hemikolektomii prawej). ';
   function lapL(end, o) { return Object.assign({ title: 'Dostęp laparoskopowy', short: '4 trokary, wydobycie przez cięcie Pfannenstiela', side: -1, text: LAP_L_TXT + end, first: 0, insuf: [-0.76, -0.62], ports: lapPorts(-1), ext: EXT_P }, o || {}); }
-  // robot da Vinci Xi — lewostronne (lewostronna kolektomia, esica, odbytnica): linia od rzutu prawej głowy kości udowej do lewej linii
+  // robot da Vinci Xi — esica i odbytnica (także Hartmann, APR): linia od rzutu prawej głowy kości udowej do lewej linii
   // środkowo-obojczykowej na łuku żebrowym; kamera na przecięciu z linią pośrodkową (tuż poniżej pępka), porty co ok. 7,5 cm; 12 mm pod stapler w prawym
   // dolnym kwadrancie; asystent 12 mm bocznie od prawej linii środkowo-obojczykowej, na wysokości między kamerą a kolejnym portem
   var ROB_L_TXT = 'Cztery porty robota w jednej linii od rzutu prawej głowy kości udowej (boczny brzeg trójkąta pachwinowego) do lewej linii środkowo-obojczykowej na wysokości łuku żebrowego, co 7–8 cm: kamera na przecięciu linii z linią pośrodkową, port 12 mm pod stapler w prawym dolnym kwadrancie, dwa porty 8 mm ku lewemu górnemu kwadrantowi; port asystenta 12 mm bocznie od prawej linii środkowo-obojczykowej. ';
@@ -127,23 +127,28 @@
       }
     }
   };
-  // zagięcie śledzionowe: robot — układ lustrzany do prawostronnej kolektomii (linia od prawej linii środkowo-obojczykowej na łuku żebrowym do spojenia)
-  ACCESS.sf = { target: [5.4, 2.6, 1.2], cam: CAM0,
-    open: openSet({ short: 'laparotomia pośrodkowa górna', text: 'Laparotomia pośrodkowa górna, od wyrostka mieczykowatego do pępka. Dostęp do zagięcia śledzionowego i lewej części poprzecznicy; zespolenie koniec-do-końca.', cuts: [midCut(6.9, -4.4, 'Laparotomia pośrodkowa górna', 'od wyrostka mieczykowatego do pępka')] }),
-    lap: lapL('Preparat wydobyty przez cięcie Pfannenstiela.'),
-    rob: { title: 'Dostęp robotyczny (da Vinci Xi)', short: 'da Vinci Xi, porty w jednej linii', side: -1,
-      text: 'Cztery porty robota w jednej linii od prawej linii środkowo-obojczykowej na wysokości łuku żebrowego do spojenia łonowego, co 6–10 cm (układ lustrzany do prawostronnej kolektomii, cel — zagięcie śledzionowe): 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w prawym boku. Preparat wydobyty przez cięcie Pfannenstiela.',
+  // robot — układ lustrzany do prawostronnej kolektomii (linia od prawej linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego): zagięcie śledzionowe
+  // i hemikolektomia lewa (okrężnica zstępująca: skośna linia portów od prawego podżebrza ku linii pośrodkowej w podbrzuszu pozwala mobilizować zarówno zagięcie
+  // śledzionowe, jak i połączenie zstępniczo-esicze — Kumamoto i wsp., Asian J Endosc Surg 2026); esica i odbytnica — linia Intuitive ku prawej głowie kości udowej (robL)
+  function robR(goal, end) {
+    return { title: 'Dostęp robotyczny (da Vinci Xi)', short: 'da Vinci Xi, porty w jednej linii', side: -1,
+      text: 'Cztery porty robota w jednej linii od prawej linii środkowo-obojczykowej na wysokości łuku żebrowego do spojenia łonowego, co 6–10 cm (układ lustrzany do prawostronnej kolektomii, cel — ' + goal + '): 12 mm pod stapler najwyżej, optyka w jednym ze środkowych portów, najniższy w linii cięcia Pfannenstiela; port asystenta 12 mm w prawym boku. ' + end,
       first: 1, insuf: [-0.76, -0.62], robot: true, line: [[-6.9, 3.5], [0, -15.4]],
       ports: [{ at: [-6.21, 1.61], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'pod prawym łukiem żebrowym, linia środkowo-obojczykowa' },
         { at: [-4.35, -3.69], mm: 8, name: '8 mm — optyka (kamera)', sub: 'port środkowy' },
         { at: [-2.48, -8.98], mm: 8, name: '8 mm — ramię robota', sub: '' },
         { at: [-0.6, -13.75], mm: 8, name: '8 mm — ramię robota', sub: 'w linii cięcia Pfannenstiela' },
         { at: [-8.4, -8.6], mm: 12, name: '12 mm — port asystenta', sub: 'prawy bok, między dolnymi portami', assist: true }],
-      ext: EXT_P } };
+      ext: EXT_P };
+  }
+  ACCESS.sf = { target: [5.4, 2.6, 1.2], cam: CAM0,
+    open: openSet({ short: 'laparotomia pośrodkowa górna', text: 'Laparotomia pośrodkowa górna, od wyrostka mieczykowatego do pępka. Dostęp do zagięcia śledzionowego i lewej części poprzecznicy; zespolenie koniec-do-końca.', cuts: [midCut(6.9, -4.4, 'Laparotomia pośrodkowa górna', 'od wyrostka mieczykowatego do pępka')] }),
+    lap: lapL('Preparat wydobyty przez cięcie Pfannenstiela.'),
+    rob: robR('zagięcie śledzionowe', 'Preparat wydobyty przez cięcie Pfannenstiela.') };
   ACCESS.lh = { target: [3, -3, 0.8], cam: CAM0,
     open: openSet({ short: 'laparotomia pośrodkowa', text: 'Laparotomia pośrodkowa nad- i podpępkowa (pępek omijany łukiem). Dostęp do lewej połowy okrężnicy, zagięcia śledzionowego i początku tętnicy krezkowej dolnej.', cuts: [midCut(1.8, -11.0, 'Laparotomia pośrodkowa', 'nad- i podpępkowa')] }),
     lap: lapL('Preparat wydobyty przez cięcie Pfannenstiela.'),
-    rob: robL('Preparat wydobyty przez cięcie Pfannenstiela.') };
+    rob: robR('okrężnica zstępująca z zagięciem śledzionowym i połączeniem zstępniczo-esiczym', 'Preparat wydobyty przez cięcie Pfannenstiela.') };
   var EEA_END = 'Preparat wydobyty przez cięcie Pfannenstiela, przez nie kowadełko staplera okrężnego wprowadza się do kikuta proksymalnego; zespolenie (EEA) staplerem wprowadzonym przez odbyt.';
   ACCESS.sig = { target: [3, -9.5, 0], cam: CAM0,
     open: openSet({ short: 'laparotomia pośrodkowa dolna', text: 'Laparotomia pośrodkowa dolna, od pępka do spojenia łonowego. Dostęp do esicy i górnej odbytnicy; zespolenie staplerem okrężnym przez odbyt.', cuts: [midCut(-4.4, -13.6, 'Laparotomia pośrodkowa dolna', 'od pępka do spojenia')] }),

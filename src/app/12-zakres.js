@@ -68,7 +68,7 @@
         $('zkGo').textContent = tr('Przejdź do resekcji') + ': ' + nm + ' →';
         $('zkGo').onclick = function () { switchAn(T.pi, 0, T.vi); };
       }
-      updateDock();
+      updateStrip(); updateDock();   // „Dalej” prowadzi do tej samej resekcji co przycisk (next() w 08)
     }
     return { d: d, grp: grp, overlay: false, el: null, labels: labels, groups: groups,
       update: function () {

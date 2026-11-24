@@ -3,7 +3,7 @@
  * Author: Piotr Spychalski, MD, PhD — colorectal surgeon and clinical researcher,
  *         Department of Oncological, Transplant and General Surgery,
  *         Medical University of Gdańsk (Gdański Uniwersytet Medyczny), Gdańsk, Poland
- * Contact: piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · https://bit.ly/surgitome
+ * Contact: piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · https://piotrspychalski.pl/surgitome/
  * Copyright (c) 2026 Piotr Spychalski. Code: MIT License (LICENSE). 3D models, illustrations and texts: CC BY 4.0 (LICENSE-CONTENT).
  * Concept, medical content and design: Piotr Spychalski. Module: anatomical data — procedures, resections, anastomoses, endoscopic routes.
  */

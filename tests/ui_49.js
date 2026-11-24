@@ -75,9 +75,17 @@ const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
     w.__sgTest.open(S.an,S.vi,fr.length-2); w.__sgTest.at(fr[fr.length-2].m0); const gE=w.__sgTest.tumour();
     console.log('domyślny guz —',q,':',g0?g0.map(x=>x.toFixed(1)).join(','):'brak','| po operacji:',gE?'zostaje':'usunięty'); ok(g0&&!gE,q+': domyślny guz nie w preparacie');
   }
-  // bez guza — bez przycisku; EN
+  // „Dalej” (przycisk ›, strzałka, przesunięcie palcem) na slajdzie zakresu — ta sama resekcja co przycisk, nie kolejny zabieg na liście (hemikolektomia prawa)
+  for (const [t,vid] of [[0.60,'lh'],[0.78,'sig'],[0.93,'ar-center'],[0.99,'apr']]) {
+    w=boot(onWall(t)); await sleep(300); await search(w,'wybór zakresu'); const $=id=>w.document.getElementById(id);
+    ok(!$('btnNext').disabled,'t '+t+': „Dalej” nieaktywne'); $('btnNext').click(); await sleep(300);
+    const S=w.__sgTest.state(), got=w.ANAT.PROCS[S.an].variants[S.vi].id; console.log('Dalej z zakresu, guz t',t,'→',got,'| kadr',S.frame);
+    ok(got===vid&&S.frame===0,'t '+t+': „Dalej” otwiera '+got+' zamiast '+vid);
+  }
+  // bez guza — bez przycisku, „Dalej” do kolejnego zabiegu; EN
   w=boot(null); await sleep(300); await search(w,'wybór zakresu'); w.document.getElementById('optGuz').click(); await sleep(100);
   ok(w.document.getElementById('ctxZakres').hidden,'przycisk bez guza');
+  { const zi=w.__sgTest.state().an; w.document.getElementById('btnNext').click(); await sleep(300); const S=w.__sgTest.state(); ok(S.an!==zi&&w.ANAT.PROCS[S.an].id==='rh','bez guza: „Dalej” nie do kolejnego zabiegu ('+w.ANAT.PROCS[S.an].id+')'); }
   w=boot(onWall(0.99),'en'); await sleep(300); await search(w,'choosing the extent'); const en=w.document.getElementById('zkGo').textContent; console.log('EN:',en);
   ok(/^Go to the resection: Abdominoperineal resection \(APR\)/.test(en),'EN: '+en);
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);

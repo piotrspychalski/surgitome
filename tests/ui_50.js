@@ -2,8 +2,8 @@
 // Slajd „Dostęp” (hemikolektomia prawa): pierwszy kadr, okno „Dostęp?” (przyciski, klawisze 1/2/3, Esc), zapis wyboru, dostęp wybiera wariant zespolenia
 // (otwarty → FEEA, laparoskopia/robot → izoperystaltyczne), trokary po lewej stronie chorego (2 × 12 mm przez lewy mięsień prosty), cięcie poprzeczne po prawej,
 // „Zmień dostęp”, powłoki niewidoczne poza slajdem, EN; wszystkie zabiegi jelitowe ze slajdem „Dostęp” (lewostronne: laparoskopia — lustrzanie przez prawy
-// mięsień prosty, robot — linia od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera przy linii pośrodkowej, porty
-// co ≥ 6 cm), robot nieoferowany w ileostomii i jelicie cienkim (przycisk ukryty), podpisy okna wg zabiegu; inne narządy bez slajdu;
+// mięsień prosty; robot w esicy i odbytnicy — linia od rzutu prawej głowy kości udowej do lewej linii środkowo-obojczykowej na łuku żebrowym, kamera przy linii
+// pośrodkowej; w hemikolektomii lewej i zagięciu śledzionowym — układ lustrzany do prawostronnej, inny niż w esicy i odbytnicy; porty co ≥ 6 cm), robot nieoferowany w ileostomii i jelicie cienkim (przycisk ukryty), podpisy okna wg zabiegu; inne narządy bez slajdu;
 // zabiegi ze stomią: te same powłoki (znacznik 'body'), stomia przez mięsień prosty
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
@@ -63,7 +63,12 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
       if(k==='lap') D.ports.filter(P=>P.mm===12).forEach(P=>{ const x=Math.abs(P.at[0]); ok(x>B.RECT_MED&&x<B.rectLat(P.at[1]),id+': trokar 12 mm poza mięśniem prostym'); });
       if(D.line){ const [a,b]=D.line; D.ports.filter(P=>!P.assist).forEach((P,i)=>{ const cr=((b[0]-a[0])*(P.at[1]-a[1])-(b[1]-a[1])*(P.at[0]-a[0]))/Math.hypot(b[0]-a[0],b[1]-a[1]); ok(Math.abs(cr)<0.15,id+': port robota '+i+' poza linią portów'); }); } }); });
   ['sf','lh','sig','ar','apr','hartmann'].forEach(id=>{ const L=A.ACCESS[id].lap; ok(L.ports.filter(P=>P.mm===12).every(P=>P.at[0]<0)&&L.side===-1,id+': laparoskopia nie lustrzana (12 mm nie przez prawy mięsień prosty)'); });
-  ['lh','sig','ar','apr','hartmann'].forEach(id=>{ const R=A.ACCESS[id].rob, [a,b]=R.line, cam=R.ports.find(P=>/kamera/.test(P.name));
+  // hemikolektomia lewa i zagięcie śledzionowe: robot lustrzanie do prawostronnej (linia od prawej linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego)
+  ['lh','sf'].forEach(id=>{ const R=A.ACCESS[id].rob, rh=A.ACCESS.rh.rob, [a,b]=R.line;
+    ok(Math.abs(a[0]+B.MCL)<0.1&&Math.abs(a[1]-3.5)<0.3&&Math.abs(b[0])<0.1&&Math.abs(b[1]-B.LM.pubis[1])<0.6,id+': linia portów robota nie od prawej linii środkowo-obojczykowej do spojenia łonowego');
+    ok(R.ports.length===rh.ports.length&&R.ports.every((P,i)=>Math.abs(P.at[0]+rh.ports[i].at[0])<1e-6&&Math.abs(P.at[1]-rh.ports[i].at[1])<1e-6),id+': porty robota nie są odbiciem lustrzanym prawostronnej');
+    ok(JSON.stringify(R.line)!==JSON.stringify(A.ACCESS.sig.rob.line),id+': porty robota jak w esicy/odbytnicy'); });
+  ['sig','ar','apr','hartmann'].forEach(id=>{ const R=A.ACCESS[id].rob, [a,b]=R.line, cam=R.ports.find(P=>/kamera/.test(P.name));
     ok(Math.abs(a[0]+5.6)<0.5&&a[1]<B.LM.asisR[1]&&Math.abs(b[0]-B.MCL)<0.1&&Math.abs(b[1]-3.5)<0.3,id+': linia portów robota nie od prawej głowy kości udowej do lewej linii środkowo-obojczykowej');
     ok(cam&&Math.abs(cam.at[0])<0.6,id+': kamera robota nie przy linii pośrodkowej');
     const as=R.ports.find(P=>P.assist); ok(as&&as.at[0]<-B.MCL,id+': port asystenta nie bocznie od prawej linii środkowo-obojczykowej'); });

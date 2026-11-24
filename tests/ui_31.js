@@ -32,7 +32,7 @@ function boot(seen){
   console.log('klik w okno nie zamyka:',inBox!=='none','| klik obok zamyka:',outBox==='none');
   const esc=boot(false); await sleep(300); esc.document.dispatchEvent(new esc.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
   const escGone=esc.getComputedStyle(esc.document.getElementById('intro')).display==='none'; console.log('Esc zamyka i zapisuje:',escGone,esc.localStorage.getItem('surgitome-intro'));
-  const links=[...w.document.querySelectorAll('a[href="https://piotrspychalski.github.io/"]')].map(a=>a.closest('#mCred,.bcred,.credit').id||a.closest('#mCred,.bcred,.credit').className);
+  const links=[...w.document.querySelectorAll('a[href="https://piotrspychalski.pl/"]')].map(a=>a.closest('#mCred,.bcred,.credit').id||a.closest('#mCred,.bcred,.credit').className);
   console.log('link pod nazwiskiem:',links.length,links.join(', '));
   const ok=!errs.length && links.length===4 && !vis1 && escGone && inBox!=='none' && outBox==='none';
   console.log('errors',JSON.stringify(ok?[]:errs.concat(links.length===4?[]:['linki: '+links.length], vis1?['okno widoczne po Rozumiem']:[], escGone?[]:['Esc nie zamyka'], outBox==='none'?[]:['klik obok nie zamyka'])));

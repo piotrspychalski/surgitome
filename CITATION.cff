@@ -23,7 +23,7 @@ identifiers:
     value: 10.5281/zenodo.23185126
     description: "Version 1.0.0"
 repository-code: "https://github.com/piotrspychalski/surgitome"
-url: "https://piotrspychalski.github.io/surgitome/"
+url: "https://piotrspychalski.pl/surgitome/"
 abstract: >-
   SURGITOME is an interactive, schematic 3D atlas of anatomy after gastrointestinal surgery.
   For 29 operations in oesophageal, gastric, bariatric, hepatopancreatobiliary, liver,
