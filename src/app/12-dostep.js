@@ -9,6 +9,8 @@
   try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
+  // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
+  function accPrompt(X) { return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.'; }
   /* wspólny model powłok (slajd „Dostęp” i zabiegi ze stomią — znacznik 'body'): siatka (y, u) na powierzchni skóry ANAT.BODY z zanikaniem przy brzegach
      (kolory RGBA); holes — otwory [{ c: [x, y], rx, ry }]: wierzchołki wewnątrz przesunięte na brzeg otworu, trójkąty całkowicie w środku pominięte */
   function holeSnap(x, y, holes) {
@@ -189,7 +191,7 @@
           if (set.stoma) { var fs = sm((m + 0.3) / 0.12); set.stoma.g.visible = fs > 0.01; set.stoma.g.children.forEach(function (c, i) { c.visible = fs * set.stoma.g.children.length > i; }); set.stoma.L.anchor = W(set.stoma.L.fn()); set.stoma.L.alpha = fs > 0.5 ? 1 : 0; }
         }
         if (FR[S.frame] && FR[S.frame].k === 'access') {
-          var tt2 = tr(D ? D.title : 'Dostęp operacyjny'), tx2 = tr(D ? D.text : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.');
+          var tt2 = tr(D ? D.title : 'Dostęp operacyjny'), tx2 = tr(D ? D.text : accPrompt(X));
           if ($('capTitle').textContent !== tt2) $('capTitle').textContent = tt2;
           if ($('capText').textContent !== tx2) $('capText').textContent = tx2;
         }

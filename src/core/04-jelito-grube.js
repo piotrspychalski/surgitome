@@ -184,7 +184,7 @@
      SMA/SMV; od SMA: IC (krętniczo-okrężnicza), RC (prawa okrężnicy), MC (środkowa okrężnicy) z gałęzią prawą (RBMC) i lewą (LBMC); łuk brzeżny.
      mode: 'keep' — nic nie usuwane (np. leczenie endoskopowe); 'rh' — hemikolektomia prawa: podwiązanie IC, RC i RBMC (pień MC i LBMC zostają);
      'ext' — poszerzona: IC, RC i pień MC u odejścia z SMA. Czasy w skali po przygotowaniu (podwiązanie 1,25; preparat odjeżdża 2,15–2,9).
-     fade: SMA i SMV znikają po etapie resekcji (razem z preparatem), bez przesuwania. */
+     SMA i SMV zostają po resekcji (z kikutami podwiązanych gałęzi) — audyt 2026-11-24: znikanie pnia sugerowało jego usunięcie z preparatem. */
   var MESO_T0 = 0.015, MESO_T1 = ct([7.2, 7.4, -0.4]) - 0.012;
   var C_ROOT = curveOf([[-1.6, -6.6, -1.4], [-1.2, -3.0, -1.7], [-0.9, 0.0, -1.6], [-0.5, 1.6, -1.0], [1.6, 2.0, -0.6], [3.8, 3.2, -0.8], [5.4, 4.8, -1.2]]);
   function mesoEdge(tc, k) {
@@ -208,8 +208,8 @@
     var MC_O = [-0.45, 2.4, -2.2], RC_O = [-0.7, -1.0, -2.0], IC_O = [-1.05, -3.8, -1.8], BIF = [-1.2, 2.3, -0.6];
     var eIC = mesoEdge(0.035).toArray(), eRC = mesoEdge(ct([-7.4, -0.5, 0])).toArray(), eRB = mesoEdge(ct([-4.4, 5.8, 1.6])).toArray(), eLB = mesoEdge(ct([2.2, 4.0, 2.6])).toArray();
     var V = [
-      { id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: [[-0.4, 3.2, -2.3], [-0.5, 1.0, -2.1], [-0.8, -2.0, -1.9], [-1.2, -5.0, -1.7], [-1.7, -8.0, -1.3]], at: 0.12, fade: rm },
-      { id: 'smv', name: '', kind: 'v', pts: [[-1.3, 3.0, -2.0], [-1.4, 1.0, -1.9], [-1.7, -2.0, -1.7], [-2.1, -5.0, -1.5], [-2.6, -8.0, -1.1]], fade: rm },
+      { id: 'sma', name: 'SMA — tętnica krezkowa górna', kind: 'a', pts: [[-0.4, 3.2, -2.3], [-0.5, 1.0, -2.1], [-0.8, -2.0, -1.9], [-1.2, -5.0, -1.7], [-1.7, -8.0, -1.3]], at: 0.12 },
+      { id: 'smv', name: '', kind: 'v', pts: [[-1.3, 3.0, -2.0], [-1.4, 1.0, -1.9], [-1.7, -2.0, -1.7], [-2.1, -5.0, -1.5], [-2.6, -8.0, -1.1]] },
       { id: 'ic', name: 'IC — tętnica krętniczo-okrężnicza', kind: 'a', pts: [IC_O, via(IC_O, eIC, 0.3), eIC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
       { id: 'rc', name: 'RC — tętnica prawa okrężnicy', kind: 'a', pts: [RC_O, via(RC_O, eRC, 0.3), eRC], removed: rm, tie: rm ? 0.06 : null, at: 0.55, nodes: true },
       { id: 'mc', name: 'MC — pień tętnicy środkowej okrężnicy', kind: 'a', pts: [MC_O, via(MC_O, BIF, 0.1), BIF], removed: ext, tie: ext ? 0.25 : null, at: 0.5, nodes: 'central' },
@@ -464,14 +464,14 @@
       id: 'ar-' + kind, short: 'Resekcja odbytnicy', title: 'Resekcja odbytnicy — ' + T[0].charAt(0).toLowerCase() + T[0].slice(1),
       sub: ular ? 'Ultraniska przednia resekcja odbytnicy (ULAR) z całkowitym wycięciem mezorektum (TME); zespolenie EEA tuż nad kanałem odbytu, technika podwójnego staplowania'
         : side ? 'Wysoka przednia resekcja odbytnicy z częściowym wycięciem mezorektum (PME); zespolenie koniec-do-boku staplerem okrężnym, technika podwójnego staplowania' : 'Niska przednia resekcja odbytnicy z całkowitym wycięciem mezorektum (TME); EEA (end-to-end anastomosis) — stapler okrężny, technika podwójnego staplowania',
-      notes: (ular ? ['Resekcja ultraniska (guz w dolnej części odbytnicy, ok. 3–6 cm od brzegu odbytu, bez naciekania zwieraczy): usunięta esica i cała odbytnica z mezorektum (TME); odbytnica przecięta tuż nad górnym brzegiem kanału odbytu, co najmniej 1 cm poniżej guza; zstępnica po mobilizacji zagięcia śledzionowego sprowadzona głęboko do miednicy.',
+      notes: (ular ? ['Resekcja ultraniska (guz w dolnej części odbytnicy, ok. 3–6 cm od brzegu odbytu, bez naciekania zwieraczy): usunięta esica i prawie cała odbytnica z mezorektum (TME); odbytnica przecięta tuż nad górnym brzegiem kanału odbytu, co najmniej 1 cm poniżej guza; zstępnica po mobilizacji zagięcia śledzionowego sprowadzona głęboko do miednicy.',
         'Zespolenie bardzo nisko — zwykle z ileostomią protekcyjną (w modelu niepokazana); możliwe zaburzenia czynności po resekcji niskiej (LARS).']
         : side ? ['Resekcja wysoka (guz w górnej części odbytnicy): usunięta esica i górna część odbytnicy; odbytnica i mezorektum przecięte na tej samej wysokości, co najmniej 5 cm poniżej guza (częściowe wycięcie mezorektum — PME); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.', 'Zespolenie na przedniej ścianie (koniec okrężnicy do boku odbytnicy) wykonuje się zwykle przy znacznie dłuższym kikucie odbytnicy, czyli po resekcji wysokiej.'] : ['Usunięta esica z górną i środkową częścią odbytnicy oraz mezorektum (w resekcji niskiej całkowite wycięcie mezorektum — TME; w wysokiej częściowe — PME, z przecięciem mezorektum co najmniej 5 cm poniżej guza); zstępnica po mobilizacji zagięcia śledzionowego sprowadzona do miednicy.',
         'Resekcja wysoka i niska różnią się poziomem przecięcia odbytnicy (odległością zespolenia od odbytu); geometria zespolenia jest taka sama.']).concat([
         'Kikut odbytnicy zamknięty poprzecznie staplerem liniowym; stapler okrężny przez odbyt, kowadełko w końcu okrężnicy.', T[1],
         'Tętnica krezkowa dolna (IMA) podwiązana u odejścia (alternatywnie poniżej odejścia LC), z usunięciem węzłów chłonnych u jej korzenia; przy podwiązaniu u odejścia tętnica lewa okrężnicy (LC) przecięta u odejścia, a zstępnica ukrwiona przez łuk brzeżny z tętnicy środkowej okrężnicy. Krezka sprowadzanej zstępnicy z łukiem brzeżnym przemieszcza się razem z jelitem (w modelu po sprowadzeniu niepokazana).']),
       frames: {
-        resect: ['Zakres resekcji', ular ? 'Esica i cała odbytnica z krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz tuż nad kanałem odbytu, co najmniej 1 cm poniżej guza. IMA podwiązana u odejścia.' : side ? 'Esica z górną częścią odbytnicy, krezką i częścią mezorektum (PME): odbytnica i mezorektum przecięte co najmniej 5 cm poniżej guza; przecięcie na granicy zstępnicy i esicy oraz w odbytnicy wyżej niż przy TME — dłuższy kikut odbytnicy. IMA podwiązana u odejścia.' : 'Esica z górną i środkową częścią odbytnicy, krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz nisko w odbytnicy, nad dnem miednicy. IMA podwiązana u odejścia.', 'Zakres resekcji'],
+        resect: ['Zakres resekcji', ular ? 'Esica i prawie cała odbytnica z krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz tuż nad kanałem odbytu, co najmniej 1 cm poniżej guza. IMA podwiązana u odejścia.' : side ? 'Esica z górną częścią odbytnicy, krezką i częścią mezorektum (PME): odbytnica i mezorektum przecięte co najmniej 5 cm poniżej guza; przecięcie na granicy zstępnicy i esicy oraz w odbytnicy wyżej niż przy TME — dłuższy kikut odbytnicy. IMA podwiązana u odejścia.' : 'Esica z górną i środkową częścią odbytnicy, krezką i całym mezorektum (TME); przecięcie na granicy zstępnicy i esicy oraz nisko w odbytnicy, nad dnem miednicy. IMA podwiązana u odejścia.', 'Zakres resekcji'],
         remove: ['Usunięcie preparatu', 'Preparat usunięty; kikut odbytnicy zamknięty poprzecznie staplerem liniowym.', 'Usunięcie'],
         recon: ['Zespolenie staplerem okrężnym', 'Zstępnica z kowadełkiem sprowadzona do miednicy. ' + T[1], 'Zespolenie'],
         post: T[2],
@@ -710,7 +710,7 @@
       focus: { t: [0.8, -8.2, 1.4], k: 0.88 }, text: COL_TEXT,
       frames: {
         resect: ['Zakres resekcji', 'Cała okrężnica i odbytnica; jelito kręte przecięte przy zastawce, odbytnica tuż nad kanałem odbytu.', 'Zakres resekcji'],
-        remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; odbytnica zamknięta poprzecznie staplerem liniowym na wysokości połączenia odbytniczo-odbytowego (mankiet ok. 1–2 cm nad linią zębatą).', 'Usunięcie'],
+        remove: ['Usunięcie jelita grubego', 'Okrężnica i odbytnica usunięte; kikut odbytnicy (mankiet) zamknięty poprzecznie staplerem liniowym na wysokości połączenia odbytniczo-odbytowego (mankiet ok. 1–2 cm nad linią zębatą).', 'Usunięcie'],
         recon: ['Zbiornik J i zespolenie', 'Końcowy odcinek jelita krętego złożony w J (ramiona co najmniej 18 cm); ramiona zespolone staplerem liniowym (trzy odpalenia) we wspólny zbiornik, dno zbiornika (zagięcie pętli) zespolone staplerem okrężnym z kanałem odbytu.', 'Zbiornik J'],
         post: 'Zbiornik J w miednicy nad kanałem odbytu: u góry, obok siebie, wlot pętli doprowadzającej i ślepy szczyt J (w pouchoskopii obraz „oczu sowy”).',
         endoPost: 'Od odbytu przez zespolenie do zbiornika; wybór: wlot pętli doprowadzającej albo ślepy szczyt J.'
@@ -743,7 +743,7 @@
     };
   })();
 
-  /* ---------- Kolostomia końcowa w lewym dole biodrowym (Hartmann, APR): zstępnica przeprowadzona przez powłoki ---------- */
+  /* ---------- Kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty) (Hartmann, APR): zstępnica przeprowadzona przez powłoki ---------- */
   // miejsce stomii: lewy dół biodrowy, przez lewy mięsień prosty (model powłok BODY), na wysokości skóry
   var COLO_S = [3.0, -7.6], COLO_Z = BODY.z(COLO_S[0], COLO_S[1]);
   var COLO_PATH = sub(C_COL, COL_R, 0, tPJ, 70).path.concat([[7.8, -4.4, 0.4], [7.2, -6.3, 2.2], [5.5, -7.4, 3.9], [3.6, -7.6, COLO_Z - 0.75], [COLO_S[0], COLO_S[1], COLO_Z]]);
@@ -763,7 +763,7 @@
       title: 'Operacja Hartmanna', sub: 'Resekcja esicy, kolostomia końcowa, zamknięty kikut odbytnicy',
       notes: [
         'Najczęściej w trybie pilnym (perforacja, niedrożność, zapalenie uchyłków z zapaleniem otrzewnej) — bez zespolenia.',
-        'Zstępnica wyprowadzona jako kolostomia końcowa w lewym dole biodrowym; kikut odbytnicy zamknięty i pozostawiony w miednicy.',
+        'Zstępnica wyprowadzona jako kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty); kikut odbytnicy zamknięty i pozostawiony w miednicy.',
         'Endoskopia przez kolostomię w stronę kątnicy albo przez odbyt do ślepego kikuta (ocena przed odtworzeniem ciągłości).',
         'W modelu tętnica krezkowa dolna (IMA) podwiązana poniżej odejścia tętnicy lewej okrężnicy (LC), z usunięciem węzłów u korzenia IMA; gałęzie esicze i górna część tętnicy odbytniczej górnej (SRA) usunięte z preparatem; mezorektum z dolną częścią SRA zostaje z kikutem.'
       ],
@@ -771,8 +771,8 @@
       frames: {
         resect: ['Zakres resekcji', 'Esica z krezką; przecięcie na granicy zstępnicy i esicy oraz na wysokości połączenia esiczo-odbytniczego. IMA podwiązana poniżej odejścia LC; mezorektum zostaje z kikutem odbytnicy.', 'Zakres resekcji'],
         remove: ['Usunięcie esicy', 'Esica usunięta; kikut odbytnicy zamknięty poprzecznie staplerem liniowym.', 'Usunięcie'],
-        recon: ['Kolostomia końcowa', 'Koniec zstępnicy przeprowadzony przez powłoki w lewym dole biodrowym i wszyty w skórę.', 'Kolostomia'],
-        post: 'Kolostomia końcowa w lewym dole biodrowym, ślepy kikut odbytnicy w miednicy.',
+        recon: ['Kolostomia końcowa', 'Koniec zstępnicy przeprowadzony przez powłoki w lewym dolnym kwadrancie (przez lewy mięsień prosty) i wszyty w skórę.', 'Kolostomia'],
+        post: 'Kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty), ślepy kikut odbytnicy w miednicy.',
         endoPost: 'Wybierz drogę: przez kolostomię albo przez odbyt do kikuta odbytnicy.'
       },
       endoTitles: ['Kolonoskopia: anatomia prawidłowa', 'Endoskopia po operacji'],
@@ -789,7 +789,7 @@
       endTarget: { pre: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia' },
       routePost: { prefix: [], branches: [
-        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
+        { label: 'Przez kolostomię', sub: 'do okrężnicy zstępującej', steps: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty)' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' }] },
         { label: 'Przez odbyt', sub: 'do kikuta odbytnicy', steps: [{ obj: 'rect', from: 1, to: addV(D.P0.toArray(), D.T0, 1.3), note: 'Kikut odbytnicy — ślepo zakończony, u szczytu linia zszywek' }],
           target: D.P0.toArray(), endText: 'Szczyt kikuta z linią zszywek' }
       ] }
@@ -799,7 +799,7 @@
   /* ---------- Amputacja brzuszno-kroczowa odbytnicy (APR, operacja Milesa) ----------
      Etap brzuszny jak w resekcji odbytnicy: IMA podwiązana u odejścia, przecięcie na granicy zstępnicy i esicy, TME do dna miednicy.
      Etap kroczowy: eliptyczne cięcie skóry wokół odbytu, preparat (esica, odbytnica z mezorektum, kanał odbytu ze zwieraczami) usuwany przez krocze,
-     rana krocza zamknięta warstwowo (narzędzie „krocze”, czasy w skali po przygotowaniu); stała kolostomia końcowa w lewym dole biodrowym. */
+     rana krocza zamknięta warstwowo (narzędzie „krocze”, czasy w skali po przygotowaniu); stała kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty). */
   var APR_OFF = [0, -7, 7];
   var APR = (function () {
     // płaszczyzna krocza prostopadła do kanału odbytu, schematycznie odchylona ku przodowi (lepiej widoczna z przodu)
@@ -813,14 +813,14 @@
         'Etap brzuszny jak w resekcji odbytnicy: IMA podwiązana u odejścia (alternatywnie poniżej odejścia LC) z usunięciem węzłów u jej korzenia, okrężnica przecięta na granicy zstępnicy i esicy, odbytnica wypreparowana z całym mezorektum (TME) do dna miednicy.',
         'Etap kroczowy: eliptyczne cięcie skóry wokół odbytu; kanał odbytu ze zwieraczami i przyczepami dźwigaczy odbytu wycięty, preparat wydobyty przez krocze. Model przedstawia wariant klasyczny (bez poszerzonego wycięcia dźwigaczy — ELAPE).',
         'Rana krocza zamknięta warstwowo (mięśnie, tkanka podskórna, skóra szwami węzełkowymi); przy dużym ubytku lub po radioterapii zamknięcie płatem albo siatką biologiczną.',
-        'Zstępnica wyprowadzona jako stała kolostomia końcowa w lewym dole biodrowym. Endoskopia tylko przez kolostomię — odbytu już nie ma.'
+        'Zstępnica wyprowadzona jako stała kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty). Endoskopia tylko przez kolostomię — odbytu już nie ma.'
       ],
       focus: { t: [1.0, -15.0, 2], k: 0.7 }, text: COL_TEXT,
       frames: {
         resect: ['Zakres resekcji', 'Esica, odbytnica z całym mezorektum i kanał odbytu ze zwieraczami; przecięcie okrężnicy na granicy zstępnicy i esicy, IMA podwiązana u odejścia; na kroczu eliptyczne cięcie wokół odbytu.', 'Zakres'],
         remove: ['Usunięcie preparatu przez krocze', 'Preparat — esica, odbytnica z mezorektum i kanał odbytu — wydobyty przez ranę krocza.', 'Usunięcie'],
-        recon: ['Zamknięcie krocza i kolostomia', 'Rana krocza zamknięta warstwowo, skóra szwami węzełkowymi od przodu do tyłu; koniec zstępnicy przeprowadzony przez powłoki w lewym dole biodrowym i wszyty w skórę jako stała kolostomia końcowa.', 'Krocze, kolostomia'],
-        post: 'Stała kolostomia końcowa w lewym dole biodrowym; odbytnica i odbyt usunięte, krocze zamknięte.',
+        recon: ['Zamknięcie krocza i kolostomia', 'Rana krocza zamknięta warstwowo, skóra szwami węzełkowymi od przodu do tyłu; koniec zstępnicy przeprowadzony przez powłoki w lewym dolnym kwadrancie (przez lewy mięsień prosty) i wszyty w skórę jako stała kolostomia końcowa.', 'Krocze, kolostomia'],
+        post: 'Stała kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty); odbytnica i odbyt usunięte, krocze zamknięte.',
         endoPost: 'Kolonoskopia przez kolostomię — jedyna droga po amputacji odbytnicy.'
       },
       endoTitles: ['Kolonoskopia: anatomia prawidłowa', 'Endoskopia przez kolostomię'],
@@ -835,7 +835,7 @@
         inc: [0.3, 0.95], open: [2.1, 2.35], close: [3.0, 3.5], stitches: 7, off: APR_OFF, offT: [2.15, 2.9] },
       endTarget: { pre: ICV, post: ICV },
       endText: { pre: 'Zastawka krętniczo-kątnicza w polu widzenia', post: 'Zastawka krętniczo-kątnicza w polu widzenia' },
-      routePost: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dole biodrowym' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
+      routePost: [{ pt: [COLO_S[0], COLO_S[1], COLO_Z + 3.4], note: 'Kolostomia końcowa w lewym dolnym kwadrancie (przez lewy mięsień prosty)' }, { obj: 'prox', from: 1, to: [7.9, -1.5, -0.7], note: 'Za stomią — okrężnica zstępująca' },
         { obj: 'prox', from: [7.9, -1.5, -0.7], to: 0.04, note: 'Poprzecznica i wstępnica do kątnicy' }]
     };
   })();
@@ -1052,7 +1052,7 @@
   }
   var BIL = ['Pętla biliopankreatyczna', 'do brodawki Vatera'], AFFB = ['Pętla doprowadzająca', 'biliopankreatyczna, do brodawki'];
   var CCB = function (id) { return ['Kanał wspólny', 'dalej z treścią pokarmową', [{ obj: id, note: 'Kanał wspólny — dalej w dół' }]]; };
-  var EFFB = function (id) { return ['Pętla odprowadzająca', 'alimentacyjna, dalej w dół', [{ obj: id, note: 'Pętla odprowadzająca' }]]; };
+  var EFFB = function (id) { return ['Pętla odprowadzająca', 'pokarm z żółcią, dalej w dół', [{ obj: id, note: 'Pętla odprowadzająca' }]]; };
   var B2 = b2(false), B2BR = b2(true);
   branchify(TG, 2, BIL, CCB('cc')); branchify(RYGB, 3, BIL, CCB('cc')); branchify(DGRY, 3, BIL, CCB('cc'));
   branchify(OAGB, 2, AFFB, EFFB('eff')); branchify(B2, 2, AFFB, EFFB('eff')); branchify(B2BR, 2, AFFB, EFFB('eff'));

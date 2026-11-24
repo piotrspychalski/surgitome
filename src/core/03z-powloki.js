@@ -127,6 +127,10 @@
       }
     }
   };
+  // hemikolektomia prawa poszerzona (do zagięcia śledzionowego, zespolenie izoperystaltyczne wewnątrzbrzuszne): otwarta — laparotomia pośrodkowa; laparoskopia i robot jak w rh
+  ACCESS['rh-ext'] = Object.assign({}, ACCESS.rh, {
+    open: openSet({ short: 'laparotomia pośrodkowa', text: 'Laparotomia pośrodkowa (pępek omijany łukiem) — dostęp do prawej połowy okrężnicy, poprzecznicy i zagięcia śledzionowego; zespolenie krętniczo-okrężnicze izoperystaltyczne przy zagięciu śledzionowym.',
+      cuts: [midCut(4.2, -9.6, 'Laparotomia pośrodkowa', 'nad i pod pępkiem')] }) });
   // robot — układ lustrzany do prawostronnej kolektomii (linia od prawej linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego): zagięcie śledzionowe
   // i hemikolektomia lewa (okrężnica zstępująca: skośna linia portów od prawego podżebrza ku linii pośrodkowej w podbrzuszu pozwala mobilizować zarówno zagięcie
   // śledzionowe, jak i połączenie zstępniczo-esicze — Kumamoto i wsp., Asian J Endosc Surg 2026); esica i odbytnica — linia Intuitive ku prawej głowie kości udowej (robL)
@@ -159,21 +163,23 @@
   var APR_END = 'Preparat usuwany przez krocze (etap kroczowy); kolostomia końcowa w miejscu oznaczonym przed operacją.';
   ACCESS.apr = { target: [1, -14, -0.5], cam: CAM0,
     open: openSet({ short: 'laparotomia pośrodkowa dolna i krocze', text: 'Laparotomia pośrodkowa dolna (pępek omijany łukiem) i, w drugim etapie, cięcie kroczowe wokół odbytu. ' + APR_END, cuts: [midCut(-2.4, -14.4, 'Laparotomia pośrodkowa dolna', 'od okolicy nadpępkowej do spojenia')], stoma: STOMA_C }),
-    lap: lapL(APR_END, { short: '4 trokary, preparat przez krocze', ext: null, stoma: STOMA_C }),
+    // APR: bez cięcia Pfannenstiela (preparat przez krocze) — trokar 5 mm nadłonowo w linii pośrodkowej
+    lap: lapL(APR_END, { short: '4 trokary, preparat przez krocze', ext: null, stoma: STOMA_C, text: LAP_L_TXT.replace('w linii cięcia Pfannenstiela', 'nadłonowo w linii pośrodkowej') + APR_END,
+      ports: lapPorts(-1).map(function (p) { return p.sub === 'w linii cięcia Pfannenstiela' ? Object.assign({}, p, { sub: 'nadłonowo, w linii pośrodkowej' }) : p; }) }),
     rob: robL(APR_END, { short: 'da Vinci Xi, preparat przez krocze', ext: null, stoma: STOMA_C }) };
   var HART_END = 'Preparat wydobyty przez cięcie Pfannenstiela; kolostomia końcowa w miejscu oznaczonym przed operacją.';
   ACCESS.hartmann = { target: [3, -11, 0], cam: CAM0,
     open: openSet({ short: 'laparotomia pośrodkowa dolna', text: 'Laparotomia pośrodkowa dolna (pępek omijany łukiem). Po resekcji kikut odbytnicy zamknięty staplerem; kolostomia końcowa w miejscu oznaczonym przed operacją.', cuts: [midCut(-2.6, -14.2, 'Laparotomia pośrodkowa dolna', 'od okolicy nadpępkowej do spojenia')], stoma: STOMA_C }),
     lap: lapL(HART_END, { stoma: STOMA_C }), rob: robL(HART_END, { stoma: STOMA_C }) };
   // kolektomia całkowita (IRA, IPAA): wiele kwadrantów
-  function totSets(end, openTxt) {
+  function totSets(end, openTxt, name) {
     return { target: [0, -5, 0], cam: CAM0,
       open: openSet({ short: 'laparotomia pośrodkowa pełna', text: openTxt, cuts: [midCut(6.7, -14.4, 'Laparotomia pośrodkowa', 'od wyrostka mieczykowatego do spojenia', 1.1)] }),
       lap: { title: 'Dostęp laparoskopowy', short: '5 trokarów, wydobycie przez cięcie Pfannenstiela', side: 0,
-        text: 'Kolektomia całkowita: układ z hemikolektomii prawej (2 × 12 mm przez lewy mięsień prosty, 5 mm w linii cięcia Pfannenstiela, 5 mm pod wyrostkiem mieczykowatym), uzupełniony trokarem 12 mm przez prawy mięsień prosty do lewej połowy okrężnicy i odbytnicy. ' + end,
+        text: name + ': układ z hemikolektomii prawej (2 × 12 mm przez lewy mięsień prosty, 5 mm w linii cięcia Pfannenstiela, 5 mm pod wyrostkiem mieczykowatym), uzupełniony trokarem 12 mm przez prawy mięsień prosty do lewej połowy okrężnicy i odbytnicy. ' + end,
         first: 0, insuf: [-0.76, -0.62], ports: lapPorts(1).concat([{ at: [-3.6, -3.6], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'przez prawy mięsień prosty' }]), ext: EXT_P },
       rob: { title: 'Dostęp robotyczny (da Vinci Xi)', short: 'da Vinci Xi, porty w linii poprzecznej', side: 0,
-        text: 'Kolektomia całkowita (kilka kwadrantów): cztery porty robota w linii poprzecznej poniżej pępka, co ok. 7,5 cm; kolejne kwadranty osiągane obrotem wysięgnika robota bez przestawiania wózka; 12 mm pod stapler w prawym dolnym kwadrancie; port asystenta 5 mm w linii cięcia Pfannenstiela. ' + end,
+        text: name + ' (kilka kwadrantów): cztery porty robota w linii poprzecznej poniżej pępka, co ok. 7,5 cm; kolejne kwadranty osiągane obrotem wysięgnika robota bez przestawiania wózka; 12 mm pod stapler w prawym dolnym kwadrancie; port asystenta 5 mm w linii cięcia Pfannenstiela. ' + end,
         first: 1, insuf: [-0.76, -0.62], robot: true, line: [[-9.4, -8.6], [9.4, -8.6]],
         ports: [{ at: [-6.9, -8.6], mm: 12, name: '12 mm — ramię robota, stapler', sub: 'prawy dolny kwadrant' },
           { at: [-2.3, -8.6], mm: 8, name: '8 mm — optyka (kamera)', sub: 'poniżej pępka' },
@@ -183,9 +189,9 @@
         ext: EXT_P } };
   }
   ACCESS.ira = totSets('Preparat wydobyty przez cięcie Pfannenstiela; zespolenie krętniczo-odbytnicze staplerem okrężnym przez odbyt.',
-    'Laparotomia pośrodkowa od wyrostka mieczykowatego do spojenia łonowego (pępek omijany łukiem) — dostęp do całej okrężnicy; zespolenie krętniczo-odbytnicze staplerem okrężnym przez odbyt.');
+    'Laparotomia pośrodkowa od wyrostka mieczykowatego do spojenia łonowego (pępek omijany łukiem) — dostęp do całej okrężnicy; zespolenie krętniczo-odbytnicze staplerem okrężnym przez odbyt.', 'Kolektomia całkowita');
   ACCESS.ipaa = totSets('Preparat wydobyty przez cięcie Pfannenstiela; przez nie formuje się zbiornik J, zespolenie zbiornika z kanałem odbytu staplerem okrężnym przez odbyt.',
-    'Laparotomia pośrodkowa od wyrostka mieczykowatego do spojenia łonowego (pępek omijany łukiem) — dostęp do całej okrężnicy i miednicy; zbiornik J i zespolenie z kanałem odbytu staplerem okrężnym przez odbyt.');
+    'Laparotomia pośrodkowa od wyrostka mieczykowatego do spojenia łonowego (pępek omijany łukiem) — dostęp do całej okrężnicy i miednicy; zbiornik J i zespolenie z kanałem odbytu staplerem okrężnym przez odbyt.', 'Proktokolektomia odtwórcza');
   // ileostomia: trepanacja w miejscu oznaczonym przed operacją albo ileostomia wspomagana laparoskopowo; bez robota
   ACCESS.ileo = { target: [-2.8, -6.9, 1], cam: CAM0,
     open: { title: 'Dostęp otwarty: trepanacja', short: 'trepanacja w miejscu stomii', side: -1,

@@ -109,7 +109,7 @@
     return {
       cat: 'hpb', id: 'hj', short: 'Hepatikojejunostomia',
       title: 'Hepatikojejunostomia na pętli Roux', sub: 'Tu: resekcja zewnątrzwątrobowych dróg żółciowych z cholecystektomią (np. torbiel przewodu żółciowego wspólnego); HJ (hepaticojejunostomy)',
-      ctOverride: { stom: 'contrast', duo: 'contrast' },
+      ctOverride: { stom: 'contrast', duo: 'contrast', bp: 'contrast', roux: 'fluid' },   // pętla Roux niesie tylko żółć, odcinek dwunastniczo-czczy — pokarm
       notes: [
         'Np. po uszkodzeniu dróg żółciowych, przy torbieli przewodu żółciowego wspólnego lub łagodnym zwężeniu. Po uszkodzeniu lub w zwężeniu zwykle bez resekcji przewodu: HJ powyżej zwężenia, często na wysokości konfluencji (Hepp–Couinaud); pęcherzyk zwykle już usunięty.',
         'Pętla Roux (typowo 40–60 cm) do przewodu wątrobowego wspólnego; zespolenie jelitowo-jelitowe (JJ) niżej.',
@@ -163,7 +163,7 @@
     var tDP = nearestT(C_PANC, [1.4, -2.4, -2.15]), OFF = [[1.15, [0, 0, 0]], [1.9, [6, 1, 5]]];
     var head = sub(C_PANC, PANC_R, 0, tDP, 24);
     return {
-      cat: 'hpb', id: 'dp', short: 'Pankreatektomia dystalna', title: 'Pankreatektomia dystalna ze splenektomią',
+      cat: 'hpb', id: 'dp', short: 'Pankreatektomia dystalna', title: 'Pankreatektomia dystalna ze splenektomią', ctOverride: { stom: 'contrast', duo: 'contrast' }, ctNoSpleen: true,
       sub: 'Resekcja trzonu i ogona trzustki na lewo od żyły krezkowej górnej, ze śledzioną; kikut zamknięty staplerem liniowym',
       notes: ['Wskazania: nowotwory trzonu i ogona trzustki, nowotwory torbielowate, guzy neuroendokrynne; przy zmianach łagodnych możliwe zachowanie śledziony.',
         'Przewód pokarmowy bez zmian — endoskopia i ECPW (endoskopowa cholangiopankreatografia wsteczna) jak w anatomii prawidłowej; przewód trzustkowy krótki, zakończony w kikucie.',
@@ -213,6 +213,7 @@
     if (frey) { var hc = C_PANC.getPointAt(0.12), core = []; for (var i = 0; i < 40; i++) { var a = i / 40 * Math.PI * 2; core.push([hc.x + 1.0 * Math.cos(a), hc.y + 0.8 * Math.sin(a), hc.z + 1.25]); }
       marks.splice(1, 0, { kind: 'loop', name: 'Wydrążenie głowy trzustki (Frey)', color: COL.cut, dash: 0.2, opacity: [[0.05, 0], [0.55, 1], [2.3, 1], [2.6, 0]], pts: core }); }
     var an = {
+      ctOverride: { stom: 'contrast', duo: 'contrast', bp: 'contrast', roux: 'fluid' },   // pętla Roux niesie tylko sok trzustkowy
       cat: 'hpb', id: frey ? 'frey' : 'puestow', short: frey ? 'Frey' : 'Puestow (Partington–Rochelle)',
       title: frey ? 'Operacja Freya: wydrążenie głowy trzustki i podłużne zespolenie trzustkowo-jelitowe' : 'Operacja Puestowa (modyfikacja Partingtona–Rochelle’a): podłużne zespolenie trzustkowo-jelitowe',
       sub: 'Przewlekłe zapalenie trzustki z poszerzonym przewodem trzustkowym; zespolenie bok-do-boku z pętlą Roux',
@@ -257,7 +258,7 @@
     var ring = [], ringE = []; for (var i = 0; i < 48; i++) { var a = i / 48 * Math.PI * 2; ring.push(mid.clone().addScaledVector(u, 0.62 * Math.cos(a)).addScaledVector(v, 0.62 * Math.sin(a)).toArray()); ringE.push(mid.clone().addScaledVector(u, 0.55 * Math.cos(a)).addScaledVector(v, 0.55 * Math.sin(a)).toArray()); }
     var tA2 = nearestT(curveOf(CBD_POST), cA.toArray());
     var an = {
-      cat: 'hpb', id: 'cdd', short: 'Choledochoduodenostomia', title: 'Choledochoduodenostomia bok-do-boku',
+      cat: 'hpb', id: 'cdd', short: 'Choledochoduodenostomia', title: 'Choledochoduodenostomia bok-do-boku', ctOverride: { stom: 'contrast', duo: 'contrast' },
       sub: 'Zespolenie przewodu żółciowego wspólnego z opuszką dwunastnicy powyżej jej górnego brzegu; zwykle z cholecystektomią',
       notes: ['Wskazania: poszerzony przewód żółciowy wspólny (zwykle ≥ 1,5 cm) z nawracającą kamicą przewodową lub łagodnym zwężeniem dystalnym, zwłaszcza u starszych chorych.',
         'Zespolenie szerokie (≥ 1,5–2 cm), jednowarstwowe; brodawka Vatera pozostaje.',

@@ -55,7 +55,7 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   const BOW=['sb','rh','sf','lh','sig','ar','apr','ira','ipaa','hartmann','ileo'], CM=1/1.64;
   A.PROCS.filter(p=>p.cat==='colon'||p.cat==='sb').forEach(p=>{ if(p.id==='zakres') return; ok(BOW.includes(p.id),'zabieg jelitowy bez slajdu „Dostęp”: '+p.id); });
   BOW.forEach(id=>{ const X=A.ACCESS[id]; ok(X&&X.open&&X.lap,id+': brak dostępu otwartego lub laparoskopowego');
-    A.PROCS.find(p=>p.id===id).variants.forEach(v=>ok(v.access===id,v.id+': brak slajdu „Dostęp”'));
+    A.PROCS.find(p=>p.id===id).variants.forEach(v=>ok(v.access===id||(v.access===v.id&&A.ACCESS[v.id]),v.id+': brak slajdu „Dostęp”'));   // wariant może mieć własny dostęp (rh-ext)
     ['open','lap','rob'].forEach(k=>{ const D=X[k]; if(!D) return;
       ok(D.title&&D.text&&D.short,id+'/'+k+': brak tytułu, opisu lub podpisu w oknie');
       (D.ports||[]).forEach((P,i)=>{ ok(Math.abs(P.at[0])<B.W(P.at[1])*0.85&&P.at[1]<B.LM.xiph[1]&&P.at[1]>B.LM.pubis[1]+1.2,id+'/'+k+': port '+i+' poza powłokami brzucha');

@@ -83,6 +83,19 @@
       o.geo = g; o.outer.geometry = g; o.inner.geometry = g;
     }
     o.st = st;
+    (o.caps || []).forEach(function (c) { c.m.position.copy(st.curve.getPointAt(c.e)); c.m.scale.setScalar(Math.max(0.02, st.r(c.e) * 0.985)); });
+  }
+  // styki odcinków (koniec jednej rury przy końcu drugiej, przed lub po operacji): kula w kolorze ściany zasłania szczelinę na załamaniu;
+  // tylko materiał zewnętrzny (od środka, w endoskopii, niewidoczna); wolne końce (stomie, wejście endoskopu) bez zmian
+  var CAP_GEO = new THREE.SphereGeometry(1, 20, 14);
+  function capJunctions(objs) {
+    var ends = [];
+    objs.forEach(function (o) { if (o.def.solid) return; [0, 1].forEach(function (e) { ends.push({ o: o, e: e, a: o.A[e ? o.A.length - 1 : 0], b: o.B[e ? o.B.length - 1 : 0] }); }); });
+    ends.forEach(function (E) {
+      var hit = ends.some(function (F) { return F.o !== E.o && (F.a.distanceTo(E.a) < 0.3 || F.b.distanceTo(E.b) < 0.3); }) || (E.o.def.capEnds || []).indexOf(E.e) >= 0;   // capEnds: wolny koniec zaokrąglony
+      if (!hit) return;
+      var cap = new THREE.Mesh(CAP_GEO, E.o.outer.material); E.o.grp.add(cap); (E.o.caps = E.o.caps || []).push({ m: cap, e: E.e });
+    });
   }
   function morphF(o, m) { var w = o.def.morph; return w ? sm((m - w[0]) / (w[1] - w[0])) : 0; }
 

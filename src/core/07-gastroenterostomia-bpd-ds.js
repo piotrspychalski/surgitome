@@ -11,6 +11,7 @@
     var EFFG = [q(0), q(1.2, 0.1), q(2.4, 0.9), [-0.6, -5.0, 3.4], [0.2, -7.8, 2.8], [2.4, -9.6, 2.2], [4.8, -10.8, 1.4]];
     var sp = jejSplit([AFFG, EFFG]), LZ = [q(-1.3, -0.95), q(0, -1.0), q(1.3, -0.95)];
     var an = {
+      ctOverride: { stom: 'contrast' },   // żołądek opróżnia się przez zespolenie — kontrast w żołądku i pętli odprowadzającej
       cat: 'upper', id: 'gebp', short: 'Gastroenterostomia', title: 'Gastroenterostomia omijająca (zespolenie żołądkowo-jelitowe bok-do-boku)',
       sub: 'Pętla jelita czczego zespolona z krzywizną większą żołądka; żołądek i dwunastnica nie są przecinane',
       notes: ['Omija niedrożność odźwiernika lub dwunastnicy (np. nieoperacyjny guz głowy trzustki, zwężenie wrzodowe); leczenie paliatywne lub pomostowe.',

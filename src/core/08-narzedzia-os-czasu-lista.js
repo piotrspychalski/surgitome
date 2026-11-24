@@ -207,7 +207,7 @@
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
       // access — slajd „Dostęp” przed anatomią prawidłową (ANAT.ACCESS[klucz]): wszystkie zabiegi jelitowe
-      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = p.id; }); });
+      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = ACCESS[v.id] ? v.id : p.id; }); });   // osobny dostęp wariantu (np. rh-ext)
       // jelito cienkie: krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sb') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
@@ -224,6 +224,10 @@
       LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
       // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
       LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf)$/.test(p.id)) p.variants.forEach(function (v) { v.tumour = true; }); });
+      // zabiegi lewostronne: końcowy odcinek jelita krętego tylko jako tło (przygaszony, wolny koniec zaokrąglony) — nie zasłania IMA/SB ani zespolenia
+      // i nie wygląda na połączony z kolostomią (audyt 2026-11-24)
+      function tiBg(v) { v.objects.forEach(function (o) { if (o.id === 'ti' && !o.opacity) { o.opacity = [[0, 0.42]]; o.capEnds = [0]; } }); }
+      LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf|hartmann)$/.test(p.id)) p.variants.forEach(tiBg); });
       // domyślne położenie guza (dopóki nie zapisano własnego): typowe dla zabiegu, na przedniej ścianie jelita
       function onWall(t) { var P = C_COL.getPointAt(t), T = C_COL.getTangentAt(t), n = new THREE.Vector3(0, 0, 1); n.addScaledVector(T, -n.dot(T)).normalize(); return P.addScaledVector(n, COL_R(t)).toArray().map(function (x) { return +x.toFixed(3); }); }
       var TDEF = { sf: 0.47, lh: 0.6, 'lh-iso': 0.6, 'lh-anti': 0.6, sig: 0.78, 'ar-center': 0.93, 'ar-racket': 0.93, 'ar-side': 0.885, 'ar-ular': 0.96, apr: 0.985 };
@@ -243,7 +247,7 @@
       };
       LIST.forEach(function (p) { p.variants.forEach(function (v) {
         var f = ADAPT[v.id]; if (!f) return;
-        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.adapted = t; a.access = v.access; return a; };
+        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.tumourDef = v.tumourDef; if (/^(lh|ar|apr|sig|sf)/.test(v.id)) tiBg(a); a.adapted = t; a.access = v.access; return a; };   // tumourDef: bez niego guz wracał na wstępnicę (GUZ_DEF)
       }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });

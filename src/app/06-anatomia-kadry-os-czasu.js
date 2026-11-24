@@ -7,6 +7,7 @@
     var group = new THREE.Group(), objG = new THREE.Group(), markG = new THREE.Group(), routeG = new THREE.Group();
     group.add(objG, markG, routeG);
     var objs = an.objects.map(makeObj), byId = {};
+    capJunctions(objs);
     objs.forEach(function (o) { byId[o.def.id] = o; objG.add(o.grp); setF(o, 0); });
     var marks = an.marks.map(makeMark), endoMarkG = new THREE.Group(); endoMarkG.visible = false;
     marks.forEach(function (mk) { markG.add(mk.mesh); if (mk.endoMesh) endoMarkG.add(mk.endoMesh); });
@@ -109,7 +110,7 @@
     F.push({ k: 'endo', vi: v, kind: 'endo', m0: an.mEnd, route: 'post', short: 'Endoskopia', title: (an.endoTitles || [])[1] || 'Endoskopia po operacji', cap: fx.endoPost });
     // dostęp operacyjny (okno wyboru, powłoki, cięcia i trokary): przed anatomią prawidłową, oś czasu m −1 → −0,02
     if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: A.ACCESS[an.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
-      cap: 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.' });
+      cap: accPrompt(A.ACCESS[an.access]) });
     F.push({ k: 'ct', vi: v, kind: 'ct', m0: an.mEnd, m1: an.mEnd, cam: 'front', short: 'TK', title: 'TK — przekroje poprzeczne (schemat)',
       cap: 'Przekroje od najwyższego. Suwak, kółko myszy nad obrazem lub strzałki ↑/↓ zmieniają poziom; „Przejazd” (spacja) prowadzi z góry na dół. Kontrast doustny wypełnia drogę pokarmową; odcinki wyłączone i drogi żółciowe zawierają płyn.' });
     F.forEach(function (fr, i) { fr.num = String(i + 1); });

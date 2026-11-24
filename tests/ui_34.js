@@ -28,7 +28,7 @@ async function run(w, label){ const $=id=>w.document.getElementById(id), q=$('q'
   ok(a0&&a0[0]>7,'zapisane położenie nie wczytane'); ok(a1&&a1[0]>7,'guz na zstępnicy zniknął po hemikolektomii prawej');
   // krezka: podwiązania
   const L=w.ANAT._lib; const rh=L.mesoRight('rh'), ex=L.mesoRight('ext'), tie=d=>d.vessels.filter(v=>v.tie!=null).map(v=>v.id).join(','), rem=d=>d.vessels.filter(v=>v.removed&&v.kind==='a').map(v=>v.id).join(',');
-  ok(rh.vessels.filter(v=>v.fade).map(v=>v.id).join(',')==='sma,smv'&&!L.mesoRight('keep').vessels.some(v=>v.fade),'SMA/SMV: znikanie po resekcji tylko w ramieniu chirurgicznym');
+  ok(!rh.vessels.some(v=>v.fade)&&!L.mesoRight('keep').vessels.some(v=>v.fade)&&['sma','smv'].every(id=>rh.vessels.some(v=>v.id===id&&!v.removed)),'SMA/SMV: pień zostaje po resekcji (z kikutami podwiązanych gałęzi) w obu ramionach');
   console.log('podwiązania — prawa:',tie(rh),'| usuwane:',rem(rh),'|| poszerzona:',tie(ex),'| usuwane:',rem(ex));
   ok(tie(rh)==='ic,rc,rbmc'&&rem(rh)==='ic,rc,rbmc','hemikolektomia prawa: złe podwiązania'); ok(tie(ex)==='ic,rc,mc'&&rem(ex)==='ic,rc,mc,rbmc,lbmc','poszerzona: złe podwiązania');
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);

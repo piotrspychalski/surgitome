@@ -89,6 +89,7 @@
     var liver = neck ? 0 : up ? band(-3, 10) : band(-1, 9.5);
     if (liver > 0.05) E(-A * 0.53, zc - 0.8, A * 0.38 * liver + 0.3, B * 0.65 * liver + 0.3, hu(95));
     var spl = up ? band(1, 8.5) : band(3, 9.5);
+    if (M.an.ctNoSpleen) spl = 0;   // po splenektomii (DP) bez śledziony w tle
     if (spl > 0.05) E(A * 0.67, zs + 3.0, 1.9 * spl + 0.2, 2.9 * spl + 0.2, hu(105));
     var kid = cat === 'sb' ? band(-11, -0.5) : up ? band(-9.5, -0.5) : band(-5, 3.5), kx = up ? 5.2 : 4.6;
     if (kid > 0.05) { [-kx, kx].forEach(function (x) { E(x, zs + 2.0, 1.5 * kid + 0.1, 2.2 * kid + 0.1, hu(170)); E(x, zs + 2.0, 0.7 * kid, 1.1 * kid, hu(40)); }); }
