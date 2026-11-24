@@ -15,7 +15,7 @@ const $=id=>w.document.getElementById(id), sleep=ms=>new Promise(r=>setTimeout(r
 function ok(c,m){ if(!c) fails.push(m); }
 (async()=>{ await sleep(300);
   const A=w.ANAT, NEW=A.PROCS.find(p=>p.id==='sb');
-  ok(A.PROCS.filter(p=>p.cat==='sb').length===1&&!A.PROCS.some(p=>p.id==='sbm'),'w kategorii „Jelito cienkie” powinien być jeden model (stary usunięty)');
+  ok(A.PROCS.filter(p=>p.cat==='sb'&&p.id!=='witzel').length===1&&!A.PROCS.some(p=>p.id==='sbm'),'w kategorii „Jelito cienkie” powinien być jeden model resekcji (stary usunięty)');   // + jejunostomia odżywcza (Witzel)
   ok(NEW&&NEW.short==='Resekcja jelita cienkiego'&&NEW.variants.map(v=>v.id).join()==='sb-e2e,sb-iso,sb-anti','zły model lub warianty jelita cienkiego');
   for(const v of NEW.variants){
     const d=v.cutTools.filter(t=>t.type==='meso'); ok(d.length===1,v.id+': brak krezki'); if(!d.length) continue;

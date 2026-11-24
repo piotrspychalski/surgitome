@@ -94,7 +94,7 @@
     var an = Pr.variants[vi || 0], fx = an.frames, tx = an.text || {}, v = vi || 0;
     var cut = an.focus ? 'focus' : an.id === 'sleeve' ? 'stomach' : 'upper';
     var F = [
-      { k: 'normal', vi: v, kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: 'Prawidłowa', title: tx.normal ? tx.normal[0] : 'Anatomia prawidłowa', cap: tx.normal ? tx.normal[1] : 'Przełyk, żołądek, dwunastnica i jelito czcze przed operacją.' },
+      { k: 'normal', vi: v, kind: 'orbit', m0: 0, m1: 0, cam: 'front', short: tx.normalShort || 'Prawidłowa', title: tx.normal ? tx.normal[0] : 'Anatomia prawidłowa', cap: tx.normal ? tx.normal[1] : 'Przełyk, żołądek, dwunastnica i jelito czcze przed operacją.' },
       { k: 'resect', vi: v, kind: 'orbit', m0: 0, m1: 1, dur: 3.2, cam: cut, short: fx.resect[2], title: fx.resect[0], cap: fx.resect[1] }
     ];
     if (an.commonCuts) F.push({ k: 'cut', vi: v, kind: 'orbit', m0: 1, m1: 2, dur: 1 + 2.6 * an.commonCuts, cam: cut, short: 'Stapler', title: 'Przecięcie staplerem liniowym',

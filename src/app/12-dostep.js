@@ -10,7 +10,10 @@
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
   // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
-  function accPrompt(X) { return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.'; }
+  function accPrompt(X) {
+    if (X && !X.lap && !X.rob) return 'Jeden dostęp — kliknij „Otwarty”, aby zobaczyć cięcie.';
+    return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.';
+  }
   /* wspólny model powłok (slajd „Dostęp” i zabiegi ze stomią — znacznik 'body'): siatka (y, u) na powierzchni skóry ANAT.BODY z zanikaniem przy brzegach
      (kolory RGBA); holes — otwory [{ c: [x, y], rx, ry }]: wierzchołki wewnątrz przesunięte na brzeg otworu, trójkąty całkowicie w środku pominięte */
   function holeSnap(x, y, holes) {
