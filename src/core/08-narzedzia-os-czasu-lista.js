@@ -213,7 +213,8 @@
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
       // access — slajd „Dostęp” przed anatomią prawidłową (ANAT.ACCESS[klucz]): wszystkie zabiegi jelitowe
-      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = ACCESS[v.id] ? v.id : p.id; }); });   // osobny dostęp wariantu (np. rh-ext)
+      // osobny dostęp wariantu (np. rh-ext); klucz tylko dla wariantu (gstom-stamm) — pozostałe warianty bez slajdu (PEG)
+      LIST.forEach(function (p) { p.variants.forEach(function (v) { var k = ACCESS[v.id] ? v.id : ACCESS[p.id] ? p.id : null; if (k) v.access = k; }); });
       // jelito cienkie: krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sb') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)

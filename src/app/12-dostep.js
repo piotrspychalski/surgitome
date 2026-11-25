@@ -1,4 +1,4 @@
-  /* ---------- slajd „Dostęp” (an.access → ANAT.ACCESS[key], model powłok ANAT.BODY): okno wyboru „Dostęp?” (otwarty / laparoskopowy / robotyczny),
+  /* ---------- slajd „Dostęp” (an.access → ANAT.ACCESS[key], model powłok ANAT.BODY): okno wyboru „Dostęp?” (otwarty / drugi otwarty open2, np. cięcie podżebrowe w gastrektomii / laparoskopowy / robotyczny),
      potem animacja na osi m −1 → −0,02: powłoki z punktami orientacyjnymi, mięśniami prostymi i naczyniami nabrzusznymi; cięcia rysowane na skórze
      i rana otwierana; trokary wprowadzane po kolei wzdłuż osi skierowanej na pole operacyjne, odma unosi powłoki; planowane cięcie do wydobycia
      preparatu (linia przerywana), miejsce stomii (okrąg przerywany), trepanacja (okrągłe wycięcie skóry). Poza osią m < 0 model powłok jest niewidoczny.
@@ -6,11 +6,14 @@
      dostęp wybiera wariant zespolenia: otwarty → FEEA, laparoskopia i robot → izoperystaltyczne (wewnątrzbrzuszne). Jelito cienkie: powłoki przeniesione
      do układu modelu (X.xf: skala, przesunięcie grupy; kotwice etykiet przeliczane). ---------- */
   var ACC_KEY = 'surgitome-dostep', ACC = { kind: null, skip: false };
-  try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
+  // kolejność przycisków w oknie wyboru; open2 — drugi wariant dostępu otwartego (gastrektomia całkowita: cięcie podżebrowe obustronne)
+  var ACC_KINDS = ['open', 'open2', 'lap', 'rob'];
+  try { var acc0 = localStorage.getItem(ACC_KEY); if (ACC_KINDS.indexOf(acc0) >= 0) ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
   // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
   function accPrompt(X) {
+    if (X && X.open2) return X.rob ? 'Wybierz dostęp: otwarty (dwa rodzaje cięcia), laparoskopowy albo robotyczny.' : 'Wybierz dostęp: otwarty (dwa rodzaje cięcia) albo laparoskopowy.';
     if (X && !X.lap && !X.rob) return 'Jeden dostęp — kliknij „Otwarty”, aby zobaczyć cięcie.';
     if (X && !X.open && !X.rob) return 'Jeden dostęp — kliknij „Laparoskopowy”, aby zobaczyć trokary.';
     return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.';
@@ -91,7 +94,7 @@
       lab('Naczynia nabrzuszne dolne', '', '#b83227', 'ghost', function (k) { return sideOf() >= 0 ? skinP(4.7, -11.8, 1.0, k) : skinP(-4.7, -11.8, 1.0, k); })];
     // dostęp: cięcia, rany, trokary, linia wydobycia (osobny zestaw dla każdego rodzaju)
     var SETS = {};
-    ['open', 'lap', 'rob'].forEach(function (kind) {
+    ACC_KINDS.forEach(function (kind) {
       var D = X[kind]; if (!D) return;
       var g = new THREE.Group(), set = { d: D, g: g, cuts: [], ports: [], ext: null, stoma: null }; g.visible = false; grp.add(g); SETS[kind] = set;
       (D.cuts || []).forEach(function (c) {
@@ -127,7 +130,7 @@
         g.add(tg);
         var ent = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.14, 0.055, 6, 22)), mat('#3b2a24', 0.9, { depthWrite: true })); g.add(ent); // miejsce wkłucia na skórze
         var w = i === D.first ? [-0.9, -0.8] : (function () { var j = order.indexOf(i), a = -0.6, b = -0.22, s = (b - a) / Math.max(1, order.length); return [a + j * s, a + (j + 0.85) * s]; })();
-        var Lp = lab(p.name, p.sub, robot ? '#2f78c4' : '#56636f', 'seg', function () { return tg.position.clone().add(new V3(0, 0, 0)).addScaledVector(tg.userData.out || new V3(0, 0, 1), 2.8); });
+        var Lp = lab(p.name, p.sub, robot ? '#2f78c4' : '#56636f', 'seg', function () { return tg.position.clone().add(p.lab ? new V3().fromArray(p.lab) : new V3(0, 0, 0)).addScaledVector(tg.userData.out || new V3(0, 0, 1), 2.8); });   // lab — przesunięcie podpisu (porty w jednej linii poziomej: podpisy naprzemiennie wyżej i niżej)
         set.ports.push({ p: p, g: tg, ent: ent, mats: [cm, hm], w: w, L: Lp });
       });
       if (D.line) { // robot: linia portów (od linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego), przerywana
@@ -212,6 +215,9 @@
       b.hidden = !D; b.setAttribute('aria-pressed', b.dataset.acc === ACC.kind && D ? 'true' : 'false');
       if (D && D.short && sm0.dataset.pl !== D.short) { sm0.dataset.pl = D.short; sm0.textContent = tr(D.short); }
     });
+    // klawisze 1…4 wg kolejności widocznych przycisków
+    var vis = accVisible(); vis.forEach(function (b, i) { b.querySelector('kbd').textContent = String(i + 1); });
+    $('acc').classList.toggle('acc4', vis.length > 3);
     if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt:not([hidden])'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
     poseUpdate();
   }
@@ -263,9 +269,10 @@
     if (to) { var k = P.variants.map(function (x) { return x.id; }).indexOf(to); if (k >= 0) { ACC.skip = true; switchVariant(k, 'first'); return; } }
     var fr = FR[S.frame]; S.m = fr.m0; S.playing = true; applyM(); updateDock();
   }
+  function accVisible() { return ACC_KINDS.map(function (k) { return document.querySelector('#acc .accopt[data-acc="' + k + '"]'); }).filter(function (b) { return b && !b.hidden; }); }
   function accKey(e) {
-    var map = { '1': 'open', '2': 'lap', '3': 'rob' };
-    if (map[e.key]) { e.preventDefault(); accChoose(map[e.key]); }
+    var n = /^[1-4]$/.test(e.key) ? +e.key : 0, b = n && accVisible()[n - 1];
+    if (n) { e.preventDefault(); if (b) accChoose(b.dataset.acc); }
     else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : 'lap'); }
   }
   document.querySelectorAll('#acc .accopt').forEach(function (b) { b.onclick = function () { accChoose(b.dataset.acc); }; });
