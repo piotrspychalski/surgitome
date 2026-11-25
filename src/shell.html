@@ -83,7 +83,10 @@ button,select,input{ font:inherit; color:inherit; }
 .cat:hover{ color:var(--text); }
 .cat[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
 .subbar{ background:var(--surface); border-bottom:1px solid var(--line); padding:6px 16px 7px; display:flex; flex-direction:column; gap:5px; }
-#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 0.2 auto; min-width:0; overflow-x:auto; scrollbar-width:none; padding-left:12px; border-left:1px solid var(--line); }
+/* warianty: w dolnym pasku, obok „Zmień dostęp” / „Wznów”; kreska oddziela je od widocznych przycisków przed nimi */
+#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 1 auto; min-width:0; overflow-x:auto; scrollbar-width:none; }
+#ctxRow > :not([hidden]) ~ #variants{ padding-left:10px; border-left:1px solid var(--line); }
+.mobile #variants{ display:none !important; }   /* telefon: warianty w menu */
 #variants::-webkit-scrollbar{ display:none; }
 #variants{ --vl:0px; --vr:0px; -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); }
 #variants.canL{ --vl:28px; } #variants.canR{ --vr:36px; }
@@ -572,7 +575,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <button class="ghostbtn" id="btnFs">Pełny ekran</button>
     </div>
   </header>
-  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div></div><div class="navline"><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button><div id="variants" role="group" aria-label="Wariant" hidden></div></div></div>
+  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div></div><div class="navline"><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button></div></div>
   <main id="main">
     <div id="viewport">
       <canvas id="c" aria-label="Interaktywny model 3D anatomii"></canvas>
@@ -657,6 +660,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <select id="speed" aria-label="Prędkość"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select>
       </div>
       <div id="ctxAcc" hidden><button class="btn" id="accChange" type="button" data-pl="Zmień dostęp">Zmień dostęp</button></div>
+      <div id="variants" role="group" aria-label="Wariant" hidden></div>
       <div id="ctxZakres" hidden><button class="btn primary" id="zkGo" type="button"></button></div>
       <div id="ctxLiver" hidden><label class="lvlbl" for="lvExplode" data-pl="Rozsunięcie">Rozsunięcie</label><input type="range" id="lvExplode" min="0" max="1000" value="0" aria-label="Rozsunięcie segmentów"><div id="lvSegs" role="group" aria-label="Segmenty"></div></div>
     </div>

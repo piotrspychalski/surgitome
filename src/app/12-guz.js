@@ -22,12 +22,16 @@
     var mat = track(new THREE.MeshStandardMaterial({ color: '#7a1522', roughness: 0.55, transparent: true })), mesh = new THREE.Mesh(track(guzGeo()), mat);
     M.group.add(mesh);
     var el = mkLabel('Guz', 'przeciągnij, aby przesunąć', '#b3263a', 'seg'), el2 = mkLabel('Guz', '', '#b3263a', 'seg');
+    // „Wybór zakresu resekcji”: odcinek do resekcji podświetlony rękawem (ZK_SLEEVE × promień) — guz osadzony ponad nim, nie pod nim
+    var sleeve = (M.an.cutTools || []).some(function (d) { return d.type === 'zakres'; }) ? ZK_SLEEVE : 1;
     var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos(M.an)),
       update: function (m) {
         var b = this.bind, o = b && b.o, on = S.tumour && !!o && m > -1e-3; // na slajdzie „Dostęp” (m < 0) guz ukryty
         if (!on) { mesh.visible = false; this.alpha = 0; return; }
         var st = o.st, P = st.curve.getPointAt(b.t);
-        mesh.position.copy(P).addScaledVector(b.n, st.r(b.t) * 0.88).add(o.grp.position);
+        // stałe wyniesienie ponad widoczną powierzchnię (ok. 0,25 — jak w esicy), niezależnie od szerokości jelita: w szerokiej kątnicy i wstępnicy
+        // dawne 0,88 × promień chowało guz pod ścianą i pod podświetleniem zakresu; w wąskich odcinkach (wyrostek) bez zmian
+        var R = st.r(b.t); mesh.position.copy(P).addScaledVector(b.n, Math.max(R * 0.88, R * sleeve - 0.12)).add(o.grp.position);
         mesh.quaternion.setFromUnitVectors(new V3(0, 0, 1), b.n);
         var op = M.an.single ? 1 : o.op; // na slajdzie wyboru zakresu jelito przygasa, guz nie
         mesh.visible = o.grp.visible && op > 0.05; mat.opacity = op;
