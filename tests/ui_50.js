@@ -52,15 +52,18 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   $('strip').querySelectorAll('.step')[1].click(); await sleep(400);
   ok(!w.__sgTest.model().access.grp.visible&&$('acc').hidden&&$('ctxAcc').hidden,'powłoki lub okno widoczne poza slajdem „Dostęp”');
   // wszystkie zabiegi jelitowe: slajd „Dostęp”; porty na skórze, w obrębie powłok, co ≥ 6 cm (3,66 j.), trokary laparoskopowe 12 mm w mięśniu prostym
-  const BOW=['sb','rh','sf','lh','sig','ar','apr','ira','ipaa','hartmann','ileo'], CM=1/1.64;
-  A.PROCS.filter(p=>p.cat==='colon'||p.cat==='sb').forEach(p=>{ if(p.id==='zakres') return; ok(BOW.includes(p.id),'zabieg jelitowy bez slajdu „Dostęp”: '+p.id); });
+  const BOW=['sb','witzel','rh','sf','lh','sig','ar','apr','ira','ipaa','tcei','hartmann','hrev','ileo','appy'], CM=1/1.64;
+  A.PROCS.filter(p=>p.cat==='colon'||p.cat==='sb').forEach(p=>{ if(p.id==='zakres') return; ok(BOW.includes(p.id)||p.id==='iclo','zabieg jelitowy bez slajdu „Dostęp”: '+p.id); });
+  // zamknięcie ileostomii: tylko dostęp przez miejsce stomii (cięcie wokół stomii), bez laparoskopii i robota
+  ok(A.ACCESS.iclo&&A.ACCESS.iclo.open&&!A.ACCESS.iclo.lap&&!A.ACCESS.iclo.rob&&A.ACCESS.iclo.open.cuts[0].disc,'zamknięcie ileostomii: dostęp inny niż przez miejsce stomii');
   BOW.forEach(id=>{ const X=A.ACCESS[id]; ok(X&&X.open&&X.lap,id+': brak dostępu otwartego lub laparoskopowego');
-    A.PROCS.find(p=>p.id===id).variants.forEach(v=>ok(v.access===id,v.id+': brak slajdu „Dostęp”'));
+    A.PROCS.find(p=>p.id===id).variants.forEach(v=>ok(v.access===id||(v.access===v.id&&A.ACCESS[v.id]),v.id+': brak slajdu „Dostęp”'));   // wariant może mieć własny dostęp (rh-ext)
     ['open','lap','rob'].forEach(k=>{ const D=X[k]; if(!D) return;
       ok(D.title&&D.text&&D.short,id+'/'+k+': brak tytułu, opisu lub podpisu w oknie');
       (D.ports||[]).forEach((P,i)=>{ ok(Math.abs(P.at[0])<B.W(P.at[1])*0.85&&P.at[1]<B.LM.xiph[1]&&P.at[1]>B.LM.pubis[1]+1.2,id+'/'+k+': port '+i+' poza powłokami brzucha');
         (D.ports||[]).forEach((Q,j)=>{ if(j>i){ const d=Math.hypot(P.at[0]-Q.at[0],P.at[1]-Q.at[1]); ok(d>6*CM,id+'/'+k+': porty '+i+' i '+j+' bliżej niż 6 cm ('+(d/CM).toFixed(1)+' cm)'); } }); });
-      if(k==='lap') D.ports.filter(P=>P.mm===12).forEach(P=>{ const x=Math.abs(P.at[0]); ok(x>B.RECT_MED&&x<B.rectLat(P.at[1]),id+': trokar 12 mm poza mięśniem prostym'); });
+      // optyka w pępku — standard w appendektomii (wydobycie wyrostka) i jejunostomii; reguła „12 mm przez mięsień prosty” dotyczy resekcji jelita
+      if(k==='lap') D.ports.filter(P=>P.mm===12&&!(['appy','witzel'].includes(id)&&P.at[0]===0)).forEach(P=>{ const x=Math.abs(P.at[0]); ok(x>B.RECT_MED&&x<B.rectLat(P.at[1]),id+': trokar 12 mm poza mięśniem prostym'); });
       if(D.line){ const [a,b]=D.line; D.ports.filter(P=>!P.assist).forEach((P,i)=>{ const cr=((b[0]-a[0])*(P.at[1]-a[1])-(b[1]-a[1])*(P.at[0]-a[0]))/Math.hypot(b[0]-a[0],b[1]-a[1]); ok(Math.abs(cr)<0.15,id+': port robota '+i+' poza linią portów'); }); } }); });
   ['sf','lh','sig','ar','apr','hartmann'].forEach(id=>{ const L=A.ACCESS[id].lap; ok(L.ports.filter(P=>P.mm===12).every(P=>P.at[0]<0)&&L.side===-1,id+': laparoskopia nie lustrzana (12 mm nie przez prawy mięsień prosty)'); });
   // hemikolektomia lewa i zagięcie śledzionowe: robot lustrzanie do prawostronnej (linia od prawej linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego)
@@ -77,7 +80,7 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   const sub=k=>w.document.querySelector('#acc .accopt[data-acc="'+k+'"] small').textContent;
   ok(sub('open')==='laparotomia pośrodkowa','hemikolektomia lewa: podpis dostępu otwartego w oknie: '+sub('open'));
   key(w,'3'); await sleep(200); w.__sgTest.at(-0.02); const lr=w.__sgTest.model().access.sets.rob; ok(lr.g.visible&&vis(lr)===5,'hemikolektomia lewa: zestaw portów robota');
-  await search(w,'ileostomia'); ok(!$('acc').hidden&&w.document.querySelector('#acc .accopt[data-acc="rob"]').hidden,'ileostomia: przycisk robota widoczny');
+  await search(w,'dwulufowa'); ok(!$('acc').hidden&&w.document.querySelector('#acc .accopt[data-acc="rob"]').hidden,'ileostomia: przycisk robota widoczny');
   key(w,'3'); await sleep(200); ok(!$('acc').hidden,'ileostomia: klawisz 3 wybiera nieoferowany dostęp');
   key(w,'1'); await sleep(300); w.__sgTest.at(-0.02); const io=w.__sgTest.model().access.sets.open; ok(io.cuts.length===1&&io.cuts[0].disc&&io.cuts[0].wm.visible,'ileostomia: brak trepanacji');
   await search(w,'resekcja jelita cienkiego'); ok(w.__sgTest.frames()[0].k==='access','resekcja jelita cienkiego: brak slajdu „Dostęp”');

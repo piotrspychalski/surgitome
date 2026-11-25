@@ -84,7 +84,7 @@
       'Schnitzbauer i wsp., Ann Surg 2012. Większy odsetek powikłań niż w klasycznej resekcji dwuetapowej z embolizacją żyły wrotnej — kwalifikacja w ośrodkach referencyjnych. ' + COMMON],
     ['Planowany zakres: segmenty IV–VIII; przyszła pozostała wątroba (FLR) to segmenty II i III z płatem ogoniastym.',
       'Etap I: podwiązanie prawej gałęzi żyły wrotnej i podział miąższu wzdłuż więzadła sierpowatego z przecięciem szypuł segmentu IV; obie części zostają w jamie brzusznej.',
-      'Po 7–14 dniach segmenty II i III wyraźnie się powiększają (krew wrotna płynie tylko do nich i do płata ogoniastego), prawa część zanika.',
+      'Po 7–14 dniach segmenty II i III wyraźnie się powiększają (krew wrotna płynie tylko do nich i do płata ogoniastego), a prawa część przestaje rosnąć i częściowo się zmniejsza.',
       'Etap II: przecięcie tętnicy wątrobowej prawej, przewodu wątrobowego prawego oraz żył wątrobowych pośrodkowej i prawej; usunięcie segmentów IV–VIII.',
       'Pozostają powiększone segmenty II i III z płatem ogoniastym oraz żyła wątrobowa lewa.']);
 

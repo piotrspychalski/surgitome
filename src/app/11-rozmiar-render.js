@@ -57,12 +57,24 @@
 
   var projV = new V3();
   var lblVis = [], lblCx = 0;
+  // kropka etykiety w osobnej warstwie pod wszystkimi ramkami (pierwszy element kontenera etykiet): kropki nie zasłaniają tekstu innych etykiet
+  function lblDot(el) {
+    var box = el.parentNode; if (!box) return null;
+    if (!box._dots || box._dots.parentNode !== box) { box._dots = document.createElement('div'); box._dots.className = 'lbldots'; box.insertBefore(box._dots, box.firstChild); }
+    if (!el._dot || el._dot.parentNode !== box._dots) {
+      var i0 = el.querySelector('i'); if (!i0) return null;
+      el._dot = document.createElement('i'); el._dot.className = 'lbldot'; el._dot.style.background = i0.style.background; box._dots.appendChild(el._dot); i0.style.visibility = 'hidden';
+    }
+    return el._dot;
+  }
   function placeLabel(el, pos, alpha) {
-    if (alpha < 0.02) { el.style.display = 'none'; return; }
+    var dot = lblDot(el);
+    if (alpha < 0.02) { el.style.display = 'none'; if (dot) dot.style.display = 'none'; return; }
     projV.copy(pos).project(orbitCam);
-    if (projV.z > 1 || projV.z < -1 || Math.abs(projV.x) > 1.05 || Math.abs(projV.y) > 1.05) { el.style.display = 'none'; return; }
+    if (projV.z > 1 || projV.z < -1 || Math.abs(projV.x) > 1.05 || Math.abs(projV.y) > 1.05) { el.style.display = 'none'; if (dot) dot.style.display = 'none'; return; }
     el.style.display = ''; el.style.opacity = alpha.toFixed(2);
     var x = view.x + (projV.x + 1) / 2 * view.w, y = view.y + (1 - projV.y) / 2 * view.h;
+    if (dot) { dot.style.display = ''; dot.style.opacity = alpha.toFixed(2); dot.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)'; }
     // strona dymka: na lewo od środka modelu — w lewo, na prawo — w prawo (z histerezą, bez przeskakiwania przy obrocie);
     // ostateczną stronę i przesunięcie przy brzegu ekranu ustala declutter (fitSide)
     var left = el._nat;

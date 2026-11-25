@@ -119,7 +119,7 @@
       (tl.fire || []).forEach(function (mi) { an.marks[mi].colors = [[tl.fireT - 0.005, COL.cut], [tl.fireT, STAPLE]]; });
     });
     // linie zamknięcia kikuta pojawiają się przy przecięciu odbytnicy
-    var stumpFire = null;
+    var stumpFire = an.stumpPre ? -1 : null;   // stumpPre: kikut zamknięty już na początku (odtworzenie ciągłości po Hartmannie)
     cuts.forEach(function (tl) { (tl.fire || []).forEach(function (mi) { if (an.marks[mi].stumpCut || /odbytnic|esiczo-odbytn/.test(an.marks[mi].name || '')) stumpFire = tl.fireT; }); });
     if (stumpFire !== null) an.marks.forEach(function (m) { if (m.stump || m.fullStump) m.opacity = [[stumpFire, 0], [stumpFire + 0.01, 1]]; });
     // zespolenie: 4.0-4.8
@@ -170,6 +170,7 @@
         one(RYGB, 'Bypass Roux-en-Y (RYGB)', 'Pomostowanie żołądkowe Roux-en-Y (RYGB)'),
         one(OAGB, 'Bypass jednozespoleniowy (OAGB)', 'Jednozespoleniowe pomostowanie żołądkowe (OAGB / MGB)'),
         one(GEBP, 'Gastroenterostomia omijająca', 'Gastroenterostomia omijająca'),
+        multi('upper', 'gstom', 'Gastrostomia', 'Gastrostomia — warianty', [P(gstomAnat(true), 'PEG'), P(gstomAnat(false), 'Stamm')]),
         one(SCOP, 'BPD (Scopinaro)', 'Wyłączenie żółciowo-trzustkowe sposobem Scopinaro'),
         multi('upper', 'ds', 'Przełączenie dwunastnicze', 'Przełączenie dwunastnicze — warianty', [P(SADIS, 'SADI-S'), P(BPDDS, 'BPD-DS')]),
         multi('hpb', 'whip', 'Whipple (klasyczny)', 'Pankreatoduodenektomia sposobem Whipple’a — warianty zespolenia trzustkowego', [P(whipple(false, false), 'PJ + HJ + GJ'), P(whipple(false, true), 'PG + HJ + GJ')]),
@@ -179,6 +180,7 @@
         multi('hpb', 'drain', 'Operacje drenujące (Puestow, Frey)', 'Przewlekłe zapalenie trzustki — operacje drenujące', [P(drainAnat(false), 'Puestow (Partington–Rochelle)'), P(drainAnat(true), 'Frey')]),
         one(CDD, 'Choledochoduodenostomia', 'Choledochoduodenostomia bok-do-boku'),
         multi('sb', 'sb', 'Resekcja jelita cienkiego', 'Resekcja jelita cienkiego — warianty zespolenia', [P(sbAnat('e2e'), 'Koniec-do-końca (szew)'), P(sbAnat('iso'), 'Izoperystaltyczne'), P(sbAnat('anti'), 'Antyperystaltyczne (FEEA)')]),
+        one(WITZ),
         (function () {
           // wybór zakresu resekcji: jeden kadr, całe jelito grube z krezką i naczyniami, przesuwalny guz
           var z = prepare({ cat: 'colon', id: 'zakres', short: 'Wybór zakresu resekcji', title: 'Wybór zakresu resekcji w raku jelita grubego',
@@ -203,11 +205,15 @@
         one(IRA, 'Kolektomia całkowita (IRA)', 'Kolektomia całkowita z zespoleniem krętniczo-odbytniczym'),
         one(IPAA, 'Zbiornik J (IPAA)', 'Proktokolektomia ze zbiornikiem J (IPAA)'),
         one(HART),
+        one(HREV),
+        multi('colon', 'appy', 'Appendektomia', 'Appendektomia — warianty zamknięcia podstawy', [P(appyAnat(false), 'Pętle (endoloop)'), P(appyAnat(true), 'Stapler')]),
+        one(ICLO),
+        multi('colon', 'tcei', 'Kolektomia z ileostomią końcową', 'Kolektomia z ileostomią końcową — warianty', [P(STC, 'Subtotalna (kikut odbytnicy)'), P(PCE, 'Proktokolektomia')]),
         multi('colon', 'ileo', 'Ileostomia', 'Ileostomia — warianty', [P(ileoAnat(true, true), 'Pętlowa — wydzielnicza górna'), P(ileoAnat(true, false), 'Pętlowa — wydzielnicza dolna'), P(ileoAnat(false, true), 'Dwulufowa — wydzielnicza górna'), P(ileoAnat(false, false), 'Dwulufowa — wydzielnicza dolna')])];
       // krezka z naczyniami i węzłami: hemikolektomie prawe; lewostronne — krezka lewej połowy okrężnicy i mezorektum
       LIST.forEach(function (p) { if (p.id === 'rh') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoRight(v.id === 'rh-ext' ? 'ext' : 'rh')]); v.tumour = true; }); });
       // access — slajd „Dostęp” przed anatomią prawidłową (ANAT.ACCESS[klucz]): wszystkie zabiegi jelitowe
-      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = p.id; }); });
+      LIST.forEach(function (p) { if (ACCESS[p.id]) p.variants.forEach(function (v) { v.access = ACCESS[v.id] ? v.id : p.id; }); });   // osobny dostęp wariantu (np. rh-ext)
       // jelito cienkie: krezka z arkadami, naczyniami prostymi i węzłami
       LIST.forEach(function (p) { if (p.id === 'sb') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.sbMeso]); delete v.sbMeso; }); });
       // żołądek (zabiegi onkologiczne): naczynia, sieci i stacje węzłowe JGCA (D2)
@@ -219,11 +225,16 @@
       var ML = { lh: 'lh', ar: 'ar', hartmann: 'hart', apr: 'apr', sig: 'sig', sf: 'sf', ira: 'ira', ipaa: 'ipaa' };
       // ileostomie: krezka końcowego odcinka jelita krętego przechodzi z pętlą do stomii
       LIST.forEach(function (p) { if (p.id === 'ileo') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.ileoMeso]); delete v.ileoMeso; }); });
+      LIST.forEach(function (p) { if (p.id === 'appy') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.appyMeso]); delete v.appyMeso; }); });   // krezka wyrostka
       LIST.forEach(function (p) { if (ML[p.id]) p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([mesoLeft(v.id === 'ar-side' ? 'arp' : ML[p.id])]); }); });
       // APR: krocze — cięcie wokół odbytu, rana i jej zamknięcie (po krezce, czasy w skali po przygotowaniu)
-      LIST.forEach(function (p) { if (p.id === 'apr') p.variants.forEach(function (v) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; }); });
+      LIST.forEach(function (p) { p.variants.forEach(function (v) { if (v.krocze) { v.cutTools = v.cutTools.concat([v.krocze]); delete v.krocze; } }); });   // APR, proktokolektomia
       // guz (przeciągany w kadrze „Prawidłowa”, położenie wspólne z „Wyborem zakresu resekcji”): także resekcje lewostronne i APR
       LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf)$/.test(p.id)) p.variants.forEach(function (v) { v.tumour = true; }); });
+      // zabiegi lewostronne: końcowy odcinek jelita krętego tylko jako tło (przygaszony, wolny koniec zaokrąglony) — nie zasłania IMA/SB ani zespolenia
+      // i nie wygląda na połączony z kolostomią (audyt 2026-11-24)
+      function tiBg(v) { v.objects.forEach(function (o) { if (o.id === 'ti' && !o.opacity) { o.opacity = [[0, 0.42]]; o.capEnds = [0]; } }); }
+      LIST.forEach(function (p) { if (/^(lh|ar|apr|sig|sf|hartmann)$/.test(p.id)) p.variants.forEach(tiBg); });
       // domyślne położenie guza (dopóki nie zapisano własnego): typowe dla zabiegu, na przedniej ścianie jelita
       function onWall(t) { var P = C_COL.getPointAt(t), T = C_COL.getTangentAt(t), n = new THREE.Vector3(0, 0, 1); n.addScaledVector(T, -n.dot(T)).normalize(); return P.addScaledVector(n, COL_R(t)).toArray().map(function (x) { return +x.toFixed(3); }); }
       var TDEF = { sf: 0.47, lh: 0.6, 'lh-iso': 0.6, 'lh-anti': 0.6, sig: 0.78, 'ar-center': 0.93, 'ar-racket': 0.93, 'ar-side': 0.885, 'ar-ular': 0.96, apr: 0.985 };
@@ -243,12 +254,12 @@
       };
       LIST.forEach(function (p) { p.variants.forEach(function (v) {
         var f = ADAPT[v.id]; if (!f) return;
-        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.adapted = t; a.access = v.access; return a; };
+        v.adapt = function (t) { var r = f(t); if (!r) return null; var a = prepare(r[0]); a.vshort = v.vshort; a.cutTools = a.cutTools.concat([r[1]]); a.tumour = true; a.tumourDef = v.tumourDef; if (/^(lh|ar|apr|sig|sf)/.test(v.id)) tiBg(a); a.adapted = t; a.access = v.access; return a; };   // tumourDef: bez niego guz wracał na wstępnicę (GUZ_DEF)
       }); });
       var BAR = { sleeve: 1, rygb: 1, oagb: 1, ds: 1, bpd: 1 }, ORDER = ['eso', 'upper', 'bar', 'hpb', 'sb', 'colon'];
       LIST.forEach(function (p) { if (BAR[p.id]) p.cat = 'bar'; });
-      var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
-        'sb', 'zakres', 'rh', 'sf', 'lh', 'sig', 'ar', 'apr', 'ira', 'ipaa', 'hartmann', 'ileo'];
+      var SEQ = ['esoph', 'dg', 'tg', 'gebp', 'gstom', 'sleeve', 'rygb', 'oagb', 'ds', 'bpd', 'whip', 'pppd', 'dp', 'hj', 'cdd', 'drain',
+        'sb', 'witzel', 'zakres', 'rh', 'sf', 'lh', 'sig', 'ar', 'apr', 'ira', 'ipaa', 'tcei', 'hartmann', 'hrev', 'ileo', 'iclo', 'appy'];
       return LIST.map(function (p, i) { var s = SEQ.indexOf(p.id); return [ORDER.indexOf(p.cat) * 100 + (s < 0 ? 90 + i : s), p]; }).sort(function (a, b) { return a[0] - b[0]; }).map(function (x) { return x[1]; });
     })(),
     PANC: PANC, PANC_R: PANC_R,

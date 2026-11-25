@@ -305,7 +305,7 @@
         if (cutCols) kfCol(cutCols, m, mSheetR.color);
         Object.keys(matsF).forEach(function (k) { matsF[k].opacity = op; }); fadeG.visible = op > 0.01;
         var opM = kfNum(d.mobOpacity, m, 1); mSheetM.opacity = 0.45 * opM; Object.keys(matsM).forEach(function (k) { matsM[k].opacity = opM; }); mobG.visible = opM > 0.01; // krezka odcinka przemieszczanego
-        ties.visible = m >= d.tieT && op > 0.01 && d.vessels.some(function (v) { return v.tie != null; }); // podwiązania znikają razem z SMA/SMV
+        ties.visible = m >= d.tieT && d.vessels.some(function (v) { return v.tie != null; }); // podwiązania (kikuty) zostają po usunięciu preparatu
         var lr = shR || d.anchorRemoved; this.alpha = on ? (lr ? op : 1) : 0; this.anchor = lr ? anchor0.clone().add(mov.position) : anchor0;
         var self = this; labels.forEach(function (L) { L.anchor = L.removed ? L.p.clone().add(mov.position) : L.p; L.alpha = on ? (L.removed || L.fade ? op : 1) : 0; });
         groups.forEach(function (G) { G.anchor = G.removed ? G.p.clone().add(mov.position) : G.p; G.alpha = on ? (G.removed ? op : 1) : 0; });

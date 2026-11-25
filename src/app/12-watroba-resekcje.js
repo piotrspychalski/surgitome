@@ -186,7 +186,7 @@
   }
   function ltDispose(o, labels) {
     o.grp.traverse(function (x) { if (x.geometry) x.geometry.dispose(); });
-    o.labels.forEach(function (L) { if (L.el) L.el.remove(); var i = labels.indexOf(L); if (i >= 0) labels.splice(i, 1); });
+    o.labels.forEach(function (L) { if (L.el) { if (L.el._dot) L.el._dot.remove(); L.el.remove(); } var i = labels.indexOf(L); if (i >= 0) labels.splice(i, 1); });
   }
   function makeLvTumor(d) {
     var LM = A.LIVER, G = LM.model(MOBILE ? 0.32 : 0.25), meta = d.mode === 'meta', grp = new THREE.Group(), labels = [], baseG = new THREE.Group(); grp.add(baseG);

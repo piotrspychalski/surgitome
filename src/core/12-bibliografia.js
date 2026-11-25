@@ -256,7 +256,21 @@
       "parker2020": { c: "Parker SG, Halligan S, Liang MK, Muysoms FE, Adrales GL, Boutall A, et al. Definitions for Loss of Domain: An International Delphi Consensus of Expert Surgeons. World J Surg. 2020;44(4):1070-8.", pmid: "31848677", doi: "10.1007/s00268-019-05317-z", y: 2020 },
       "sabbagh2011": { c: "Sabbagh C, Dumont F, Robert B, Badaoui R, Verhaeghe P, Regimbeau JM. Peritoneal volume is predictive of tension-free fascia closure of large incisional hernias with loss of domain: a prospective study. Hernia. 2011;15(5):559-65.", pmid: "21584816", doi: "10.1007/s10029-011-0832-y", y: 2011 },
       "tanaka2010": { c: "Tanaka EY, Yoo JH, Rodrigues AJ Jr, Utiyama EM, Birolini D, Rasslan S. A computerized tomography scan method for calculating the hernia sac and abdominal cavity volume in complex large incisional hernia with loss of domain. Hernia. 2010;14(1):63-9.", pmid: "19756913", doi: "10.1007/s10029-009-0560-8", y: 2010 },
-      "henriksen2020": { c: "Henriksen NA, Montgomery A, Kaufmann R, Berrevoet F, East B, Fischer J, et al.; European and Americas Hernia Societies (EHS and AHS). Guidelines for treatment of umbilical and epigastric hernias from the European Hernia Society and Americas Hernia Society. Br J Surg. 2020;107(3):171-90.", pmid: "31916607", doi: "10.1002/bjs.11489", y: 2020 }
+      "henriksen2020": { c: "Henriksen NA, Montgomery A, Kaufmann R, Berrevoet F, East B, Fischer J, et al.; European and Americas Hernia Societies (EHS and AHS). Guidelines for treatment of umbilical and epigastric hernias from the European Hernia Society and Americas Hernia Society. Br J Surg. 2020;107(3):171-90.", pmid: "31916607", doi: "10.1002/bjs.11489", y: 2020 },
+      "strasberg1995": { c: "Strasberg SM, Hertl M, Soper NJ. An analysis of the problem of biliary injury during laparoscopic cholecystectomy. J Am Coll Surg. 1995;180(1):101-25.", pmid: "8000648", y: 1995 },
+      "brunt2020": { c: "Brunt LM, Deziel DJ, Telem DA, Strasberg SM, Aggarwal R, Asbun H, et al.; and the Prevention of Bile Duct Injury Consensus Work Group. Safe Cholecystectomy Multi-society Practice Guideline and State of the Art Consensus Conference on Prevention of Bile Duct Injury During Cholecystectomy. Ann Surg. 2020;272(1):3-23.", pmid: "32404658", doi: "10.1097/SLA.0000000000003791", y: 2020 },
+      "strasberg2016": { c: "Strasberg SM, Pucci MJ, Brunt LM, Deziel DJ. Subtotal Cholecystectomy-\"Fenestrating\" vs \"Reconstituting\" Subtypes and the Prevention of Bile Duct Injury: Definition of the Optimal Procedure in Difficult Operative Conditions. J Am Coll Surg. 2016;222(1):89-96.", pmid: "26521077", doi: "10.1016/j.jamcollsurg.2015.09.019", y: 2016 },
+      "gauderer1980": { c: "Gauderer MW, Ponsky JL, Izant RJ Jr. Gastrostomy without laparotomy: a percutaneous endoscopic technique. J Pediatr Surg. 1980;15(6):872-5.", pmid: "6780678", doi: "10.1016/s0022-3468(80)80296-x", y: 1980 },
+      "disaverio2020": { c: "Di Saverio S, Podda M, De Simone B, Ceresoli M, Augustin G, Gori A, et al. Diagnosis and treatment of acute appendicitis: 2020 update of the WSES Jerusalem guidelines. World J Emerg Surg. 2020;15(1):27.", pmid: "32295644", doi: "10.1186/s13017-020-00306-3", y: 2020 },
+      "flum2020": { c: "Flum DR, Davidson GH, Monsell SE, Shapiro NI, Odom SR, Sanchez SE, et al.; CODA Collaborative. A Randomized Trial Comparing Antibiotics with Appendectomy for Appendicitis. N Engl J Med. 2020;383(20):1907-19.", pmid: "33017106", doi: "10.1056/NEJMoa2014320", y: 2020 },
+      "loffler2012": { c: "Löffler T, Rossion I, Bruckner T, Diener MK, Koch M, von Frankenberg M, et al.; HASTA Trial Group. HAnd Suture Versus STApling for Closure of Loop Ileostomy (HASTA Trial): results of a multicenter randomized trial (DRKS00000040). Ann Surg. 2012;256(5):828-35; discussion 835-6.", pmid: "23095628", doi: "10.1097/SLA.0b013e318272df97", y: 2012 },
+      "spinelli2022": { c: "Spinelli A, Bonovas S, Burisch J, Kucharzik T, Adamina M, Annese V, et al. ECCO Guidelines on Therapeutics in Ulcerative Colitis: Surgical Treatment. J Crohns Colitis. 2022;16(2):179-89.", pmid: "34635910", doi: "10.1093/ecco-jcc/jjab177", y: 2022 },
+      "semm1983": { c: "Semm K. Endoscopic appendectomy. Endoscopy. 1983;15(2):59-64.", pmid: "6221925", doi: "10.1055/s-2007-1021466", y: 1983 },
+      "danielsen2017": { c: "Danielsen AK, Park J, Jansen JE, Bock D, Skullman S, Wedin A, et al. Early Closure of a Temporary Ileostomy in Patients With Rectal Cancer: A Multicenter Randomized Controlled Trial. Ann Surg. 2017;265(2):284-90.", pmid: "27322187", doi: "10.1097/SLA.0000000000001829", y: 2017 },
+      "arvanitakis2021": { c: "Arvanitakis M, Gkolfakis P, Despott EJ, Ballarin A, Beyna T, Boeykens K, et al. Endoscopic management of enteral tubes in adult patients - Part 1: Definitions and indications. European Society of Gastrointestinal Endoscopy (ESGE) Guideline. Endoscopy. 2021;53(1):81-92.", pmid: "33260229", doi: "10.1055/a-1303-7449", y: 2021 },
+      "camachomauries2013": { c: "Camacho-Mauries D, Rodriguez-Díaz JL, Salgado-Nesme N, González QH, Vergara-Fernández O. Randomized clinical trial of intestinal ostomy takedown comparing pursestring wound closure vs conventional closure to eliminate the risk of wound infection. Dis Colon Rectum. 2013;56(2):205-11.", pmid: "23303149", doi: "10.1097/DCR.0b013e31827888f6", y: 2013 },
+      "bischoff2020": { c: "Bischoff SC, Austin P, Boeykens K, Chourdakis M, Cuerda C, Jonkers-Schuitema C, et al. ESPEN guideline on home enteral nutrition. Clin Nutr. 2020;39(1):5-22.", pmid: "31255350", doi: "10.1016/j.clnu.2019.04.022", y: 2020 },
+      "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 }
     },
     P: {
       "tar": [
@@ -273,6 +287,43 @@
         ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
       "umb": [
         ["henriksen2020", "guideline", "Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm"]],
+      "tcei": [
+        ["spinelli2022", "guideline", "ECCO 2022: kolektomia subtotalna z ileostomią końcową w ciężkim rzucie WZJG; proktokolektomia z ileostomią albo ze zbiornikiem J"],
+        ["brooke1952", "original", "Ileostomia wywinięta (Brooke) — koniec jelita krętego ponad skórę"]
+      ],
+      "pce": [
+        ["spinelli2022", "guideline", "Proktokolektomia z ileostomią końcową jako opcja, gdy zbiornik J nie jest wskazany; preparowanie odbytnicy w chorobie zapalnej"]
+      ],
+      "hrev": [
+        ["chavrier2022", "outcomes", "Metaanaliza: laparoskopowe odtworzenie ciągłości po Hartmannie — mniej powikłań i krótszy pobyt niż po laparotomii"],
+        ["sartelli2020", "guideline", "WSES 2020: Hartmann w trybie pilnym; odtworzenie ciągłości w drugim etapie"]
+      ],
+      "iclo": [
+        ["loffler2012", "outcomes", "HASTA: szew ręczny i stapler przy zamykaniu ileostomii pętlowej — podobny odsetek niedrożności, stapler krótszy"],
+        ["danielsen2017", "outcomes", "EASY: wczesne zamknięcie ileostomii (8–13 dni) u wybranych chorych po resekcji odbytnicy"],
+        ["camachomauries2013", "technique", "Szew kapciuchowy skóry po zamknięciu stomii — mniej zakażeń rany niż szew linijny"]
+      ],
+      "appy": [
+        ["disaverio2020", "guideline", "WSES 2020: appendektomia laparoskopowa z wyboru; zamknięcie kikuta pętlami, klipsami lub staplerem; wgłobienie kikuta niekonieczne"],
+        ["flum2020", "outcomes", "CODA: antybiotykoterapia jako alternatywa w niepowikłanym zapaleniu wyrostka (wyższe ryzyko bez kamienia kałowego niż z nim)"],
+        ["semm1983", "original", "Pierwsza appendektomia laparoskopowa (Semm)"]
+      ],
+      "chole": [
+        ["strasberg1995", "original", "Krytyczny widok bezpieczeństwa (CVS): oczyszczony trójkąt, dolna część pęcherzyka oddzielona od łoża, dwie struktury"],
+        ["brunt2020", "guideline", "Wytyczne SAGES/AHPBA/IHPBA/SSAT/EAES 2020: CVS, cholangiografia, cholecystektomia częściowa przy trudnych warunkach"],
+        ["strasberg2016", "technique", "Cholecystektomia częściowa: odmiana „fenestrating” i „reconstituting”"]
+      ],
+      "gstom": [
+        ["bischoff2020", "guideline", "ESPEN 2020: wskazania do długotrwałego żywienia dojelitowego przez gastrostomię"],
+        ["arvanitakis2021", "guideline", "ESGE 2021: definicje i wskazania do zgłębników żywieniowych, wybór PEG"]
+      ],
+      "gstom-peg": [
+        ["gauderer1980", "original", "Pierwszy opis PEG metodą „pull” (Gauderer, Ponsky, Izant)"]
+      ],
+      "witzel": [
+        ["bischoff2020", "guideline", "ESPEN 2020: żywienie dojelitowe za odźwiernikiem przez jejunostomię"],
+        ["arvanitakis2021", "guideline", "ESGE 2021: wskazania do żywienia do jelita czczego"]
+      ],
       "sleeve": [
         ["regan2003", "original", "Pierwszy opis laparoskopowej SG jako pierwszego etapu leczenia otyłości olbrzymiej (zespół Gagnera)."],
         ["rosenthal2012", "guideline", "Konsensus SG: resekcja od 2–6 cm przed odźwiernikiem, sonda kalibracyjna 32–36 Fr."],
