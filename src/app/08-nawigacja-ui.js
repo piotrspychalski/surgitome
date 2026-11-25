@@ -186,10 +186,15 @@
   function tabsFit(center) {
     var nav = $('tabs'), wrap = nav.parentNode, line = wrap.parentNode;
     if (MOBILE) return;
+    // karty zabiegów: co najmniej ok. 40% wiersza (albo cała ich szerokość, jeśli mniejsza); resztę dostają warianty (przewijane)
+    var f0 = nav.firstElementChild, f1 = nav.lastElementChild, cw = f0 ? f1.offsetLeft + f1.offsetWidth - f0.offsetLeft + 2 : 0;   // szerokość samych kart (scrollWidth rośnie z kontenerem)
+    wrap.style.minWidth = Math.min(cw, Math.round(line.clientWidth * 0.42)) + 'px';
     if (center) { var sel = nav.querySelector('.tab[aria-selected="true"]'); if (sel) nav.scrollLeft = Math.max(0, sel.offsetLeft - (nav.clientWidth - sel.offsetWidth) / 2); }
     var over = nav.scrollWidth > nav.clientWidth + 2 || $('app').querySelector('.subbar').classList.contains('tabsopen');
     line.classList.toggle('over', over);
     wrap.classList.toggle('canL', over && nav.scrollLeft > 2); wrap.classList.toggle('canR', over && nav.scrollLeft < nav.scrollWidth - nav.clientWidth - 2);
+    var vb = $('variants'), vo = vb.scrollWidth > vb.clientWidth + 2;   // warianty: wygaszony brzeg, gdy się nie mieszczą
+    vb.classList.toggle('canL', vo && vb.scrollLeft > 2); vb.classList.toggle('canR', vo && vb.scrollLeft < vb.scrollWidth - vb.clientWidth - 2);
   }
   function tabsOpen(on) {
     var sb = $('app').querySelector('.subbar'); if (!sb) return;
@@ -203,6 +208,9 @@
       if ($('app').querySelector('.subbar').classList.contains('tabsopen') || nav.scrollWidth <= nav.clientWidth) return;
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { nav.scrollLeft += e.deltaY; e.preventDefault(); }
     }, { passive: false });
+    // kółko myszy przewija w poziomie także warianty, kategorie i podgrupy (gdy się nie mieszczą)
+    ['variants', 'cats', 'subs'].forEach(function (id) { var el = $(id); el.addEventListener('wheel', function (e) { if (el.scrollWidth <= el.clientWidth + 2 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; el.scrollLeft += e.deltaY; e.preventDefault(); }, { passive: false }); });
+    $('variants').addEventListener('scroll', function () { tabsFit(false); }, { passive: true });
     $('tabsL').onclick = function () { nav.scrollBy({ left: -nav.clientWidth * 0.7, behavior: 'smooth' }); };
     $('tabsR').onclick = function () { nav.scrollBy({ left: nav.clientWidth * 0.7, behavior: 'smooth' }); };
     $('tabsAll').onclick = function (e) { e.stopPropagation(); tabsOpen(); };

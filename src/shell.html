@@ -59,7 +59,7 @@ button,select,input{ font:inherit; color:inherit; }
 #cats::-webkit-scrollbar{ display:none; }
 .navline{ display:flex; flex-wrap:nowrap; align-items:center; gap:10px; min-width:0; }
 /* zabiegi kategorii w jednym wierszu: przewijanie (kółko, strzałki, wygaszone brzegi), „Wszystkie” — pełna lista jako panel nad widokiem */
-.tabwrap{ position:relative; flex:1 1 0; min-width:0; min-height:36px; display:flex; align-items:center; --fl:0px; --fr:0px; }
+.tabwrap{ position:relative; flex:0 1 auto; min-width:0; min-height:36px; display:flex; align-items:center; --fl:0px; --fr:0px; }
 .tabwrap.canL{ --fl:44px; } .tabwrap.canR{ --fr:44px; }
 .tscroll{ position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:28px; height:28px; border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--text); font-size:17px; line-height:1; padding:0 0 2px; cursor:pointer; display:none; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,.12); }
 .tscroll:hover{ background:var(--surface-2); }
@@ -83,8 +83,10 @@ button,select,input{ font:inherit; color:inherit; }
 .cat:hover{ color:var(--text); }
 .cat[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
 .subbar{ background:var(--surface); border-bottom:1px solid var(--line); padding:6px 16px 7px; display:flex; flex-direction:column; gap:5px; }
-#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 0 auto; min-width:0; max-width:48%; overflow-x:auto; scrollbar-width:none; padding-left:12px; border-left:1px solid var(--line); }
+#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 0.2 auto; min-width:0; overflow-x:auto; scrollbar-width:none; padding-left:12px; border-left:1px solid var(--line); }
 #variants::-webkit-scrollbar{ display:none; }
+#variants{ --vl:0px; --vr:0px; -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); }
+#variants.canL{ --vl:28px; } #variants.canR{ --vr:36px; }
 #variants > *{ flex:none; }
 #variants[hidden]{ display:none; }
 .vlabel{ font-size:13px; color:var(--muted); margin-right:4px; }
