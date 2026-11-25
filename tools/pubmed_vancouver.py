@@ -9,8 +9,8 @@ import xml.etree.ElementTree as ET
 FIX = {'39560893': {'authors': ['Bhasker AG', 'Prasad A', 'Shah S', 'Parmar C'], 'collective': ['OAGB-MGB Consensus Contributors']},
        '25733126': {'collective': ['American Society for Gastrointestinal Endoscopy Standards of Practice Committee']},
        '703369': {'doi': '10.1016/S0022-5223(19)41012-X'}, '3702486': {'doi': '10.1016/S0022-5223(19)36003-9'},
-       '7524454': {'doi': '10.1097/00000658-199410000-00008'},
-       '19860578': {'collective': ['American Thyroid Association Surgery Working Group', 'American Association of Endocrine Surgeons', 'American Academy of Otolaryngology-Head and Neck Surgery', 'American Head and Neck Society']},   # przecinek w nazwie grupy w PubMed   # w PubMed DOI innej pracy (Frey, Amikura, J Hepatobiliary Pancreat Surg 1995)
+       '7524454': {'doi': '10.1097/00000658-199410000-00008'},   # w PubMed DOI innej pracy (Frey, Amikura, J Hepatobiliary Pancreat Surg 1995)
+       '19860578': {'collective': ['American Thyroid Association Surgery Working Group', 'American Association of Endocrine Surgeons', 'American Academy of Otolaryngology-Head and Neck Surgery', 'American Head and Neck Society']},   # przecinek w nazwie grupy w PubMed
        '39264553': {'authors': ['Ponce de Leon-Ballesteros G', 'Romero-Velez G', 'Higa K', 'Himpens J', "O'Kane M", 'Torres A', 'Prager G', 'Herrera MF']}}   # „O' Kane” w PubMed
 EPONYM = {'vater': 'Vater', 'whipple': 'Whipple', 'roux': 'Roux', 'billroth': 'Billroth', 'puestow': 'Puestow', 'hartmann': 'Hartmann', 'braun': 'Braun'}
 

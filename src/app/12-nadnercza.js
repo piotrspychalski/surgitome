@@ -134,7 +134,7 @@
         } else {
           var sq = spl.position.clone().applyEuler(splG.rotation).add(splG.position);
           put(L.spl, sq, fA || fk === 'spl'); put(L.panc, panc.curve.getPointAt(0.7).applyEuler(splG.rotation).add(splG.position), fA || fk === 'spl');
-          put(L.sv, V(VV.sv[2]).add(new V3(0, 0, 0)), fA); put(L.lrv, V(VV.lrv[1]), fA || fk === 'vein' || fP);
+          put(L.sv, V(VV.sv[2]), fA); put(L.lrv, V(VV.lrv[1]), fA || fk === 'vein' || fP);
           put(L.lipv, V(VV.lipv[2]), fk === 'vein' && vq < 0.5 || fA); put(L.flex, flex.curve.getPointAt(0.45).add(flex.mesh.position), fk === 'spl');
         }
       } };

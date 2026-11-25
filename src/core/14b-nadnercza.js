@@ -83,16 +83,16 @@
   A.ACCESS['adr-r'] = { target: bodyPt([-3.4, -1.2, -7.0]), cam: { t: [-6.5, -9.5, 2.0], tp: [-7.5, -9.0, 2.0], az: -28, el: 16, k: 1.0 }, xf: XF,
     lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '4 trokary 10 mm pod prawym łukiem żebrowym', side: 0,
       text: 'Chory na lewym boku (prawa strona ku górze), stół zgięty — poszerza to przestrzeń między łukiem żebrowym a grzebieniem biodrowym. Cztery trokary 10 mm ok. 2 cm poniżej prawego łuku żebrowego: pierwszy w linii pachowej przedniej, drugi w boku, poniżej końca żebra XI (optyka), dwa bardziej do przodu — najbardziej przyśrodkowy przy bocznym brzegu mięśnia prostego (retraktor wątroby). Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
-      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [-9.0, -0.2], mm: 12, name: '10 mm — pierwszy trokar', sub: 'linia pachowa przednia, 2 cm pod łukiem żebrowym' },
-        { at: [-10.4, -3.0], mm: 12, name: '10 mm — optyka (kamera)', sub: 'w boku, poniżej końca żebra XI' },
-        { at: [-7.3, 1.7], mm: 12, name: '10 mm — narzędzie', sub: '2 cm pod łukiem żebrowym' },
-        { at: [-5.9, 3.1], mm: 12, name: '10 mm — retraktor wątroby', sub: 'przy bocznym brzegu mięśnia prostego' }] } };
+      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [-9.0, -0.2], mm: 10, name: '10 mm — pierwszy trokar', sub: 'linia pachowa przednia, 2 cm pod łukiem żebrowym' },
+        { at: [-10.4, -3.0], mm: 10, name: '10 mm — optyka (kamera)', sub: 'w boku, poniżej końca żebra XI' },
+        { at: [-7.3, 1.7], mm: 10, name: '10 mm — narzędzie', sub: '2 cm pod łukiem żebrowym' },
+        { at: [-5.9, 3.1], mm: 10, name: '10 mm — retraktor wątroby', sub: 'przy bocznym brzegu mięśnia prostego' }] } };
   A.ACCESS['adr-l'] = { target: bodyPt([3.4, -3.4, -7.0]), cam: { t: [6.5, -9.5, 2.0], tp: [7.5, -9.0, 2.0], az: 28, el: 16, k: 1.0 }, xf: XF,
     lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '3 trokary 10 mm pod lewym łukiem żebrowym', side: 0,
       text: 'Chory na prawym boku (lewa strona ku górze), stół zgięty. Trzy trokary 10 mm ok. 2 cm poniżej lewego łuku żebrowego: pierwszy tuż przyśrodkowo od linii pachowej przedniej, drugi w boku, poniżej końca żebra XI, trzeci bardziej do przodu i przyśrodkowo (optyka); w razie potrzeby czwarty (retraktor) bardziej ku tyłowi, po przecięciu więzadła śledzionowo-nerkowego. Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
-      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [8.6, 0.1], mm: 12, name: '10 mm — pierwszy trokar', sub: 'tuż przyśrodkowo od linii pachowej przedniej' },
-        { at: [10.1, -3.2], mm: 12, name: '10 mm — narzędzie', sub: 'w boku, poniżej końca żebra XI' },
-        { at: [6.6, 2.0], mm: 12, name: '10 mm — optyka (kamera)', sub: 'bardziej do przodu i przyśrodkowo' }] } };
+      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [8.6, 0.1], mm: 10, name: '10 mm — pierwszy trokar', sub: 'tuż przyśrodkowo od linii pachowej przedniej' },
+        { at: [10.1, -3.2], mm: 10, name: '10 mm — narzędzie', sub: 'w boku, poniżej końca żebra XI' },
+        { at: [6.6, 2.0], mm: 10, name: '10 mm — optyka (kamera)', sub: 'bardziej do przodu i przyśrodkowo' }] } };
 
   /* ---------- zabiegi ---------- */
   var CAMS = {
