@@ -1,9 +1,9 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Przełyk — slajd „Dostęp” w esofagektomii (decyzja autora 2026-11-25): model tułowia (szyja, klatka piersiowa, nadbrzusze); Ivor Lewis, McKeown
-// i Akiyama — otwarty, hybrydowy, małoinwazyjny (MIE), robotyczny (RAMIE); przezrozworowa — otwarty i laparoskopowy; interpozycja okrężnicy — otwarty.
-// Kolejność etapów (Ivor Lewis: brzuch → klatka; McKeown: klatka → brzuch → szyja), torakotomia tylno-boczna prawa (Ivor Lewis V, McKeown IV
-// przestrzeń międzyżebrowa) poniżej kąta dolnego łopatki, trokary torakoskopii i robota po prawej stronie, cięcie na szyi po lewej (4–8 cm),
-// schemat ułożenia na lewym boku tylko w etapie piersiowym, podpis kadru wg etapu, klawisze 1–4, przyciski w jelicie grubym bez zmian; EN.
+// Slajd „Dostęp” w zabiegach żołądka (decyzja autora 2026-11-25): resekcja dystalna i gastrektomia całkowita — otwarty, laparoskopowy, robotyczny;
+// gastroenterostomia omijająca i gastrostomia Stamma — otwarty i laparoskopowy; PEG bez slajdu. Laparoskopia resekcji: 5 trokarów (optyka w pępku,
+// 2 po prawej, 2 po lewej stronie chorego) + retraktor wątroby pod wyrostkiem mieczykowatym, wydobycie przez cięcie Pfannenstiela; robot — porty w linii
+// poprzecznej przy pępku, asystent w prawym dolnym kwadrancie; gastrektomia: dwa warianty dostępu otwartego (laparotomia pośrodkowa górna i cięcie
+// podżebrowe obustronne — przycisk open2, klawisze wg kolejności widocznych przycisków), porty w obrębie powłok, co ≥ 6 cm, poniżej łuków żebrowych; EN
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -16,90 +16,73 @@ function boot(lang){ const dom=new JSDOM(html,{runScripts:'outside-only',pretend
   w.matchMedia=()=>({matches:false,addEventListener(){}});
   w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }
-const lblOn=w=>[...w.document.querySelectorAll('#labels .lbl')].filter(e=>e.style.display!=='none'&&e.style.opacity!=='0');
+async function search(w, txt){ const q=w.document.getElementById('q'); q.value=txt; q.dispatchEvent(new w.Event('input')); q.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter'})); await sleep(500); }
 const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,bubbles:true}));
-const CM=1.64;   // 1 jednostka modelu ≈ 1,64 cm
 (async()=>{
-  let w=boot(); await sleep(300); const $=id=>w.document.getElementById(id), A=w.ANAT, S=w.__sgTest.state();
-  const an=A.PROCS.findIndex(p=>p.id==='esoph'), P=A.PROCS[an]; ok(an>=0&&P.cat==='eso','brak esofagektomii w kategorii Przełyk');
-  const T=A.ACCESS['eso-il'].torso; ok(T&&T.at&&T.ics,'brak modelu tułowia');
-  const vis=()=>[...w.document.querySelectorAll('#acc .accopt')].filter(b=>!b.hidden);
-  const EXP={ 'eso-il':'open,hyb,lap,rob', 'eso-il-ss':'open,hyb,lap,rob', 'eso-mck':'open,hyb,lap,rob', 'eso-mck-ss':'open,hyb,lap,rob', 'eso-aki':'open,hyb,lap,rob', 'eso-the':'open,lap', 'eso-col':'open' };
-  const ORDER={ 'eso-il':'abd,thx', 'eso-mck':'thx,abd,neck', 'eso-aki':'thx,abd,neck', 'eso-the':'abd,neck', 'eso-col':'abd,neck' };
-  const len=pts=>{ let L=0; for(let i=1;i<pts.length;i++) L+=T.at(pts[i][0],pts[i][1],0,0).distanceTo(T.at(pts[i-1][0],pts[i-1][1],0,0)); return L; };
-  const dense=pts=>{ const out=[]; for(let i=1;i<pts.length;i++) for(let j=0;j<10;j++){ const u=j/10; out.push([pts[i-1][0]+(pts[i][0]-pts[i-1][0])*u, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*u]); } out.push(pts[pts.length-1]); return out; };
-  for(let vi=0;vi<P.variants.length;vi++){
-    const v=P.variants[vi], X=A.ACCESS[v.access]; ok(X&&X.torso,v.id+': brak dostępu z modelem tułowia');
-    w.__sgTest.open(an,vi,0); await sleep(40);
-    const F=w.__sgTest.frames(); ok(F[0].k==='access'&&F[1].k==='normal',v.id+': pierwszy kadr to nie „Dostęp”');
-    ok(!$('acc').hidden,v.id+': brak okna wyboru dostępu');
-    const kinds=vis().map(b=>b.dataset.acc).join(); ok(kinds===EXP[v.id],v.id+': przyciski '+kinds);
-    ok(vis().every((b,i)=>b.querySelector('kbd').textContent===String(i+1)),v.id+': numery klawiszy nie po kolei');
-    if(EXP[v.id].includes('hyb')) ok(vis().map(b=>b.querySelector('b').textContent).join()==='Otwarty,Hybrydowy,Małoinwazyjny (MIE),Robotyczny',v.id+': nazwy przycisków');
-    const base=v.id.replace('-ss','');
-    ['open','hyb','lap','rob'].forEach(k=>{ const D=X[k]; if(!D) return;
-      ok(D.title&&D.short&&D.phases.every(ph=>ph.text&&ph.title&&ph.name),v.id+'/'+k+': brak tytułu, podpisu lub opisu etapu');
-      ok(D.phases.map(ph=>ph.part).join()===ORDER[base],v.id+'/'+k+': kolejność etapów '+D.phases.map(ph=>ph.part).join());
-      D.phases.forEach(ph=>{
-        const pp=(ph.ports||[]).map(p=>ph.part==='abd'?[T.fx(p.at[0],p.at[1]),p.at[1]]:p.at);
-        if(ph.part==='abd') (ph.ports||[]).forEach((p,i)=>ok(Math.abs(p.at[0])<A.BODY.W(p.at[1])*0.92&&p.at[1]<A.BODY.LM.xiph[1]&&p.at[1]>-10,v.id+'/'+k+': port brzuszny '+i+' poza nadbrzuszem'));
-        if(ph.part==='thx'){ pp.forEach((q,i)=>ok(q[0]<-45&&q[0]>-165&&q[1]>7&&q[1]<20,v.id+'/'+k+': port piersiowy '+i+' poza prawą ścianą klatki ('+q.map(x=>x.toFixed(1))+')'));
-          ok(ph.pose&&ph.pose.thx&&/lewym boku/.test(ph.pose.title),v.id+'/'+k+': etap piersiowy bez schematu ułożenia na lewym boku'); }
-        pp.forEach((a,i)=>pp.forEach((b,j)=>{ if(j>i){ const d=T.at(a[0],a[1],0,0).distanceTo(T.at(b[0],b[1],0,0))*CM; ok(d>4,v.id+'/'+k+'/'+ph.part+': porty '+i+' i '+j+' bliżej niż 4 cm ('+d.toFixed(1)+')'); } }));
-        if(ph.line){ const [a,b]=ph.line; (ph.ports||[]).filter(p=>!p.assist).forEach((p,i)=>{ const q=ph.part==='abd'?[T.fx(p.at[0],p.at[1]),p.at[1]]:p.at, d=Math.abs((b[0]-a[0])*(q[1]-a[1])-(b[1]-a[1])*(q[0]-a[0]))/Math.hypot(b[0]-a[0],b[1]-a[1]); ok(d<0.6,v.id+'/'+k+': port robota '+i+' poza linią portów'); }); }
-        if(ph.part==='thx'&&ph.cuts){ const c=ph.cuts[0].pts, tip=T.LM.scapTip, near=dense(c).filter(q=>Math.abs(q[0]-tip[0])<2);
-          ok(c.every(q=>q[0]<-50),v.id+'/'+k+': torakotomia nie po prawej stronie');
-          ok(near.length&&Math.max(...near.map(q=>q[1]))<tip[1]-0.8,v.id+'/'+k+': torakotomia nie poniżej kąta dolnego łopatki');
-          ok(ph.ics&&ph.ics.k===(base==='eso-il'?5:4),v.id+'/'+k+': przestrzeń międzyżebrowa '+(ph.ics&&ph.ics.k)); }
-        if(ph.part==='neck'){ const c=ph.cuts[0].pts, L=len(dense(c))*CM; ok(c.every(q=>q[0]>0),v.id+': cięcie na szyi nie po lewej'); ok(L>4&&L<8,v.id+': długość cięcia na szyi '+L.toFixed(1)+' cm'); }
-      });
-    });
-  }
-  // przebieg slajdu: Ivor Lewis, dostęp otwarty — etap brzuszny, potem piersiowy (kamera i schemat ułożenia), elementy etapu 1 zostają
-  w.__sgTest.open(an,0,0); await sleep(40); $('acc').querySelector('.accopt[data-acc="open"]').click(); await sleep(40); S.playing=false;
-  let Tl=w.__sgTest.model().access; ok(Tl&&Tl.torso&&Tl.sets.open,'Ivor Lewis: brak narzędzia slajdu');
-  w.__sgTest.at(-0.6); await sleep(20);
-  ok(Tl.ph===0&&/etap brzuszny/.test($('capTitle').textContent)&&$('pose').hidden,'Ivor Lewis: etap brzuszny (podpis / schemat): '+$('capTitle').textContent);
-  ok(Tl.sets.open.phases[0].cuts[0].mesh.visible&&!Tl.sets.open.phases[1].cuts[0].mesh.visible,'Ivor Lewis: cięcie piersiowe widoczne w etapie brzusznym');
-  w.__sgTest.at(-0.1); await sleep(20);
-  ok(Tl.ph===1&&/etap piersiowy/.test($('capTitle').textContent)&&!$('pose').hidden&&/lewym boku/.test($('pose').textContent),'Ivor Lewis: etap piersiowy (podpis / schemat ułożenia)');
-  ok(Tl.sets.open.phases[0].cuts[0].mesh.visible&&!Tl.sets.open.phases[0].cuts[0].wm.visible&&Tl.sets.open.phases[1].cuts[0].wm.visible,'Ivor Lewis: na końcu laparotomia nie zszyta albo torakotomia nie otwarta');
-  ok(Tl.sets.open.phases[1].ics.g.visible,'Ivor Lewis: brak przestrzeni międzyżebrowej');
-  // McKeown, MIE: 3 etapy, porty torakoskopii po kolei, na końcu szyja
-  w.__sgTest.open(an,2,0); await sleep(40); key(w,'3'); await sleep(40); S.playing=false; Tl=w.__sgTest.model().access;
-  ok(w.__sgTest.state()&&Tl.sets.lap&&Tl.sets.lap.g.visible,'McKeown: klawisz 3 nie wybiera dostępu małoinwazyjnego');
-  w.__sgTest.at(-0.75); await sleep(20); const th=Tl.sets.lap.phases[0].ports.filter(p=>p.g.visible).length;
-  w.__sgTest.at(-0.02); await sleep(20);
-  // po zmianie ułożenia trokary piersiowe usunięte (zostaje miejsce wkłucia); brzuch i szyja jednocześnie — trokary brzuszne zostają
-  ok(th>=4&&Tl.ph===2&&Tl.sets.lap.phases[2].cuts[0].wm.visible&&Tl.sets.lap.phases[0].ports.every(p=>!p.g.visible&&p.ent.visible)&&Tl.sets.lap.phases[1].ports.every(p=>p.g.visible),'McKeown MIE: przebieg etapów ('+th+', '+Tl.ph+')');
-  ok(/etap szyjny \(3\/3\)/.test($('capTitle').textContent),'McKeown: podpis etapu szyjnego: '+$('capTitle').textContent);
-  ok($('pose').hidden,'McKeown: schemat ułożenia poza etapem piersiowym');
-  key(w,'Escape'); await sleep(20);
-  // Ivor Lewis MIE: w etapie piersiowym trokary brzuszne usunięte i bez odmy
-  w.__sgTest.open(an,0,0); await sleep(40); $('acc').querySelector('.accopt[data-acc="lap"]').click(); await sleep(40); S.playing=false; Tl=w.__sgTest.model().access;
-  w.__sgTest.at(-0.6); await sleep(20); const zA=Tl.grp.children[0].geometry.attributes.position.array.slice();
-  ok(Tl.sets.lap.phases[0].ports.every(p=>p.g.visible),'Ivor Lewis MIE: trokary brzuszne niewidoczne w etapie brzusznym');
-  w.__sgTest.at(-0.05); await sleep(20);
-  ok(Tl.sets.lap.phases[0].ports.every(p=>!p.g.visible&&p.ent.visible)&&Tl.sets.lap.phases[1].ext.g.visible,'Ivor Lewis MIE: trokary brzuszne w etapie piersiowym albo brak poszerzenia otworu w IV przestrzeni');
-  const zB=Tl.grp.children[0].geometry.attributes.position.array; let dz=0; for(let i=2;i<zB.length;i+=3) dz=Math.max(dz,zA[i]-zB[i]);
-  ok(dz>0.5,'Ivor Lewis MIE: odma nie schodzi po zmianie ułożenia ('+dz.toFixed(2)+')');
-  // klawisz 2 = hybrydowy; „Zmień dostęp”
-  $('accChange').click(); await sleep(20); ok(!$('acc').hidden,'„Zmień dostęp” nie otwiera okna'); key(w,'2'); await sleep(40); S.playing=false; w.__sgTest.at(-0.5);
-  ok(Tl.sets.hyb.g.visible&&!Tl.sets.lap.g.visible,'klawisz 2 nie wybiera dostępu hybrydowego');
-  // poza slajdem model tułowia niewidoczny
-  w.__sgTest.open(an,2,1); await sleep(40); ok(!w.__sgTest.model().access.grp.visible&&$('acc').hidden&&$('pose').hidden,'model tułowia lub okno widoczne poza slajdem');
-  // jelito grube bez zmian: trzy przyciski z domyślnymi nazwami i klawiszami 1–3
-  const rh=A.PROCS.findIndex(p=>p.id==='rh'); w.__sgTest.open(rh,0,0); await sleep(40);
-  ok(vis().map(b=>b.dataset.acc+':'+b.querySelector('b').textContent+':'+b.querySelector('kbd').textContent).join()==='open:Otwarty:1,lap:Laparoskopowy:2,rob:Robotyczny:3','hemikolektomia prawa: przyciski '+vis().map(b=>b.querySelector('b').textContent).join());
-  ok(!w.__sgTest.model().access.torso,'hemikolektomia prawa: model tułowia zamiast powłok brzucha');
+  let w=boot(); await sleep(300); const $=id=>w.document.getElementById(id), A=w.ANAT, B=A.BODY, CM=1/1.64;
+  const P=id=>A.PROCS.find(p=>p.id===id), idx=id=>A.PROCS.findIndex(p=>p.id===id);
+  // dane: zakres dostępów
+  const EXP={dg:['open','lap','rob'], tg:['open','open2','lap','rob'], gebp:['open','lap'], 'gstom-stamm':['open','lap']};
+  Object.keys(EXP).forEach(k=>{ const X=A.ACCESS[k]; ok(X,k+': brak dostępu');
+    if(!X) return; const have=['open','open2','lap','rob'].filter(q=>X[q]); ok(have.join()===EXP[k].join(),k+': dostępy '+have.join()+' zamiast '+EXP[k].join());
+    have.forEach(q=>{ const D=X[q]; ok(D.title&&D.text&&D.short,k+'/'+q+': brak tytułu, opisu lub podpisu w oknie');
+      (D.ports||[]).forEach((Pt,i)=>{ ok(Math.abs(Pt.at[0])<B.W(Pt.at[1])*0.85&&Pt.at[1]<B.LM.xiph[1]&&Pt.at[1]>B.LM.pubis[1]+1.2,k+'/'+q+': port '+i+' poza powłokami brzucha');
+        // porty boczne poniżej łuku żebrowego (interpolacja łuku po |x|)
+        const ax=Math.abs(Pt.at[0]), C=B.LM.costalL; if(ax>1.5&&ax<C[C.length-1][0]){ let cy=null; for(let j=1;j<C.length;j++) if(ax<=C[j][0]){ const u=(ax-C[j-1][0])/(C[j][0]-C[j-1][0]); cy=C[j-1][1]+u*(C[j][1]-C[j-1][1]); break; } ok(cy==null||Pt.at[1]<cy-0.6,k+'/'+q+': port '+i+' nie poniżej łuku żebrowego'); }
+        (D.ports||[]).forEach((Q,j)=>{ if(j>i){ const d=Math.hypot(Pt.at[0]-Q.at[0],Pt.at[1]-Q.at[1]); ok(d>6*CM,k+'/'+q+': porty '+i+' i '+j+' bliżej niż 6 cm ('+(d/CM).toFixed(1)+' cm)'); } }); });
+      if(D.line){ const [a,b]=D.line; D.ports.filter(Pt=>Pt.mm===8).forEach((Pt,i)=>{ const cr=((b[0]-a[0])*(Pt.at[1]-a[1])-(b[1]-a[1])*(Pt.at[0]-a[0]))/Math.hypot(b[0]-a[0],b[1]-a[1]); ok(Math.abs(cr)<0.15,k+': port robota '+i+' poza linią portów'); }); } }); });
+  ['dg','tg'].forEach(k=>{ const L=A.ACCESS[k].lap, tro=L.ports.filter(Pt=>!/Retraktor/.test(Pt.name)), cam=tro.find(Pt=>/kamera/.test(Pt.name)), ret=L.ports.find(Pt=>/Retraktor/.test(Pt.name));
+    ok(tro.length===5,k+': laparoskopia — '+tro.length+' trokarów zamiast 5');
+    ok(cam&&cam.at[0]===0&&Math.abs(cam.at[1]-B.LM.umb[1])<1&&cam.mm===12&&L.first===L.ports.indexOf(cam),k+': optyka 12 mm nie w pępku (lub nie pierwsza)');
+    ok(tro.filter(Pt=>Pt.at[0]<-1).length===2&&tro.filter(Pt=>Pt.at[0]>1).length===2,k+': trokary nie po 2 z każdej strony');
+    ok(tro.filter(Pt=>Pt.mm===12).length===3,k+': nie 3 trokary 12 mm (optyka + po jednym z każdej strony)');
+    ok(ret&&ret.at[0]===0&&ret.at[1]>B.LM.xiph[1]-2.5,k+': brak retraktora wątroby pod wyrostkiem mieczykowatym');
+    const R=A.ACCESS[k].rob, arms=R.ports.filter(Pt=>Pt.mm===8), as=R.ports.find(Pt=>Pt.assist);
+    ok(arms.length===4&&R.robot&&Math.abs(R.line[0][1]-R.line[1][1])<1e-6&&Math.abs(R.line[0][1]-B.LM.umb[1])<2.5,k+': robot — nie 4 porty w linii poprzecznej przy pępku');
+    ok(arms.filter(Pt=>Pt.at[0]<-1).length===1&&arms.filter(Pt=>Pt.at[0]>1).length===2,k+': robot — nie 1 ramię po prawej i 2 po lewej');
+    ok(as&&as.at[0]<0&&as.at[1]<B.LM.umb[1]&&as.mm===12,k+': port asystenta nie w prawym dolnym kwadrancie');
+    [L,R].forEach(D=>ok(D.ext&&D.ext.pts.every(p=>p[1]<-13)&&/Pfannenstiela/.test(D.ext.name),k+': wydobycie nie przez cięcie Pfannenstiela')); });
+  const O2=A.ACCESS.tg.open2; ok(O2.cuts.length===1&&O2.cuts[0].pts.some(p=>p[0]<-6)&&O2.cuts[0].pts.some(p=>p[0]>6)&&Math.max(...O2.cuts[0].pts.map(p=>p[1]))<B.LM.xiph[1]-2,'gastrektomia: cięcie podżebrowe nie obustronne lub sięga wyrostka');
+  ok(A.ACCESS.tg.open.cuts[0].pts.every(p=>Math.abs(p[0])<0.8)&&A.ACCESS.dg.open.cuts[0].pts[0][1]>7,'laparotomia pośrodkowa górna: zły przebieg');
+  // warianty: dostęp we wszystkich wariantach resekcji dystalnej; PEG bez dostępu, Stamm z własnym
+  P('dg').variants.forEach(v=>ok(v.access==='dg',v.id+': brak slajdu „Dostęp”')); ok(P('tg').variants.every(v=>v.access==='tg')&&P('gebp').variants.every(v=>v.access==='gebp'),'gastrektomia / gastroenterostomia bez dostępu');
+  const gs=P('gstom').variants; ok(!gs.find(v=>v.id==='gstom-peg').access&&gs.find(v=>v.id==='gstom-stamm').access==='gstom-stamm','gastrostomia: PEG z dostępem albo Stamm bez');
+  // okno wyboru: gastrektomia — 4 przyciski w kolejności, klawisz 2 = drugi dostęp otwarty
+  w.__sgTest.open(idx('tg'),0,0); await sleep(250);
+  ok(w.__sgTest.frames()[0].k==='access'&&!$('acc').hidden,'gastrektomia: brak slajdu „Dostęp” lub okna');
+  const visB=()=>[...w.document.querySelectorAll('#acc .accopt')].filter(b=>!b.hidden).sort((a,b)=>+w.getComputedStyle(a).order- +w.getComputedStyle(b).order);
+  ok(visB().map(b=>b.dataset.acc).join()==='open,open2,lap,rob','gastrektomia: przyciski '+visB().map(b=>b.dataset.acc).join());
+  ok(visB().map(b=>b.querySelector('kbd').textContent).join()==='1,2,3,4','gastrektomia: numery klawiszy '+visB().map(b=>b.querySelector('kbd').textContent).join());
+  ok($('acc').classList.contains('acc4'),'gastrektomia: okno nie poszerzone przy 4 przyciskach');
+  ok(/dwa rodzaje cięcia/.test($('capText').textContent),'gastrektomia: podpis okna nie wspomina dwóch cięć: '+$('capText').textContent);
+  key(w,'2'); await sleep(200); w.__sgTest.at(-0.02);
+  const T=w.__sgTest.model().access, o2=T.sets.open2; console.log('gastrektomia, klawisz 2:',w.localStorage.getItem('surgitome-dostep'),'|',$('capTitle').textContent);
+  ok(w.localStorage.getItem('surgitome-dostep')==='open2'&&o2&&o2.g.visible&&!T.sets.open.g.visible&&o2.cuts[0].wm.visible,'gastrektomia: klawisz 2 nie wybiera cięcia podżebrowego');
+  ok(/podżebrowe/.test($('capTitle').textContent),'gastrektomia: tytuł dostępu podżebrowego');
+  $('accChange').click(); await sleep(100); key(w,'4'); await sleep(200); w.__sgTest.at(-0.02);
+  ok(w.localStorage.getItem('surgitome-dostep')==='rob'&&T.sets.rob.ports.filter(p=>p.g.visible).length===6,'gastrektomia: klawisz 4 nie wybiera robota (5 portów + retraktor)');
+  // resekcja dystalna: zapamiętany open2 nieoferowany — okno, 3 przyciski, klawisz 2 = laparoskopia
+  w.localStorage.setItem('surgitome-dostep','open2');
+  w.__sgTest.open(idx('dg'),2,0); await sleep(250);
+  ok(!$('acc').hidden&&visB().map(b=>b.dataset.acc).join()==='open,lap,rob'&&!$('acc').classList.contains('acc4'),'resekcja dystalna: przyciski '+visB().map(b=>b.dataset.acc).join());
+  key(w,'2'); await sleep(200); w.__sgTest.at(-0.02); const L2=w.__sgTest.model().access.sets.lap;
+  ok(L2.g.visible&&L2.ports.filter(p=>p.g.visible).length===6&&L2.ext.g.visible,'resekcja dystalna: laparoskopia (5 trokarów + retraktor, cięcie Pfannenstiela)');
+  ok(A.PROCS[w.__sgTest.state().an].variants[w.__sgTest.state().vi].id===P('dg').variants[2].id,'resekcja dystalna: wybór dostępu zmienił wariant rekonstrukcji');
+  // gastroenterostomia: bez robota
+  w.__sgTest.open(idx('gebp'),0,0); await sleep(250); ok(visB().map(b=>b.dataset.acc).join()==='open,lap','gastroenterostomia: przyciski '+visB().map(b=>b.dataset.acc).join());
+  key(w,'3'); await sleep(100); ok(!$('acc').hidden,'gastroenterostomia: klawisz 3 wybiera nieoferowany dostęp');
+  key(w,'1'); await sleep(200); w.__sgTest.at(-0.02); ok(w.__sgTest.model().access.sets.open.cuts[0].wm.visible,'gastroenterostomia: brak laparotomii');
+  // gastrostomia: Stamm ze slajdem, PEG bez (przejście między wariantami bez błędów)
+  w.__sgTest.open(idx('gstom'),1,0); await sleep(250); ok(w.__sgTest.frames()[0].k==='access'&&!$('acc').hidden,'Stamm: brak slajdu „Dostęp”');
+  key(w,'2'); await sleep(200); w.__sgTest.at(-0.02); const SL=w.__sgTest.model().access.sets.lap; ok(SL.stoma&&SL.stoma.g.visible&&SL.ports.filter(p=>p.g.visible).length===3,'Stamm: laparoskopia (3 trokary, miejsce zgłębnika)');
+  w.__sgTest.open(idx('gstom'),0,0); await sleep(250); ok(w.__sgTest.frames()[0].k==='normal'&&$('acc').hidden&&!w.__sgTest.model().access,'PEG: slajd „Dostęp” albo okno');
+  // klawisze w zabiegu jelitowym bez zmian (1 otwarty, 2 laparoskopia, 3 robot)
+  w.__sgTest.open(idx('lh'),0,0); await sleep(250); ok(visB().map(b=>b.querySelector('kbd').textContent+b.dataset.acc).join()==='1open,2lap,3rob','hemikolektomia lewa: klawisze '+visB().map(b=>b.querySelector('kbd').textContent+b.dataset.acc).join());
   // EN
-  w=boot('en'); await sleep(300); { const A2=w.ANAT, an2=A2.PROCS.findIndex(p=>p.id==='esoph'); w.__sgTest.open(an2,0,0); await sleep(40);
-    const b=[...w.document.querySelectorAll('#acc .accopt')].filter(x=>!x.hidden).map(x=>x.querySelector('b').textContent).join();
-    ok(b==='Open,Hybrid,Minimally invasive (MIE),Robotic','EN: przyciski '+b);
-    w.document.querySelector('#acc .accopt[data-acc="hyb"]').click(); await sleep(40); w.__sgTest.state().playing=false; w.__sgTest.at(-0.1); await sleep(20);
-    const cap=w.document.getElementById('capTitle').textContent+' '+w.document.getElementById('capText').textContent;
-    ok(/thoracic stage/.test(cap)&&!/[ąćęłńóśźż]/i.test(cap),'EN: podpis etapu: '+cap.slice(0,120));
-    const lbl=[...w.document.querySelectorAll('#labels .lbl')].filter(e=>e.style.display!=='none'&&e.style.opacity!=='0').map(e=>e.textContent).join(' | ');
-    ok(!/[ąćęłńóśźż]/i.test(lbl),'EN: polskie etykiety: '+lbl.slice(0,200)); }
+  w=boot('en'); await sleep(300); w.__sgTest.open(w.ANAT.PROCS.findIndex(p=>p.id==='tg'),0,0); await sleep(250);
+  const enB=[...w.document.querySelectorAll('#acc .accopt')].filter(b=>!b.hidden).map(b=>b.querySelector('b').textContent+' / '+b.querySelector('small').textContent);
+  console.log('EN:',enB.join(' | '),'|',w.document.getElementById('capText').textContent);
+  ok(enB.includes('Open / bilateral subcostal incision (rooftop)')&&enB.includes('Laparoscopic / 5 trocars, extraction through a Pfannenstiel incision'),'EN: przyciski dostępu');
+  ok(w.document.getElementById('capText').textContent==='Choose the approach: open (two types of incision), laparoscopic or robotic.','EN: podpis okna');
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);
 })();
