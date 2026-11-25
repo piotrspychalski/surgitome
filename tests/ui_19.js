@@ -12,7 +12,7 @@ const sc=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]); w.eva
 const $=id=>w.document.getElementById(id); const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 (async()=>{ await sleep(300);
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja odbytnicy')).click(); await sleep(500);
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Resekcja odbytnicy').click(); await sleep(500);
   console.log('warianty:',[...$('variants').querySelectorAll('.vbtn')].map(b=>b.textContent).join(', '));
   for(const b of [...$('variants').querySelectorAll('.vbtn')]){ b.click(); await sleep(400); }
   console.log('errors',errs); process.exit(0); })();

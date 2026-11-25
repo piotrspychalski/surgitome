@@ -226,7 +226,8 @@
     if (M && SPLIT.on) { splitFrame(dt, now); requestAnimationFrame(frame); return; }
     if (M) {
       var fr = FR[S.frame];
-      if (fr && fr.kind === 'orbit' && S.playing && S.m < fr.m1) {
+      // w czasie przejścia między zabiegami (busy — wygaszenie) FR należy już do nowego zabiegu, a S.m jeszcze do starego: bez przesuwania osi czasu
+      if (fr && fr.kind === 'orbit' && S.playing && !busy && fr.dur > 0 && S.m < fr.m1) {
         S.m = Math.min(fr.m1, S.m + (fr.m1 - fr.m0) * dt / fr.dur); applyM();
         if (S.m >= fr.m1) updateDock();
       }

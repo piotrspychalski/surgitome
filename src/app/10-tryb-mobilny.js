@@ -17,7 +17,10 @@
     uiCats().forEach(function (c) { btn(rc, (c.id === 'fav' ? '★ ' : '') + tr(c.name), c.id === S.cat, function () { if (c.id !== S.cat) pickCat(c.id); renderMobileMenu(); }); });
     var rp = sec('Zabieg'), L = catProcs(S.cat);
     if (!L.length) { var h = document.createElement('p'); h.className = 'favhint'; h.textContent = tr('Brak ulubionych — oznacz zabiegi gwiazdką ☆ w pozostałych zakładkach (lub klawiszem F).'); rp.appendChild(h); }
+    var SG = subsOf(S.cat), grpAt = {};
+    if (SG) { L = []; SG.forEach(function (g) { grpAt[g.ids[0]] = g.name; L = L.concat(g.ids); }); }
     L.forEach(function (i) {
+      if (grpAt[i]) { var gh = document.createElement('span'); gh.className = 'mgrp'; gh.textContent = tr(grpAt[i]); rp.appendChild(gh); }
       var w = document.createElement('span'); w.className = 'mfav';
       var b = btn(w, tr(A.PROCS[i].short), i === S.an, function () { if (i !== S.an) switchAn(i, 0); mMenu(false); });
       var st = document.createElement('button'); st.className = 'mstar' + (isFav(i) ? ' on' : ''); st.textContent = isFav(i) ? '★' : '☆';
@@ -239,7 +242,7 @@
     else if (k === 'Home') { e.preventDefault(); goTo(0); }
     else if (k === 'o' || k === 'O' || k === 'l' || k === 'L') { setLabels(!S.labels); }
     else if (k >= '1' && k <= '9') {
-      var list = catProcs(S.cat), n = list[parseInt(k, 10) - 1]; if (n !== undefined && n !== S.an) switchAn(n, 0);
+      var list = visProcs(), n = list[parseInt(k, 10) - 1]; if (n !== undefined && n !== S.an) switchAn(n, 0);
     }
   });
 

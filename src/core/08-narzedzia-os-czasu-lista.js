@@ -264,6 +264,9 @@
     })(),
     PANC: PANC, PANC_R: PANC_R,
     CATS: [{ id: 'eso', name: 'Przełyk' }, { id: 'upper', name: 'Żołądek' }, { id: 'bar', name: 'Bariatria' }, { id: 'hpb', name: 'Trzustka i drogi żółciowe' }, { id: 'sb', name: 'Jelito cienkie' }, { id: 'colon', name: 'Jelito grube' }],
+    // podgrupy zabiegów w kategoriach z wieloma zabiegami (pasek zabiegów w jednym wierszu); zabieg spoza listy trafia do ostatniej grupy
+    SUBS: { colon: [{ name: 'Kolektomie', ids: ['zakres', 'rh', 'sf', 'lh', 'sig', 'ira', 'tcei'] }, { name: 'Odbytnica', ids: ['ar', 'apr', 'ipaa'] },
+      { name: 'Stomie', ids: ['hartmann', 'hrev', 'ileo', 'iclo'] }, { name: 'Wyrostek', ids: ['appy'] }] },
     resectionFor: resectionFor, COL: COL, BODY: BODY, ACCESS: ACCESS, curveOf: curveOf, buildTube: buildTube, nearestT: nearestT, papillaPoint: papillaPoint, V: V, endoGeometries: endoGeometries,
     // klocki dla modułu badań (09-badania.js); tylko funkcje i krzywe
     _lib: { prepare: prepare, rhAnat: rhAnat, mesoRight: mesoRight, mesoLeft: mesoLeft, colObj: colObj, tiObj: tiObj, appObj: appObj, ringOn: ringOn, L: L, sub: sub, flat: flat, profile: profile, sm01: sm01,
