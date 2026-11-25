@@ -25,6 +25,8 @@ const linked=li=>li.className==='rbook'||[...li.querySelectorAll('a')].some(a=>/
   let n=0, minN=99, total=0;
   for(const c of [...D.querySelectorAll('#cats .cat')].filter(b=>!/Ulubione/.test(b.textContent))){
     c.click(); await sleep(30);
+    const subs=D.getElementById('subs'), sn=subs.hidden?1:subs.querySelectorAll('.sub').length;   // podgrupy (np. jelito grube): każda po kolei
+    for(let si=0; si<sn; si++){ if(!subs.hidden){ subs.querySelectorAll('.sub')[si].click(); await sleep(30); }
     for(let ti=0; ti<D.querySelectorAll('#tabs .tab').length; ti++){
       D.querySelectorAll('#tabs .tab')[ti].click(); await sleep(30);
       const vb=[...D.querySelectorAll('#variants .vbtn')], vn=Math.max(1,vb.length);
@@ -37,6 +39,7 @@ const linked=li=>li.className==='rbook'||[...li.querySelectorAll('a')].some(a=>/
         ok(D.getElementById('pRefsN').textContent==='('+L.length+')','licznik pozycji: '+who);
         n++; total+=L.length; minN=Math.min(minN,L.length);
       }
+    }
     }
   }
   console.log('zabiegów i wariantów:',n,'| pozycji łącznie:',total,'| najmniej w jednym:',minN);

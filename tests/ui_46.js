@@ -27,7 +27,7 @@ function ok(c,m){ if(!c) fails.push(m); }
   // interfejs: domyślnie wyłączone, przełącznik widoczny przy krezce, podpisy niezależne od etykiet
   ok(!$('optNodes').checked&&w.localStorage.getItem('surgitome-wezly')===null,'grupy węzłów domyślnie włączone');
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Hemikolektomia prawa')).click(); await sleep(500);
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Hemikolektomia prawa').click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(400);
   ok(!$('togNodes').hidden&&!$('nodeSys').hidden&&/JSCCR/.test($('nodeSys').textContent),'brak przełącznika grup lub opisu numeracji');
   ok(nodeLbl().length===0,'podpisy grup widoczne przy wyłączonym przełączniku');
@@ -49,14 +49,14 @@ function ok(c,m){ if(!c) fails.push(m); }
   $('optMeso').click(); await sleep(200);
   $('optNodes').click(); await sleep(100); ok($('nodeList').hidden,'lista grup widoczna przy wyłączonym przełączniku'); $('optNodes').click(); await sleep(100);
   // zabieg bez krezki: przełącznik ukryty
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Ileostomia')).click(); await sleep(400); ok($('togNodes').hidden,'przełącznik grup przy zabiegu bez krezki');
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Ileostomia').click(); await sleep(400); ok($('togNodes').hidden,'przełącznik grup przy zabiegu bez krezki');
   // jelito cienkie: grupy opisowe; wybór zakresu: JSCCR
   [...$('cats').children].find(b=>b.textContent==='Jelito cienkie').click(); await sleep(400);
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja jelita cienkiego')).click(); await sleep(500);
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Resekcja jelita cienkiego').click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(300);
   ok(nodeLbl().includes('Węzły centralne')&&/opisowe/.test($('nodeSys').textContent),'jelito cienkie: brak grup opisowych');
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Wybór zakresu')).click(); await sleep(500);
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Wybór zakresu').click(); await sleep(500);
   ok(nodeLbl().includes('253')&&nodeLbl().includes('251'),'wybór zakresu: brak grup JSCCR: '+nodeLbl());
   // EN
   $('btnLang').click(); await sleep(300);

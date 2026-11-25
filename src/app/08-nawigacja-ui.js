@@ -72,6 +72,15 @@
     if (cat === 'fav') return favIdx();
     return A.PROCS.map(function (p, i) { return p.cat === cat && (cat !== 'trials' || i === S.an || isFav(i)) ? i : -1; }).filter(function (i) { return i >= 0; });
   }
+  // podgrupy zabiegów (ANAT.SUBS): grupa bieżącego zabiegu (lub pierwsza), lista widocznych zabiegów
+  function subsOf(cat) {
+    var G = (A.SUBS || {})[cat]; if (!G) return null; var L = catProcs(cat), used = {};
+    var out = G.map(function (g) { var ids = []; g.ids.forEach(function (id) { var i = A.PROCS.findIndex(function (p) { return p.id === id; }); if (i >= 0 && L.indexOf(i) >= 0) { ids.push(i); used[i] = 1; } }); return { name: g.name, ids: ids }; });
+    L.forEach(function (i) { if (!used[i]) out[out.length - 1].ids.push(i); });
+    return out.filter(function (g) { return g.ids.length; });
+  }
+  function curSub(cat) { var G = subsOf(cat); if (!G) return -1; for (var k = 0; k < G.length; k++) if (G[k].ids.indexOf(S.an) >= 0) return k; return 0; }
+  function visProcs() { var G = subsOf(S.cat); return G ? G[curSub(S.cat)].ids : catProcs(S.cat); }
   function pickCat(id) {
     S.cat = id; var L = catProcs(id);
     if (L.length && L.indexOf(S.an) < 0) switchAn(L[0], 0); else renderTabs();
@@ -129,7 +138,16 @@
       b.onclick = function () { if (c.id !== cat) pickCat(c.id); };
       cats.appendChild(b);
     });
-    var L = catProcs(cat);
+    var L = catProcs(cat), SG = subsOf(cat), sb = $('subs'); sb.innerHTML = ''; sb.hidden = !SG;
+    if (SG) {
+      var gi = curSub(cat); L = SG[gi].ids;
+      SG.forEach(function (g, k) {
+        var b = document.createElement('button'); b.className = 'sub'; setT(b, g.name); b.setAttribute('aria-pressed', k === gi ? 'true' : 'false');
+        b.title = g.ids.map(function (i) { return tr(A.PROCS[i].short); }).join(' · ');
+        b.onclick = function () { tabsOpen(false); if (k !== gi) switchAn(g.ids[0], 0); };
+        sb.appendChild(b);
+      });
+    }
     if (!L.length) { var h = document.createElement('span'); h.className = 'favhint'; setT(h, 'Brak ulubionych — oznacz zabiegi gwiazdką ☆ w pozostałych zakładkach (lub klawiszem F).'); nav.appendChild(h); }
     L.forEach(function (i, n) {
       var an = A.PROCS[i], b = document.createElement('button'); b.className = 'tab'; b.setAttribute('role', 'tab');
@@ -139,10 +157,10 @@
       st.setAttribute('role', 'button'); st.title = tr(isFav(i) ? 'Usuń z ulubionych' : 'Dodaj do ulubionych') + ' (F)';
       st.onclick = function (ev) { ev.stopPropagation(); toggleFav(i); };
       b.appendChild(st); b.title = tr(an.title) + (n < 9 ? ' (' + (n + 1) + ')' : '');
-      b.onclick = function () { if (i !== S.an) switchAn(i, 0); };
+      b.onclick = function () { tabsOpen(false); if (i !== S.an) switchAn(i, 0); };
       nav.appendChild(b);
-      if (i === S.an && b.scrollIntoView) try { b.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
     });
+    var all = $('tabsAll'); all.textContent = tr('Wszystkie') + ' (' + L.length + ') ▾'; all.title = tr('Pokaż wszystkie zabiegi kategorii');
     var P = curProc(), vb = $('variants'); vb.innerHTML = '';
     // warianty tylko dla zabiegu widocznego w bieżącej zakładce (np. po odgwiazdkowaniu go w Ulubionych — ukryte)
     var showV = P.variants.length > 1 && L.indexOf(S.an) >= 0;
@@ -162,7 +180,44 @@
         vb.appendChild(b);
       });
     }
+    tabsFit(true); requestAnimationFrame(function () { tabsFit(true); });   // po ułożeniu wariantów (szerokość wiersza zabiegów)
   }
+  /* ---------- zabiegi w jednym wierszu: przewijanie, strzałki, panel „Wszystkie” ---------- */
+  function tabsFit(center) {
+    var nav = $('tabs'), wrap = nav.parentNode, line = wrap.parentNode;
+    if (MOBILE) return;
+    // karty zabiegów: co najmniej ok. 40% wiersza (albo cała ich szerokość, jeśli mniejsza); resztę dostają warianty (przewijane)
+    var f0 = nav.firstElementChild, f1 = nav.lastElementChild, cw = f0 ? f1.offsetLeft + f1.offsetWidth - f0.offsetLeft + 2 : 0;   // szerokość samych kart (scrollWidth rośnie z kontenerem)
+    wrap.style.minWidth = Math.min(cw, Math.round(line.clientWidth * 0.42)) + 'px';
+    if (center) { var sel = nav.querySelector('.tab[aria-selected="true"]'); if (sel) nav.scrollLeft = Math.max(0, sel.offsetLeft - (nav.clientWidth - sel.offsetWidth) / 2); }
+    var over = nav.scrollWidth > nav.clientWidth + 2 || $('app').querySelector('.subbar').classList.contains('tabsopen');
+    line.classList.toggle('over', over);
+    wrap.classList.toggle('canL', over && nav.scrollLeft > 2); wrap.classList.toggle('canR', over && nav.scrollLeft < nav.scrollWidth - nav.clientWidth - 2);
+    var vb = $('variants'), vo = vb.scrollWidth > vb.clientWidth + 2;   // warianty: wygaszony brzeg, gdy się nie mieszczą
+    vb.classList.toggle('canL', vo && vb.scrollLeft > 2); vb.classList.toggle('canR', vo && vb.scrollLeft < vb.scrollWidth - vb.clientWidth - 2);
+  }
+  function tabsOpen(on) {
+    var sb = $('app').querySelector('.subbar'); if (!sb) return;
+    if (on == null) on = !sb.classList.contains('tabsopen');
+    sb.classList.toggle('tabsopen', on); $('tabsAll').setAttribute('aria-expanded', on ? 'true' : 'false'); tabsFit(!on);
+  }
+  (function () {
+    var nav = $('tabs');
+    nav.addEventListener('scroll', function () { tabsFit(false); }, { passive: true });
+    nav.addEventListener('wheel', function (e) {   // kółko myszy przewija wiersz w poziomie
+      if ($('app').querySelector('.subbar').classList.contains('tabsopen') || nav.scrollWidth <= nav.clientWidth) return;
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { nav.scrollLeft += e.deltaY; e.preventDefault(); }
+    }, { passive: false });
+    // kółko myszy przewija w poziomie także warianty, kategorie i podgrupy (gdy się nie mieszczą)
+    ['variants', 'cats', 'subs'].forEach(function (id) { var el = $(id); el.addEventListener('wheel', function (e) { if (el.scrollWidth <= el.clientWidth + 2 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; el.scrollLeft += e.deltaY; e.preventDefault(); }, { passive: false }); });
+    $('variants').addEventListener('scroll', function () { tabsFit(false); }, { passive: true });
+    $('tabsL').onclick = function () { nav.scrollBy({ left: -nav.clientWidth * 0.7, behavior: 'smooth' }); };
+    $('tabsR').onclick = function () { nav.scrollBy({ left: nav.clientWidth * 0.7, behavior: 'smooth' }); };
+    $('tabsAll').onclick = function (e) { e.stopPropagation(); tabsOpen(); };
+    document.addEventListener('click', function (e) { var sb = $('app').querySelector('.subbar'); if (sb.classList.contains('tabsopen') && !nav.contains(e.target) && e.target !== $('tabsAll')) tabsOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('app').querySelector('.subbar').classList.contains('tabsopen')) { tabsOpen(false); e.stopPropagation(); } }, true);
+    window.addEventListener('resize', function () { tabsFit(false); });
+  })();
   function renderStrip() {
     var st = $('strip'); st.innerHTML = '';
     var r1 = document.createElement('div'); r1.className = 'srow srow1';

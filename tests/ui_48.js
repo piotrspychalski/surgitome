@@ -13,7 +13,7 @@ const errs=[]; w.addEventListener('error',e=>errs.push(e.message||String(e.error
 const sc=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]); w.eval(sc[0]); w.eval(sc[1]);
 const $=id=>w.document.getElementById(id), sleep=ms=>new Promise(r=>setTimeout(r,ms)), fails=[];
 function ok(c,m){ if(!c) fails.push(m); }
-const pick=(cat,tab)=>{ [...$('cats').children].find(b=>b.textContent===cat).click(); [...$('tabs').children].find(b=>b.textContent.startsWith(tab)).click(); };
+const pick=(cat,tab)=>{ [...$('cats').children].find(b=>b.textContent===cat).click(); (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })(tab).click(); };
 (async()=>{ await sleep(300);
   const b=$('fLn'); ok(b&&b.closest('#mFloat')&&b.textContent==='LNs','brak przycisku „LNs” w grupie przycisków przy ⓘ i etykietach');
   // zabieg z grupami węzłów: przycisk widoczny, domyślnie wyłączony (jak przełącznik w panelu)

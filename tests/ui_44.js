@@ -38,7 +38,7 @@ function ok(c,m){ if(!c) fails.push(m); }
   // zabiegi: każdy wariant ma krezkę, przełącznik widoczny, przejście przez wszystkie kadry bez błędów; hemikolektomia prawa bez zmian
   [...$('cats').children].find(b=>b.textContent==='Jelito grube').click(); await sleep(400);
   for(const [tab,n] of [['Hemikolektomia lewa',3],['Resekcja odbytnicy',4],['Hartmann',1]]){
-    [...$('tabs').children].find(b=>b.textContent.startsWith(tab)).click(); await sleep(500);
+    (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })(tab).click(); await sleep(500);
     const vb=[...$('variants').querySelectorAll('.vbtn')]; ok(Math.max(1,vb.length)===n,tab+': zła liczba wariantów');
     for(let i=0;i<n;i++){
       if(vb[i]){ vb[i].click(); await sleep(400); }
@@ -64,7 +64,7 @@ function ok(c,m){ if(!c) fails.push(m); }
   ms('ileo').forEach((M,i)=>{ const d=M[0]; ok(M.length===1&&d.morph&&d.sheets.every(s=>s.post)&&!d.vessels.some(v=>v.tie!=null)&&!d.nodes.length&&!d.groups,'ileostomia '+i+': krezka jelita krętego');
     const B=w.ANAT.BODY; ok(d.sheets.every(s=>s.post.every(r=>r[0][2]<=B.z(r[0][0],r[0][1])-0.6)),'ileostomia '+i+': krezka ponad powłokami'); });
   // EN: podpisy krezki i mezorektum przetłumaczone
-  [...$('tabs').children].find(b=>b.textContent.startsWith('Resekcja odbytnicy')).click(); await sleep(500);
+  (n=>{ const f=()=>[...$('tabs').children].find(b=>b.textContent.startsWith(n)); let b=f(); if(!b) for(const s of [...$('subs').children]){ s.click(); if((b=f())) break; } return b; })('Resekcja odbytnicy').click(); await sleep(500);
   $('strip').querySelectorAll('.step')[1].click(); await sleep(200);
   $('btnLang').click(); await sleep(300);
   const lab=[...$('labels').children].map(e=>e.textContent).join(' | ');
