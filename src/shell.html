@@ -56,6 +56,9 @@ button,select,input{ font:inherit; color:inherit; }
 .brand h1{ margin:0; font-size:18px; line-height:1.2; font-weight:700; letter-spacing:0.08em; }
 .brand p{ margin:0; font-size:13px; color:var(--muted); }
 #cats{ display:flex; flex-wrap:nowrap; gap:3px; padding:3px; background:var(--surface-2); border-radius:10px; align-self:flex-start; max-width:100%; overflow-x:auto; scrollbar-width:none; }
+/* kategorie: gdy się nie mieszczą (wąski ekran, wiele kategorii) — wygaszony brzeg po stronie przewijania, jak przy wariantach */
+#cats{ --vl:0px; --vr:0px; -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); }
+#cats.canL{ --vl:28px; } #cats.canR{ --vr:48px; }
 #cats::-webkit-scrollbar{ display:none; }
 .navline{ display:flex; flex-wrap:nowrap; align-items:center; gap:10px; min-width:0; }
 /* zabiegi kategorii w jednym wierszu: przewijanie (kółko, strzałki, wygaszone brzegi), „Wszystkie” — pełna lista jako panel nad widokiem */
@@ -70,7 +73,8 @@ button,select,input{ font:inherit; color:inherit; }
 .navline.over .tabsall{ display:inline-flex; }
 .subbar{ position:relative; z-index:35; }   /* nad oknem dostępu (#acc 30), pod listą wyszukiwania (.qres 40) */
 .catline{ display:flex; flex-wrap:wrap; align-items:center; gap:5px 14px; min-width:0; }
-#subs{ display:flex; flex:none; gap:2px; padding:3px; background:var(--surface-2); border-radius:9px; max-width:100%; overflow-x:auto; scrollbar-width:none; }
+/* podgrupy (np. jelito grube): na początku wiersza zabiegów — górny pasek w dwóch wierszach także przy wielu kategoriach */
+#subs{ display:flex; flex:0 0 auto; gap:2px; padding:3px; background:var(--surface-2); border-radius:9px; max-width:45%; overflow-x:auto; scrollbar-width:none; }
 #subs::-webkit-scrollbar{ display:none; }
 #subs[hidden]{ display:none; }
 .sub{ border:0; background:transparent; color:var(--muted); padding:5px 11px; border-radius:7px; white-space:nowrap; cursor:pointer; font-weight:700; font-size:13px; }
@@ -575,7 +579,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <button class="ghostbtn" id="btnFs">Pełny ekran</button>
     </div>
   </header>
-  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div></div><div class="navline"><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button></div></div>
+  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div></div><div class="navline"><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button></div></div>
   <main id="main">
     <div id="viewport">
       <canvas id="c" aria-label="Interaktywny model 3D anatomii"></canvas>

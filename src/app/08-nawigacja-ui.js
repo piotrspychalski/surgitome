@@ -191,8 +191,10 @@
     var over = nav.scrollWidth > nav.clientWidth + 2 || $('app').querySelector('.subbar').classList.contains('tabsopen');
     line.classList.toggle('over', over);
     wrap.classList.toggle('canL', over && nav.scrollLeft > 2); wrap.classList.toggle('canR', over && nav.scrollLeft < nav.scrollWidth - nav.clientWidth - 2);
-    var vb = $('variants'), vo = vb.scrollWidth > vb.clientWidth + 2;   // warianty: wygaszony brzeg, gdy się nie mieszczą
-    vb.classList.toggle('canL', vo && vb.scrollLeft > 2); vb.classList.toggle('canR', vo && vb.scrollLeft < vb.scrollWidth - vb.clientWidth - 2);
+    var cb = $('cats');
+    if (center) { var sc = cb.querySelector('.cat[aria-pressed="true"]'); if (sc) { var x = sc.offsetLeft - cb.offsetLeft; if (x < cb.scrollLeft || x + sc.offsetWidth > cb.scrollLeft + cb.clientWidth) cb.scrollLeft = Math.max(0, x - (cb.clientWidth - sc.offsetWidth) / 2); } }   // wybrana kategoria widoczna
+    // warianty i kategorie: wygaszony brzeg, gdy się nie mieszczą
+    [$('variants'), cb].forEach(function (vb) { var vo = vb.scrollWidth > vb.clientWidth + 2; vb.classList.toggle('canL', vo && vb.scrollLeft > 2); vb.classList.toggle('canR', vo && vb.scrollLeft < vb.scrollWidth - vb.clientWidth - 2); });
   }
   function tabsOpen(on) {
     var sb = $('app').querySelector('.subbar'); if (!sb) return;
@@ -208,7 +210,7 @@
     }, { passive: false });
     // kółko myszy przewija w poziomie także warianty, kategorie i podgrupy (gdy się nie mieszczą)
     ['variants', 'cats', 'subs'].forEach(function (id) { var el = $(id); el.addEventListener('wheel', function (e) { if (el.scrollWidth <= el.clientWidth + 2 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; el.scrollLeft += e.deltaY; e.preventDefault(); }, { passive: false }); });
-    $('variants').addEventListener('scroll', function () { tabsFit(false); }, { passive: true });
+    ['variants', 'cats'].forEach(function (id) { $(id).addEventListener('scroll', function () { tabsFit(false); }, { passive: true }); });
     $('tabsL').onclick = function () { nav.scrollBy({ left: -nav.clientWidth * 0.7, behavior: 'smooth' }); };
     $('tabsR').onclick = function () { nav.scrollBy({ left: nav.clientWidth * 0.7, behavior: 'smooth' }); };
     $('tabsAll').onclick = function (e) { e.stopPropagation(); tabsOpen(); };
