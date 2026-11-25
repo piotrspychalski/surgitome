@@ -80,14 +80,20 @@
      trokary wg Raffaelli i wsp. (Gland Surg 2019): pod łukiem żebrowym, optyka w linii pachowej przedniej; prawa — 4 (2 × 10–12 mm, 2 × 5 mm), lewa — zwykle 3 ---------- */
   var XF = { s: 1.45, d: [0, -10.115, -0.8] };
   function bodyPt(p) { return [p[0] / XF.s, (p[1] - XF.d[1]) / XF.s, (p[2] - XF.d[2]) / XF.s]; }
-  A.ACCESS['adr-r'] = { target: bodyPt([-3.4, -1.2, -7.0]), cam: { t: [-10.0, -14.5, 2.0], tp: [-11.0, -14.0, 2.0], az: -30, el: 12, k: 1.15 }, xf: XF,
+  /* schemat ułożenia (nakładka 2D w kadrze „Dostęp”, 12-dostep.js → poseUpdate): chory na boku przeciwnym do operowanego, stół zgięty pod żebrem X,
+     wałek pod przeciwległym bokiem (Raffaelli i wsp., Gland Surg 2019); lie — bok, na którym leży chory; n — liczba trokarów na rysunku */
+  var POSE = {
+    R: { key: 'adr-r', lie: 'L', n: 4, title: 'Ułożenie na lewym boku', sub: 'prawa strona ku górze, stół zgięty', table: 'Zgięcie stołu (żebro X)', rest: 'Wałek pod lewym bokiem', margin: 'Łuk żebrowy', ports: 'Trokary' },
+    L: { key: 'adr-l', lie: 'R', n: 3, title: 'Ułożenie na prawym boku', sub: 'lewa strona ku górze, stół zgięty', table: 'Zgięcie stołu (żebro X)', rest: 'Wałek pod prawym bokiem', margin: 'Łuk żebrowy', ports: 'Trokary' }
+  };
+  A.ACCESS['adr-r'] = { pose: POSE.R, target: bodyPt([-3.4, -1.2, -7.0]), cam: { t: [-10.0, -14.5, 2.0], tp: [-11.0, -14.0, 2.0], az: -30, el: 12, k: 1.15 }, xf: XF,
     lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '4 trokary pod prawym łukiem żebrowym', side: 0,
       text: 'Chory na lewym boku (prawa strona ku górze), stół zgięty na wysokości żebra X — poszerza to przestrzeń między łukiem żebrowym a grzebieniem biodrowym. Cztery trokary pod prawym łukiem żebrowym: optyka 10–12 mm w linii pachowej przedniej (pierwszy), przyśrodkowo od niej 10–12 mm na narzędzia, bliżej nadbrzusza 5 mm na retraktor wątroby i 5 mm najbardziej bocznie, w boku. Nadnercze wydobyte w worku przez miejsce trokara 10–12 mm.',
       first: 0, insuf: [-0.76, -0.62], ports: [{ at: [-9.0, -0.2], mm: 12, name: '10–12 mm — optyka (kamera)', sub: 'pierwszy, w linii pachowej przedniej pod łukiem żebrowym' },
         { at: [-10.4, -3.0], mm: 5, name: '5 mm — narzędzie', sub: 'najbardziej bocznie, w boku' },
         { at: [-7.3, 1.7], mm: 12, name: '10–12 mm — narzędzie', sub: 'pod łukiem żebrowym, przyśrodkowo od optyki' },
         { at: [-5.9, 3.1], mm: 5, name: '5 mm — retraktor wątroby', sub: 'między linią pachową przednią a nadbrzuszem' }] } };
-  A.ACCESS['adr-l'] = { target: bodyPt([3.4, -3.4, -7.0]), cam: { t: [10.0, -14.5, 2.0], tp: [11.0, -14.0, 2.0], az: 30, el: 12, k: 1.15 }, xf: XF,
+  A.ACCESS['adr-l'] = { pose: POSE.L, target: bodyPt([3.4, -3.4, -7.0]), cam: { t: [10.0, -14.5, 2.0], tp: [11.0, -14.0, 2.0], az: 30, el: 12, k: 1.15 }, xf: XF,
     lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '3 trokary pod lewym łukiem żebrowym', side: 0,
       text: 'Chory na prawym boku (lewa strona ku górze), stół zgięty na wysokości żebra X. Zwykle trzy trokary pod lewym łukiem żebrowym: optyka 10 mm w linii pachowej przedniej (pierwszy) i po jednym trokarze 5–10 mm po obu jej stronach, ok. 7 cm od niej; w razie potrzeby czwarty, 4–5 cm poniżej optyki. Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
       first: 0, insuf: [-0.76, -0.62], ports: [{ at: [8.6, 0.1], mm: 10, name: '10 mm — optyka (kamera)', sub: 'pierwszy, w linii pachowej przedniej pod łukiem żebrowym' },

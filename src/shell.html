@@ -168,6 +168,23 @@ button,select,input{ font:inherit; color:inherit; }
 #hud strong{ display:block; font-size:16px; }
 #hud #hudNote{ display:block; font-size:14px; opacity:.9; }
 #hudEnd{ margin-top:4px; display:inline-block; background:#c9574d; color:#fff; text-shadow:none; padding:2px 8px; border-radius:6px; font-size:13px; font-weight:700; }
+/* schemat ułożenia chorego w kadrze „Dostęp” (adrenalektomia: na boku; 12-dostep.js → poseUpdate) */
+#pose{ position:absolute; top:14px; left:14px; z-index:3; width:min(36vw,340px); box-sizing:border-box; padding:8px 10px 4px; border-radius:12px; background:var(--surface); color:var(--text); box-shadow:var(--shadow); pointer-events:none; }
+#pose[hidden]{ display:none; }
+#pose .pz-h strong{ display:block; font-size:14px; line-height:1.25; } #pose .pz-h span{ display:block; font-size:12px; color:var(--muted); }
+#pose svg{ display:block; width:100%; height:auto; margin-top:2px; }
+#pose .pz-table{ fill:none; stroke:var(--muted); stroke-width:7; stroke-linecap:round; stroke-linejoin:round; }
+#pose .pz-base{ fill:var(--muted); opacity:.45; } #pose .pz-board{ fill:none; stroke:var(--muted); stroke-width:3; stroke-linecap:round; }
+#pose .pz-rest{ fill:#8fb0cf; }
+#pose .pz-skin{ fill:#ecc6aa; stroke:#b4866a; stroke-width:1.5; }
+#pose .pz-limb-o{ fill:none; stroke:#b4866a; stroke-width:15; stroke-linecap:round; stroke-linejoin:round; } #pose .pz-limb{ fill:none; stroke:#ecc6aa; stroke-width:12; stroke-linecap:round; stroke-linejoin:round; }
+#pose .pz-margin{ fill:none; stroke:#b0442a; stroke-width:2.6; stroke-dasharray:6 3; }
+#pose .pz-port{ fill:#2c3338; stroke:#fff; stroke-width:1.5; }
+#pose .pz-lead{ fill:none; stroke:var(--muted); stroke-width:1; }
+#pose .pz-t{ font-size:11px; fill:var(--text); }
+.mobile #pose{ top:8px; left:8px; width:min(56vw,230px); padding:6px 8px 2px; }
+.mobile #pose .pz-t, .mobile #pose .pz-lead{ display:none; }
+.mobile #pose .pz-h strong{ font-size:12.5px; } .mobile #pose .pz-h span{ font-size:11px; }
 #inset{ position:absolute; right:14px; bottom:14px; z-index:3; overflow:hidden; background:var(--scene); width:min(26vw,240px); aspect-ratio:3/4; border-radius:10px; pointer-events:none; box-sizing:border-box; border:2px solid rgba(255,255,255,.75); box-shadow:0 8px 24px rgba(0,0,0,.55); }
 #insetCv{ display:block; width:100%; height:100%; }
 
@@ -595,6 +612,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <div id="hud" hidden><span class="sw" id="hudSw"></span><div><strong id="hudSeg"></strong><span id="hudNote"></span><span id="hudEnd" hidden>Brodawka Vatera w polu widzenia</span></div></div>
       <div id="inset" hidden><canvas id="insetCv"></canvas></div>
       <div id="cap"><span id="capNum"></span><h2 id="capTitle"></h2><p id="capText"></p></div>
+      <div id="pose" hidden aria-hidden="true"></div>
       <div id="acc" hidden role="dialog" aria-modal="true" aria-labelledby="accTitle"><div class="accbox">
         <h2 id="accTitle" data-pl="Dostęp?">Dostęp?</h2>
         <p data-pl="Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.">Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.</p>

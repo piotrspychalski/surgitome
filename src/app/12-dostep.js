@@ -213,11 +213,46 @@
       if (D && D.short && sm0.dataset.pl !== D.short) { sm0.dataset.pl = D.short; sm0.textContent = tr(D.short); }
     });
     if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt:not([hidden])'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
+    poseUpdate();
   }
   function accFrame(fr) {
-    if (fr.k !== 'access') { if (!$('acc').hidden) accShow(false); return; }
+    if (fr.k !== 'access') { if (!$('acc').hidden) accShow(false); poseUpdate(); return; }
     if (ACC.skip) { ACC.skip = false; accShow(false); return; }
     accShow(true);
+  }
+  /* schemat ułożenia chorego (ACCESS[…].pose — adrenalektomia: na boku) — nakładka 2D w lewym górnym rogu modelu, tylko w kadrze „Dostęp”
+     po zamknięciu okna wyboru; widok od przodu chorego, głowa po lewej, gdy leży na lewym boku (lustrzanie dla prawego) */
+  function poseUpdate() {
+    var fr = FR[S.frame], X = accX(), P = X && X.pose, el = $('pose'), on = !!(P && fr && fr.k === 'access' && $('acc').hidden);
+    if (on && el._key !== P.key) { el.innerHTML = poseSVG(P); el._key = P.key; }
+    el.hidden = !on;
+  }
+  function poseSVG(P) {
+    var W = 340, mir = P.lie === 'R';
+    function X(x) { return mir ? W - x : x; }
+    function anc(a) { return !mir ? a : a === 'start' ? 'end' : a === 'end' ? 'start' : a; }
+    function limb(d) { return '<path class="pz-limb-o" d="' + d + '"/><path class="pz-limb" d="' + d + '"/>'; }
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+    function txt(x, y, s, a, cls) { return '<text class="pz-t' + (cls ? ' ' + cls : '') + '" x="' + X(x) + '" y="' + y + '" text-anchor="' + anc(a || 'start') + '" data-pl="' + esc(s) + '">' + esc(tr(s)) + '</text>'; }
+    // trokary wzdłuż linii ok. 2 cm poniżej łuku żebrowego: od nadbrzusza do boku
+    var pts = P.n === 4 ? [[131, 99], [145, 92], [159, 85], [171, 79]] : [[137, 96], [153, 88], [167, 81]];
+    var g = '<g' + (mir ? ' transform="translate(' + W + ',0) scale(-1,1)"' : '') + '>' +
+      '<path class="pz-table" d="M14 132 L170 116 L326 132"/>' +
+      '<path class="pz-base" d="M158 152 L182 152 L176 122 L164 122 Z"/>' +
+      '<ellipse class="pz-rest" cx="170" cy="110" rx="17" ry="6"/>' +
+      '<ellipse class="pz-rest" cx="38" cy="124" rx="19" ry="5"/>' +
+      limb('M248 116 L288 124 L314 117') + limb('M248 107 L326 115') +
+      '<path class="pz-board" d="M64 47 L132 47 M98 47 L98 60"/>' +
+      limb('M80 92 L88 62 L122 52') +
+      '<path class="pz-skin" d="M60 121 Q115 113 170 104 Q208 109 247 120 Q259 106 249 90 Q208 85 170 72 Q122 80 76 88 Q58 92 60 121 Z"/>' +
+      '<rect class="pz-skin" x="49" y="99" width="14" height="13" rx="3"/><circle class="pz-skin" cx="38" cy="106" r="13"/>' +
+      '<path class="pz-margin" d="M106 103 Q136 93 163 73"/>' +
+      pts.map(function (p) { return '<circle class="pz-port" cx="' + p[0] + '" cy="' + p[1] + '" r="4.2"/>'; }).join('') +
+      '<path class="pz-lead" d="M122 97 L176 40 M' + (pts[pts.length - 1][0] + 3) + ' ' + (pts[pts.length - 1][1] - 3) + ' L212 60 M168 112 L154 136 M176 124 L190 136"/>' +
+      '</g>';
+    return '<div class="pz-h"><strong data-pl="' + esc(P.title) + '">' + esc(tr(P.title)) + '</strong><span data-pl="' + esc(P.sub) + '">' + esc(tr(P.sub)) + '</span></div>' +
+      '<svg viewBox="0 0 ' + W + ' 160" aria-hidden="true">' + g +
+      txt(180, 38, P.margin) + txt(216, 64, P.ports) + txt(152, 146, P.rest, 'end') + txt(188, 146, P.table) + '</svg>';
   }
   function accChoose(kind) {
     var X = accX(); if (X && !X[kind]) return;

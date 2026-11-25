@@ -2,7 +2,7 @@
 // Endokrynologia (2026-11-25): tyreoidektomia (całkowita, lobektomia, + przedział VI, + boczna II–V), paratyreoidektomia (celowana, obustronna,
 // subtotalna, całkowita z autoprzeszczepem), adrenalektomia laparoskopowa (prawa, lewa). Kategoria i podgrupy; wszystkie kadry bez błędów i z etykietami;
 // anatomia: przytarczyce górne grzbietowo, dolne brzusznie od nerwu krtaniowego wstecznego; żyła nadnerczowa prawa do żyły głównej dolnej, lewa do nerkowej;
-// dostęp — slajd „Dostęp” tylko z laparoskopią (adrenalektomia); etykiety kluczowe (CVS nerwu, kikut, PTH, autoprzeszczep); EN — teksty bez polskich znaków.
+// dostęp — slajd „Dostęp” tylko z laparoskopią (adrenalektomia) i schemat ułożenia na boku (lustrzany po lewej, tylko w tym kadrze); etykiety kluczowe (CVS nerwu, kikut, PTH, autoprzeszczep); EN — teksty bez polskich znaków.
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -61,6 +61,17 @@ async function at(w,an,vi,fi,m){ const S=w.__sgTest.state(); w.__sgTest.open(an,
   // dostęp: okno wyboru — tylko „Laparoskopowy”, podpis jednego dostępu
   const anA=A.PROCS.findIndex(p=>p.id==='adr'); w.__sgTest.open(anA,0,0); await sleep(60);
   const vis=[...w.document.querySelectorAll('#acc .accopt')].filter(b=>!b.hidden).map(b=>b.dataset.acc).join(); ok(vis==='lap','adrenalektomia: przyciski dostępu '+vis);
+  // schemat ułożenia na boku (kadr „Dostęp” po wyborze dostępu): prawa — na lewym boku, 4 trokary; lewa — na prawym boku, lustrzanie, 3 trokary
+  const pose=()=>w.document.getElementById('pose'), lap=async()=>{ w.document.querySelector('#acc .accopt[data-acc="lap"]').click(); await sleep(60); };
+  ok(pose().hidden,'schemat ułożenia widoczny pod oknem wyboru dostępu');
+  await lap(); ok(!pose().hidden && /Ułożenie na lewym boku/.test(pose().textContent) && /Wałek pod lewym bokiem/.test(pose().textContent),'adrenalektomia prawa: brak schematu ułożenia na lewym boku');
+  ok(pose().querySelectorAll('.pz-port').length===4 && !pose().querySelector('svg > g[transform]'),'adrenalektomia prawa: schemat — 4 trokary, bez odbicia');
+  w.__sgTest.open(anA,1,0); await sleep(60); if(!w.document.getElementById('acc').hidden) await lap();
+  ok(!pose().hidden && /Ułożenie na prawym boku/.test(pose().textContent) && pose().querySelectorAll('.pz-port').length===3 && pose().querySelector('svg > g[transform]'),'adrenalektomia lewa: schemat na prawym boku, 3 trokary, odbity');
+  w.__sgTest.open(anA,1,1); await sleep(60); ok(pose().hidden,'schemat ułożenia widoczny poza kadrem „Dostęp”');
+  const anO=A.PROCS.findIndex(p=>p.variants.some(v=>v.access && !A.ACCESS[v.access].pose)), viO=A.PROCS[anO].variants.findIndex(v=>v.access);
+  w.__sgTest.open(anO,viO,0); await sleep(60); if(!w.document.getElementById('acc').hidden) await lap(); ok(pose().hidden,'schemat ułożenia w zabiegu bez ułożenia na boku: '+A.PROCS[anO].id);
+  const anT=A.PROCS.findIndex(p=>p.split); if(anT>=0){ w.__sgTest.open(anA,0,0); await sleep(40); await lap(); w.__sgTest.open(anT,0,0); await sleep(60); ok(pose().hidden,'schemat ułożenia w widoku badań'); }
   // EN
   w=boot('en'); await sleep(300); const A2=w.ANAT, PL=/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/, bad=[];
   for(const id in NEW){ const an=A2.PROCS.findIndex(p=>p.id===id);
@@ -69,6 +80,8 @@ async function at(w,an,vi,fi,m){ const S=w.__sgTest.state(); w.__sgTest.open(an,
         ['capTitle','capText'].forEach(k=>{ const t=w.document.getElementById(k).textContent; if(PL.test(t)) bad.push(id+' '+fi+':'+t.slice(0,50)); });
         [...w.document.querySelectorAll('#labels .lbl b, #labels .lbl small')].forEach(e=>{ if(PL.test(e.textContent)) bad.push(id+' '+fi+':'+e.textContent); }); } } }
   ok(!bad.length,'EN: polskie teksty: '+[...new Set(bad)].slice(0,4).join(' | '));
+  { const an=A2.PROCS.findIndex(p=>p.id==='adr'); w.__sgTest.open(an,0,0); await sleep(60); const b=w.document.querySelector('#acc .accopt[data-acc="lap"]'); if(!w.document.getElementById('acc').hidden) b.click(); await sleep(60);
+    const t=w.document.getElementById('pose').textContent; ok(/Left lateral decubitus/.test(t) && /Table break/.test(t) && !PL.test(t),'EN: schemat ułożenia: '+t.slice(0,80)); }
   console.log('endokrynologia:',Object.keys(NEW).join(','));
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);
 })();

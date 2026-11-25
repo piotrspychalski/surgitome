@@ -19,7 +19,7 @@
   }
   function applyFrame(i, snap) {
     i = Math.max(0, Math.min(FR.length - 1, i));
-    if (curProc().split) return splitApplyFrame(i, snap);
+    if (curProc().split) { $('pose').hidden = true; return splitApplyFrame(i, snap); }   // schemat ułożenia tylko w kadrze „Dostęp”
     var fr = FR[i], need = curVar();
     if (!M || M.an !== need) build(need);
     S.frame = i;
