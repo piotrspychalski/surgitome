@@ -5,7 +5,7 @@
    prawe trójkątne, za żyłą główną dolną i nad górnym biegunem nerki; lewe półksiężycowate, przyśrodkowo od górnego bieguna nerki, bocznie od aorty,
    za trzustką. Żyła nadnerczowa prawa — krótka, do tylno-bocznej ściany żyły głównej dolnej; lewa — w dół do żyły nerkowej lewej, z żyłą przeponową dolną.
    Narzędzie TOOL_EXT.adrenal (src/app/12-nadnercza.js); dostęp: ANAT.ACCESS['adr-r' | 'adr-l'] (powłoki ANAT.BODY przeniesione: xf).
-   Źródła: Gagner i wsp., Ann Surg 1997 (technika, trokary, żyły); Yip i wsp., JAMA Surg 2022 (AAES); Lenders i wsp., J Clin Endocrinol Metab 2014
+   Źródła: Gagner i wsp., Ann Surg 1997 (wyniki); Raffaelli i wsp., Gland Surg 2019 (technika, trokary, żyły); Yip i wsp., JAMA Surg 2022 (AAES); Lenders i wsp., J Clin Endocrinol Metab 2014
    (guz chromochłonny); Cesmebasi i wsp., Clin Anat 2014 (anatomia nadnerczy i ich naczyń).
    ===================================================================== */
 (function (root) {
@@ -77,22 +77,22 @@
     box: [[-11, -15, -11], [11, 6, 4]] };
 
   /* ---------- dostęp (slajd „Dostęp”): powłoki ANAT.BODY przeniesione do układu wątroby (skala 1,45, wyrostek mieczykowaty ok. y 2,5);
-     trokary wg Gagnera (Ann Surg 1997): ok. 2 cm poniżej łuku żebrowego; prawa — 4 × 10 mm, lewa — 3 × 10 mm ---------- */
+     trokary wg Raffaelli i wsp. (Gland Surg 2019): pod łukiem żebrowym, optyka w linii pachowej przedniej; prawa — 4 (2 × 10–12 mm, 2 × 5 mm), lewa — zwykle 3 ---------- */
   var XF = { s: 1.45, d: [0, -10.115, -0.8] };
   function bodyPt(p) { return [p[0] / XF.s, (p[1] - XF.d[1]) / XF.s, (p[2] - XF.d[2]) / XF.s]; }
-  A.ACCESS['adr-r'] = { target: bodyPt([-3.4, -1.2, -7.0]), cam: { t: [-6.5, -9.5, 2.0], tp: [-7.5, -9.0, 2.0], az: -28, el: 16, k: 1.0 }, xf: XF,
-    lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '4 trokary 10 mm pod prawym łukiem żebrowym', side: 0,
-      text: 'Chory na lewym boku (prawa strona ku górze), stół zgięty — poszerza to przestrzeń między łukiem żebrowym a grzebieniem biodrowym. Cztery trokary 10 mm ok. 2 cm poniżej prawego łuku żebrowego: pierwszy w linii pachowej przedniej, drugi w boku, poniżej końca żebra XI (optyka), dwa bardziej do przodu — najbardziej przyśrodkowy przy bocznym brzegu mięśnia prostego (retraktor wątroby). Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
-      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [-9.0, -0.2], mm: 10, name: '10 mm — pierwszy trokar', sub: 'linia pachowa przednia, 2 cm pod łukiem żebrowym' },
-        { at: [-10.4, -3.0], mm: 10, name: '10 mm — optyka (kamera)', sub: 'w boku, poniżej końca żebra XI' },
-        { at: [-7.3, 1.7], mm: 10, name: '10 mm — narzędzie', sub: '2 cm pod łukiem żebrowym' },
-        { at: [-5.9, 3.1], mm: 10, name: '10 mm — retraktor wątroby', sub: 'przy bocznym brzegu mięśnia prostego' }] } };
-  A.ACCESS['adr-l'] = { target: bodyPt([3.4, -3.4, -7.0]), cam: { t: [6.5, -9.5, 2.0], tp: [7.5, -9.0, 2.0], az: 28, el: 16, k: 1.0 }, xf: XF,
-    lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '3 trokary 10 mm pod lewym łukiem żebrowym', side: 0,
-      text: 'Chory na prawym boku (lewa strona ku górze), stół zgięty. Trzy trokary 10 mm ok. 2 cm poniżej lewego łuku żebrowego: pierwszy tuż przyśrodkowo od linii pachowej przedniej, drugi w boku, poniżej końca żebra XI, trzeci bardziej do przodu i przyśrodkowo (optyka); w razie potrzeby czwarty (retraktor) bardziej ku tyłowi, po przecięciu więzadła śledzionowo-nerkowego. Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
-      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [8.6, 0.1], mm: 10, name: '10 mm — pierwszy trokar', sub: 'tuż przyśrodkowo od linii pachowej przedniej' },
-        { at: [10.1, -3.2], mm: 10, name: '10 mm — narzędzie', sub: 'w boku, poniżej końca żebra XI' },
-        { at: [6.6, 2.0], mm: 10, name: '10 mm — optyka (kamera)', sub: 'bardziej do przodu i przyśrodkowo' }] } };
+  A.ACCESS['adr-r'] = { target: bodyPt([-3.4, -1.2, -7.0]), cam: { t: [-10.0, -14.5, 2.0], tp: [-11.0, -14.0, 2.0], az: -30, el: 12, k: 1.15 }, xf: XF,
+    lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '4 trokary pod prawym łukiem żebrowym', side: 0,
+      text: 'Chory na lewym boku (prawa strona ku górze), stół zgięty na wysokości żebra X — poszerza to przestrzeń między łukiem żebrowym a grzebieniem biodrowym. Cztery trokary pod prawym łukiem żebrowym: optyka 10–12 mm w linii pachowej przedniej (pierwszy), przyśrodkowo od niej 10–12 mm na narzędzia, bliżej nadbrzusza 5 mm na retraktor wątroby i 5 mm najbardziej bocznie, w boku. Nadnercze wydobyte w worku przez miejsce trokara 10–12 mm.',
+      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [-9.0, -0.2], mm: 12, name: '10–12 mm — optyka (kamera)', sub: 'pierwszy, w linii pachowej przedniej pod łukiem żebrowym' },
+        { at: [-10.4, -3.0], mm: 5, name: '5 mm — narzędzie', sub: 'najbardziej bocznie, w boku' },
+        { at: [-7.3, 1.7], mm: 12, name: '10–12 mm — narzędzie', sub: 'pod łukiem żebrowym, przyśrodkowo od optyki' },
+        { at: [-5.9, 3.1], mm: 5, name: '5 mm — retraktor wątroby', sub: 'między linią pachową przednią a nadbrzuszem' }] } };
+  A.ACCESS['adr-l'] = { target: bodyPt([3.4, -3.4, -7.0]), cam: { t: [10.0, -14.5, 2.0], tp: [11.0, -14.0, 2.0], az: 30, el: 12, k: 1.15 }, xf: XF,
+    lap: { title: 'Dostęp laparoskopowy przezotrzewnowy boczny', short: '3 trokary pod lewym łukiem żebrowym', side: 0,
+      text: 'Chory na prawym boku (lewa strona ku górze), stół zgięty na wysokości żebra X. Zwykle trzy trokary pod lewym łukiem żebrowym: optyka 10 mm w linii pachowej przedniej (pierwszy) i po jednym trokarze 5–10 mm po obu jej stronach, ok. 7 cm od niej; w razie potrzeby czwarty, 4–5 cm poniżej optyki. Nadnercze wydobyte w worku przez poszerzone miejsce trokara.',
+      first: 0, insuf: [-0.76, -0.62], ports: [{ at: [8.6, 0.1], mm: 10, name: '10 mm — optyka (kamera)', sub: 'pierwszy, w linii pachowej przedniej pod łukiem żebrowym' },
+        { at: [10.1, -3.2], mm: 10, name: '5–10 mm — narzędzie', sub: 'bocznie od optyki, pod łukiem żebrowym' },
+        { at: [6.6, 2.0], mm: 10, name: '5–10 mm — narzędzie', sub: 'przyśrodkowo od optyki, pod łukiem żebrowym' }] } };
 
   /* ---------- zabiegi ---------- */
   var CAMS = {
@@ -101,30 +101,30 @@
   };
   function fr(s, k, m0, m1, cam, short, title, cap, dur) { var f = { k: k, kind: 'orbit', m0: m0, m1: m1, cam: 'custom', camP: CAMS[s][cam], short: short, title: title, cap: cap }; if (dur) f.dur = dur; return f; }
   var FR_R = [
-    fr('R', 'anat', 0, 0, 'anat', 'Anatomia', 'Anatomia: nadnercze prawe', 'Nadnercze prawe leży nad górnym biegunem nerki, za wątrobą i bocznie od żyły głównej dolnej, której tylną ścianę częściowo przykrywa. Krótka (ok. 1 cm) żyła nadnerczowa prawa uchodzi bezpośrednio do tylno-bocznej ściany żyły głównej dolnej; tętnice nadnerczowe — górne (z tętnicy przeponowej dolnej), środkowa (z aorty) i dolna (z tętnicy nerkowej) — są drobne.'),
+    fr('R', 'anat', 0, 0, 'anat', 'Anatomia', 'Anatomia: nadnercze prawe', 'Nadnercze prawe leży nad górnym biegunem nerki, za wątrobą i bocznie od żyły głównej dolnej, której tylną ścianę częściowo przykrywa. Bardzo krótka (kilka milimetrów, zwykle poniżej 1 cm) żyła nadnerczowa prawa uchodzi bezpośrednio do tylno-bocznej ściany żyły głównej dolnej; tętnice nadnerczowe — górne (z tętnicy przeponowej dolnej), środkowa (z aorty) i dolna (z tętnicy nerkowej) — są drobne.'),
     fr('R', 'liver', 0, 1, 'wide', 'Wątroba', 'Mobilizacja płata prawego wątroby', 'Więzadło trójkątne prawe i otrzewna między wątrobą a nerką przecięte aż do przepony; płat prawy wątroby odciągnięty przyśrodkowo i ku górze retraktorem. Odsłania się przestrzeń zaotrzewnowa z nadnerczem i boczny brzeg żyły głównej dolnej.', 5),
     fr('R', 'ivc', 1, 2, 'lap', 'Żyła główna dolna', 'Brzeg żyły głównej dolnej', 'Otrzewna nacięta wzdłuż bocznego brzegu żyły głównej dolnej; przyśrodkowy brzeg nadnercza oddzielany od żyły. Drobne tętnice nadnerczowe zamykane koagulacją lub narzędziem energetycznym.', 5),
-    fr('R', 'vein', 2, 3, 'lap', 'Żyła nadnerczowa', 'Żyła nadnerczowa prawa', 'Krótka, szeroka żyła odsłonięta przy tylno-bocznej ścianie żyły głównej dolnej; klipsy — co najmniej dwa, lepiej trzy od strony żyły głównej — i przecięcie. Jej uszkodzenie to najgroźniejsze krwawienie w tym zabiegu.', 5),
+    fr('R', 'vein', 2, 3, 'lap', 'Żyła nadnerczowa', 'Żyła nadnerczowa prawa', 'Krótka, szeroka żyła odsłonięta przy tylno-bocznej ścianie żyły głównej dolnej, zamknięta klipsami (co najmniej dwa od strony żyły głównej) i przecięta. Jej uszkodzenie to najgroźniejsze krwawienie w tym zabiegu; w ok. 20% przypadków 2–3 cm wyżej jest żyła dodatkowa, zamykana tak samo.', 5),
     fr('R', 'mob', 3, 4, 'lap', 'Uwolnienie', 'Uwolnienie nadnercza', 'Nadnercze uwalniane z otaczającą tkanką tłuszczową: od góry (gałęzie naczyń przeponowych dolnych), bocznie i od dołu — od górnego bieguna nerki. Gruczołu nie chwyta się narzędziami (ryzyko pęknięcia torebki); trzyma się tkankę tłuszczową wokół niego.', 5),
     fr('R', 'rem', 4, 5, 'wide', 'Usunięcie', 'Usunięcie nadnercza', 'Nadnercze w worku wydobyte przez poszerzone miejsce trokara; kontrola hemostazy w loży i na kikucie żyły; wątroba wraca na miejsce.', 5),
-    fr('R', 'post', 5, 5, 'anat', 'Po operacji', 'Stan po adrenalektomii prawej', 'Loża nadnercza nad górnym biegunem nerki; kikut żyły nadnerczowej z klipsami na ścianie żyły głównej dolnej. Drenaż zwykle zbędny.')
+    fr('R', 'post', 5, 5, 'anat', 'Po operacji', 'Stan po adrenalektomii prawej', 'Loża nadnercza nad górnym biegunem nerki; kikut żyły nadnerczowej z klipsami na ścianie żyły głównej dolnej; dren w loży — opcjonalnie.')
   ];
   var FR_L = [
     fr('L', 'anat', 0, 0, 'anat', 'Anatomia', 'Anatomia: nadnercze lewe', 'Nadnercze lewe (półksiężycowate) leży przyśrodkowo od górnego bieguna nerki, bocznie od aorty i odnogi przepony, za trzonem i ogonem trzustki i żyłą śledzionową. Żyła nadnerczowa lewa (dłuższa, ok. 2 cm) biegnie w dół od dolnego bieguna gruczołu do żyły nerkowej lewej; uchodzi do niej żyła przeponowa dolna lewa.'),
     fr('L', 'spl', 0, 1, 'wide', 'Śledziona', 'Mobilizacja śledziony i ogona trzustki', 'Zagięcie śledzionowe okrężnicy odsunięte w dół; więzadło śledzionowo-nerkowe przecięte od dolnego bieguna śledziony do przepony. Śledziona z ogonem trzustki odchodzi przyśrodkowo — otwiera się przestrzeń między trzustką a nerką.', 5),
-    fr('L', 'vein', 1, 2, 'lap', 'Żyła nadnerczowa', 'Żyła nadnerczowa lewa', 'Żyła odnaleziona przy dolno-przyśrodkowym brzegu nadnercza i wypreparowana na 1,5–2 cm w kierunku żyły nerkowej lewej (bez konieczności odsłaniania ujścia); klipsy i przecięcie. Od strony przyśrodkowej dochodzi do niej żyła przeponowa dolna.', 5),
+    fr('L', 'vein', 1, 2, 'lap', 'Żyła nadnerczowa', 'Żyła nadnerczowa lewa', 'Żyła odnaleziona przy dolno-przyśrodkowym brzegu nadnercza i wypreparowana w kierunku żyły nerkowej lewej (bez konieczności odsłaniania ujścia); klipsy i przecięcie. Od strony przyśrodkowej dochodzi do niej żyła przeponowa dolna.', 5),
     fr('L', 'mob', 2, 3, 'lap', 'Uwolnienie', 'Uwolnienie nadnercza', 'Preparowanie przyśrodkowo wzdłuż odnogi przepony i aorty, potem od górnego bieguna nerki i od góry (gałęzie naczyń przeponowych dolnych) — z tkanką tłuszczową, bez chwytania gruczołu.', 5),
     fr('L', 'rem', 3, 4, 'wide', 'Usunięcie', 'Usunięcie nadnercza', 'Nadnercze w worku wydobyte przez poszerzone miejsce trokara; kontrola hemostazy; śledziona z trzustką wracają na miejsce.', 5),
     fr('L', 'post', 4, 4, 'anat', 'Po operacji', 'Stan po adrenalektomii lewej', 'Loża nadnercza przyśrodkowo od górnego bieguna nerki; kikut żyły nadnerczowej z klipsami nad żyłą nerkową lewą.')
   ];
   var NOTES = [
-    'Wskazania: guzy czynne hormonalnie (gruczolak w pierwotnym hiperaldosteronizmie, zespół Cushinga, guz chromochłonny) i guzy podejrzane o złośliwość. Incydentaloma powyżej 4 cm lub o gęstości ponad 20 j.H. w TK bez kontrastu wymaga oceny w kierunku raka kory nadnercza.',
+    'Wskazania: guzy czynne hormonalnie (gruczolak w pierwotnym hiperaldosteronizmie, zespół Cushinga, guz chromochłonny) i guzy podejrzane o złośliwość. Incydentaloma: zmiana jednorodna o gęstości do 10 j.H. w TK bez kontrastu to gruczolak (bez dalszej diagnostyki obrazowej); guz powyżej 4 cm lub o gęstości ponad 20 j.H. wymaga oceny w kierunku raka kory nadnercza (AAES 2022, ESE 2023).',
     'Dostęp małoinwazyjny (laparoskopowy przezotrzewnowy boczny albo tylny zaotrzewnowy) jest metodą z wyboru w łagodnych guzach nadnerczy; przy podejrzeniu raka kory nadnercza preferuje się operację otwartą — usunięcie guza w całości (R0) bez naruszenia torebki (AAES 2022).',
     'Guz chromochłonny: przed operacją blokada receptorów alfa i wyrównanie objętości; w czasie preparowania możliwe gwałtowne wahania ciśnienia. Zespół Cushinga: po operacji substytucja glikokortykosteroidów (zahamowana czynność drugiego nadnercza). Hiperaldosteronizm: po operacji odstawienie spironolaktonu i potasu, kontrola potasu.',
-    'Schemat: proporcje uproszczone; odmiany żył nadnerczowych (np. żyła prawa uchodząca do żyły wątrobowej prawej, żyły dodatkowe) są częste.'
+    'Schemat: proporcje uproszczone; odmiany żył nadnerczowych (np. żyła prawa uchodząca do dodatkowej żyły wątrobowej prawej, żyły dodatkowe) są częste.'
   ];
   var VN = {
-    R: 'Strona prawa: kluczowe jest uwolnienie płata prawego wątroby (więzadło trójkątne prawe) i odsłonięcie bocznego brzegu żyły głównej dolnej. Żyła nadnerczowa jest krótka i uchodzi do tylnej ściany żyły głównej — od jej strony co najmniej dwa, lepiej trzy klipsy.',
+    R: 'Strona prawa: kluczowe jest uwolnienie płata prawego wątroby (więzadło trójkątne prawe) i odsłonięcie bocznego brzegu żyły głównej dolnej. Żyła nadnerczowa jest krótka i uchodzi do tylnej ściany żyły głównej — od jej strony co najmniej dwa klipsy.',
     L: 'Strona lewa: odsunięcie śledziony z ogonem trzustki po przecięciu więzadła śledzionowo-nerkowego. Żyła nadnerczowa jest dłuższa i uchodzi do żyły nerkowej lewej — nie mylić jej z żyłą nerkową ani śledzionową.'
   };
   function adrVar(s) {

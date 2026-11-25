@@ -78,7 +78,7 @@
       adr: lab(R ? 'Nadnercze prawe' : 'Nadnercze lewe', '', C.adr), fat: lab('Tkanka tłuszczowa okołonadnerczowa', 'usuwana z gruczołem', '#c9a94f'),
       av: lab(R ? 'Żyła nadnerczowa prawa' : 'Żyła nadnerczowa lewa', R ? 'krótka, do tylnej ściany żyły głównej dolnej' : 'do żyły nerkowej lewej', C.vein),
       ivc: lab('Żyła główna dolna', '', C.vein), ao: lab('Aorta', '', C.art), kid: lab(R ? 'Nerka prawa' : 'Nerka lewa', 'górny biegun', C.kid),
-      crus: lab(R ? 'Odnoga prawa przepony' : 'Odnoga lewa przepony', '', C.mus), clip: lab('Klipsy', R ? 'dwa–trzy od strony żyły głównej' : 'dwa od strony żyły nerkowej', '#8f98a2'),
+      crus: lab(R ? 'Odnoga prawa przepony' : 'Odnoga lewa przepony', '', C.mus), clip: lab('Klipsy', R ? 'dwa od strony żyły głównej' : 'dwa od strony żyły nerkowej', '#8f98a2'),
       stump: lab('Kikut żyły nadnerczowej', 'z klipsami', C.vein), bed: lab('Loża nadnercza', '', '#8a6b4f'), arts: lab('Tętnice nadnerczowe', 'drobne — koagulacja lub narzędzie energetyczne', C.art),
       cut: lab(R ? 'Nacięcie otrzewnej' : 'Więzadło śledzionowo-nerkowe', R ? 'więzadło trójkątne prawe, brzeg żyły głównej dolnej' : 'przecięte od bieguna dolnego śledziony do przepony', A.COL.cut, 'cut')
     };

@@ -315,16 +315,23 @@
       "yip2022": { c: "Yip L, Duh QY, Wachtel H, Jimenez C, Sturgeon C, Lee C, et al. American Association of Endocrine Surgeons Guidelines for Adrenalectomy: Executive Summary. JAMA Surg. 2022;157(10):870-7.", pmid: "35976622", doi: "10.1001/jamasurg.2022.3544", y: 2022 },
       "lenders2014": { c: "Lenders JW, Duh QY, Eisenhofer G, Gimenez-Roqueplo AP, Grebe SK, Murad MH, et al.; Endocrine Society. Pheochromocytoma and paraganglioma: an endocrine society clinical practice guideline. J Clin Endocrinol Metab. 2014;99(6):1915-42.", pmid: "24893135", doi: "10.1210/jc.2014-1498", y: 2014 },
       "fassnacht2023": { c: "Fassnacht M, Tsagarakis S, Terzolo M, Tabarin A, Sahdev A, Newell-Price J, et al. European Society of Endocrinology clinical practice guidelines on the management of adrenal incidentalomas, in collaboration with the European Network for the Study of Adrenal Tumors. Eur J Endocrinol. 2023;189(1):G1-G42.", pmid: "37318239", doi: "10.1093/ejendo/lvad066", y: 2023 },
+      "schneider2018": { c: "Schneider R, Randolph GW, Dionigi G, Wu CW, Barczynski M, Chiang FY, et al. International neural monitoring study group guideline 2018 part I: Staging bilateral thyroid surgery with monitoring loss of signal. Laryngoscope. 2018;128 Suppl 3:S1-S17.", pmid: "30289983", doi: "10.1002/lary.27359", y: 2018 },
+      "lorentepoch2015b": { c: "Lorente-Poch L, Sancho JJ, Ruiz S, Sitges-Serra A. Importance of in situ preservation of parathyroid glands during total thyroidectomy. Br J Surg. 2015;102(4):359-67.", pmid: "25605285", doi: "10.1002/bjs.9676", y: 2015 },
+      "iacobone2015": { c: "Iacobone M, Carnaille B, Palazzo FF, Vriens M. Hereditary hyperparathyroidism--a consensus report of the European Society of Endocrine Surgeons (ESES). Langenbecks Arch Surg. 2015;400(8):867-86.", pmid: "26450137", doi: "10.1007/s00423-015-1342-7", y: 2015 },
+      "raffaelli2019": { c: "Raffaelli M, De Crea C, Bellantone R. Laparoscopic adrenalectomy. Gland Surg. 2019;8(Suppl 1):S41-S52.", pmid: "31404184", doi: "10.21037/gs.2019.06.07", y: 2019 },
+      "funder2016": { c: "Funder JW, Carey RM, Mantero F, Murad MH, Reincke M, Shibata H, et al. The Management of Primary Aldosteronism: Case Detection, Diagnosis, and Treatment: An Endocrine Society Clinical Practice Guideline. J Clin Endocrinol Metab. 2016;101(5):1889-916.", pmid: "26934393", doi: "10.1210/jc.2015-4061", y: 2016 },
       "cesmebasi2014": { c: "Cesmebasi A, Du Plessis M, Iannatuono M, Shah S, Tubbs RS, Loukas M. A review of the anatomy and clinical significance of adrenal veins. Clin Anat. 2014;27(8):1253-63.", pmid: "24737134", doi: "10.1002/ca.22374", y: 2014 },
     },
     P: {
       "thyr": [
         ["haugen2016", "guideline", "ATA 2015: zakres operacji w raku zróżnicowanym (lobektomia albo tyreoidektomia całkowita), wskazania do limfadenektomii"],
-        ["randolph2011", "guideline", "Neuromonitoring nerwu krtaniowego wstecznego: standard V1–R1–R2–V2, postępowanie przy utracie sygnału"],
+        ["randolph2011", "guideline", "Neuromonitoring nerwu krtaniowego wstecznego: standard L1–V1–R1–R2–V2–L2 (laryngoskopia przed operacją i po niej)"],
+        ["schneider2018", "guideline", "INMSG 2018: utrata sygnału po pierwszej stronie — odroczenie drugiej strony (tyreoidektomia dwuetapowa)"],
         ["cernea1992", "anatomy", "Gałąź zewnętrzna nerwu krtaniowego górnego: typy skrzyżowania z naczyniami tarczowymi górnymi (typ 2B — poniżej górnego brzegu bieguna)"],
         ["barczynski2013", "guideline", "INMSG: identyfikacja i monitorowanie gałęzi zewnętrznej nerwu krtaniowego górnego, podwiązywanie naczyń bieguna górnego przy torebce"],
         ["gauger2001", "anatomy", "Guzek Zuckerkandla: częstość i położenie nerwu krtaniowego wstecznego przyśrodkowo od niego"],
-        ["lorentepoch2015", "outcomes", "Niedoczynność przytarczyc po tyreoidektomii całkowitej: definicje, zachowanie przytarczyc z ukrwieniem, autoprzeszczep"]
+        ["lorentepoch2015", "outcomes", "Niedoczynność przytarczyc po tyreoidektomii całkowitej: definicje (przemijająca, przewlekła)"],
+        ["lorentepoch2015b", "outcomes", "Liczba przytarczyc zachowanych in situ (z ukrwieniem) a ryzyko niedoczynności przytarczyc po tyreoidektomii całkowitej"]
       ],
       "thyr-cnd": [
         ["carty2009", "guideline", "Konsensus ATA/AAES: terminologia i zakres centralnej limfadenektomii szyjnej (węzły przedkrtaniowe, przedtchawicze, przytchawicze)"]
@@ -341,22 +348,25 @@
       ],
       "ptx-sub": [
         ["lorenz2015", "guideline", "ESES 2015: nadczynność wtórna — paratyreoidektomia subtotalna (kikut 40–80 mg oznaczony szwem lub klipsem, najlepiej z dolnej przytarczycy) i całkowita z autoprzeszczepem"],
+        ["iacobone2015", "guideline", "ESES 2015: nadczynność dziedziczna — w MEN1 eksploracja obustronna z paratyreoidektomią subtotalną albo całkowitą z autoprzeszczepem"],
         ["kdigo2017", "guideline", "KDIGO 2017: wskazania do paratyreoidektomii w przewlekłej chorobie nerek"],
         ["rothmund1991", "outcomes", "Badanie z randomizacją: paratyreoidektomia subtotalna a całkowita z autoprzeszczepem w nadczynności wtórnej"]
       ],
       "ptx-tot": [
         ["wells1975", "original", "Autoprzeszczep przytarczyc do mięśni przedramienia"],
-        ["wells1980", "technique", "Technika: fragmenty ok. 1 × 1 × 3 mm, 15–20 w osobnych kieszonkach mięśnia przedramienia niedominującego, kriokonserwacja"],
-        ["lorenz2015", "guideline", "ESES 2015: autoprzeszczep do mięśnia ramienno-promieniowego przedramienia, tymektomia szyjna"],
-        ["schlosser2016", "outcomes", "TOPAR: paratyreoidektomia całkowita z tymektomią i autoprzeszczepem a bez autoprzeszczepu (badanie z randomizacją)"]
+        ["wells1980", "outcomes", "Wyniki odległe paratyreoidektomii całkowitej z autoprzeszczepem do przedramienia (tkanka świeża lub kriokonserwowana); nawrót leczony częściowym wycięciem przeszczepu"],
+        ["lorenz2015", "guideline", "ESES 2015: autoprzeszczep 10–20 fragmentów po ok. 1 mm³ do mięśnia ramienno-promieniowego przedramienia niedominującego, oznaczony klipsem lub szwem niewchłanialnym; tymektomia szyjna"],
+        ["schlosser2016", "outcomes", "TOPAR: paratyreoidektomia całkowita z rutynową tymektomią i autoprzeszczepem a całkowita bez tymektomii i bez autoprzeszczepu (badanie z randomizacją)"]
       ],
       "adr": [
         ["gagner1992", "original", "Pierwsze adrenalektomie laparoskopowe (zespół Cushinga, guz chromochłonny)"],
-        ["gagner1997", "technique", "Adrenalektomia przezotrzewnowa boczna: ułożenie, trokary 10 mm pod łukiem żebrowym, żyła nadnerczowa (prawa — 2–3 klipsy od strony żyły głównej)"],
+        ["gagner1997", "outcomes", "100 kolejnych adrenalektomii laparoskopowych: bez zgonów, powikłania 12%, konwersje 3%, wahania ciśnienia przy guzie chromochłonnym; metoda z wyboru poza rakiem i guzami powyżej 15 cm"],
+        ["raffaelli2019", "technique", "Adrenalektomia przezotrzewnowa boczna: ułożenie na boku ze zgięciem stołu, trokary pod łukiem żebrowym (prawa — 4, lewa — zwykle 3), optyka w linii pachowej przedniej; żyła nadnerczowa prawa — podwójny klips, żyła dodatkowa w ok. 20%"],
         ["yip2022", "guideline", "AAES 2022: dostęp małoinwazyjny w guzach łagodnych, operacja otwarta przy podejrzeniu raka kory nadnercza, incydentaloma > 4 cm lub > 20 j.H."],
         ["lenders2014", "guideline", "Endocrine Society 2014: guz chromochłonny — przygotowanie blokadą alfa przed operacją"],
         ["fassnacht2023", "guideline", "ESE/ENSAT 2023: postępowanie w incydentaloma nadnerczy"],
-        ["cesmebasi2014", "anatomy", "Żyły nadnerczowe: prawa do żyły głównej dolnej, lewa do nerkowej z żyłą przeponową dolną; odmiany"]
+        ["cesmebasi2014", "anatomy", "Żyły nadnerczowe: prawa do żyły głównej dolnej, lewa do nerkowej z żyłą przeponową dolną; odmiany"],
+        ["funder2016", "guideline", "Endocrine Society 2016: pierwotny hiperaldosteronizm — laparoskopowa adrenalektomia jednostronna przy chorobie jednostronnej; po operacji odstawienie potasu i antagonisty receptora mineralokortykoidowego, kontrola potasu"]
       ],
       "lich": [
         ["lichtenstein1989", "original", "Naprawa bez napięcia: siatka polipropylenowa wzmacnia całą tylną ścianę kanału pachwinowego"],
