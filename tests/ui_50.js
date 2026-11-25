@@ -93,7 +93,7 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
     const st=mk.filter(m=>m.kind==='stoma'); ok(st.length&&st.every(s=>Math.abs(s.center[2]-B.z(s.center[0],s.center[1]))<0.5),id+': stomia nie na skórze'); });
   console.log('zabiegi ze stomią — powłoki:',marks.length,'| kolostomia x:',marks[0][1].find(m=>m.kind==='body').holes[0].c[0],'| ileostomia x:',marks.find(m=>/^ileo/.test(m[0]))[1].find(m=>m.kind==='body').holes[0].c[0].toFixed(1));
   // EN
-  w=boot('en'); await sleep(300); await search(w,'right hemicolectomy'); const t=w.document.getElementById('accTitle').textContent, b=[...w.document.querySelectorAll('#acc .accopt b')].map(x=>x.textContent).join(',');
+  w=boot('en'); await sleep(300); await search(w,'right hemicolectomy'); const t=w.document.getElementById('accTitle').textContent, b=[...w.document.querySelectorAll('#acc .accopt')].filter(x=>!x.hidden).map(x=>x.querySelector('b').textContent).join(',');   // ukryty „Hybrydowy” (tylko esofagektomia)
   console.log('EN:',t,'|',b); ok(t==='Approach?'&&b==='Open,Laparoscopic,Robotic','EN: okno wyboru');
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);
 })();

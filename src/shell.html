@@ -180,6 +180,7 @@ button,select,input{ font:inherit; color:inherit; }
 #pose .pz-limb-o{ fill:none; stroke:#b4866a; stroke-width:15; stroke-linecap:round; stroke-linejoin:round; } #pose .pz-limb{ fill:none; stroke:#ecc6aa; stroke-width:12; stroke-linecap:round; stroke-linejoin:round; }
 #pose .pz-margin{ fill:none; stroke:#b0442a; stroke-width:2.6; stroke-dasharray:6 3; }
 #pose .pz-port{ fill:#2c3338; stroke:#fff; stroke-width:1.5; }
+#pose .pz-cut{ fill:none; stroke:#c0392b; stroke-width:3; stroke-linecap:round; } #pose .pz-scap{ fill:none; stroke:#8a7a5c; stroke-width:2; stroke-dasharray:4 3; }
 #pose .pz-lead{ fill:none; stroke:var(--muted); stroke-width:1; }
 #pose .pz-t{ font-size:11px; fill:var(--text); }
 .mobile #pose{ top:8px; left:8px; width:min(56vw,230px); padding:6px 8px 2px; }
@@ -625,6 +626,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <p data-pl="Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.">Wybierz dostęp operacyjny — animacja pokaże cięcia i trokary.</p>
         <div class="accopts">
           <button class="accopt" type="button" data-acc="open" aria-pressed="false"><b data-pl="Otwarty">Otwarty</b><small data-pl="cięcie poprzeczne prawostronne">cięcie poprzeczne prawostronne</small><kbd>1</kbd></button>
+          <button class="accopt" type="button" data-acc="hyb" aria-pressed="false" hidden><b data-pl="Hybrydowy">Hybrydowy</b><small data-pl="laparoskopia i torakotomia prawostronna">laparoskopia i torakotomia prawostronna</small><kbd>2</kbd></button>
           <button class="accopt" type="button" data-acc="lap" aria-pressed="false"><b data-pl="Laparoskopowy">Laparoskopowy</b><small data-pl="4 trokary, wydobycie przez cięcie Pfannenstiela">4 trokary, wydobycie przez cięcie Pfannenstiela</small><kbd>2</kbd></button>
           <button class="accopt" type="button" data-acc="rob" aria-pressed="false"><b data-pl="Robotyczny">Robotyczny</b><small data-pl="da Vinci Xi, porty w jednej linii">da Vinci Xi, porty w jednej linii</small><kbd>3</kbd></button>
         </div>

@@ -6,11 +6,12 @@
      dostęp wybiera wariant zespolenia: otwarty → FEEA, laparoskopia i robot → izoperystaltyczne (wewnątrzbrzuszne). Jelito cienkie: powłoki przeniesione
      do układu modelu (X.xf: skala, przesunięcie grupy; kotwice etykiet przeliczane). ---------- */
   var ACC_KEY = 'surgitome-dostep', ACC = { kind: null, skip: false };
-  try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
+  try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob' || acc0 === 'hyb') ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
   // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
   function accPrompt(X) {
+    if (X && X.prompt) return X.prompt;   // esofagektomia: własny podpis (także dostęp hybrydowy)
     if (X && !X.lap && !X.rob) return 'Jeden dostęp — kliknij „Otwarty”, aby zobaczyć cięcie.';
     if (X && !X.open && !X.rob) return 'Jeden dostęp — kliknij „Laparoskopowy”, aby zobaczyć trokary.';
     return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.';
@@ -207,10 +208,16 @@
   function accShow(on) {
     $('acc').hidden = !on;
     var X = accX();
+    var nVis = 0;
     document.querySelectorAll('#acc .accopt').forEach(function (b) {
-      var D = X && X[b.dataset.acc], sm0 = b.querySelector('small');
+      var D = X && X[b.dataset.acc], sm0 = b.querySelector('small'), b0 = b.querySelector('b'), kb = b.querySelector('kbd');
       b.hidden = !D; b.setAttribute('aria-pressed', b.dataset.acc === ACC.kind && D ? 'true' : 'false');
       if (D && D.short && sm0.dataset.pl !== D.short) { sm0.dataset.pl = D.short; sm0.textContent = tr(D.short); }
+      // nazwa przycisku: własna w zabiegu (esofagektomia: „Małoinwazyjny (MIE)”), inaczej domyślna; klawisz — kolejny widoczny przycisk
+      if (!b0.dataset.def) b0.dataset.def = b0.dataset.pl;
+      var nm = (X && X.labels && X.labels[b.dataset.acc]) || b0.dataset.def;
+      if (b0.dataset.pl !== nm) { b0.dataset.pl = nm; b0.textContent = tr(nm); }
+      if (D) kb.textContent = String(++nVis);
     });
     if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt:not([hidden])'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
     poseUpdate();
@@ -223,8 +230,8 @@
   /* schemat ułożenia chorego (ACCESS[…].pose — adrenalektomia: na boku) — nakładka 2D w lewym górnym rogu modelu, tylko w kadrze „Dostęp”
      po zamknięciu okna wyboru; widok od przodu chorego, głowa po lewej, gdy leży na lewym boku (lustrzanie dla prawego) */
   function poseUpdate() {
-    var fr = FR[S.frame], X = accX(), P = X && X.pose, el = $('pose'), on = !!(P && fr && fr.k === 'access' && $('acc').hidden);
-    if (on && el._key !== P.key) { el.innerHTML = poseSVG(P); el._key = P.key; }
+    var fr = FR[S.frame], X = accX(), P = M && M.access && M.access.torso ? M.access.pose : X && X.pose, el = $('pose'), on = !!(P && fr && fr.k === 'access' && $('acc').hidden);   // esofagektomia: schemat tylko w etapie piersiowym
+    if (on && el._key !== P.key) { el.innerHTML = P.thx ? poseSVGThx(P) : poseSVG(P); el._key = P.key; }
     el.hidden = !on;
   }
   function poseSVG(P) {
@@ -254,6 +261,28 @@
       '<svg viewBox="0 0 ' + W + ' 160" aria-hidden="true">' + g +
       txt(180, 38, P.margin) + txt(216, 64, P.ports) + txt(152, 146, P.rest, 'end') + txt(188, 146, P.table) + '</svg>';
   }
+  /* schemat ułożenia do etapu piersiowego esofagektomii (P.thx): chory na lewym boku, prawa ręka uniesiona do przodu na podpórce, wałek pod lewą pachą,
+     stół zgięty pod klatką piersiową; na prawej ścianie klatki zaznaczone kąt dolny łopatki i miejsce dostępu (torakotomia albo trokary) */
+  function poseSVGThx(P) {
+    var W = 340;
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+    function txt(x, y, s, a) { return '<text class="pz-t" x="' + x + '" y="' + y + '" text-anchor="' + (a || 'start') + '" data-pl="' + esc(s) + '">' + esc(tr(s)) + '</text>'; }
+    function limb(d) { return '<path class="pz-limb-o" d="' + d + '"/><path class="pz-limb" d="' + d + '"/>'; }
+    var g = '<path class="pz-table" d="M14 128 L150 120 L326 132"/>' +
+      '<path class="pz-base" d="M138 152 L162 152 L156 120 L144 120 Z"/>' +
+      '<ellipse class="pz-rest" cx="96" cy="117" rx="17" ry="6"/>' +
+      '<ellipse class="pz-rest" cx="38" cy="122" rx="19" ry="5"/>' +
+      limb('M248 116 L288 124 L314 117') + limb('M248 107 L326 115') +
+      '<path class="pz-board" d="M64 47 L132 47 M98 47 L98 60"/>' +
+      limb('M80 92 L88 62 L122 52') +
+      '<path class="pz-skin" d="M60 119 Q115 113 170 106 Q208 109 247 120 Q259 106 249 90 Q208 85 170 74 Q122 80 76 88 Q58 92 60 119 Z"/>' +
+      '<rect class="pz-skin" x="49" y="99" width="14" height="13" rx="3"/><circle class="pz-skin" cx="38" cy="106" r="13"/>' +
+      '<path class="pz-scap" d="M98 86 Q112 96 128 100"/>' +
+      '<path class="pz-cut" d="M100 96 Q128 104 150 88"/>' +
+      '<path class="pz-lead" d="M126 99 L176 40 M150 90 L212 62 M92 121 L72 141 M152 124 L176 140"/>';
+    return '<div class="pz-h"><strong data-pl="' + esc(P.title) + '">' + esc(tr(P.title)) + '</strong><span data-pl="' + esc(P.sub) + '">' + esc(tr(P.sub)) + '</span></div>' +
+      '<svg viewBox="0 0 ' + W + ' 160" aria-hidden="true">' + g + txt(180, 38, P.margin) + txt(216, 64, P.ports) + txt(16, 153, P.rest) + txt(180, 152, P.table) + '</svg>';
+  }
   function accChoose(kind) {
     var X = accX(); if (X && !X[kind]) return;
     ACC.kind = kind; try { localStorage.setItem(ACC_KEY, kind); } catch (e) {}
@@ -263,10 +292,11 @@
     if (to) { var k = P.variants.map(function (x) { return x.id; }).indexOf(to); if (k >= 0) { ACC.skip = true; switchVariant(k, 'first'); return; } }
     var fr = FR[S.frame]; S.m = fr.m0; S.playing = true; applyM(); updateDock();
   }
+  // klawisze 1–4: kolejne widoczne przyciski (w jelicie grubym: 1 otwarty, 2 laparoskopowy, 3 robotyczny); Esc — poprzedni wybór albo pierwszy dostępny
   function accKey(e) {
-    var map = { '1': 'open', '2': 'lap', '3': 'rob' };
-    if (map[e.key]) { e.preventDefault(); accChoose(map[e.key]); }
-    else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : 'lap'); }
+    var vis = [].slice.call(document.querySelectorAll('#acc .accopt')).filter(function (b) { return !b.hidden; }), n = parseInt(e.key, 10);
+    if (n >= 1 && n <= vis.length) { e.preventDefault(); accChoose(vis[n - 1].dataset.acc); }
+    else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : X && !X.lap && vis[0] ? vis[0].dataset.acc : 'lap'); }
   }
   document.querySelectorAll('#acc .accopt').forEach(function (b) { b.onclick = function () { accChoose(b.dataset.acc); }; });
   $('accChange').onclick = function () { accShow(true); };
