@@ -74,27 +74,35 @@
       COMMON],
     cutTools: [{ type: 'wall', op: 'tar', her: 'inc' }], mEnd: 6, box: [[-12, -3, 0], [12, 1, 9]], singleFrames: TAR_FR });
 
-  var ACS_FR = [
-    TAR_FR[0], TAR_FR[1],
-    { k: 'flap', kind: 'orbit', m0: 1, m1: 2, dur: 5, cam: 'custom', camP: CAMS, short: 'Płaty skórne', title: 'Płaty skórno-tłuszczowe',
+  var ACS_FLAP = { k: 'flap', kind: 'orbit', m0: 1, m1: 2, dur: 5, cam: 'custom', camP: CAMS, short: 'Płaty skórne', title: 'Płaty skórno-tłuszczowe',
       cap: 'Skóra z tkanką podskórną oddzielona od pochewki przedniej i rozcięgna mięśnia skośnego zewnętrznego, bocznie za kresę półksiężycowatą. Przecina to perforatory okołopępkowe; w odmianie oszczędzającej perforatory dochodzi się do rozcięgna przez krótkie tunele.' },
-    { k: 'eo', kind: 'orbit', m0: 2, m1: 3, dur: 5, cam: 'custom', camP: CAMS, short: 'Skośny zewnętrzny', title: 'Przecięcie rozcięgna mięśnia skośnego zewnętrznego',
+    ACS_EO = { k: 'eo', kind: 'orbit', m0: 2, m1: 3, dur: 5, cam: 'custom', camP: CAMS, short: 'Skośny zewnętrzny', title: 'Przecięcie rozcięgna mięśnia skośnego zewnętrznego',
       cap: 'Rozcięgno mięśnia skośnego zewnętrznego nacięte 1–2 cm bocznie od kresy półksiężycowatej, od łuku żebrowego do więzadła pachwinowego. Mięsień skośny zewnętrzny oddzielony od wewnętrznego w beznaczyniowej warstwie, bocznie aż do linii pachowej.' },
-    { k: 'adv', kind: 'orbit', m0: 3, m1: 4, dur: 5, cam: 'custom', camP: CAMV, short: 'Przesunięcie', title: 'Przesunięcie mięśni prostych i zamknięcie linii białej',
+    ACS_ADV = { k: 'adv', kind: 'orbit', m0: 3, m1: 4, dur: 5, cam: 'custom', camP: CAMV, short: 'Przesunięcie', title: 'Przesunięcie mięśni prostych i zamknięcie linii białej',
       cap: 'Mięsień prosty z mięśniem skośnym wewnętrznym i poprzecznym przesuwa się przyśrodkowo jako jeden płat (według Ramireza ok. 10 cm na wysokości talii); mięsień skośny zewnętrzny zostaje bocznie, między brzegami jego rozcięgna powstaje szczelina. Linia biała zszyta w linii pośrodkowej.' },
+    ACS_CT = { k: 'ct', kind: 'ct', m0: 0, m1: 0, cam: 'custom', camP: CAMT, short: 'TK', title: 'TK przed operacją: RDR i utrata domeny', cap: '' };
+  // oryginał (Ramirez i wsp. 1990): naprawa z tkanek własnych, bez siatki
+  var ACS0_FR = [TAR_FR[0], TAR_FR[1], ACS_FLAP, ACS_EO, ACS_ADV,
+    { k: 'close', kind: 'orbit', m0: 4, m1: 5, dur: 4, cam: 'custom', camP: CAMV, short: 'Zamknięcie', title: 'Dreny i zamknięcie skóry — bez siatki',
+      cap: 'Naprawa wyłącznie z tkanek własnych chorego, bez siatki — jak w oryginalnym opisie (Ramirez i wsp. 1990). Dreny pod płatami skórno-tłuszczowymi (ryzyko płynu i zaburzeń gojenia brzegów skóry), zamknięcie tkanki podskórnej i skóry.' },
+    ACS_CT];
+  var ACS_FR = [TAR_FR[0], TAR_FR[1], ACS_FLAP, ACS_EO, ACS_ADV,
     { k: 'mesh', kind: 'orbit', m0: 4, m1: 5, dur: 4, cam: 'custom', camP: CAMV, short: 'Siatka', title: 'Wzmocnienie siatką (onlay)',
-      cap: 'Siatka na pochewce przedniej i rozcięgnie mięśnia skośnego zewnętrznego, przykrywa szew linii białej i obie szczeliny po przecięciu rozcięgna. Możliwa też siatka za mięśniami prostymi (sublay).' },
+      cap: 'Modyfikacja późniejsza niż oryginalny opis (Ramirez 1990 — bez siatki). Siatka na pochewce przedniej i rozcięgnie mięśnia skośnego zewnętrznego, przykrywa szew linii białej i obie szczeliny po przecięciu rozcięgna. Możliwa też siatka za mięśniami prostymi (sublay).' },
     { k: 'close', kind: 'orbit', m0: 5, m1: 6, dur: 4, cam: 'custom', camP: CAMV, short: 'Zamknięcie', title: 'Dreny i zamknięcie skóry',
       cap: 'Dreny pod płatami skórno-tłuszczowymi (ryzyko płynu i zaburzeń gojenia brzegów skóry), zamknięcie tkanki podskórnej i skóry.' },
-    { k: 'ct', kind: 'ct', m0: 0, m1: 0, cam: 'custom', camP: CAMT, short: 'TK', title: 'TK przed operacją: RDR i utrata domeny', cap: '' }
-  ];
-  var ACS = ventral({ id: 'acs', short: 'Ramirez (przednie)', title: 'Przednie rozdzielenie komponentów (Ramirez)',
-    sub: 'Przecięcie rozcięgna mięśnia skośnego zewnętrznego, przesunięcie mięśni prostych',
-    notes: ['Przednie rozdzielenie komponentów (Ramirez i wsp. 1990): mięsień skośny zewnętrzny oddziela się od wewnętrznego w beznaczyniowej warstwie po nacięciu jego rozcięgna bocznie od kresy półksiężycowatej; płat złożony z mięśnia prostego, skośnego wewnętrznego i poprzecznego przesuwa się przyśrodkowo.',
-      'Ramirez opisał też oddzielenie mięśnia prostego od pochewki tylnej, co zwiększa przesunięcie.',
-      'Wymaga rozległych płatów skórno-tłuszczowych — więcej powikłań rany niż w technice tylnej; odmiany oszczędzające perforatory (okołopępkowe) i endoskopowe ograniczają ten problem.',
-      'Siatka jako wzmocnienie: onlay (pokazana) albo sublay; po przecięciu rozcięgna boczna ściana jest słabsza.',
-      COMMON],
+    ACS_CT];
+  var ACS_NOTES = ['Przednie rozdzielenie komponentów (Ramirez i wsp. 1990): mięsień skośny zewnętrzny oddziela się od wewnętrznego w beznaczyniowej warstwie po nacięciu jego rozcięgna bocznie od kresy półksiężycowatej; płat złożony z mięśnia prostego, skośnego wewnętrznego i poprzecznego przesuwa się przyśrodkowo.',
+    'Ramirez opisał też oddzielenie mięśnia prostego od pochewki tylnej, co zwiększa przesunięcie.',
+    'Wymaga rozległych płatów skórno-tłuszczowych — więcej powikłań rany niż w technice tylnej; odmiany oszczędzające perforatory (okołopępkowe) i endoskopowe ograniczają ten problem.'];
+  var ACS0 = ventral({ id: 'acs-orig', vshort: 'Oryginał (bez siatki)', short: 'Ramirez (przednie)', title: 'Przednie rozdzielenie komponentów (Ramirez) — oryginał, bez siatki',
+    sub: 'Przecięcie rozcięgna mięśnia skośnego zewnętrznego, przesunięcie mięśni prostych, zamknięcie bez siatki',
+    notes: ['Oryginalny opis (Ramirez i wsp. 1990): badanie na 10 zwłokach i u 11 chorych z ubytkami od 4 × 4 do 18 × 35 cm; powłoki odtworzone z tkanek własnych chorego — bez siatki i bez przenoszenia odległych płatów.'].concat(ACS_NOTES,
+      ['Siatkę dodano w późniejszych modyfikacjach; obecnie rozdzielenie komponentów zwykle łączy się ze wzmocnieniem siatką (wariant „Z siatką”).', COMMON]),
+    cutTools: [{ type: 'wall', op: 'acs', her: 'inc', noMesh: true }], mEnd: 5, box: [[-12, -3, 0], [12, 1, 9]], singleFrames: ACS0_FR });
+  var ACS = ventral({ id: 'acs-mesh', vshort: 'Z siatką (onlay)', short: 'Ramirez (przednie)', title: 'Przednie rozdzielenie komponentów (Ramirez) — wzmocnienie siatką (onlay)',
+    sub: 'Przecięcie rozcięgna mięśnia skośnego zewnętrznego, przesunięcie mięśni prostych, siatka onlay',
+    notes: ACS_NOTES.concat(['Siatka jako wzmocnienie — modyfikacja późniejsza niż oryginalny opis (Ramirez 1990 — bez siatki): onlay (pokazana) albo sublay; po przecięciu rozcięgna boczna ściana jest słabsza.', COMMON]),
     cutTools: [{ type: 'wall', op: 'acs', her: 'inc' }], mEnd: 6, box: [[-12, -3, 0], [12, 1, 9]], singleFrames: ACS_FR });
 
   function umbFrames(mesh) {
@@ -128,7 +136,7 @@
 
   // pozycja na liście: kategoria „Herniologia” po jelicie grubym (przed badaniami)
   var at = A.PROCS.length; A.PROCS.forEach(function (p, i) { if (p.cat === 'trials' && at === A.PROCS.length) at = i; });
-  A.PROCS.splice(at, 0, UMB, { cat: 'hernia', id: 'tar', short: TAR.short, title: TAR.title, variants: [TAR] }, { cat: 'hernia', id: 'acs', short: ACS.short, title: ACS.title, variants: [ACS] });
+  A.PROCS.splice(at, 0, UMB, { cat: 'hernia', id: 'tar', short: TAR.short, title: TAR.title, variants: [TAR] }, { cat: 'hernia', id: 'acs', short: ACS.short, title: 'Przednie rozdzielenie komponentów (Ramirez)', variants: [ACS0, ACS] });
   var ci = A.CATS.length; A.CATS.forEach(function (c, i) { if (c.id === 'trials') ci = i; });
   A.CATS.splice(ci, 0, { id: 'hernia', name: 'Herniologia' });
 })(typeof window !== 'undefined' ? window : globalThis);

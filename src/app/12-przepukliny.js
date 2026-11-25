@@ -15,7 +15,7 @@
     HW_TEX = new THREE.CanvasTexture(c); HW_TEX.wrapS = HW_TEX.wrapT = THREE.RepeatWrapping; return HW_TEX;
   }
   function makeWall(d) {
-    var W = A.WALL, B = A.BODY, H = W.HER[d.her], T = W.T, op = d.op, UMB = op === 'umb' || op === 'umbs';
+    var W = A.WALL, B = A.BODY, H = W.HER[d.her], T = W.T, op = d.op, UMB = op === 'umb' || op === 'umbs', NOMESH = !!d.noMesh;   // noMesh — Ramirez w wersji oryginalnej (bez siatki)
     var DF = T.skin + H.fat, RM = B.RECT_MED, KM = 1.6;
     // schemat: warstwy mięśniowo-powięziowe i głębsze pogrubione KM razy (czytelność przekroju); D2 — głębokość rysowana
     function D2(d) { return d > DF ? DF + (d - DF) * KM : d; }
@@ -59,8 +59,8 @@
           st.fade = sm((m - 1.0) / 0.3) * (1 - sm((m - 5.4) / 0.3));
         } else {
           st.flap = sm((m - 1.05) / 0.85); st.eoCut = clamp01((m - 2.0) / 0.3); st.eo = sm((m - 2.3) / 0.65); st.cA = sm((m - 3.05) / 0.85); st.cP = st.cA;
-          st.mesh = sm((m - 4.05) / 0.6); st.close = sm((m - 5.05) / 0.6); st.drain = sm((m - 5.2) / 0.3);
-          st.fade = sm((m - 1.6) / 0.3) * (1 - sm((m - 5.05) / 0.3));
+          if (NOMESH) { st.close = sm((m - 4.05) / 0.6); st.drain = sm((m - 4.2) / 0.3); st.fade = sm((m - 1.6) / 0.3) * (1 - sm((m - 4.05) / 0.3)); }
+          else { st.mesh = sm((m - 4.05) / 0.6); st.close = sm((m - 5.05) / 0.6); st.drain = sm((m - 5.2) / 0.3); st.fade = sm((m - 1.6) / 0.3) * (1 - sm((m - 5.05) / 0.3)); }
         }
       } else {
         var mesh = op === 'umb', mc = mesh ? 3 : 2;
@@ -211,7 +211,7 @@
     // siatka: pasmo cienkie z teksturą oczek
     var meshMat = track(new THREE.MeshStandardMaterial({ color: HW_COL.mesh, map: hwMeshTex(), roughness: 0.6, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
     hwMeshTex().repeat.set(1, 1);
-    var meshKind = op === 'tar' ? 'sub' : op === 'acs' ? 'on' : op === 'umb' ? 'pre' : null, meshG = [];
+    var meshKind = op === 'tar' ? 'sub' : op === 'acs' ? (NOMESH ? null : 'on') : op === 'umb' ? 'pre' : null, meshG = [];
     function meshDomain(y, st) {
       if (meshKind === 'sub') return Wd(y) * 0.8;
       if (meshKind === 'on') return eoCutX(y) + 1.6;
@@ -306,12 +306,12 @@
       lab('Mięsień poprzeczny przecięty', '', HW_COL.ta, 'seg', function (st) { var y = yL(); return at(tarX(y) + 0.3, y, DF + taTop(tarX(y), y) + 0.1, 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 2.5 && m < 3.05; });
       lab('Przestrzeń przed powięzią poprzeczną', '', HW_COL.cut, 'seg', function (st) { var y = yL(); return at(semi(y) + 3, y, DF + taTop(semi(y) + 3, y) + 0.32, 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 2.6 && m < 3.05; });
       lab('Szew warstwy tylnej', 'w linii pośrodkowej', HW_COL.suture, 'seg', function (st) { var y = yL(); return at(0, y, DF + tfD(0, y), 1, st); }, function (st, m) { return op === 'tar' && m > 3.7 && m < 4.05; });
-      lab('Siatka', meshKind === 'sub' ? 'za mięśniami (sublay)' : 'na powięzi (onlay)', HW_COL.mesh, 'seg', function (st) { var y = yL(); return at(3.2, y, meshDep(3.2, y, st), 1, st, 'A'); }, function (st, m) { return m > 4.4 && m < 5.05; });
-      lab('Linia biała odtworzona', 'szew nad siatką', HW_COL.suture, 'seg', function (st) { var y = yL(); return at(0, y, DF + 0.3, 1, st); }, function (st, m) { return (op === 'tar' && m > 5.55) || (op === 'acs' && m > 3.7 && m < 4.05); });
+      if (meshKind) lab('Siatka', meshKind === 'sub' ? 'za mięśniami (sublay)' : 'na powięzi (onlay)', HW_COL.mesh, 'seg', function (st) { var y = yL(); return at(3.2, y, meshDep(3.2, y, st), 1, st, 'A'); }, function (st, m) { return m > 4.4 && m < 5.05; });
+      lab('Linia biała odtworzona', op === 'tar' ? 'szew nad siatką' : 'szew w linii pośrodkowej', HW_COL.suture, 'seg', function (st) { var y = yL(); return at(0, y, DF + 0.3, 1, st); }, function (st, m) { return (op === 'tar' && m > 5.55) || (op === 'acs' && m > 3.7 && m < 4.05); });
       lab('Płat skórno-tłuszczowy', '', '#c9a640', 'seg', function (st) { var y = yL(); return at(3.4, y, DF * 0.5 - gF(3.4, y, st), 1, st); }, function (st, m) { return op === 'acs' && m > 1.5 && m < 2.05; });
       lab('Nacięcie rozcięgna skośnego zewnętrznego', '1–2 cm bocznie od kresy półksiężycowatej', HW_COL.cut, 'seg', function (st) { var y = yL(); return at(eoCutX(y), y, DF - 0.02, 1, st, 'A'); }, function (st, m) { return op === 'acs' && m > 2.2 && m < 3.05; });
       lab('Szczelina po przecięciu rozcięgna', '', HW_COL.eo, 'seg', function (st) { var y = yL(); return at(eoCutX(y) + 0.3, y, DF - 0.02, 1, st, 'A'); }, function (st, m) { return op === 'acs' && m > 3.6 && m < 4.05; });
-      lab('Dreny', '', '#7d8b96', 'seg', function (st) { return drains[0].geometry.parameters.path.getPointAt(0.85); }, function (st, m) { return m > 5.75; });
+      lab('Dreny', '', '#7d8b96', 'seg', function (st) { return drains[0].geometry.parameters.path.getPointAt(0.85); }, function (st, m) { return m > (NOMESH ? 4.75 : 5.75); });
     } else {
       lab('Pępek', '', '#8a5f50', 'ghost', function (st) { return at(0.9, H.yc - 0.4, -bulge(0.9, H.yc - 0.4, st), -1, st); }, NORM);
       lab('Worek przepuklinowy', 'tłuszcz przedotrzewnowy i sieć', '#c9a640', 'seg', function (st) { var y = yL(); return at(0, y, fatBot(0, y, st) + 0.1, 1, st); }, function (st, m) { return m < 1.05; });
