@@ -84,8 +84,9 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   key(w,'3'); await sleep(200); ok(!$('acc').hidden,'ileostomia: klawisz 3 wybiera nieoferowany dostęp');
   key(w,'1'); await sleep(300); w.__sgTest.at(-0.02); const io=w.__sgTest.model().access.sets.open; ok(io.cuts.length===1&&io.cuts[0].disc&&io.cuts[0].wm.visible,'ileostomia: brak trepanacji');
   await search(w,'resekcja jelita cienkiego'); ok(w.__sgTest.frames()[0].k==='access','resekcja jelita cienkiego: brak slajdu „Dostęp”');
-  // inne narządy bez slajdu
-  await search(w,'gastrektomia całkowita'); ok(w.__sgTest.frames()[0].k!=='access'&&$('acc').hidden,'slajd „Dostęp” w gastrektomii');
+  // zabieg bez dostępu w danych (np. PEG): bez slajdu i okna
+  { const na=A.PROCS.findIndex(p=>!p.split&&!p.variants[0].single&&!p.variants[0].singleFrames&&!p.variants[0].access); ok(na>=0,'brak zabiegu bez dostępu do sprawdzenia');
+    w.__sgTest.open(na,0,0); await sleep(300); ok(w.__sgTest.frames()[0].k!=='access'&&$('acc').hidden,'slajd „Dostęp” w zabiegu bez dostępu: '+A.PROCS[na].id); }
   // zabiegi ze stomią: wspólny model powłok, otwór stomii w obrębie mięśnia prostego (kolostomia — lewy, ileostomia — prawy), bez starego prostokąta
   const marks=A.PROCS.filter(p=>['hartmann','apr','ileo'].includes(p.id)).flatMap(p=>p.variants.map(v=>[v.id,v.marks]));
   marks.forEach(([id,mk])=>{ const b=mk.filter(m=>m.kind==='body'); ok(b.length===1&&!mk.some(m=>m.kind==='wall'),id+': brak powłok (body) albo stary prostokąt');
@@ -93,7 +94,7 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
     const st=mk.filter(m=>m.kind==='stoma'); ok(st.length&&st.every(s=>Math.abs(s.center[2]-B.z(s.center[0],s.center[1]))<0.5),id+': stomia nie na skórze'); });
   console.log('zabiegi ze stomią — powłoki:',marks.length,'| kolostomia x:',marks[0][1].find(m=>m.kind==='body').holes[0].c[0],'| ileostomia x:',marks.find(m=>/^ileo/.test(m[0]))[1].find(m=>m.kind==='body').holes[0].c[0].toFixed(1));
   // EN
-  w=boot('en'); await sleep(300); await search(w,'right hemicolectomy'); const t=w.document.getElementById('accTitle').textContent, b=[...w.document.querySelectorAll('#acc .accopt b')].map(x=>x.textContent).join(',');
+  w=boot('en'); await sleep(300); await search(w,'right hemicolectomy'); const t=w.document.getElementById('accTitle').textContent, b=[...w.document.querySelectorAll('#acc .accopt')].filter(x=>!x.hidden).map(x=>x.querySelector('b').textContent).join(',');
   console.log('EN:',t,'|',b); ok(t==='Approach?'&&b==='Open,Laparoscopic,Robotic','EN: okno wyboru');
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);
 })();
