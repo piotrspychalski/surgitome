@@ -47,6 +47,7 @@
   }
   function passOrbit(inset) {
     hemi.intensity = 0.9; keyL.intensity = 0.85; rimL.intensity = 0.35; endoAmb.intensity = 0; headlight.intensity = 0;
+    if (M.light) { hemi.intensity = M.light[0]; keyL.intensity = M.light[1]; rimL.intensity = M.light[2]; }   // model z własnym oświetleniem (widok laparoskopowy pachwiny)
     fog.near = 1e4; fog.far = 1e5;
     if (endo.g) endo.g.visible = false;
     M.endoMarkG.visible = false;

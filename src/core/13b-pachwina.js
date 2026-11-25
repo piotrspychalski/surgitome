@@ -52,7 +52,7 @@
   function groin(o) { return Object.assign({ cat: 'hernia', objects: [], marks: [], anastTools: [], commonCuts: 0, single: true, box: [[-10, -18, -1], [1, -8, 7]] }, o); }
   var CL = { t: [-4.4, -12.7, 4.2], tp: [-3.9, -13.0, 4.2], az: -10, el: -6, k: 0.85 }, CL2 = { t: [-3.75, -12.75, 3.9], tp: [-3.75, -12.75, 3.9], az: -10, el: -6, k: 0.38 };
   // widok laparoskopowy (model obrócony: x' = −x, y' = z, z' = y): kamera od strony pępka, w jamie brzusznej (powłoki uniesione odmą)
-  var CP = { t: [4.7, 2.2, -12.4], tp: [4.6, 2.2, -12.4], az: -30, el: 32, k: 0.42 }, CP2 = { t: [4.6, 2.0, -12.6], tp: [4.5, 2.0, -12.6], az: -28, el: 34, k: 0.37 };
+  var CP = { t: [4.8, 2.3, -12.6], tp: [4.8, 2.3, -12.6], az: -24, el: 28, k: 0.34, kp: 0.3 }, CP2 = { t: [4.7, 2.2, -12.7], tp: [4.7, 2.2, -12.7], az: -24, el: 30, k: 0.31, kp: 0.27 };   // optyka w jamie (sprawdzone: 2 j. pod otrzewną)
   var LICH_FR = [
     { k: 'normal', kind: 'orbit', m0: 0, m1: 0, cam: 'custom', camP: CL, short: 'Pachwina', title: 'Przepuklina pachwinowa skośna',
       cap: 'Okolica pachwinowa prawa od przodu. Więzadło pachwinowe biegnie od kolca biodrowego przedniego górnego do guzka łonowego; nad pierścieniem pachwinowym powierzchownym uwypuklenie przepukliny. Linia przerywana — planowane cięcie.' },

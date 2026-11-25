@@ -5,7 +5,7 @@
      wewnętrzna IS(s, t, odsunięcie) — ściana (t ≥ 0) przechodzi zaokrąglonym zagięciem w dno pachwiny (t < 0); otrzewna z fałdami, wrota przepukliny,
      naczynia nabrzuszne dolne i biodrowe zewnętrzne, nasieniowód, naczynia jądrowe, więzadło Coopera, pasmo biodrowo-łonowe, nerwy trójkąta bólu, siatka.
      Stan z osi czasu m (stateAt). Etykiety w układzie modelu, przeliczane przez macierz grupy. ---------- */
-  var GR_COL = { skin: '#e2b59c', fat: '#f1d58a', eo: '#ebe2d0', io: '#b8524a', apo: '#ece4d4', tf: '#d8c9ad', per: '#e9d6cf', floor: '#dcb96a', psoas: '#a8554b',
+  var GR_COL = { skin: '#e2b59c', fat: '#f1d58a', eo: '#ebe2d0', io: '#b8524a', apo: '#ece4d4', tf: '#d8c9ad', per: '#e8cdc4', floor: '#dcb96a', psoas: '#a8554b',
     bone: '#efe3c8', bladder: '#e8b4aa', lig: '#f6f2e8', cord: '#d98c7a', vas: '#f4f1ea', art: '#d63c3c', vein: '#3f63b8', nerve: '#e6bd2e', mesh: '#2f78c4',
     suture: '#22305c', sac: '#c4d3df', doom: '#e53935', pain: '#fbc02d', hole: '#2a1616' };
   function makeGroin(d) {
@@ -234,12 +234,12 @@
         var w = -t, ps = Math.exp(-Math.pow((s - 0.72) / 0.18, 2)), bl = Math.exp(-Math.pow((s + 0.24) / 0.26, 2) - Math.pow((w - 2.9) / 1.3, 2)), bo = Math.exp(-Math.pow((w - 0.6) / 0.5, 2)) * (1 - sm((s - 0.3) / 0.1));
         var c = new THREE.Color(GR_COL.floor); c.lerp(new THREE.Color(GR_COL.psoas), Math.min(1, ps * sm(w / 1.0) * 1.1)); c.lerp(new THREE.Color(GR_COL.bladder), Math.min(1, bl * 1.2)); c.lerp(new THREE.Color(GR_COL.bone), Math.min(1, bo)); return '#' + c.getHexString();
       }
-      lap.deep = surf(NS, 110, [S0, S1], function () { return [BOT, TOPT]; }, mat('#ffffff', { vc: true, rough: 0.75 }), deepCol);
+      lap.deep = surf(NS, 110, [S0, S1], function () { return [BOT, TOPT]; }, mat('#ffffff', { vc: true, rough: 0.75, em: '#221a14' }), deepCol);
       lap.deep.update(function (s, t, u, v, q) { IS(s, t, 0, q); });
       // struktury: tętnica i żyła biodrowa zewnętrzna, naczynia nabrzuszne dolne, nasieniowód, naczynia jądrowe, więzadło Coopera z gałęzią kości łonowej, pasmo biodrowo-łonowe, nerwy, corona mortis
       // przebiegi chowają się przy brzegach modelu: u góry za powięź poprzeczną (naczynia nabrzuszne wnikają do pochewki m. prostego), na dnie pod powięź
-      function sink(t) { return 0.75 * sm((t - (TOPT - 1.7)) / 0.8) + 0.75 * sm(((BOT + 1.1) - t) / 0.8); }
-      function path(PL, off, n) { return smoothPL(PL, n || 48).filter(function (p) { return p.y <= TOPT - 0.3 && p.y >= BOT + 0.05; }).map(function (p) { return IS(p.x, p.y, (typeof off === 'function' ? off(p.x, p.y) : off) - sink(p.y)); }); }
+      function sink(t) { return 0.75 * sm((t - 2.5) / 0.9) + 0.75 * sm(((BOT + 1.8) - t) / 0.8); }   // u góry: naczynia nabrzuszne wnikają do pochewki m. prostego (kresa łukowata, 3–4 cm nad pierścieniem)
+      function path(PL, off, n) { return smoothPL(PL, n || 48).filter(function (p) { return p.y <= 3.6 && p.y >= BOT + 0.05; }).map(function (p) { return IS(p.x, p.y, (typeof off === 'function' ? off(p.x, p.y) : off) - sink(p.y)); }); }
       function tubeOn(PL, off, r, col, o) {   // przewód z zaokrąglonymi końcami
         var m = tubeMesh(mat(col, o || { rough: 0.45 })), pts = path(PL, off); setTube(m, pts, r, 80);
         [pts[0], pts[pts.length - 1]].forEach(function (p) { var c = new THREE.Mesh(track(new THREE.SphereGeometry(r, 12, 8)), m.material); c.position.copy(p); grp.add(c); });
@@ -255,14 +255,16 @@
       lap.vas = tubeOn(G.VAS, cordOff(0.13), 0.09, GR_COL.vas, { rough: 0.3, em: '#3a3a36' }); lap.test = tubeOn(G.TEST, cordOff(0.12), 0.11, '#a43a4a');
       lap.ring = new THREE.Mesh(track(new THREE.TorusGeometry(0.34, 0.06, 8, 24)), mat('#bfae92', { rough: 0.7 })); lap.ring.position.copy(IS(G.RING[0], G.RING[1], 0.03)); lap.ring.lookAt(IS(G.RING[0], G.RING[1], 1)); grp.add(lap.ring);
       // pierścień głęboki — wrota przepukliny: ciemne zagłębienie w otrzewnej
-      lap.hole = new THREE.Mesh(track(new THREE.CircleGeometry(1, 28)), mat(GR_COL.hole, { rough: 0.9 })); grp.add(lap.hole);
+      var holeTex = (function () { var c = document.createElement('canvas'); c.width = c.height = 64; var g = c.getContext('2d'); var gr = g && g.createRadialGradient ? g.createRadialGradient(32, 32, 2, 32, 32, 31) : null; if (gr) {
+        gr.addColorStop(0, 'rgba(18,6,5,1)'); gr.addColorStop(0.55, 'rgba(40,14,10,0.92)'); gr.addColorStop(1, 'rgba(60,24,18,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); } return new THREE.CanvasTexture(c); })();
+      lap.hole = new THREE.Mesh(track(new THREE.CircleGeometry(1, 32)), track(new THREE.MeshBasicMaterial({ map: holeTex, transparent: true, depthWrite: false }))); lap.hole.renderOrder = 6; grp.add(lap.hole);   // wrota: ciemne wejście do kanału (miękki brzeg)
       // otrzewna: dwie części rozdzielone linią nacięcia (TAPP), odsunięcie od powierzchni: fałdy, wrota, płat, balon (TEP)
       var tInc = G.tInc, SA = G.TAPP_S[0], SB = G.TAPP_S[1];
       function per0(s, t) { var x = G.xy(s, t)[0], f = Math.max(D.per, cover(s, t) + 0.08);
         f += 0.2 * Math.exp(-Math.pow(distPL(s, t, G.UMBM) / 0.32, 2)) + 0.1 * Math.exp(-Math.pow(distPL(s, t, G.IEV) / 0.3, 2)) + (t > 0 ? 0.12 * Math.exp(-x * x / 0.06) : 0); return f; }
       function perOff(s, t, st, lower) {
         var off = lap.base(s, t), r = distP(s, t, G.RING), near = Math.exp(-r * r / 0.35);
-        off -= st.sac * (off - 0.05) * Math.exp(-r * r / 0.1);
+        off -= st.sac * (off - 0.05) * Math.exp(-r * r / 0.28);
         var cordNear = Math.exp(-Math.pow(Math.min(distPL(s, t, G.VAS), distPL(s, t, G.TEST)) / 0.75, 2)) * sm((t + 2.8) / 0.4) * (1 - sm((t - 1.0) / 0.3));
         if (op === 'tapp') {
           var span = sm((s + 0.42) / 0.1) * (1 - sm((s - 1.06) / 0.08)), det = sm((t + 2.6) / 0.6);
@@ -277,7 +279,7 @@
         }
         return off;
       }
-      var mPerU = mat(GR_COL.per, { op: 0.62, rough: 0.3, dw: false }), mPerL = mat(GR_COL.per, { op: 0.62, rough: 0.3, dw: false });
+      var mPerU = mat(GR_COL.per, { op: 0.78, rough: 0.28, dw: false, em: '#2a1612' }), mPerL = mat(GR_COL.per, { op: 0.78, rough: 0.28, dw: false, em: '#2a1612' });
       lap.perU = surf(NS, 44, [S0, S1], function (s) { return [tInc(s), TOPT]; }, mPerU); lap.perL = surf(NS, 76, [S0, S1], function (s) { return [BOT, tInc(s)]; }, mPerL);
       lap.perU.mesh.renderOrder = lap.perL.mesh.renderOrder = 4;
       // stałe: P0, N i odsunięcie bazowe dla wierzchołków otrzewnej
@@ -288,20 +290,23 @@
         [[lap.perU, false], [lap.perL, true]].forEach(function (q) { var o = q[0], P = o.P; lap.base = null;
           o.c.forEach(function (c, k) { lap.base = function () { return c.b; }; var off = perOff(c.s, c.t, st, q[1]); P[k * 3] = c.P.x + c.N.x * off; P[k * 3 + 1] = c.P.y + c.N.y * off; P[k * 3 + 2] = c.P.z + c.N.z * off; });
           done(o.g); });
-        mPerU.opacity = 0.62 - (op === 'tep' ? 0.5 * Math.max(st.bal, st.lat) * (1 - st.des) : 0);
-        mPerL.opacity = 0.62 - (op === 'tapp' ? 0.5 * st.flap * (1 - st.close) : 0.45 * Math.max(st.bal, st.lat) * (1 - st.des));
+        mPerU.opacity = 0.78 - (op === 'tep' ? 0.6 * Math.max(st.bal, st.lat) * (1 - st.des) : 0);
+        mPerL.opacity = 0.78 - (op === 'tapp' ? 0.68 * st.flap * (1 - st.close) : 0.62 * Math.max(st.bal, st.lat) * (1 - st.des));
         if (op === 'tapp') {   // brzegi nacięcia otrzewnej (płat dolny i górny)
-          var showR = st.pOpen > 0.02 && st.close < 0.98; lap.rimL.visible = lap.rimU.visible = showR;
+          var showR = st.pOpen > 0.02 && st.flap < 0.6 && st.close < 0.98; lap.rimL.visible = lap.rimU.visible = showR; mRim.opacity = 1 - sm(st.flap / 0.6);
           if (showR) [[lap.perL, lap.perL.nt, lap.rimL], [lap.perU, 0, lap.rimU]].forEach(function (q) { var o = q[0], row = q[1], pts = [];
             for (var i = 0; i <= o.ns; i++) { var c = o.c[row * (o.ns + 1) + i]; if (c.s < SA + 0.01 || c.s > SB - 0.01) continue; var k = (row * (o.ns + 1) + i) * 3; pts.push(new V3(o.P[k], o.P[k + 1], o.P[k + 2])); }
-            setTube(q[2], pts, 0.045, 90); });
+            setTube(q[2], pts, 0.028, 90); });
         }
-        var hp = IS(G.RING[0], G.RING[1], 0.08); lap.hole.position.copy(hp); lap.hole.lookAt(IS(G.RING[0], G.RING[1], 2)); lap.hole.scale.setScalar(0.34 * Math.sqrt(Math.max(0, st.sac))); lap.hole.visible = st.sac > 0.04;
+        var hp = IS(G.RING[0], G.RING[1], 0.3); lap.hole.position.copy(hp); lap.hole.lookAt(IS(G.RING[0], G.RING[1], 2)); lap.hole.scale.setScalar(0.62 * Math.sqrt(Math.max(0, st.sac))); lap.hole.visible = st.sac > 0.04;
       };
-      var mRim = mat('#f6ece8', { rough: 0.3, em: '#3a2e2a' }); lap.rimL = tubeMesh(mRim); lap.rimU = tubeMesh(mRim); lap.rimL.renderOrder = lap.rimU.renderOrder = 5;
+      var mRim = mat('#caa196', { rough: 0.35 }); lap.rimL = tubeMesh(mRim); lap.rimU = tubeMesh(mRim); lap.rimL.renderOrder = lap.rimU.renderOrder = 5;
       // światło optyki: punktowe w miejscu kamery (jak w laparoskopii — jaśniej w środku pola)
-      var scope = new THREE.PointLight('#fff6ee', 0.55, 0); grp.add(scope);
+      var scope = new THREE.PointLight('#fff4ea', 1.05, 34, 1); grp.add(scope);   // przy tym widoku światło sceny przygaszone (M.light w przebiegu orbitalnym)
       lap.deep.mesh.onBeforeRender = function (r, sc, cam) { scope.position.copy(grp.worldToLocal(cam.position.clone())); };
+      // tło jamy brzusznej: ciemna kula wokół pola (widoczna tylko od środka) — brzegi modelu giną w ciemności jak poza zasięgiem światła optyki
+      var cav = new THREE.Mesh(track(new THREE.SphereGeometry(26, 32, 20)), track(new THREE.MeshBasicMaterial({ color: '#24120f', side: THREE.BackSide, depthWrite: false })));
+      cav.position.copy(IS(0.45, 1.0, 1.5)); cav.renderOrder = -1; grp.add(cav);
       // nacięcie otrzewnej i szew (TAPP)
       var mCut = mat(A.COL.cut, { rough: 0.5 }), mSut = mat(GR_COL.suture, { rough: 0.5 });
       lap.incL = tubeMesh(mCut); setTube(lap.incL, smoothPL([[SA, tInc(SA)], [0.6, tInc(0.6)], [SB, tInc(SB)]], 40).map(function (p) { return IS(p.x, p.y, lap.base ? per0(p.x, p.y) + 0.03 : D.per); }), 0.05, 80);
@@ -323,9 +328,6 @@
       lap.doom = zone(vasD, testD, GR_COL.doom);
       lap.pain = zone([[0.56, 0.12], [0.56, -0.3], [0.58, -1.0], [0.61, -1.9]], [[0.98, 0.12], [0.97, -0.3], [0.96, -1.0], [0.95, -1.9]], GR_COL.pain);
       // światło od strony optyki
-      var lamp = new THREE.DirectionalLight('#ffffff', 0.45); lamp.position.copy(B.at(-0.5, -6.0, 4.5, 1)); var lt = new THREE.Object3D(); lt.position.copy(IS(0.45, 0.3, 0)); grp.add(lamp); grp.add(lt); lamp.target = lt;
-      var lamp2 = new THREE.DirectionalLight('#ffffff', 0.15); lamp2.position.copy(IS(0.4, -3.5, 4)); var lt2 = new THREE.Object3D(); lt2.position.copy(IS(0.45, 2.5, 0)); grp.add(lamp2); grp.add(lt2); lamp2.target = lt2;
-      var lamp3 = new THREE.DirectionalLight('#ffffff', 0.35); lamp3.position.copy(IS(0.3, 3.0, 5)); var lt3 = new THREE.Object3D(); lt3.position.copy(IS(0.3, 3.0, 0)); grp.add(lamp3); grp.add(lt3); lamp3.target = lt3;
     })();
     else { var fill = new THREE.DirectionalLight('#ffffff', 0.35); fill.position.copy(wallP(0.3, -3, -6)); grp.add(fill); }
 
@@ -417,7 +419,7 @@
       labels.forEach(function (Lb) { var p = Lb.fn(st, m); Lb.anchor = p ? grp.localToWorld(p.clone ? p.clone() : p) : null; Lb.alpha = Lb.when(st, m) ? 1 : 0; });
     };
     tool.test = { state: stateAt, IS: IS, wallP: wallP, lap: lap, ant: ant };
-    M.groin = tool;
+    M.groin = tool; if (LAP) M.light = [0.42, 0.12, 0.08];   // światło sceny (półkula, kierunkowe, kontra) — resztę daje światło optyki
     return tool;
   }
   TOOL_EXT.groin = makeGroin;
