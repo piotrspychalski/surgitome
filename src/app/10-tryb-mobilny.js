@@ -69,7 +69,10 @@
     var t;
     if (isEndo) t = endo.playing ? 'Pauza' : (endo.route && endo.s >= endo.route.total - 0.01 ? 'Powtórz' : 'Dalej');
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');
-    $('btnPlay').textContent = tr(t || '');
+    // stała szerokość: niewidoczny ::after z wszystkimi napisami tego trybu (CSS) — przycisk ma szerokość najdłuższego, pasek nie skacze
+    var bp = $('btnPlay'), w = (isEndo ? ['Pauza', 'Powtórz', 'Dalej'] : ['Powtórz animację', 'Pauza', 'Wznów']).map(function (s) { return tr(s); }).join('\n');
+    if (bp.dataset.w !== w) bp.dataset.w = w;
+    bp.textContent = tr(t || '');
   }
   // lista grup węzłów w panelu (przy włączonym przełączniku): kod, nazwa, czy z preparatem; grupa rozdzielona — „częściowo z preparatem”
   function nodeList(ng) {
