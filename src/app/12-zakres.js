@@ -1,5 +1,5 @@
   /* ---------- wybór zakresu resekcji: przesunięcie guza podświetla odcinek jelita, krezkę i naczynia do podwiązania, reszta przygasa ---------- */
-  var ZK_HI = '#d9463b', ZK_NODE = '#f0a030';
+  var ZK_HI = '#d9463b', ZK_NODE = '#f0a030', ZK_SLEEVE = 1.07;   // podświetlenie odcinka: rękaw 1,07 × promień jelita (guz osadzany ponad nim, 12-guz)
   function makeZakres(d) {
     var map = d.map, grp = new THREE.Group(), hiG = new THREE.Group(); grp.add(hiG);
     // krezka: kolor wierzchołków zależnie od tego, czy wiersz (odcinek jelita) jest w zakresie resekcji
@@ -34,7 +34,7 @@
     function hiTube(o, t0, t1) {
       var st = stateAt(o, 0), n = Math.max(8, Math.round(60 * (t1 - t0))), pts = [];
       for (var i = 0; i <= n; i++) pts.push(st.curve.getPointAt(t0 + (t1 - t0) * i / n));
-      var c = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), g = track(A.buildTube(c, function (u) { return st.r(t0 + (t1 - t0) * u) * 1.07; }, Math.max(24, n * 4), 26, true));
+      var c = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), g = track(A.buildTube(c, function (u) { return st.r(t0 + (t1 - t0) * u) * ZK_SLEEVE; }, Math.max(24, n * 4), 26, true));
       hiG.add(new THREE.Mesh(g, hiMat));
     }
     function apply() {

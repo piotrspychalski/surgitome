@@ -83,7 +83,10 @@ button,select,input{ font:inherit; color:inherit; }
 .cat:hover{ color:var(--text); }
 .cat[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
 .subbar{ background:var(--surface); border-bottom:1px solid var(--line); padding:6px 16px 7px; display:flex; flex-direction:column; gap:5px; }
-#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 0.2 auto; min-width:0; overflow-x:auto; scrollbar-width:none; padding-left:12px; border-left:1px solid var(--line); }
+/* warianty: w dolnym pasku, obok „Zmień dostęp” / „Wznów”; kreska oddziela je od widocznych przycisków przed nimi */
+#variants{ display:flex; flex-wrap:nowrap; gap:4px; align-items:center; flex:0 1 auto; min-width:0; overflow-x:auto; scrollbar-width:none; }
+#ctxRow > :not([hidden]) ~ #variants{ padding-left:10px; border-left:1px solid var(--line); }
+.mobile #variants{ display:none !important; }   /* telefon: warianty w menu */
 #variants::-webkit-scrollbar{ display:none; }
 #variants{ --vl:0px; --vr:0px; -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); mask-image:linear-gradient(to right, transparent 0, #000 var(--vl), #000 calc(100% - var(--vr)), transparent 100%); }
 #variants.canL{ --vl:28px; } #variants.canR{ --vr:36px; }
@@ -572,7 +575,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       <button class="ghostbtn" id="btnFs">Pełny ekran</button>
     </div>
   </header>
-  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div></div><div class="navline"><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button><div id="variants" role="group" aria-label="Wariant" hidden></div></div></div>
+  <div class="subbar"><div class="catline"><div id="cats" role="group" aria-label="Kategoria"></div><div id="subs" role="group" aria-label="Grupa zabiegów" hidden></div></div><div class="navline"><div class="tabwrap"><button class="tscroll tl" id="tabsL" tabindex="-1" aria-hidden="true">‹</button><nav id="tabs" role="tablist" aria-label="Zabieg"></nav><button class="tscroll tr" id="tabsR" tabindex="-1" aria-hidden="true">›</button></div><button class="ghostbtn tabsall" id="tabsAll" aria-expanded="false" aria-controls="tabs"></button></div></div>
   <main id="main">
     <div id="viewport">
       <canvas id="c" aria-label="Interaktywny model 3D anatomii"></canvas>
@@ -657,6 +660,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         <select id="speed" aria-label="Prędkość"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select>
       </div>
       <div id="ctxAcc" hidden><button class="btn" id="accChange" type="button" data-pl="Zmień dostęp">Zmień dostęp</button></div>
+      <div id="variants" role="group" aria-label="Wariant" hidden></div>
       <div id="ctxZakres" hidden><button class="btn primary" id="zkGo" type="button"></button></div>
       <div id="ctxLiver" hidden><label class="lvlbl" for="lvExplode" data-pl="Rozsunięcie">Rozsunięcie</label><input type="range" id="lvExplode" min="0" max="1000" value="0" aria-label="Rozsunięcie segmentów"><div id="lvSegs" role="group" aria-label="Segmenty"></div></div>
     </div>
@@ -7433,15 +7437,13 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         vb.appendChild(b);
       });
     }
-    tabsFit(true); requestAnimationFrame(function () { tabsFit(true); });   // po ułożeniu wariantów (szerokość wiersza zabiegów)
+    updateDock();   // warianty są w dolnym pasku (obok „Zmień dostęp”) — pokaż/ukryj ten wiersz
+    tabsFit(true); requestAnimationFrame(function () { tabsFit(true); });
   }
   /* ---------- zabiegi w jednym wierszu: przewijanie, strzałki, panel „Wszystkie” ---------- */
   function tabsFit(center) {
     var nav = $('tabs'), wrap = nav.parentNode, line = wrap.parentNode;
     if (MOBILE) return;
-    // karty zabiegów: co najmniej ok. 40% wiersza (albo cała ich szerokość, jeśli mniejsza); resztę dostają warianty (przewijane)
-    var f0 = nav.firstElementChild, f1 = nav.lastElementChild, cw = f0 ? f1.offsetLeft + f1.offsetWidth - f0.offsetLeft + 2 : 0;   // szerokość samych kart (scrollWidth rośnie z kontenerem)
-    wrap.style.minWidth = Math.min(cw, Math.round(line.clientWidth * 0.42)) + 'px';
     if (center) { var sel = nav.querySelector('.tab[aria-selected="true"]'); if (sel) nav.scrollLeft = Math.max(0, sel.offsetLeft - (nav.clientWidth - sel.offsetWidth) / 2); }
     var over = nav.scrollWidth > nav.clientWidth + 2 || $('app').querySelector('.subbar').classList.contains('tabsopen');
     line.classList.toggle('over', over);
@@ -7613,7 +7615,9 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var isEndo = fr.kind === 'endo', anim = fr.kind === 'orbit' && fr.m1 > fr.m0;
     var lvSeg = !!(M && M.liver && !SPLIT.on && fr.k === 'segs'); // wątroba: suwak rozsunięcia i przyciski segmentów
     var zk = !!(M && M.zakresGo && !SPLIT.on); // „Wybór zakresu resekcji”: przejście do zabiegu z guzem w tym samym miejscu
-    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('ctxZakres').hidden = !zk; $('ctxAcc').hidden = fr.k !== 'access'; $('btnPlay').hidden = !(isEndo || anim); $('ctxRow').hidden = !(isEndo || anim || lvSeg || zk);
+    $('ctxEndo').hidden = !isEndo; $('ctxLiver').hidden = !lvSeg; $('ctxZakres').hidden = !zk; $('ctxAcc').hidden = fr.k !== 'access'; $('btnPlay').hidden = !(isEndo || anim);
+    var hasV = !MOBILE && !$('variants').hidden;   // wybór wariantu (na telefonie — w menu)
+    $('ctxRow').hidden = !(isEndo || anim || lvSeg || zk || hasV);
     var t;
     if (isEndo) t = endo.playing ? 'Pauza' : (endo.route && endo.s >= endo.route.total - 0.01 ? 'Powtórz' : 'Dalej');
     else if (anim) t = S.m >= fr.m1 - 1e-4 ? 'Powtórz animację' : (S.playing ? 'Pauza' : 'Wznów');
@@ -7827,7 +7831,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     endoCam.aspect = W / H; endoCam.updateProjectionMatrix();
   }
   if (window.ResizeObserver) new ResizeObserver(resize).observe(viewport); else window.addEventListener('resize', resize);
-  var onMQ = function () { MOBILE = mobMQ.matches; root.classList.toggle('mobile', MOBILE); if (!MOBILE) mMenu(false); };
+  var onMQ = function () { MOBILE = mobMQ.matches; root.classList.toggle('mobile', MOBILE); if (!MOBILE) mMenu(false); updateDock(); };
   var reflow = function () { resize(); setTimeout(resize, 120); setTimeout(resize, 450); if (ct.on) setTimeout(ctResize, 460); };
   window.addEventListener('orientationchange', reflow);
   window.addEventListener('resize', reflow);
@@ -8944,12 +8948,16 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var mat = track(new THREE.MeshStandardMaterial({ color: '#7a1522', roughness: 0.55, transparent: true })), mesh = new THREE.Mesh(track(guzGeo()), mat);
     M.group.add(mesh);
     var el = mkLabel('Guz', 'przeciągnij, aby przesunąć', '#b3263a', 'seg'), el2 = mkLabel('Guz', '', '#b3263a', 'seg');
+    // „Wybór zakresu resekcji”: odcinek do resekcji podświetlony rękawem (ZK_SLEEVE × promień) — guz osadzony ponad nim, nie pod nim
+    var sleeve = (M.an.cutTools || []).some(function (d) { return d.type === 'zakres'; }) ? ZK_SLEEVE : 1;
     var tool = { d: { type: 'guz' }, grp: new THREE.Group(), overlay: false, el: el, el2: el2, mesh: mesh, bind: guzBind(guzPos(M.an)),
       update: function (m) {
         var b = this.bind, o = b && b.o, on = S.tumour && !!o && m > -1e-3; // na slajdzie „Dostęp” (m < 0) guz ukryty
         if (!on) { mesh.visible = false; this.alpha = 0; return; }
         var st = o.st, P = st.curve.getPointAt(b.t);
-        mesh.position.copy(P).addScaledVector(b.n, st.r(b.t) * 0.88).add(o.grp.position);
+        // stałe wyniesienie ponad widoczną powierzchnię (ok. 0,25 — jak w esicy), niezależnie od szerokości jelita: w szerokiej kątnicy i wstępnicy
+        // dawne 0,88 × promień chowało guz pod ścianą i pod podświetleniem zakresu; w wąskich odcinkach (wyrostek) bez zmian
+        var R = st.r(b.t); mesh.position.copy(P).addScaledVector(b.n, Math.max(R * 0.88, R * sleeve - 0.12)).add(o.grp.position);
         mesh.quaternion.setFromUnitVectors(new V3(0, 0, 1), b.n);
         var op = M.an.single ? 1 : o.op; // na slajdzie wyboru zakresu jelito przygasa, guz nie
         mesh.visible = o.grp.visible && op > 0.05; mat.opacity = op;
@@ -11354,7 +11362,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   });
   window.__sgTest.liver = function () { return M && M.liver ? { segs: M.liver.segs.map(function (s) { return [s.s, s.mesh.visible, +s.mesh.material.opacity.toFixed(2), s.mesh.position.toArray().map(function (x) { return +x.toFixed(2); })]; }), hl: S.highlight, m: S.m } : null; };
   /* ---------- wybór zakresu resekcji: przesunięcie guza podświetla odcinek jelita, krezkę i naczynia do podwiązania, reszta przygasa ---------- */
-  var ZK_HI = '#d9463b', ZK_NODE = '#f0a030';
+  var ZK_HI = '#d9463b', ZK_NODE = '#f0a030', ZK_SLEEVE = 1.07;   // podświetlenie odcinka: rękaw 1,07 × promień jelita (guz osadzany ponad nim, 12-guz)
   function makeZakres(d) {
     var map = d.map, grp = new THREE.Group(), hiG = new THREE.Group(); grp.add(hiG);
     // krezka: kolor wierzchołków zależnie od tego, czy wiersz (odcinek jelita) jest w zakresie resekcji
@@ -11389,7 +11397,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     function hiTube(o, t0, t1) {
       var st = stateAt(o, 0), n = Math.max(8, Math.round(60 * (t1 - t0))), pts = [];
       for (var i = 0; i <= n; i++) pts.push(st.curve.getPointAt(t0 + (t1 - t0) * i / n));
-      var c = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), g = track(A.buildTube(c, function (u) { return st.r(t0 + (t1 - t0) * u) * 1.07; }, Math.max(24, n * 4), 26, true));
+      var c = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), g = track(A.buildTube(c, function (u) { return st.r(t0 + (t1 - t0) * u) * ZK_SLEEVE; }, Math.max(24, n * 4), 26, true));
       hiG.add(new THREE.Mesh(g, hiMat));
     }
     function apply() {
