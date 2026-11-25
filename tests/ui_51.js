@@ -38,8 +38,17 @@ function boot(lang){ const dom=new JSDOM(html,{runScripts:'outside-only',pretend
   // siatka niewidoczna przed kadrem „Siatka”
   w.__sgTest.open(anT,0,2); S.playing=false; w.__sgTest.at(2); const meshVis=M.wall.grp.children.some(c=>c.isMesh&&c.material&&c.material.map&&c.visible);
   ok(!meshVis,'TAR: siatka widoczna przed kadrem „Siatka”');
+  // Ramirez: oryginał (1990) bez siatki w żadnym kadrze; modyfikacja — siatka onlay dopiero od kadru „Siatka”
+  const anA=A.PROCS.findIndex(p=>p.id==='acs'); ok(A.PROCS[anA].variants.map(v=>v.id).join(',')==='acs-orig,acs-mesh','Ramirez: warianty '+A.PROCS[anA].variants.map(v=>v.id));
+  const meshOn=MM=>MM.wall.grp.children.some(c=>c.isMesh&&c.material&&c.material.map&&c.visible&&c.material.opacity>0.05);
+  for(let vi=0;vi<2;vi++){ w.__sgTest.open(anA,vi,0); const MA=w.__sgTest.model(), FA=w.__sgTest.frames(); let first=-1;
+    for(let fi=0;fi<FA.length;fi++){ if(FA[fi].kind==='ct') continue; w.__sgTest.open(anA,vi,fi); S.playing=false; w.__sgTest.at(FA[fi].m1); await sleep(5); if(first<0&&meshOn(MA)) first=fi; }
+    const lblMesh=MA.wall.labels.some(L=>/Siatka/.test(L.el.textContent));
+    if(vi===0){ ok(first<0,'Ramirez (oryginał): siatka widoczna w kadrze '+first); ok(!lblMesh,'Ramirez (oryginał): etykieta „Siatka”'); }
+    else { const mi=FA.findIndex(f=>f.k==='mesh'); ok(mi>0&&first===mi,'Ramirez (siatka): siatka od kadru '+first+', oczekiwano '+mi); ok(lblMesh,'Ramirez (siatka): brak etykiety „Siatka”'); }
+  }
   // TK
-  const F=w.__sgTest.frames(), ci=F.findIndex(f=>f.kind==='ct'); w.__sgTest.open(anT,0,ci); await sleep(50);
+  w.__sgTest.open(anT,0,0); const F=w.__sgTest.frames(), ci=F.findIndex(f=>f.kind==='ct'); w.__sgTest.open(anT,0,ci); await sleep(50);
   ok(!$('ctPanel').hidden,'TK: panel ukryty'); ok(Math.abs(parseFloat($('ctLevel').value)+A.WALL.HER.inc.yc)<0.6,'TK: start nie na poziomie ubytku: '+$('ctLevel').value);
   ok(drawn.some(t=>/RDR/.test(t)),'TK: brak opisu RDR'); ok(drawn.some(t=>/Sabbagh/.test(t)),'TK: brak opisu utraty domeny');
   // EN
