@@ -2,7 +2,7 @@
 
 Źródła pokazywane w aplikacji: panel „Opis” → „Piśmiennictwo” (bieżący zabieg i wariant) oraz „Źródła” w stopce panelu (całość). Plik powstaje z `src/core/12-bibliografia.js` poleceniem `node tools/bibliografia_md.js`.
 
-- **Pozycji:** 254, w tym 243 z PMID i 11 spoza PubMed. Styl Vancouver (NLM): do 6 autorów, potem „et al.”; skróty czasopism wg katalogu NLM; rok wydania drukowanego.
+- **Pozycji:** 278, w tym 267 z PMID i 11 spoza PubMed. Styl Vancouver (NLM): do 6 autorów, potem „et al.”; skróty czasopism wg katalogu NLM; rok wydania drukowanego.
 - **Dobór:** dla każdego zabiegu wyszukiwanie w PubMed (konektor PubMed): opis oryginalny, aktualne wytyczne lub konsensus, źródła liczb i szczegółów pokazanych w modelu, endoskopia po zabiegu, kluczowe RCT i metaanalizy. Włączono wszystkie źródła z audytu medycznego z 5.10.2026. Nowsze wersje wytycznych (EASL 2024, JGCA 2025, IFSO 2023 i 2026, ASCRS 2026) dopisano 6.10.2026 obok wcześniejszych, które zostają.
 - **Weryfikacja:** każdy opis złożono z rekordu PubMed (E-utilities efetch), więc PMID, tytuł i DOI pochodzą z jednego rekordu. Pierwszy autor i rok podane przy wyborze porównano z rekordem dla wszystkich PMID. Pozycje spoza PubMed (rejestry ClinicalTrials.gov, CORDIS, FDA 510(k), Brisbane 2000, Radiopaedia, mp.pl, poradniki) sprawdzono w źródle; data dostępu: 2026-10-05.
 - **Role:** *opis oryginalny*, *wytyczne / konsensus*, *anatomia*, *technika*, *endoskopia*, *wyniki badań*, *rejestr badania*, *materiały dla chorych*. W aplikacji pozycje idą w tej kolejności, a w obrębie roli chronologicznie. Pozycje wariantu dochodzą do pozycji wspólnych dla zabiegu.
@@ -960,44 +960,119 @@ Różnice między źródłami, a także między źródłami a modelem, wynikają
 347. Flum DR, Davidson GH, Monsell SE, Shapiro NI, Odom SR, Sanchez SE, et al.; CODA Collaborative. A Randomized Trial Comparing Antibiotics with Appendectomy for Appendicitis. N Engl J Med. 2020;383(20):1907-19. [PubMed 33017106](https://pubmed.ncbi.nlm.nih.gov/33017106/) · [doi:10.1056/NEJMoa2014320](https://doi.org/10.1056/NEJMoa2014320)  
    *wyniki badań* — CODA: antybiotykoterapia jako alternatywa w niepowikłanym zapaleniu wyrostka (wyższe ryzyko bez kamienia kałowego niż z nim)
 
+## Endokrynologia
+
+### Tyreoidektomia — warianty zakresu (`thyr`)
+
+348. Randolph GW, Dralle H, Abdullah H, Barczynski M, Bellantone R, Brauckhoff M, et al.; International Intraoperative Monitoring Study Group. Electrophysiologic recurrent laryngeal nerve monitoring during thyroid and parathyroid surgery: international standards guideline statement. Laryngoscope. 2011;121 Suppl 1:S1-16. [PubMed 21181860](https://pubmed.ncbi.nlm.nih.gov/21181860/) · [doi:10.1002/lary.21119](https://doi.org/10.1002/lary.21119)  
+   *wytyczne / konsensus* — Neuromonitoring nerwu krtaniowego wstecznego: standard V1–R1–R2–V2, postępowanie przy utracie sygnału
+349. Barczyński M, Randolph GW, Cernea CR, Dralle H, Dionigi G, Alesina PF, et al.; International Neural Monitoring Study Group. External branch of the superior laryngeal nerve monitoring during thyroid and parathyroid surgery: International Neural Monitoring Study Group standards guideline statement. Laryngoscope. 2013;123 Suppl 4:S1-14. [PubMed 23832799](https://pubmed.ncbi.nlm.nih.gov/23832799/) · [doi:10.1002/lary.24301](https://doi.org/10.1002/lary.24301)  
+   *wytyczne / konsensus* — INMSG: identyfikacja i monitorowanie gałęzi zewnętrznej nerwu krtaniowego górnego, podwiązywanie naczyń bieguna górnego przy torebce
+350. Haugen BR, Alexander EK, Bible KC, Doherty GM, Mandel SJ, Nikiforov YE, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer: The American Thyroid Association Guidelines Task Force on Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133. [PubMed 26462967](https://pubmed.ncbi.nlm.nih.gov/26462967/) · [doi:10.1089/thy.2015.0020](https://doi.org/10.1089/thy.2015.0020)  
+   *wytyczne / konsensus* — ATA 2015: zakres operacji w raku zróżnicowanym (lobektomia albo tyreoidektomia całkowita), wskazania do limfadenektomii
+351. Cernea CR, Ferraz AR, Nishio S, Dutra A Jr, Hojaij FC, dos Santos LR. Surgical anatomy of the external branch of the superior laryngeal nerve. Head Neck. 1992;14(5):380-3. [PubMed 1399571](https://pubmed.ncbi.nlm.nih.gov/1399571/) · [doi:10.1002/hed.2880140507](https://doi.org/10.1002/hed.2880140507)  
+   *anatomia* — Gałąź zewnętrzna nerwu krtaniowego górnego: typy skrzyżowania z naczyniami tarczowymi górnymi (typ 2B — poniżej górnego brzegu bieguna)
+352. Gauger PG, Delbridge LW, Thompson NW, Crummer P, Reeve TS. Incidence and importance of the tubercle of Zuckerkandl in thyroid surgery. Eur J Surg. 2001;167(4):249-54. [PubMed 11354315](https://pubmed.ncbi.nlm.nih.gov/11354315/) · [doi:10.1080/110241501300091363](https://doi.org/10.1080/110241501300091363)  
+   *anatomia* — Guzek Zuckerkandla: częstość i położenie nerwu krtaniowego wstecznego przyśrodkowo od niego
+353. Lorente-Poch L, Sancho JJ, Muñoz-Nova JL, Sánchez-Velázquez P, Sitges-Serra A. Defining the syndromes of parathyroid failure after total thyroidectomy. Gland Surg. 2015;4(1):82-90. [PubMed 25713783](https://pubmed.ncbi.nlm.nih.gov/25713783/) · [doi:10.3978/j.issn.2227-684X.2014.12.04](https://doi.org/10.3978/j.issn.2227-684X.2014.12.04)  
+   *wyniki badań* — Niedoczynność przytarczyc po tyreoidektomii całkowitej: definicje, zachowanie przytarczyc z ukrwieniem, autoprzeszczep
+
+*Tylko wariant `thyr-cnd`:*
+
+354. Carty SE, Cooper DS, Doherty GM, Duh QY, Kloos RT, Mandel SJ, et al.; American Thyroid Association Surgery Working Group; American Association of Endocrine Surgeons; American Academy of Otolaryngology-Head and Neck Surgery; American Head and Neck Society. Consensus statement on the terminology and classification of central neck dissection for thyroid cancer. Thyroid. 2009;19(11):1153-8. [PubMed 19860578](https://pubmed.ncbi.nlm.nih.gov/19860578/) · [doi:10.1089/thy.2009.0159](https://doi.org/10.1089/thy.2009.0159)  
+   *wytyczne / konsensus* — Konsensus ATA/AAES: terminologia i zakres centralnej limfadenektomii szyjnej (węzły przedkrtaniowe, przedtchawicze, przytchawicze)
+
+*Tylko wariant `thyr-lnd`:*
+
+355. Carty SE, Cooper DS, Doherty GM, Duh QY, Kloos RT, Mandel SJ, et al.; American Thyroid Association Surgery Working Group; American Association of Endocrine Surgeons; American Academy of Otolaryngology-Head and Neck Surgery; American Head and Neck Society. Consensus statement on the terminology and classification of central neck dissection for thyroid cancer. Thyroid. 2009;19(11):1153-8. [PubMed 19860578](https://pubmed.ncbi.nlm.nih.gov/19860578/) · [doi:10.1089/thy.2009.0159](https://doi.org/10.1089/thy.2009.0159)  
+   *wytyczne / konsensus* — Konsensus ATA/AAES: zakres centralnej limfadenektomii szyjnej
+356. Stack BC Jr, Ferris RL, Goldenberg D, Haymart M, Shaha A, Sheth S, et al.; American Thyroid Association Surgical Affairs Committee. American Thyroid Association consensus review and statement regarding the anatomy, terminology, and rationale for lateral neck dissection in differentiated thyroid cancer. Thyroid. 2012;22(5):501-8. [PubMed 22435914](https://pubmed.ncbi.nlm.nih.gov/22435914/) · [doi:10.1089/thy.2011.0312](https://doi.org/10.1089/thy.2011.0312)  
+   *wytyczne / konsensus* — ATA: przedziałowa limfadenektomia boczna co najmniej poziomów IIa, III, IV i Vb
+
+### Paratyreoidektomia — warianty (`ptx`)
+
+357. Irvin GL 3rd, Dembrow VD, Prudhomme DL. Operative monitoring of parathyroid gland hyperfunction. Am J Surg. 1991;162(4):299-302. [PubMed 1683177](https://pubmed.ncbi.nlm.nih.gov/1683177/) · [doi:10.1016/0002-9610(91)90135-z](https://doi.org/10.1016/0002-9610(91)90135-z)  
+   *opis oryginalny* — Szybki śródoperacyjny pomiar PTH 10 min po wycięciu gruczolaka
+358. Wilhelm SM, Wang TS, Ruan DT, Lee JA, Asa SL, Duh QY, et al. The American Association of Endocrine Surgeons Guidelines for Definitive Management of Primary Hyperparathyroidism. JAMA Surg. 2016;151(10):959-68. [PubMed 27532368](https://pubmed.ncbi.nlm.nih.gov/27532368/) · [doi:10.1001/jamasurg.2016.2310](https://doi.org/10.1001/jamasurg.2016.2310)  
+   *wytyczne / konsensus* — AAES 2016: wskazania do paratyreoidektomii, lokalizacja przed operacją, paratyreoidektomia celowana albo eksploracja obustronna
+359. Akerström G, Malmaeus J, Bergström R. Surgical anatomy of human parathyroid glands. Surgery. 1984;95(1):14-21. [PubMed 6691181](https://pubmed.ncbi.nlm.nih.gov/6691181/)  
+   *anatomia* — Położenie przytarczyc górnych i dolnych (badanie sekcyjne), ektopie
+360. Carneiro DM, Solorzano CC, Nader MC, Ramirez M, Irvin GL 3rd. Comparison of intraoperative iPTH assay (QPTH) criteria in guiding parathyroidectomy: which criterion is the most accurate? Surgery. 2003;134(6):973-9; discussion 979-81. [PubMed 14668730](https://pubmed.ncbi.nlm.nih.gov/14668730/) · [doi:10.1016/j.surg.2003.06.001](https://doi.org/10.1016/j.surg.2003.06.001)  
+   *technika* — Kryterium Miami: spadek PTH o ≥ 50% od najwyższej wartości przed nacięciem lub przed wycięciem, 10 min po wycięciu
+
+*Tylko wariant `ptx-sub`:*
+
+361. Lorenz K, Bartsch DK, Sancho JJ, Guigard S, Triponez F. Surgical management of secondary hyperparathyroidism in chronic kidney disease--a consensus report of the European Society of Endocrine Surgeons. Langenbecks Arch Surg. 2015;400(8):907-27. [PubMed 26429790](https://pubmed.ncbi.nlm.nih.gov/26429790/) · [doi:10.1007/s00423-015-1344-5](https://doi.org/10.1007/s00423-015-1344-5)  
+   *wytyczne / konsensus* — ESES 2015: nadczynność wtórna — paratyreoidektomia subtotalna (kikut 40–80 mg oznaczony szwem lub klipsem, najlepiej z dolnej przytarczycy) i całkowita z autoprzeszczepem
+362. Kidney Disease: Improving Global Outcomes (KDIGO) CKD-MBD Update Work Group. KDIGO 2017 Clinical Practice Guideline Update for the Diagnosis, Evaluation, Prevention, and Treatment of Chronic Kidney Disease-Mineral and Bone Disorder (CKD-MBD). Kidney Int Suppl. 2017;7(1):1-59. [PubMed 30675420](https://pubmed.ncbi.nlm.nih.gov/30675420/) · [doi:10.1016/j.kisu.2017.04.001](https://doi.org/10.1016/j.kisu.2017.04.001)  
+   *wytyczne / konsensus* — KDIGO 2017: wskazania do paratyreoidektomii w przewlekłej chorobie nerek
+363. Rothmund M, Wagner PK, Schark C. Subtotal parathyroidectomy versus total parathyroidectomy and autotransplantation in secondary hyperparathyroidism: a randomized trial. World J Surg. 1991;15(6):745-50. [PubMed 1767541](https://pubmed.ncbi.nlm.nih.gov/1767541/) · [doi:10.1007/BF01665309](https://doi.org/10.1007/BF01665309)  
+   *wyniki badań* — Badanie z randomizacją: paratyreoidektomia subtotalna a całkowita z autoprzeszczepem w nadczynności wtórnej
+
+*Tylko wariant `ptx-tot`:*
+
+364. Wells SA Jr, Gunnells JC, Shelburne JD, Schneider AB, Sherwood LM. Transplantation of the parathyroid glands in man: clinical indications and results. Surgery. 1975;78(1):34-44. [PubMed 1138398](https://pubmed.ncbi.nlm.nih.gov/1138398/)  
+   *opis oryginalny* — Autoprzeszczep przytarczyc do mięśni przedramienia
+365. Lorenz K, Bartsch DK, Sancho JJ, Guigard S, Triponez F. Surgical management of secondary hyperparathyroidism in chronic kidney disease--a consensus report of the European Society of Endocrine Surgeons. Langenbecks Arch Surg. 2015;400(8):907-27. [PubMed 26429790](https://pubmed.ncbi.nlm.nih.gov/26429790/) · [doi:10.1007/s00423-015-1344-5](https://doi.org/10.1007/s00423-015-1344-5)  
+   *wytyczne / konsensus* — ESES 2015: autoprzeszczep do mięśnia ramienno-promieniowego przedramienia, tymektomia szyjna
+366. Wells SA Jr, Farndon JR, Dale JK, Leight GS, Dilley WG. Long-term evaluation of patients with primary parathyroid hyperplasia managed by total parathyroidectomy and heterotopic autotransplantation. Ann Surg. 1980;192(4):451-8. [PubMed 7425691](https://pubmed.ncbi.nlm.nih.gov/7425691/) · [doi:10.1097/00000658-198010000-00003](https://doi.org/10.1097/00000658-198010000-00003)  
+   *technika* — Technika: fragmenty ok. 1 × 1 × 3 mm, 15–20 w osobnych kieszonkach mięśnia przedramienia niedominującego, kriokonserwacja
+367. Schlosser K, Bartsch DK, Diener MK, Seiler CM, Bruckner T, Nies C, et al. Total Parathyroidectomy With Routine Thymectomy and Autotransplantation Versus Total Parathyroidectomy Alone for Secondary Hyperparathyroidism: Results of a Nonconfirmatory Multicenter Prospective Randomized Controlled Pilot Trial. Ann Surg. 2016;264(5):745-53. [PubMed 27741007](https://pubmed.ncbi.nlm.nih.gov/27741007/) · [doi:10.1097/SLA.0000000000001875](https://doi.org/10.1097/SLA.0000000000001875)  
+   *wyniki badań* — TOPAR: paratyreoidektomia całkowita z tymektomią i autoprzeszczepem a bez autoprzeszczepu (badanie z randomizacją)
+
+### Adrenalektomia laparoskopowa — strona prawa i lewa (`adr`)
+
+368. Gagner M, Lacroix A, Bolté E. Laparoscopic adrenalectomy in Cushing's syndrome and pheochromocytoma. N Engl J Med. 1992;327(14):1033. [PubMed 1387700](https://pubmed.ncbi.nlm.nih.gov/1387700/) · [doi:10.1056/NEJM199210013271417](https://doi.org/10.1056/NEJM199210013271417)  
+   *opis oryginalny* — Pierwsze adrenalektomie laparoskopowe (zespół Cushinga, guz chromochłonny)
+369. Lenders JW, Duh QY, Eisenhofer G, Gimenez-Roqueplo AP, Grebe SK, Murad MH, et al.; Endocrine Society. Pheochromocytoma and paraganglioma: an endocrine society clinical practice guideline. J Clin Endocrinol Metab. 2014;99(6):1915-42. [PubMed 24893135](https://pubmed.ncbi.nlm.nih.gov/24893135/) · [doi:10.1210/jc.2014-1498](https://doi.org/10.1210/jc.2014-1498)  
+   *wytyczne / konsensus* — Endocrine Society 2014: guz chromochłonny — przygotowanie blokadą alfa przed operacją
+370. Yip L, Duh QY, Wachtel H, Jimenez C, Sturgeon C, Lee C, et al. American Association of Endocrine Surgeons Guidelines for Adrenalectomy: Executive Summary. JAMA Surg. 2022;157(10):870-7. [PubMed 35976622](https://pubmed.ncbi.nlm.nih.gov/35976622/) · [doi:10.1001/jamasurg.2022.3544](https://doi.org/10.1001/jamasurg.2022.3544)  
+   *wytyczne / konsensus* — AAES 2022: dostęp małoinwazyjny w guzach łagodnych, operacja otwarta przy podejrzeniu raka kory nadnercza, incydentaloma > 4 cm lub > 20 j.H.
+371. Fassnacht M, Tsagarakis S, Terzolo M, Tabarin A, Sahdev A, Newell-Price J, et al. European Society of Endocrinology clinical practice guidelines on the management of adrenal incidentalomas, in collaboration with the European Network for the Study of Adrenal Tumors. Eur J Endocrinol. 2023;189(1):G1-G42. [PubMed 37318239](https://pubmed.ncbi.nlm.nih.gov/37318239/) · [doi:10.1093/ejendo/lvad066](https://doi.org/10.1093/ejendo/lvad066)  
+   *wytyczne / konsensus* — ESE/ENSAT 2023: postępowanie w incydentaloma nadnerczy
+372. Cesmebasi A, Du Plessis M, Iannatuono M, Shah S, Tubbs RS, Loukas M. A review of the anatomy and clinical significance of adrenal veins. Clin Anat. 2014;27(8):1253-63. [PubMed 24737134](https://pubmed.ncbi.nlm.nih.gov/24737134/) · [doi:10.1002/ca.22374](https://doi.org/10.1002/ca.22374)  
+   *anatomia* — Żyły nadnerczowe: prawa do żyły głównej dolnej, lewa do nerkowej z żyłą przeponową dolną; odmiany
+373. Gagner M, Pomp A, Heniford BT, Pharand D, Lacroix A. Laparoscopic adrenalectomy: lessons learned from 100 consecutive procedures. Ann Surg. 1997;226(3):238-46; discussion 246-7. [PubMed 9339930](https://pubmed.ncbi.nlm.nih.gov/9339930/) · [doi:10.1097/00000658-199709000-00003](https://doi.org/10.1097/00000658-199709000-00003)  
+   *technika* — Adrenalektomia przezotrzewnowa boczna: ułożenie, trokary 10 mm pod łukiem żebrowym, żyła nadnerczowa (prawa — 2–3 klipsy od strony żyły głównej)
+
 ## Badania
 
 ### ETHOS — leczenie endoskopowe czy operacja we wczesnym raku okrężnicy (`ethos`)
 
-348. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
+374. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
    *wytyczne / konsensus* — ESMO 2020: leczenie i schemat obserwacji w raku okrężnicy
-349. Ferlitsch M, Hassan C, Bisschops R, Bhandari P, Dinis-Ribeiro M, Risio M, et al. Colorectal polypectomy and endoscopic mucosal resection: European Society of Gastrointestinal Endoscopy (ESGE) Guideline - Update 2024. Endoscopy. 2024;56(7):516-45. [PubMed 38670139](https://pubmed.ncbi.nlm.nih.gov/38670139/) · [doi:10.1055/a-2304-3219](https://doi.org/10.1055/a-2304-3219)  
+375. Ferlitsch M, Hassan C, Bisschops R, Bhandari P, Dinis-Ribeiro M, Risio M, et al. Colorectal polypectomy and endoscopic mucosal resection: European Society of Gastrointestinal Endoscopy (ESGE) Guideline - Update 2024. Endoscopy. 2024;56(7):516-45. [PubMed 38670139](https://pubmed.ncbi.nlm.nih.gov/38670139/) · [doi:10.1055/a-2304-3219](https://doi.org/10.1055/a-2304-3219)  
    *wytyczne / konsensus* — ESGE 2024: przy podejrzeniu raka powierzchownego resekcja en bloc, m.in. EFTR
-350. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
+376. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
    *technika* — EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT
-351. Zwager LW, Bastiaansen BAJ, Montazeri NSM, Hompes R, Barresi V, Ichimasa K, et al. Deep Submucosal Invasion Is Not an Independent Risk Factor for Lymph Node Metastasis in T1 Colorectal Cancer: A Meta-Analysis. Gastroenterology. 2022;163(1):174-89. [PubMed 35436498](https://pubmed.ncbi.nlm.nih.gov/35436498/) · [doi:10.1053/j.gastro.2022.04.010](https://doi.org/10.1053/j.gastro.2022.04.010)  
+377. Zwager LW, Bastiaansen BAJ, Montazeri NSM, Hompes R, Barresi V, Ichimasa K, et al. Deep Submucosal Invasion Is Not an Independent Risk Factor for Lymph Node Metastasis in T1 Colorectal Cancer: A Meta-Analysis. Gastroenterology. 2022;163(1):174-89. [PubMed 35436498](https://pubmed.ncbi.nlm.nih.gov/35436498/) · [doi:10.1053/j.gastro.2022.04.010](https://doi.org/10.1053/j.gastro.2022.04.010)  
    *wyniki badań* — Głęboki naciek podśluzówki nie jest niezależnym czynnikiem ryzyka przerzutów węzłowych T1
-352. Endoscopic Therapy Or Surgery for Early Colon Cancer (ETHOS). ClinicalTrials.gov identifier: NCT06940947 [Internet]. Bethesda (MD): National Library of Medicine (US); 2025 Apr 15 [updated 2025 Nov 17; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06940947)  
+378. Endoscopic Therapy Or Surgery for Early Colon Cancer (ETHOS). ClinicalTrials.gov identifier: NCT06940947 [Internet]. Bethesda (MD): National Library of Medicine (US); 2025 Apr 15 [updated 2025 Nov 17; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06940947)  
    *rejestr badania* — Rejestracja ETHOS: kryteria włączenia, ramiona EFTR vs operacja, punkty końcowe
-353. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
+379. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
    *rejestr badania* — Projekt Horyzont Europa ECOPOP: leczenie oszczędzające narząd we wczesnym raku jelita grubego
 
 ### SCAR — operacja czy resekcja endoskopowa po niedoszczętnym usunięciu wczesnego raka okrężnicy (`scar`)
 
-354. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
+380. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
    *wytyczne / konsensus* — ESMO 2020: postępowanie po endoskopowym usunięciu raka pT1 i obserwacja
-355. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
+381. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
    *technika* — EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT
-356. Zwager LW, Bastiaansen BAJ, van der Spek BW, Heine DN, Schreuder RM, Perk LE, et al.; Dutch eFTR Group. Endoscopic full-thickness resection of T1 colorectal cancers: a retrospective analysis from a multicenter Dutch eFTR registry. Endoscopy. 2022;54(5):475-85. [PubMed 34488228](https://pubmed.ncbi.nlm.nih.gov/34488228/) · [doi:10.1055/a-1637-9051](https://doi.org/10.1055/a-1637-9051)  
+382. Zwager LW, Bastiaansen BAJ, van der Spek BW, Heine DN, Schreuder RM, Perk LE, et al.; Dutch eFTR Group. Endoscopic full-thickness resection of T1 colorectal cancers: a retrospective analysis from a multicenter Dutch eFTR registry. Endoscopy. 2022;54(5):475-85. [PubMed 34488228](https://pubmed.ncbi.nlm.nih.gov/34488228/) · [doi:10.1055/a-1637-9051](https://doi.org/10.1055/a-1637-9051)  
    *wyniki badań* — Rejestr eFTR: 198 wycięć blizny po niedoszczętnej resekcji raka T1
-357. Zwager LW, Moons LMG, Farina Sarasqueta A, Laclé MM, Albers SC, Hompes R, et al.; the Dutch eFTR Working Group. Long-term oncological outcomes of endoscopic full-thickness resection after previous incomplete resection of low-risk T1 CRC (LOCAL-study): study protocol of a national prospective cohort study. BMC Gastroenterol. 2022;22(1):516. [PubMed 36513968](https://pubmed.ncbi.nlm.nih.gov/36513968/) · [doi:10.1186/s12876-022-02591-5](https://doi.org/10.1186/s12876-022-02591-5)  
+383. Zwager LW, Moons LMG, Farina Sarasqueta A, Laclé MM, Albers SC, Hompes R, et al.; the Dutch eFTR Working Group. Long-term oncological outcomes of endoscopic full-thickness resection after previous incomplete resection of low-risk T1 CRC (LOCAL-study): study protocol of a national prospective cohort study. BMC Gastroenterol. 2022;22(1):516. [PubMed 36513968](https://pubmed.ncbi.nlm.nih.gov/36513968/) · [doi:10.1186/s12876-022-02591-5](https://doi.org/10.1186/s12876-022-02591-5)  
    *rejestr badania* — Protokół LOCAL: wyniki odległe eFTR po niedoszczętnej resekcji raka T1 niskiego ryzyka
-358. Surgery Versus Endoscopic Resection for Incompletely Removed Early Colon CAnceR (SCAR). ClinicalTrials.gov identifier: NCT06057350 [Internet]. Bethesda (MD): National Library of Medicine (US); 2023 Aug 12 [updated 2024 Feb 15; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06057350)  
+384. Surgery Versus Endoscopic Resection for Incompletely Removed Early Colon CAnceR (SCAR). ClinicalTrials.gov identifier: NCT06057350 [Internet]. Bethesda (MD): National Library of Medicine (US); 2023 Aug 12 [updated 2024 Feb 15; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06057350)  
    *rejestr badania* — Rejestracja SCAR: eFTR blizny vs resekcja segmentarna po niedoszczętnym usunięciu raka T1
-359. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
+385. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
    *rejestr badania* — Projekt Horyzont Europa ECOPOP: leczenie oszczędzające narząd we wczesnym raku jelita grubego
 
 ## Narzędzia
 
 ### Narzędzia
 
-360. U.S. Food and Drug Administration. 510(k) premarket notification K103263: Endo GIA Single Use Duet TRS Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2010 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf10/K103263.pdf)  
+386. U.S. Food and Drug Administration. 510(k) premarket notification K103263: Endo GIA Single Use Duet TRS Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2010 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf10/K103263.pdf)  
    *technika* — Stapler liniowy Endo GIA: ładunek Tri-Staple — po 3 rzędy zszywek z każdej strony linii cięcia
-361. U.S. Food and Drug Administration. 510(k) premarket notification K133938: Endo GIA Reinforced Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2014 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf13/K133938.pdf)  
+387. U.S. Food and Drug Administration. 510(k) premarket notification K133938: Endo GIA Reinforced Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2014 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf13/K133938.pdf)  
    *technika* — Stapler liniowy Endo GIA: ładunek wzmocniony Tri-Staple — po 3 rzędy zszywek z każdej strony
 

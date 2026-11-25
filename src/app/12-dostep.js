@@ -12,6 +12,7 @@
   // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
   function accPrompt(X) {
     if (X && !X.lap && !X.rob) return 'Jeden dostęp — kliknij „Otwarty”, aby zobaczyć cięcie.';
+    if (X && !X.open && !X.rob) return 'Jeden dostęp — kliknij „Laparoskopowy”, aby zobaczyć trokary.';
     return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.';
   }
   /* wspólny model powłok (slajd „Dostęp” i zabiegi ze stomią — znacznik 'body'): siatka (y, u) na powierzchni skóry ANAT.BODY z zanikaniem przy brzegach

@@ -89,7 +89,12 @@
   // lista kadrów jednego wariantu: prawidłowa, zakres, [stapler], usunięcie, [rekonstrukcja], endoskopia, TK
   function framesFor(Pr, vi) {
     if (Pr.split) return trialFrames(Pr);
-    if (Pr.variants[vi || 0].singleFrames) return Pr.variants[vi || 0].singleFrames.map(function (f, i) { return Object.assign({ vi: vi || 0, num: String(i + 1) }, f); });
+    if (Pr.variants[vi || 0].singleFrames) {
+      var sv = Pr.variants[vi || 0], SF = sv.singleFrames.slice();
+      // dostęp operacyjny także w zabiegach z własnymi kadrami (np. adrenalektomia): slajd „Dostęp” na osi m −1 → −0,02
+      if (sv.access) SF.unshift({ k: 'access', kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: A.ACCESS[sv.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny', cap: accPrompt(A.ACCESS[sv.access]) });
+      return SF.map(function (f, i) { return Object.assign({ vi: vi || 0, num: String(i + 1) }, f); });
+    }
     if (Pr.variants[0].single) return [{ k: 'normal', vi: 0, kind: 'orbit', m0: 0, m1: 0, cam: 'front', num: '1', short: 'Guz i zakres', title: 'Wybór zakresu resekcji', cap: '' }];
     var an = Pr.variants[vi || 0], fx = an.frames, tx = an.text || {}, v = vi || 0;
     var cut = an.focus ? 'focus' : an.id === 'sleeve' ? 'stomach' : 'upper';

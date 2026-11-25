@@ -263,9 +263,74 @@
       "arvanitakis2021": { c: "Arvanitakis M, Gkolfakis P, Despott EJ, Ballarin A, Beyna T, Boeykens K, et al. Endoscopic management of enteral tubes in adult patients - Part 1: Definitions and indications. European Society of Gastrointestinal Endoscopy (ESGE) Guideline. Endoscopy. 2021;53(1):81-92.", pmid: "33260229", doi: "10.1055/a-1303-7449", y: 2021 },
       "camachomauries2013": { c: "Camacho-Mauries D, Rodriguez-Díaz JL, Salgado-Nesme N, González QH, Vergara-Fernández O. Randomized clinical trial of intestinal ostomy takedown comparing pursestring wound closure vs conventional closure to eliminate the risk of wound infection. Dis Colon Rectum. 2013;56(2):205-11.", pmid: "23303149", doi: "10.1097/DCR.0b013e31827888f6", y: 2013 },
       "bischoff2020": { c: "Bischoff SC, Austin P, Boeykens K, Chourdakis M, Cuerda C, Jonkers-Schuitema C, et al. ESPEN guideline on home enteral nutrition. Clin Nutr. 2020;39(1):5-22.", pmid: "31255350", doi: "10.1016/j.clnu.2019.04.022", y: 2020 },
-      "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 }
+      "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 },
+      // endokrynologia (2026-11-25): tarczyca, przytarczyce, nadnercza — rekordy PubMed (tools/pubmed_vancouver.py)
+      "haugen2016": { c: "Haugen BR, Alexander EK, Bible KC, Doherty GM, Mandel SJ, Nikiforov YE, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer: The American Thyroid Association Guidelines Task Force on Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133.", pmid: "26462967", doi: "10.1089/thy.2015.0020", y: 2016 },
+      "randolph2011": { c: "Randolph GW, Dralle H, Abdullah H, Barczynski M, Bellantone R, Brauckhoff M, et al.; International Intraoperative Monitoring Study Group. Electrophysiologic recurrent laryngeal nerve monitoring during thyroid and parathyroid surgery: international standards guideline statement. Laryngoscope. 2011;121 Suppl 1:S1-16.", pmid: "21181860", doi: "10.1002/lary.21119", y: 2011 },
+      "cernea1992": { c: "Cernea CR, Ferraz AR, Nishio S, Dutra A Jr, Hojaij FC, dos Santos LR. Surgical anatomy of the external branch of the superior laryngeal nerve. Head Neck. 1992;14(5):380-3.", pmid: "1399571", doi: "10.1002/hed.2880140507", y: 1992 },
+      "barczynski2013": { c: "Barczyński M, Randolph GW, Cernea CR, Dralle H, Dionigi G, Alesina PF, et al.; International Neural Monitoring Study Group. External branch of the superior laryngeal nerve monitoring during thyroid and parathyroid surgery: International Neural Monitoring Study Group standards guideline statement. Laryngoscope. 2013;123 Suppl 4:S1-14.", pmid: "23832799", doi: "10.1002/lary.24301", y: 2013 },
+      "carty2009": { c: "Carty SE, Cooper DS, Doherty GM, Duh QY, Kloos RT, Mandel SJ, et al.; American Thyroid Association Surgery Working Group; American Association of Endocrine Surgeons; American Academy of Otolaryngology-Head and Neck Surgery; American Head and Neck Society. Consensus statement on the terminology and classification of central neck dissection for thyroid cancer. Thyroid. 2009;19(11):1153-8.", pmid: "19860578", doi: "10.1089/thy.2009.0159", y: 2009 },
+      "stack2012": { c: "Stack BC Jr, Ferris RL, Goldenberg D, Haymart M, Shaha A, Sheth S, et al.; American Thyroid Association Surgical Affairs Committee. American Thyroid Association consensus review and statement regarding the anatomy, terminology, and rationale for lateral neck dissection in differentiated thyroid cancer. Thyroid. 2012;22(5):501-8.", pmid: "22435914", doi: "10.1089/thy.2011.0312", y: 2012 },
+      "gauger2001": { c: "Gauger PG, Delbridge LW, Thompson NW, Crummer P, Reeve TS. Incidence and importance of the tubercle of Zuckerkandl in thyroid surgery. Eur J Surg. 2001;167(4):249-54.", pmid: "11354315", doi: "10.1080/110241501300091363", y: 2001 },
+      "lorentepoch2015": { c: "Lorente-Poch L, Sancho JJ, Muñoz-Nova JL, Sánchez-Velázquez P, Sitges-Serra A. Defining the syndromes of parathyroid failure after total thyroidectomy. Gland Surg. 2015;4(1):82-90.", pmid: "25713783", doi: "10.3978/j.issn.2227-684X.2014.12.04", y: 2015 },
+      "wilhelm2016": { c: "Wilhelm SM, Wang TS, Ruan DT, Lee JA, Asa SL, Duh QY, et al. The American Association of Endocrine Surgeons Guidelines for Definitive Management of Primary Hyperparathyroidism. JAMA Surg. 2016;151(10):959-68.", pmid: "27532368", doi: "10.1001/jamasurg.2016.2310", y: 2016 },
+      "irvin1991": { c: "Irvin GL 3rd, Dembrow VD, Prudhomme DL. Operative monitoring of parathyroid gland hyperfunction. Am J Surg. 1991;162(4):299-302.", pmid: "1683177", doi: "10.1016/0002-9610(91)90135-z", y: 1991 },
+      "carneiro2003": { c: "Carneiro DM, Solorzano CC, Nader MC, Ramirez M, Irvin GL 3rd. Comparison of intraoperative iPTH assay (QPTH) criteria in guiding parathyroidectomy: which criterion is the most accurate? Surgery. 2003;134(6):973-9; discussion 979-81.", pmid: "14668730", doi: "10.1016/j.surg.2003.06.001", y: 2003 },
+      "akerstrom1984": { c: "Akerström G, Malmaeus J, Bergström R. Surgical anatomy of human parathyroid glands. Surgery. 1984;95(1):14-21.", pmid: "6691181", y: 1984 },
+      "wells1975": { c: "Wells SA Jr, Gunnells JC, Shelburne JD, Schneider AB, Sherwood LM. Transplantation of the parathyroid glands in man: clinical indications and results. Surgery. 1975;78(1):34-44.", pmid: "1138398", y: 1975 },
+      "wells1980": { c: "Wells SA Jr, Farndon JR, Dale JK, Leight GS, Dilley WG. Long-term evaluation of patients with primary parathyroid hyperplasia managed by total parathyroidectomy and heterotopic autotransplantation. Ann Surg. 1980;192(4):451-8.", pmid: "7425691", doi: "10.1097/00000658-198010000-00003", y: 1980 },
+      "schlosser2016": { c: "Schlosser K, Bartsch DK, Diener MK, Seiler CM, Bruckner T, Nies C, et al. Total Parathyroidectomy With Routine Thymectomy and Autotransplantation Versus Total Parathyroidectomy Alone for Secondary Hyperparathyroidism: Results of a Nonconfirmatory Multicenter Prospective Randomized Controlled Pilot Trial. Ann Surg. 2016;264(5):745-53.", pmid: "27741007", doi: "10.1097/SLA.0000000000001875", y: 2016 },
+      "lorenz2015": { c: "Lorenz K, Bartsch DK, Sancho JJ, Guigard S, Triponez F. Surgical management of secondary hyperparathyroidism in chronic kidney disease--a consensus report of the European Society of Endocrine Surgeons. Langenbecks Arch Surg. 2015;400(8):907-27.", pmid: "26429790", doi: "10.1007/s00423-015-1344-5", y: 2015 },
+      "kdigo2017": { c: "Kidney Disease: Improving Global Outcomes (KDIGO) CKD-MBD Update Work Group. KDIGO 2017 Clinical Practice Guideline Update for the Diagnosis, Evaluation, Prevention, and Treatment of Chronic Kidney Disease-Mineral and Bone Disorder (CKD-MBD). Kidney Int Suppl. 2017;7(1):1-59.", pmid: "30675420", doi: "10.1016/j.kisu.2017.04.001", y: 2017 },
+      "rothmund1991": { c: "Rothmund M, Wagner PK, Schark C. Subtotal parathyroidectomy versus total parathyroidectomy and autotransplantation in secondary hyperparathyroidism: a randomized trial. World J Surg. 1991;15(6):745-50.", pmid: "1767541", doi: "10.1007/BF01665309", y: 1991 },
+      "gagner1992": { c: "Gagner M, Lacroix A, Bolté E. Laparoscopic adrenalectomy in Cushing's syndrome and pheochromocytoma. N Engl J Med. 1992;327(14):1033.", pmid: "1387700", doi: "10.1056/NEJM199210013271417", y: 1992 },
+      "gagner1997": { c: "Gagner M, Pomp A, Heniford BT, Pharand D, Lacroix A. Laparoscopic adrenalectomy: lessons learned from 100 consecutive procedures. Ann Surg. 1997;226(3):238-46; discussion 246-7.", pmid: "9339930", doi: "10.1097/00000658-199709000-00003", y: 1997 },
+      "yip2022": { c: "Yip L, Duh QY, Wachtel H, Jimenez C, Sturgeon C, Lee C, et al. American Association of Endocrine Surgeons Guidelines for Adrenalectomy: Executive Summary. JAMA Surg. 2022;157(10):870-7.", pmid: "35976622", doi: "10.1001/jamasurg.2022.3544", y: 2022 },
+      "lenders2014": { c: "Lenders JW, Duh QY, Eisenhofer G, Gimenez-Roqueplo AP, Grebe SK, Murad MH, et al.; Endocrine Society. Pheochromocytoma and paraganglioma: an endocrine society clinical practice guideline. J Clin Endocrinol Metab. 2014;99(6):1915-42.", pmid: "24893135", doi: "10.1210/jc.2014-1498", y: 2014 },
+      "fassnacht2023": { c: "Fassnacht M, Tsagarakis S, Terzolo M, Tabarin A, Sahdev A, Newell-Price J, et al. European Society of Endocrinology clinical practice guidelines on the management of adrenal incidentalomas, in collaboration with the European Network for the Study of Adrenal Tumors. Eur J Endocrinol. 2023;189(1):G1-G42.", pmid: "37318239", doi: "10.1093/ejendo/lvad066", y: 2023 },
+      "cesmebasi2014": { c: "Cesmebasi A, Du Plessis M, Iannatuono M, Shah S, Tubbs RS, Loukas M. A review of the anatomy and clinical significance of adrenal veins. Clin Anat. 2014;27(8):1253-63.", pmid: "24737134", doi: "10.1002/ca.22374", y: 2014 },
     },
     P: {
+      "thyr": [
+        ["haugen2016", "guideline", "ATA 2015: zakres operacji w raku zróżnicowanym (lobektomia albo tyreoidektomia całkowita), wskazania do limfadenektomii"],
+        ["randolph2011", "guideline", "Neuromonitoring nerwu krtaniowego wstecznego: standard V1–R1–R2–V2, postępowanie przy utracie sygnału"],
+        ["cernea1992", "anatomy", "Gałąź zewnętrzna nerwu krtaniowego górnego: typy skrzyżowania z naczyniami tarczowymi górnymi (typ 2B — poniżej górnego brzegu bieguna)"],
+        ["barczynski2013", "guideline", "INMSG: identyfikacja i monitorowanie gałęzi zewnętrznej nerwu krtaniowego górnego, podwiązywanie naczyń bieguna górnego przy torebce"],
+        ["gauger2001", "anatomy", "Guzek Zuckerkandla: częstość i położenie nerwu krtaniowego wstecznego przyśrodkowo od niego"],
+        ["lorentepoch2015", "outcomes", "Niedoczynność przytarczyc po tyreoidektomii całkowitej: definicje, zachowanie przytarczyc z ukrwieniem, autoprzeszczep"]
+      ],
+      "thyr-cnd": [
+        ["carty2009", "guideline", "Konsensus ATA/AAES: terminologia i zakres centralnej limfadenektomii szyjnej (węzły przedkrtaniowe, przedtchawicze, przytchawicze)"]
+      ],
+      "thyr-lnd": [
+        ["carty2009", "guideline", "Konsensus ATA/AAES: zakres centralnej limfadenektomii szyjnej"],
+        ["stack2012", "guideline", "ATA: przedziałowa limfadenektomia boczna co najmniej poziomów IIa, III, IV i Vb"]
+      ],
+      "ptx": [
+        ["wilhelm2016", "guideline", "AAES 2016: wskazania do paratyreoidektomii, lokalizacja przed operacją, paratyreoidektomia celowana albo eksploracja obustronna"],
+        ["akerstrom1984", "anatomy", "Położenie przytarczyc górnych i dolnych (badanie sekcyjne), ektopie"],
+        ["irvin1991", "original", "Szybki śródoperacyjny pomiar PTH 10 min po wycięciu gruczolaka"],
+        ["carneiro2003", "technique", "Kryterium Miami: spadek PTH o ≥ 50% od najwyższej wartości przed nacięciem lub przed wycięciem, 10 min po wycięciu"]
+      ],
+      "ptx-sub": [
+        ["lorenz2015", "guideline", "ESES 2015: nadczynność wtórna — paratyreoidektomia subtotalna (kikut 40–80 mg oznaczony szwem lub klipsem, najlepiej z dolnej przytarczycy) i całkowita z autoprzeszczepem"],
+        ["kdigo2017", "guideline", "KDIGO 2017: wskazania do paratyreoidektomii w przewlekłej chorobie nerek"],
+        ["rothmund1991", "outcomes", "Badanie z randomizacją: paratyreoidektomia subtotalna a całkowita z autoprzeszczepem w nadczynności wtórnej"]
+      ],
+      "ptx-tot": [
+        ["wells1975", "original", "Autoprzeszczep przytarczyc do mięśni przedramienia"],
+        ["wells1980", "technique", "Technika: fragmenty ok. 1 × 1 × 3 mm, 15–20 w osobnych kieszonkach mięśnia przedramienia niedominującego, kriokonserwacja"],
+        ["lorenz2015", "guideline", "ESES 2015: autoprzeszczep do mięśnia ramienno-promieniowego przedramienia, tymektomia szyjna"],
+        ["schlosser2016", "outcomes", "TOPAR: paratyreoidektomia całkowita z tymektomią i autoprzeszczepem a bez autoprzeszczepu (badanie z randomizacją)"]
+      ],
+      "adr": [
+        ["gagner1992", "original", "Pierwsze adrenalektomie laparoskopowe (zespół Cushinga, guz chromochłonny)"],
+        ["gagner1997", "technique", "Adrenalektomia przezotrzewnowa boczna: ułożenie, trokary 10 mm pod łukiem żebrowym, żyła nadnerczowa (prawa — 2–3 klipsy od strony żyły głównej)"],
+        ["yip2022", "guideline", "AAES 2022: dostęp małoinwazyjny w guzach łagodnych, operacja otwarta przy podejrzeniu raka kory nadnercza, incydentaloma > 4 cm lub > 20 j.H."],
+        ["lenders2014", "guideline", "Endocrine Society 2014: guz chromochłonny — przygotowanie blokadą alfa przed operacją"],
+        ["fassnacht2023", "guideline", "ESE/ENSAT 2023: postępowanie w incydentaloma nadnerczy"],
+        ["cesmebasi2014", "anatomy", "Żyły nadnerczowe: prawa do żyły głównej dolnej, lewa do nerkowej z żyłą przeponową dolną; odmiany"]
+      ],
       "tcei": [
         ["spinelli2022", "guideline", "ECCO 2022: kolektomia subtotalna z ileostomią końcową w ciężkim rzucie WZJG; proktokolektomia z ileostomią albo ze zbiornikiem J"],
         ["brooke1952", "original", "Ileostomia wywinięta (Brooke) — koniec jelita krętego ponad skórę"]
