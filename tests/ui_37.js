@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Przeszczepienie wątroby (OLTx): 4 warianty (klasyczna / piggyback × przewód–przewód / Roux-en-Y), 6 kadrów, zespolenia w stanie końcowym, EN
+// Przeszczepienie wątroby (OLTx): 4 warianty (klasyczna / piggyback × przewód–przewód / Roux-en-Y), 6 kadrów, zespolenia w stanie końcowym, EN; od 2026-11-25 w kategorii „Transplantologia”
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -15,8 +15,8 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }
 (async()=>{
   const w=boot(); await sleep(300); const $=id=>w.document.getElementById(id), D=w.document;
-  [...D.querySelectorAll('#cats .cat')].find(b=>/Wątroba/.test(b.textContent)).click(); await sleep(500);
-  [...D.querySelectorAll('#tabs .tab')].find(b=>/Przeszczep/.test(b.textContent)).click(); await sleep(800);
+  [...D.querySelectorAll('#cats .cat')].find(b=>/Transplantologia/.test(b.textContent)).click(); await sleep(500);   // OLTx w kategorii „Transplantologia” (od 2026-11-25)
+  [...D.querySelectorAll('#tabs .tab')].find(b=>/wątroby/.test(b.textContent)).click(); await sleep(800);
   const vb=[...D.querySelectorAll('#variants .vbtn')].map(b=>b.textContent); ok(vb.length===4,'warianty: '+vb.join('|'));
   const WANT={0:['Zespolenie IVC nad wątrobą','Zespolenie IVC pod wątrobą','Zespolenie przewód–przewód'],1:['Zespolenie IVC nad wątrobą','Hepatikojejunostomia','Zespolenie jelitowo-jelitowe','Kikut przewodu żółciowego biorcy (zamknięty)','Pętla Roux-en-Y'],
     2:['Zespolenie kawo-kawalne bok-do-bokuprzednia ściana IVC biorcy – tylna ściana IVC dawcy','Zamknięty górny koniec IVC dawcy','Zamknięty dolny koniec IVC dawcy','Zamknięte ujścia żył wątrobowych biorcy','Zespolenie przewód–przewód','IVC biorcy (zachowana)'],3:['Zespolenie kawo-kawalne bok-do-bokuprzednia ściana IVC biorcy – tylna ściana IVC dawcy','Hepatikojejunostomia','Pętla Roux-en-Y','Kikut przewodu żółciowego biorcy (zamknięty)']};

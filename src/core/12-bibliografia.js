@@ -279,6 +279,18 @@
       "mckernan1993": { c: "McKernan JB, Laws HL. Laparoscopic repair of inguinal hernias using a totally extraperitoneal prosthetic approach. Surg Endosc. 1993;7(1):26-8.", pmid: "8424228", doi: "10.1007/BF00591232", y: 1993 },
       "arregui1992": { c: "Arregui ME, Davis CJ, Yucel O, Nagan RF. Laparoscopic mesh repair of inguinal hernia using a preperitoneal approach: a preliminary report. Surg Laparosc Endosc. 1992;2(1):53-8.", pmid: "1341501", y: 1992 },
       "kaufmann2018": { c: "Kaufmann R, Halm JA, Eker HH, Klitsie PJ, Nieuwenhuizen J, van Geldere D, et al. Mesh versus suture repair of umbilical hernia in adults: a randomised, double-blind, controlled, multicentre trial. Lancet. 2018;391(10123):860-9.", pmid: "29459021", doi: "10.1016/S0140-6736(18)30298-8", y: 2018 },
+      "merrill1956": { c: "Merrill JP, Murray JE, Harrison JH, Guild WR. Successful homotransplantation of the human kidney between identical twins. J Am Med Assoc. 1956;160(4):277-82.", pmid: "13278189", doi: "10.1001/jama.1956.02960390027008", y: 1956 },
+      "rodriguezfaba2025": { c: "Rodríguez Faba O, Boissier R, Budde K, Figueiredo A, Hevia V, Lledó García E, et al. European Association of Urology Guidelines on Renal Transplantation: Update 2024. Eur Urol Focus. 2025;11(2):365-73.", pmid: "39489684", doi: "10.1016/j.euf.2024.10.010", y: 2025 },
+      "gregoir1962": { c: "Gregoir W. [Congenital vesico-ureteral reflux]. Acta Urol Belg. 1962;30:286-300.", pmid: "13901619", y: 1962 },
+      "politano1958": { c: "Politano VA, Leadbetter WF. An operative technique for the correction of vesicoureteral reflux. J Urol. 1958;79(6):932-41.", pmid: "13539988", doi: "10.1016/S0022-5347(17)66369-9", y: 1958 },
+      "patterson2024": { c: "Patterson LG, Tingle SJ, Rix DA, Manas DM, Wilson CH. Routine intraoperative ureteric stenting for kidney transplant recipients. Cochrane Database Syst Rev. 2024;7(7):CD004925.", pmid: "38979749", doi: "10.1002/14651858.CD004925.pub4", y: 2024 },
+      "alberts2014": { c: "Alberts VP, Idu MM, Legemate DA, Laguna Pes MP, Minnee RC. Ureterovesical anastomotic techniques for kidney transplantation: a systematic review and meta-analysis. Transpl Int. 2014;27(6):593-605.", pmid: "24606191", doi: "10.1111/tri.12301", y: 2014 },
+      "slagt2014": { c: "Slagt IK, Dor FJ, Tran TC, Kimenai HJ, Weimar W, Ijzermans JN, et al. A randomized controlled trial comparing intravesical to extravesical ureteroneocystostomy in living donor kidney transplantation recipients. Kidney Int. 2014;85(2):471-7.", pmid: "24284515", doi: "10.1038/ki.2013.464", y: 2014 },
+      "barry1978": { c: "Barry JM, Fuchs EF. Right renal vein extension in cadaver kidney transplantation. Arch Surg. 1978;113(3):300.", pmid: "346002", doi: "10.1001/archsurg.1978.01370150072015", y: 1978 },
+      "corry1978": { c: "Corry RJ, Kelley SE. Technic for lengthening the right renal vein of cadaver donor kidneys. Am J Surg. 1978;135(6):867.", pmid: "352170", doi: "10.1016/0002-9610(78)90186-1", y: 1978 },
+      "benedetti1995": { c: "Benedetti E, Troppmann C, Gillingham K, Sutherland DE, Payne WD, Dunn DL, et al. Short- and long-term outcomes of kidney transplants with multiple renal arteries. Ann Surg. 1995;221(4):406-14.", pmid: "7726677", doi: "10.1097/00000658-199504000-00012", y: 1995 },
+      "carrel2001": { c: "Carrel A, Guthrie CC. Anastomosis of blood vessels by the patching method and transplantation of the kidney. 1906 [classical article]. Yale J Biol Med. 2001;74(4):243-7.", pmid: "11697483", y: 2001 },
+      "gittes1979": { c: "Gittes RF, Waters WB. Sexual impotence: the overlooked complication of a second renal transplant. J Urol. 1979;121(6):719-20.", pmid: "379364", doi: "10.1016/s0022-5347(17)56967-0", y: 1979 }
     },
     P: {
       "lich": [
@@ -753,6 +765,25 @@
         ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez całkowitego zaciśnięcia IVC (zacisk boczny; Belghiti)"]],
       "oltx-classic-d2d": [
         ["dumonceau2018", "endoscopy", "ESGE: łagodne zwężenia dróg żółciowych — mnogie stenty plastikowe lub FCSEMS"]],
+      "ktx": [
+        ["merrill1956", "original", "Pierwszy udany przeszczep nerki u człowieka (bliźnięta jednojajowe, Boston 1954)"],
+        ["rodriguezfaba2025", "guideline", "Wytyczne EAU 2024: zewnątrzpęcherzowe zespolenie moczowodu typu Lich–Gregoir na cewniku JJ"],
+        ["patterson2024", "outcomes", "Przegląd Cochrane: rutynowy cewnik JJ zmniejsza ryzyko poważnych powikłań urologicznych"],
+        ["benedetti1995", "outcomes", "Tętnice dodatkowe (tętnica bieguna dolnego); łata aortalna i wybór tętnicy biodrowej bez wpływu na powikłania naczyniowe"],
+        ["gregoir1962", "original", "Zewnątrzpęcherzowa technika antyrefluksowa (Gregoir; opis Licha z 1961 r. nie jest indeksowany w PubMed)"]],
+      "ktx-carrel": [
+        ["carrel2001", "original", "Łata Carrela: zespolenie naczyń sposobem łaty i przeszczepienie nerki (1906, przedruk 2001)"]],
+      "ktx-iia": [
+        ["gittes1979", "outcomes", "Zaburzenia erekcji po drugim przeszczepie, gdy obie tętnice biodrowe wewnętrzne są podwiązane"]],
+      "ktx-rv": [
+        ["carrel2001", "original", "Łata Carrela przy tętnicy nerki od dawcy zmarłego"],
+        ["barry1978", "technique", "Przedłużenie prawej żyły nerkowej odcinkiem żyły głównej dolnej dawcy"],
+        ["corry1978", "technique", "Wydłużenie prawej żyły nerkowej nerek od dawców zmarłych"]],
+      "ktx-pl": [
+        ["carrel2001", "original", "Łata Carrela przy tętnicy nerki od dawcy zmarłego"],
+        ["politano1958", "original", "Wewnątrzpęcherzowa ureteroneocystostomia z tunelem podśluzówkowym"],
+        ["alberts2014", "outcomes", "Przegląd systematyczny: Lich–Gregoir — mniej przecieków i krwiomoczu niż Politano–Leadbetter, zwężenia bez różnicy"],
+        ["slagt2014", "outcomes", "RCT: technika wewnątrz- vs zewnątrzpęcherzowa u biorców od dawców żywych — reinterwencje bez różnicy, zewnątrzpęcherzowa szybsza"]],
       "_tools": [
         ["fdaK103263", "technique", "Stapler liniowy Endo GIA: ładunek Tri-Staple — po 3 rzędy zszywek z każdej strony linii cięcia"],
         ["fdaK133938", "technique", "Stapler liniowy Endo GIA: ładunek wzmocniony Tri-Staple — po 3 rzędy zszywek z każdej strony"]]

@@ -18,7 +18,7 @@ function boot(lang){ const dom=new JSDOM(html,{runScripts:'outside-only',pretend
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }
 (async()=>{
   let w=boot(); await sleep(300); const $=id=>w.document.getElementById(id), A=w.ANAT;
-  const cats=A.CATS.map(c=>c.id); ok(cats.indexOf('hernia')>=0 && cats.indexOf('hernia')===cats.indexOf('trials')-1,'kategoria hernia nie stoi przed badaniami: '+cats);
+  const cats=A.CATS.map(c=>c.id); ok(cats.indexOf('hernia')>cats.indexOf('colon') && cats.indexOf('hernia')<cats.indexOf('trials'),'kategoria hernia nie stoi po jelicie grubym i przed badaniami: '+cats);   // dalej mogą być inne kategorie (np. Transplantologia)
   const H=A.PROCS.filter(p=>p.cat==='hernia').map(p=>p.id); ok(H.join(',')==='lich,tapp,tep,umb,tar,acs','zabiegi herniologii: '+H);
   ok(A.WALL.rdr().ratio<1 && A.WALL.rdr().ratio>0.8,'RDR modelu TAR/Ramirez: '+A.WALL.rdr().ratio);
   const S=w.__sgTest.state();
