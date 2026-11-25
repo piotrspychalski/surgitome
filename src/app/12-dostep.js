@@ -24,7 +24,7 @@
   function gridGeo(NY, NX, fXY, off, k, holes, alphaFn) {
     var B = A.BODY, pos = [], col = [], idx = [], ins = [], base = new THREE.Color(ACC_SKIN);
     for (var i = 0; i <= NY; i++) for (var j = 0; j <= NX; j++) {
-      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, off, k);
+      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, typeof off === 'function' ? off(h.x, h.y) : off, k);
       pos.push(p.x, p.y, p.z); ins.push(h.inside); if (alphaFn) col.push(base.r, base.g, base.b, alphaFn(i / NY, j / NX));
     }
     for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NX; j2++) {
@@ -41,9 +41,10 @@
     return gridGeo(72, 52, function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v; return [(-1 + 2 * u) * B.W(y) * 0.985, y]; }, 0, k, holes,
       function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v, uu = -1 + 2 * u; return sm((1 - Math.abs(uu)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6); });
   }
+  // mięsień prosty: środek jego grubości ze wspólnego modelu warstw (BODY.depth)
   function bodyRectusGeo(sd, k, holes) {
     var B = A.BODY;
-    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, 0.5, k, holes, null);
+    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, function (x, y) { return B.depth(['rect', 0.5], x, y); }, k, holes, null);
   }
   function accessAttach(key) {
     var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [], XF = X.xf || { s: 1, d: [0, 0, 0] };
@@ -59,23 +60,22 @@
     grp.add(new THREE.Mesh(skinG, skinM));
     // mięśnie proste: pasma pod skórą od spojenia do łuku żebrowego; smugi ścięgniste
     // mięśnie proste: wyróżniony ten, przez który się wchodzi — laparoskopia i robot: lewy (kontralateralny, trokary), dostęp otwarty: prawy (przecinany)
-    var musBy = { '1': mat('#b04a42', 0.24), '-1': mat('#b04a42', 0.24) }, tendM = mat('#e7c9b8', 0.6);
+    // wspólny model ściany (ANAT.BODY) na poziomie szczegółu 0: pozostałe warstwy, nerwy i drobne naczynia ukryte (12-powloki: wallVesselsLod)
+    var musBy = { '1': mat(wallCol('rect'), 0.24), '-1': mat(wallCol('rect'), 0.24) }, tendM = mat('#e7c9b8', 0.6), dTend = B.depth(['rect', 0, 0.03], 2, 0);
     function sideOf() { var D = ACC.kind && X[ACC.kind]; return D ? (D.side || 0) : 0; }
     [1, -1].forEach(function (sd) {
       var musM = musBy[String(sd)];
       grp.add(new THREE.Mesh(morphGeo(function (k) { return bodyRectusGeo(sd, k, null); }, true), musM));
-      B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], 0.46, 0.05, k); }), tendM)); });
-      // naczynia nabrzuszne (tętnica i żyła obok)
-      [['a', '#b83227', 0], ['v', '#3867b5', 0.16]].forEach(function (vv) {
-        [B.EPI_INF, B.EPI_SUP].forEach(function (path, pi) {
-          grp.add(new THREE.Mesh(morphGeo(function (k) {
-            return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(path.map(function (q) { return skinP(sd * (q[0] + vv[2]), q[1], q[2], k); }), false, 'centripetal'), 40, pi ? 0.055 : 0.075, 6, false);
-          }), mat(vv[1], pi ? 0.6 : 0.85)));
+      B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], dTend, 0.05, k); }), tendM)); });
+      // naczynia nabrzuszne dolne i górne (tętnica i żyła obok) — za mięśniem prostym, głębokość ze wspólnego modelu
+      ['a', 'v'].forEach(function (kind) {
+        wallVesselsLod(0).forEach(function (v) {
+          grp.add(new THREE.Mesh(morphGeo(function (k) { return wallTubeGeo(wallVesselPts(v, sd, kind, function (x, y, d) { return skinP(x, y, d, k); }), v.r, 40); }), mat(wallCol(kind === 'a' ? 'art' : 'vein'), v.id === 'epiSup' ? 0.6 : 0.85)));
         });
       });
     });
     // punkty orientacyjne na skórze
-    var lmM = mat('#7d6152', 0.85), LM = B.LM;
+    var lmM = mat(wallCol('lm'), 0.85), LM = B.LM;
     ['costalL', 'costalR', 'crestL', 'crestR', 'ingL', 'ingR'].forEach(function (id) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn(LM[id], -0.03, 0.05, k); }), lmM)); });
     var dot = track(new THREE.SphereGeometry(0.16, 12, 9)), dots = [];
     ['xiph', 'asisL', 'asisR', 'pubis'].forEach(function (id) { var s = new THREE.Mesh(dot, lmM); grp.add(s); dots.push({ s: s, p: LM[id] }); });

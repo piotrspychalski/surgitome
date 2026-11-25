@@ -7,7 +7,7 @@
      „wolnym” (z nerką na stole) a zespoleniem (koniec na ścianie naczynia biorcy / pęcherza). Warianty: d.art (carrel / nopatch / iia), d.vein (std / ext),
      d.ure (lg / pl), d.side (L — miedniczka z przodu, R — żyła z przodu). Stan z osi czasu m (stateAt). ---------- */
   function makeKtx(d) {
-    var K = A.KTX, B = A.BODY, C = K.COL, WT = (A.WALL && A.WALL.T) || { skin: 0.12, fat: 1.05, eo: 0.22, io: 0.24, ta: 0.2, tf: 0.045, pre: 0.16 };
+    var K = A.KTX, B = A.BODY, C = K.COL, WT = B.T;   // grubości warstw — wspólny model ściany (ANAT.BODY)
     var grp = new THREE.Group(), labels = [], dyn = [], LEFT = d.side === 'L';
     function v3(a) { return new V3(a[0], a[1], a[2]); }
     function mat(col, o) {
@@ -53,7 +53,7 @@
     var APO = new THREE.Color('#ece3d1'), MUS = new THREE.Color('#b65046'), MUS2 = new THREE.Color('#a8443d'), TFC = new THREE.Color('#ddd0b4');
     function layerCol(id, x, y) {
       var rl = B.rectLat(y), ax = -x, c = new THREE.Color();
-      if (id === 'eo') return c.copy(APO).lerp(MUS, sm((ax - (A.WALL ? A.WALL.eoApo(y) : rl + 1.6)) / 0.6));
+      if (id === 'eo') return c.copy(APO).lerp(MUS, sm((ax - B.eoApo(y)) / 0.6));
       if (id === 'io') return c.copy(APO).lerp(MUS, sm((ax - rl - 0.3) / 0.5));
       if (id === 'ta') return c.copy(APO).lerp(MUS2, sm((ax - rl - 0.8) / 0.5));
       return c.copy(TFC);
