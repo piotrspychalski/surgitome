@@ -250,6 +250,13 @@
       "japanesegastricc2011": { c: "Japanese Gastric Cancer Association. Japanese classification of gastric carcinoma: 3rd English edition. Gastric Cancer. 2011;14(2):101-12.", pmid: "21573743", doi: "10.1007/s10120-011-0041-5", y: 2011 },
       "tol2014": { c: "Tol JA, Gouma DJ, Bassi C, Dervenis C, Montorsi M, Adham M, et al.; International Study Group on Pancreatic Surgery. Definition of a standard lymphadenectomy in surgery for pancreatic ductal adenocarcinoma: a consensus statement by the International Study Group on Pancreatic Surgery (ISGPS). Surgery. 2014;156(3):591-600.", pmid: "25061003", doi: "10.1016/j.surg.2014.06.016", y: 2014 },
       "rice2017": { c: "Rice TW, Ishwaran H, Ferguson MK, Blackstone EH, Goldstraw P. Cancer of the Esophagus and Esophagogastric Junction: An Eighth Edition Staging Primer. J Thorac Oncol. 2017;12(1):36-42.", pmid: "27810391", doi: "10.1016/j.jtho.2016.10.016", y: 2017 },
+      "novitsky2012": { c: "Novitsky YW, Elliott HL, Orenstein SB, Rosen MJ. Transversus abdominis muscle release: a novel approach to posterior component separation during complex abdominal wall reconstruction. Am J Surg. 2012;204(5):709-16.", pmid: "22607741", doi: "10.1016/j.amjsurg.2012.02.008", y: 2012 },
+      "ramirez1990": { c: "Ramirez OM, Ruas E, Dellon AL. \"Components separation\" method for closure of abdominal-wall defects: an anatomic and clinical study. Plast Reconstr Surg. 1990;86(3):519-26.", pmid: "2143588", doi: "10.1097/00006534-199009000-00023", y: 1990 },
+      "love2021": { c: "Love MW, Warren JA, Davis S, Ewing JA, Hall AM, Cobb WS, et al. Computed tomography imaging in ventral hernia repair: can we predict the need for myofascial release? Hernia. 2021;25(2):471-7.", pmid: "32277369", doi: "10.1007/s10029-020-02181-y", y: 2021 },
+      "parker2020": { c: "Parker SG, Halligan S, Liang MK, Muysoms FE, Adrales GL, Boutall A, et al. Definitions for Loss of Domain: An International Delphi Consensus of Expert Surgeons. World J Surg. 2020;44(4):1070-8.", pmid: "31848677", doi: "10.1007/s00268-019-05317-z", y: 2020 },
+      "sabbagh2011": { c: "Sabbagh C, Dumont F, Robert B, Badaoui R, Verhaeghe P, Regimbeau JM. Peritoneal volume is predictive of tension-free fascia closure of large incisional hernias with loss of domain: a prospective study. Hernia. 2011;15(5):559-65.", pmid: "21584816", doi: "10.1007/s10029-011-0832-y", y: 2011 },
+      "tanaka2010": { c: "Tanaka EY, Yoo JH, Rodrigues AJ Jr, Utiyama EM, Birolini D, Rasslan S. A computerized tomography scan method for calculating the hernia sac and abdominal cavity volume in complex large incisional hernia with loss of domain. Hernia. 2010;14(1):63-9.", pmid: "19756913", doi: "10.1007/s10029-009-0560-8", y: 2010 },
+      "henriksen2020": { c: "Henriksen NA, Montgomery A, Kaufmann R, Berrevoet F, East B, Fischer J, et al.; European and Americas Hernia Societies (EHS and AHS). Guidelines for treatment of umbilical and epigastric hernias from the European Hernia Society and Americas Hernia Society. Br J Surg. 2020;107(3):171-90.", pmid: "31916607", doi: "10.1002/bjs.11489", y: 2020 },
       "strasberg1995": { c: "Strasberg SM, Hertl M, Soper NJ. An analysis of the problem of biliary injury during laparoscopic cholecystectomy. J Am Coll Surg. 1995;180(1):101-25.", pmid: "8000648", y: 1995 },
       "brunt2020": { c: "Brunt LM, Deziel DJ, Telem DA, Strasberg SM, Aggarwal R, Asbun H, et al.; and the Prevention of Bile Duct Injury Consensus Work Group. Safe Cholecystectomy Multi-society Practice Guideline and State of the Art Consensus Conference on Prevention of Bile Duct Injury During Cholecystectomy. Ann Surg. 2020;272(1):3-23.", pmid: "32404658", doi: "10.1097/SLA.0000000000003791", y: 2020 },
       "strasberg2016": { c: "Strasberg SM, Pucci MJ, Brunt LM, Deziel DJ. Subtotal Cholecystectomy-\"Fenestrating\" vs \"Reconstituting\" Subtypes and the Prevention of Bile Duct Injury: Definition of the Optimal Procedure in Difficult Operative Conditions. J Am Coll Surg. 2016;222(1):89-96.", pmid: "26521077", doi: "10.1016/j.jamcollsurg.2015.09.019", y: 2016 },
@@ -264,6 +271,26 @@
       "camachomauries2013": { c: "Camacho-Mauries D, Rodriguez-Díaz JL, Salgado-Nesme N, González QH, Vergara-Fernández O. Randomized clinical trial of intestinal ostomy takedown comparing pursestring wound closure vs conventional closure to eliminate the risk of wound infection. Dis Colon Rectum. 2013;56(2):205-11.", pmid: "23303149", doi: "10.1097/DCR.0b013e31827888f6", y: 2013 },
       "bischoff2020": { c: "Bischoff SC, Austin P, Boeykens K, Chourdakis M, Cuerda C, Jonkers-Schuitema C, et al. ESPEN guideline on home enteral nutrition. Clin Nutr. 2020;39(1):5-22.", pmid: "31255350", doi: "10.1016/j.clnu.2019.04.022", y: 2020 },
       "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 },
+      "lichtenstein1989": { c: "Lichtenstein IL, Shulman AG, Amid PK, Montllor MM. The tension-free hernioplasty. Am J Surg. 1989;157(2):188-93.", pmid: "2916733", doi: "10.1016/0002-9610(89)90526-6", y: 1989 },
+      "herniasurgegroup2018": { c: "HerniaSurge Group. International guidelines for groin hernia management. Hernia. 2018;22(1):1-165.", pmid: "29330835", doi: "10.1007/s10029-017-1668-x", y: 2018 },
+      "bittner2011": { c: "Bittner R, Arregui ME, Bisgaard T, Dudai M, Ferzli GS, Fitzgibbons RJ, et al. Guidelines for laparoscopic (TAPP) and endoscopic (TEP) treatment of inguinal hernia [International Endohernia Society (IEHS)]. Surg Endosc. 2011;25(9):2773-843.", pmid: "21751060", doi: "10.1007/s00464-011-1799-6", y: 2011 },
+      "spaw1991": { c: "Spaw AT, Ennis BW, Spaw LP. Laparoscopic hernia repair: the anatomic basis. J Laparoendosc Surg. 1991;1(5):269-77.", pmid: "1834279", doi: "10.1089/lps.1991.1.269", y: 1991 },
+      "daes2017": { c: "Daes J, Felix E. Critical View of the Myopectineal Orifice. Ann Surg. 2017;266(1):e1-e2.", pmid: "27984213", doi: "10.1097/SLA.0000000000002104", y: 2017 },
+      "mckernan1993": { c: "McKernan JB, Laws HL. Laparoscopic repair of inguinal hernias using a totally extraperitoneal prosthetic approach. Surg Endosc. 1993;7(1):26-8.", pmid: "8424228", doi: "10.1007/BF00591232", y: 1993 },
+      "arregui1992": { c: "Arregui ME, Davis CJ, Yucel O, Nagan RF. Laparoscopic mesh repair of inguinal hernia using a preperitoneal approach: a preliminary report. Surg Laparosc Endosc. 1992;2(1):53-8.", pmid: "1341501", y: 1992 },
+      "kaufmann2018": { c: "Kaufmann R, Halm JA, Eker HH, Klitsie PJ, Nieuwenhuizen J, van Geldere D, et al. Mesh versus suture repair of umbilical hernia in adults: a randomised, double-blind, controlled, multicentre trial. Lancet. 2018;391(10123):860-9.", pmid: "29459021", doi: "10.1016/S0140-6736(18)30298-8", y: 2018 },
+      "merrill1956": { c: "Merrill JP, Murray JE, Harrison JH, Guild WR. Successful homotransplantation of the human kidney between identical twins. J Am Med Assoc. 1956;160(4):277-82.", pmid: "13278189", doi: "10.1001/jama.1956.02960390027008", y: 1956 },
+      "rodriguezfaba2025": { c: "Rodríguez Faba O, Boissier R, Budde K, Figueiredo A, Hevia V, Lledó García E, et al. European Association of Urology Guidelines on Renal Transplantation: Update 2024. Eur Urol Focus. 2025;11(2):365-73.", pmid: "39489684", doi: "10.1016/j.euf.2024.10.010", y: 2025 },
+      "gregoir1962": { c: "Gregoir W. [Congenital vesico-ureteral reflux]. Acta Urol Belg. 1962;30:286-300.", pmid: "13901619", y: 1962 },
+      "politano1958": { c: "Politano VA, Leadbetter WF. An operative technique for the correction of vesicoureteral reflux. J Urol. 1958;79(6):932-41.", pmid: "13539988", doi: "10.1016/S0022-5347(17)66369-9", y: 1958 },
+      "patterson2024": { c: "Patterson LG, Tingle SJ, Rix DA, Manas DM, Wilson CH. Routine intraoperative ureteric stenting for kidney transplant recipients. Cochrane Database Syst Rev. 2024;7(7):CD004925.", pmid: "38979749", doi: "10.1002/14651858.CD004925.pub4", y: 2024 },
+      "alberts2014": { c: "Alberts VP, Idu MM, Legemate DA, Laguna Pes MP, Minnee RC. Ureterovesical anastomotic techniques for kidney transplantation: a systematic review and meta-analysis. Transpl Int. 2014;27(6):593-605.", pmid: "24606191", doi: "10.1111/tri.12301", y: 2014 },
+      "slagt2014": { c: "Slagt IK, Dor FJ, Tran TC, Kimenai HJ, Weimar W, Ijzermans JN, et al. A randomized controlled trial comparing intravesical to extravesical ureteroneocystostomy in living donor kidney transplantation recipients. Kidney Int. 2014;85(2):471-7.", pmid: "24284515", doi: "10.1038/ki.2013.464", y: 2014 },
+      "barry1978": { c: "Barry JM, Fuchs EF. Right renal vein extension in cadaver kidney transplantation. Arch Surg. 1978;113(3):300.", pmid: "346002", doi: "10.1001/archsurg.1978.01370150072015", y: 1978 },
+      "corry1978": { c: "Corry RJ, Kelley SE. Technic for lengthening the right renal vein of cadaver donor kidneys. Am J Surg. 1978;135(6):867.", pmid: "352170", doi: "10.1016/0002-9610(78)90186-1", y: 1978 },
+      "benedetti1995": { c: "Benedetti E, Troppmann C, Gillingham K, Sutherland DE, Payne WD, Dunn DL, et al. Short- and long-term outcomes of kidney transplants with multiple renal arteries. Ann Surg. 1995;221(4):406-14.", pmid: "7726677", doi: "10.1097/00000658-199504000-00012", y: 1995 },
+      "carrel2001": { c: "Carrel A, Guthrie CC. Anastomosis of blood vessels by the patching method and transplantation of the kidney. 1906 [classical article]. Yale J Biol Med. 2001;74(4):243-7.", pmid: "11697483", y: 2001 },
+      "gittes1979": { c: "Gittes RF, Waters WB. Sexual impotence: the overlooked complication of a second renal transplant. J Urol. 1979;121(6):719-20.", pmid: "379364", doi: "10.1016/s0022-5347(17)56967-0", y: 1979 },
       // endokrynologia (2026-11-25): tarczyca, przytarczyce, nadnercza — rekordy PubMed (tools/pubmed_vancouver.py)
       "haugen2016": { c: "Haugen BR, Alexander EK, Bible KC, Doherty GM, Mandel SJ, Nikiforov YE, et al. 2015 American Thyroid Association Management Guidelines for Adult Patients with Thyroid Nodules and Differentiated Thyroid Cancer: The American Thyroid Association Guidelines Task Force on Thyroid Nodules and Differentiated Thyroid Cancer. Thyroid. 2016;26(1):1-133.", pmid: "26462967", doi: "10.1089/thy.2015.0020", y: 2016 },
       "randolph2011": { c: "Randolph GW, Dralle H, Abdullah H, Barczynski M, Bellantone R, Brauckhoff M, et al.; International Intraoperative Monitoring Study Group. Electrophysiologic recurrent laryngeal nerve monitoring during thyroid and parathyroid surgery: international standards guideline statement. Laryngoscope. 2011;121 Suppl 1:S1-16.", pmid: "21181860", doi: "10.1002/lary.21119", y: 2011 },
@@ -331,6 +358,35 @@
         ["fassnacht2023", "guideline", "ESE/ENSAT 2023: postępowanie w incydentaloma nadnerczy"],
         ["cesmebasi2014", "anatomy", "Żyły nadnerczowe: prawa do żyły głównej dolnej, lewa do nerkowej z żyłą przeponową dolną; odmiany"]
       ],
+      "lich": [
+        ["lichtenstein1989", "original", "Naprawa bez napięcia: siatka polipropylenowa wzmacnia całą tylną ścianę kanału pachwinowego"],
+        ["herniasurgegroup2018", "guideline", "HerniaSurge: naprawa z siatką u dorosłych z objawową przepukliną pachwinową; Lichtenstein — technika otwarta z wyboru"]],
+      "tapp": [
+        ["arregui1992", "original", "Wczesny opis laparoskopowej naprawy z siatką w przestrzeni przedotrzewnowej z dostępu przezbrzusznego (TAPP)"],
+        ["herniasurgegroup2018", "guideline", "Siatka co najmniej 10 × 15 cm na otworze mięśniowo-łonowym, parietalizacja; mocowanie zwykle zbędne"],
+        ["bittner2011", "guideline", "Wytyczne IEHS dla TAPP i TEP: technika, siatka, mocowanie, powikłania"],
+        ["spaw1991", "technique", "Anatomia pachwiny od strony jamy brzusznej; trójkąt zagłady"],
+        ["daes2017", "technique", "Krytyczny widok otworu mięśniowo-łonowego przed założeniem siatki"]],
+      "tep": [
+        ["mckernan1993", "original", "Pierwszy opis TEP: siatka w przestrzeni przedotrzewnowej bez otwierania otrzewnej"],
+        ["herniasurgegroup2018", "guideline", "Siatka co najmniej 10 × 15 cm na otworze mięśniowo-łonowym, parietalizacja; mocowanie zwykle zbędne"],
+        ["bittner2011", "guideline", "Wytyczne IEHS dla TAPP i TEP: technika, siatka, mocowanie, powikłania"],
+        ["daes2017", "technique", "Krytyczny widok otworu mięśniowo-łonowego przed założeniem siatki"]],
+      "tar": [
+        ["novitsky2012", "original", "TAR: pochewka tylna nacięta 0,5–1 cm przyśrodkowo od kresy półksiężycowatej, przecięcie mięśnia poprzecznego, siatka sublay, linia biała nad siatką"],
+        ["love2021", "outcomes", "RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego"],
+        ["parker2020", "guideline", "Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha"],
+        ["sabbagh2011", "outcomes", "Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia"],
+        ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
+      "acs": [
+        ["ramirez1990", "original", "Rozdzielenie komponentów: oddzielenie mięśnia skośnego zewnętrznego od wewnętrznego, przesunięcie płata ok. 10 cm na wysokości talii"],
+        ["love2021", "outcomes", "RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego"],
+        ["parker2020", "guideline", "Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha"],
+        ["sabbagh2011", "outcomes", "Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia"],
+        ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
+      "umb": [
+        ["henriksen2020", "guideline", "Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm"],
+        ["kaufmann2018", "outcomes", "Badanie randomizowane (ubytek 1–4 cm): siatka przedotrzewnowa — mniej nawrotów niż szew pierwotny"]],
       "tcei": [
         ["spinelli2022", "guideline", "ECCO 2022: kolektomia subtotalna z ileostomią końcową w ciężkim rzucie WZJG; proktokolektomia z ileostomią albo ze zbiornikiem J"],
         ["brooke1952", "original", "Ileostomia wywinięta (Brooke) — koniec jelita krętego ponad skórę"]
@@ -774,6 +830,25 @@
         ["belghiti1992", "technique", "Zespolenie kawo-kawalne bok-do-boku bez całkowitego zaciśnięcia IVC (zacisk boczny; Belghiti)"]],
       "oltx-classic-d2d": [
         ["dumonceau2018", "endoscopy", "ESGE: łagodne zwężenia dróg żółciowych — mnogie stenty plastikowe lub FCSEMS"]],
+      "ktx": [
+        ["merrill1956", "original", "Pierwszy udany przeszczep nerki u człowieka (bliźnięta jednojajowe, Boston 1954)"],
+        ["rodriguezfaba2025", "guideline", "Wytyczne EAU 2024: zewnątrzpęcherzowe zespolenie moczowodu typu Lich–Gregoir na cewniku JJ"],
+        ["patterson2024", "outcomes", "Przegląd Cochrane: rutynowy cewnik JJ zmniejsza ryzyko poważnych powikłań urologicznych"],
+        ["benedetti1995", "outcomes", "Tętnice dodatkowe (tętnica bieguna dolnego); łata aortalna i wybór tętnicy biodrowej bez wpływu na powikłania naczyniowe"],
+        ["gregoir1962", "original", "Zewnątrzpęcherzowa technika antyrefluksowa (Gregoir; opis Licha z 1961 r. nie jest indeksowany w PubMed)"]],
+      "ktx-carrel": [
+        ["carrel2001", "original", "Łata Carrela: zespolenie naczyń sposobem łaty i przeszczepienie nerki (1906, przedruk 2001)"]],
+      "ktx-iia": [
+        ["gittes1979", "outcomes", "Zaburzenia erekcji po drugim przeszczepie, gdy obie tętnice biodrowe wewnętrzne są podwiązane"]],
+      "ktx-rv": [
+        ["carrel2001", "original", "Łata Carrela przy tętnicy nerki od dawcy zmarłego"],
+        ["barry1978", "technique", "Przedłużenie prawej żyły nerkowej odcinkiem żyły głównej dolnej dawcy"],
+        ["corry1978", "technique", "Wydłużenie prawej żyły nerkowej nerek od dawców zmarłych"]],
+      "ktx-pl": [
+        ["carrel2001", "original", "Łata Carrela przy tętnicy nerki od dawcy zmarłego"],
+        ["politano1958", "original", "Wewnątrzpęcherzowa ureteroneocystostomia z tunelem podśluzówkowym"],
+        ["alberts2014", "outcomes", "Przegląd systematyczny: Lich–Gregoir — mniej przecieków i krwiomoczu niż Politano–Leadbetter, zwężenia bez różnicy"],
+        ["slagt2014", "outcomes", "RCT: technika wewnątrz- vs zewnątrzpęcherzowa u biorców od dawców żywych — reinterwencje bez różnicy, zewnątrzpęcherzowa szybsza"]],
       "_tools": [
         ["fdaK103263", "technique", "Stapler liniowy Endo GIA: ładunek Tri-Staple — po 3 rzędy zszywek z każdej strony linii cięcia"],
         ["fdaK133938", "technique", "Stapler liniowy Endo GIA: ładunek wzmocniony Tri-Staple — po 3 rzędy zszywek z każdej strony"]]

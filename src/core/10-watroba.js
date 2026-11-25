@@ -273,7 +273,7 @@
       : 'Przeszczep z zawątrobowym odcinkiem IVC dawcy leży przed zachowaną IVC biorcy: zespolenie kawo-kawalne bok-do-boku w środkowym odcinku, oba końce IVC dawcy zamknięte.';
     var bileTxt = bile === 'd2d' ? 'Przewód wątrobowy wspólny dawcy zespolony koniec-do-końca z przewodem żółciowym biorcy.'
       : 'Pętla jelita czczego wyprowadzona metodą Roux-en-Y; przewód wątrobowy dawcy wszyty w jej bok (hepatikojejunostomia), kikut przewodu biorcy zamknięty, zespolenie jelitowo-jelitowe niżej.';
-    return { cat: 'liver', id: 'oltx-' + cav + '-' + bile, vshort: vshort, short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — ' + vshort,
+    return { cat: 'tx', id: 'oltx-' + cav + '-' + bile, vshort: vshort, short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — ' + vshort,
       sub: cav === 'classic' ? 'Technika klasyczna: zawątrobowy odcinek IVC biorcy usuwany z wątrobą' : 'Piggyback: IVC biorcy zachowana, zespolenie kawo-kawalne bok-do-boku',
       notes: notes, objects: [], marks: [], cutTools: [{ type: 'oltx', cav: cav, bile: bile }], anastTools: [], commonCuts: 0, mEnd: 4, single: true, box: [[-11.5, -14, -7], [11, 9.5, 7]],
       singleFrames: [
@@ -289,8 +289,9 @@
           cap: 'Przeszczep z zespoleniami: ' + (cav === 'classic' ? 'IVC nad i pod wątrobą' : 'kawo-kawalne bok-do-boku') + ', żyła wrotna, tętnica wątrobowa, ' + (bile === 'd2d' ? 'przewód–przewód.' : 'hepatikojejunostomia na pętli Roux-en-Y.') }
       ] };
   }
-  var OLT = { cat: 'liver', id: 'oltx', short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — warianty rekonstrukcji żylnej i żółciowej',
+  var OLT = { cat: 'tx', id: 'oltx', short: 'Przeszczepienie wątroby', title: 'Przeszczepienie wątroby (OLTx) — warianty rekonstrukcji żylnej i żółciowej',
     variants: [oltAn('classic', 'd2d', 'Klasyczna, przewód–przewód'), oltAn('classic', 'roux', 'Klasyczna, Roux-en-Y'), oltAn('pb', 'd2d', 'Piggyback, przewód–przewód'), oltAn('pb', 'roux', 'Piggyback, Roux-en-Y')] };
+  // OLTx w kategorii „Transplantologia” (tx, decyzja autora 2026-11-25; kategorię dodaje 15-przeszczep-nerki.js)
   var at = 0; A.PROCS.forEach(function (p, i) { if (p.cat === 'hpb') at = i + 1; });
   A.PROCS.splice(at, 0, PROC, OLT);
   var ci = 0; A.CATS.forEach(function (c, i) { if (c.id === 'hpb') ci = i + 1; });

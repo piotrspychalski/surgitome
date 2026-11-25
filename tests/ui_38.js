@@ -20,7 +20,7 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
   [...D.querySelectorAll('#cats .cat')].find(b=>/Wątroba/.test(b.textContent)).click(); await sleep(500);
   if(!w.__sgTest.state().labels) $('btnLabels').click(); // na telefonie etykiety są domyślnie wyłączone
   const tabs=[...D.querySelectorAll('#tabs .tab')].map(b=>b.textContent.replace(/[☆★]/g,'').trim());
-  ok(tabs.join('|')==='Anatomia wątroby|Guz: zakres resekcji|Bisegmentektomia II/III|Prawa hemihepatektomia|Lewa hemihepatektomia|ALPPS|Przeszczepienie wątroby','zakładki: '+tabs.join('|'));
+  ok(tabs.join('|')==='Anatomia wątroby|Guz: zakres resekcji|Bisegmentektomia II/III|Prawa hemihepatektomia|Lewa hemihepatektomia|ALPPS','zakładki: '+tabs.join('|'));   // OLTx od 2026-11-25 w „Transplantologii”
   const lbl=()=>[...D.querySelectorAll('#labels .lbl')].filter(e=>e.style.display!=='none'&&+(e.style.opacity||1)>0.3).map(e=>e.querySelector('b').textContent);
   const WANT={'Bisegmentektomia II/III':['Szypuła segmentu II (podwiązana)','Szypuła segmentu III (podwiązana)','Żyła wątrobowa lewa (stapler)','Pozostała wątroba: I, IV–VIII'],
     'Prawa hemihepatektomia':['Tętnica wątrobowa prawa (podwiązana)','Prawa gałąź żyły wrotnej (podwiązana)','Przewód wątrobowy prawy (przecięty)','Żyła wątrobowa prawa (stapler)','Pozostała wątroba: I–IV'],
