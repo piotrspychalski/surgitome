@@ -293,3 +293,68 @@
     return an;
   })();
 
+
+  /* ---------- Dostęp operacyjny (slajd „Dostęp”, ANAT.ACCESS) — trzustka i drogi żółciowe; modele w układzie powłok (bez przeniesienia xf).
+     Decyzje autora (2026-11-25): Whipple, PPPD, Puestow/Frey — cięcie podżebrowe obustronne (chevron), Whipple i PPPD także robot da Vinci Xi;
+     hepatikojejunostomia i choledochoduodenostomia — cięcie podżebrowe prawe (Kochera); pankreatektomia dystalna — otwarta, laparoskopowa, robotyczna
+     (otwarta: cięcie podżebrowe lewe przedłużone przez linię pośrodkową). Cięcia podżebrowe ok. 2–3 cm (1,7 j.) poniżej łuku żebrowego, równolegle do niego. ---------- */
+  var SUBC_R = [[-0.3, 6.5], [-2.7, 4.75], [-4.7, 3.15], [-6.7, 1.35], [-8.5, -0.35]];          // podżebrowe prawe: od linii pośrodkowej do linii pachowej przedniej
+  function mirX(pts) { return pts.map(function (p) { return [-p[0], p[1]]; }); }
+  var SUBC_L = mirX(SUBC_R), CHEVRON = SUBC_R.slice().reverse().slice(0, -1).concat([[0, 6.6]], SUBC_L.slice(1));
+  function cutOn(pts, name, sub, w) { return { pts: pts, name: name, sub: sub, t: [-0.86, -0.46], open: [-0.42, -0.12], w: w || 0.85 }; }
+  var CAM_HPB = { t: [-6.4, -1.6, 0.8], tp: [0, -1.8, 0.8], az: 0, el: 12, k: 0.8, kp: 1.1 };
+  var PFANN_X = { pts: PFANN, name: 'Cięcie Pfannenstiela', sub: 'wydobycie preparatu w worku' };
+  function chevronSet(text) {
+    return { title: 'Dostęp otwarty: cięcie podżebrowe obustronne', short: 'cięcie podżebrowe obustronne (chevron)', side: 0, ports: [],
+      text: 'Cięcie podżebrowe obustronne (typu „chevron”, „rooftop”), ok. 2–3 cm poniżej obu łuków żebrowych i równolegle do nich, od prawej do lewej linii pachowej przedniej, z przecięciem obu mięśni prostych; w razie potrzeby przedłużone pionowo ku wyrostkowi mieczykowatemu. Rozwieracz zaczepiony o łuki żebrowe unosi je ku górze. ' + text,
+      cuts: [Object.assign(cutOn(CHEVRON, 'Cięcie podżebrowe obustronne', 'ok. 2–3 cm poniżej łuków żebrowych', 1.1), { humps: 2 })] };
+  }
+  function kocherSet(text, o) {
+    return Object.assign({ title: 'Dostęp otwarty: cięcie podżebrowe prawe (Kochera)', short: 'cięcie podżebrowe prawe (Kochera)', side: -1, ports: [],
+      text: 'Cięcie podżebrowe prawe (Kochera), ok. 2–3 cm poniżej prawego łuku żebrowego i równolegle do niego, od linii pośrodkowej do linii pachowej przedniej, z przecięciem prawego mięśnia prostego. ' + text,
+      cuts: [cutOn(SUBC_R, 'Cięcie podżebrowe prawe (Kochera)', 'ok. 2–3 cm poniżej prawego łuku żebrowego')] }, o || {});
+  }
+  // robot da Vinci Xi w pankreatoduodenektomii: porty w linii poprzecznej nad pępkiem, optyka na prawo od linii pośrodkowej (pole operacyjne w prawym nadbrzuszu)
+  var ROB_PD = { title: 'Dostęp robotyczny (da Vinci Xi)', short: 'da Vinci Xi, porty w linii poprzecznej', side: 0,
+    text: 'Chory na plecach, w pozycji anty-Trendelenburga. Cztery porty robota 8 mm w linii poprzecznej ok. 3–4 cm nad pępkiem, co 6–10 cm, od prawej do lewej linii pachowej przedniej: optyka w drugim porcie od prawej, na prawo od linii pośrodkowej; ramię w prawym boku do odciągania (dwunastnica, wątroba), dwa ramiona robocze po lewej. Port asystenta 12 mm poniżej linii portów, między optyką a ramieniem po lewej (stapler, klipsy, igły, ssak); retraktor wątroby przez port 5 mm pod wyrostkiem mieczykowatym. Preparat w worku wydobyty przez cięcie Pfannenstiela.',
+    first: 1, insuf: [-0.76, -0.62], robot: true, line: [[-9.4, -2.6], [9.4, -2.6]],
+    ports: [{ at: [-8.0, -2.6], mm: 8, name: '8 mm — ramię robota', sub: 'prawy bok, odciąganie' },
+      { at: [-2.6, -2.6], mm: 8, name: '8 mm — optyka (kamera)', sub: 'na prawo od linii pośrodkowej, nad pępkiem' },
+      { at: [2.8, -2.6], mm: 8, name: '8 mm — ramię robota', sub: '' },
+      { at: [8.2, -2.6], mm: 8, name: '8 mm — ramię robota', sub: 'lewy bok' },
+      { at: [0.1, -8.8], mm: 12, name: '12 mm — port asystenta', sub: 'poniżej linii portów, pod pępkiem', assist: true },
+      { at: [-1.0, 6.2], mm: 5, name: '5 mm — retraktor wątroby', sub: 'pod wyrostkiem mieczykowatym', assist: true }],
+    ext: PFANN_X };
+  ACCESS.whip = { target: [-2.4, -2.6, -1.0], cam: CAM_HPB,
+    open: chevronSet('Szeroki dostęp do głowy trzustki i dwunastnicy (manewr Kochera), wnęki wątroby, żyły krezkowej górnej i żyły wrotnej; pętla jelita czczego do rekonstrukcji przeprowadzona zaokrężniczo.'),
+    rob: ROB_PD };
+  ACCESS.pppd = ACCESS.whip;
+  ACCESS.drain = { target: [1.6, -2.4, -2.0], cam: CAM_HPB,
+    open: chevronSet('Dostęp do całej trzustki od głowy do ogona: torba sieciowa otwarta przez przecięcie więzadła żołądkowo-okrężniczego, żołądek uniesiony ku górze; pętla Roux przeprowadzona zaokrężniczo do trzustki.') };
+  ACCESS.hj = { target: [-3.2, 4.6, -1.4], cam: CAM_HPB,
+    open: kocherSet('Dostęp do wnęki wątroby i zewnątrzwątrobowych dróg żółciowych; pętla Roux przeprowadzona zaokrężniczo do wnęki. Przy wysokim zespoleniu (na wysokości konfluencji) cięcie bywa przedłużane przez linię pośrodkową w lewo.') };
+  ACCESS.cdd = { target: [-3.3, 1.6, -0.8], cam: CAM_HPB,
+    open: kocherSet('Dostęp do przewodu żółciowego wspólnego nad dwunastnicą, do opuszki dwunastnicy i do pęcherzyka (cholecystektomia w tym samym zabiegu).') };
+  ACCESS.dp = { target: [4.2, -1.6, -2.6], cam: CAM_HPB,
+    open: { title: 'Dostęp otwarty: cięcie podżebrowe lewe', short: 'cięcie podżebrowe lewe', side: 1, ports: [],
+      text: 'Cięcie podżebrowe lewe, ok. 2–3 cm poniżej lewego łuku żebrowego i równolegle do niego, od linii pośrodkowej do linii pachowej przedniej (w razie potrzeby przedłużone na prawą stronę), z przecięciem lewego mięśnia prostego; alternatywnie laparotomia pośrodkowa górna. Dostęp do trzonu i ogona trzustki przez torbę sieciową (przecięte więzadło żołądkowo-okrężnicze) i do śledziony.',
+      cuts: [cutOn(SUBC_L, 'Cięcie podżebrowe lewe', 'ok. 2–3 cm poniżej lewego łuku żebrowego')] },
+    lap: { title: 'Dostęp laparoskopowy', short: '5 trokarów, wydobycie przez cięcie Pfannenstiela', side: 0,
+      text: 'Chory na plecach, w pozycji anty-Trendelenburga z przechyleniem na prawy bok (albo ułożony półbocznie na prawym boku). Optyka 12 mm nad pępkiem (technika otwarta, potem odma), 12 mm w lewym śródbrzuszu (stapler do przecięcia trzustki), 5 mm w prawym śródbrzuszu, 5 mm w lewej linii pachowej przedniej pod łukiem żebrowym i 5 mm pod wyrostkiem mieczykowatym (odciągnięcie żołądka). Trzon i ogon trzustki ze śledzioną w worku wydobyte przez cięcie Pfannenstiela.',
+      first: 0, insuf: [-0.76, -0.62],
+      ports: [{ at: [0, -4.3], mm: 12, name: '12 mm — optyka (kamera)', sub: 'nad pępkiem' },
+        { at: [5.6, -3.4], mm: 12, name: '12 mm — narzędzie, stapler', sub: 'lewe śródbrzusze' },
+        { at: [-6.0, -1.8], mm: 5, name: '5 mm — narzędzie', sub: 'prawe śródbrzusze' },
+        { at: [8.8, -0.6], mm: 5, name: '5 mm — narzędzie', sub: 'lewa linia pachowa przednia, pod łukiem żebrowym' },
+        { at: [0.9, 6.0], mm: 5, name: '5 mm — odciągnięcie żołądka', sub: 'pod wyrostkiem mieczykowatym' }],
+      ext: PFANN_X },
+    rob: { title: 'Dostęp robotyczny (da Vinci Xi)', short: 'da Vinci Xi, porty w linii poprzecznej', side: 0,
+      text: 'Chory na plecach, w pozycji anty-Trendelenburga z przechyleniem na prawy bok. Cztery porty robota 8 mm w linii poprzecznej tuż nad pępkiem, co 6–10 cm, od prawej linii środkowo-obojczykowej do lewej linii pachowej przedniej; optyka w drugim porcie od prawej. Port asystenta 12 mm w prawym dolnym kwadrancie (stapler do przecięcia trzustki, klipsy, ssak). Trzon i ogon trzustki ze śledzioną w worku wydobyte przez cięcie Pfannenstiela.',
+      first: 1, insuf: [-0.76, -0.62], robot: true, line: [[-9.0, -3.6], [9.4, -3.6]],
+      ports: [{ at: [-6.6, -3.6], mm: 8, name: '8 mm — ramię robota', sub: 'prawa linia środkowo-obojczykowa' },
+        { at: [-1.4, -3.6], mm: 8, name: '8 mm — optyka (kamera)', sub: 'nad pępkiem' },
+        { at: [3.8, -3.6], mm: 8, name: '8 mm — ramię robota', sub: '' },
+        { at: [9.0, -3.6], mm: 8, name: '8 mm — ramię robota', sub: 'lewa linia pachowa przednia' },
+        { at: [-4.4, -9.4], mm: 12, name: '12 mm — port asystenta', sub: 'prawy dolny kwadrant', assist: true }],
+      ext: PFANN_X } };
+  // cholecystektomia: dostęp w 11c-cholecystektomia.js (model wątroby, powłoki przeniesione xf), cięcie Kochera z ACCESS.hj

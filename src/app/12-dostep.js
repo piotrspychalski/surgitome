@@ -175,7 +175,7 @@
             if (c.disc) { c.wm.visible = op > 0.01; c.wm.scale.setScalar(Math.max(op, 0.01)); c.L.anchor = W(c.L.fn()); c.L.alpha = tt > 0.3 ? 1 : 0; return; }
             c.wm.visible = op > 0.01;
             if (c.wm.visible) for (var q = 0; q <= c.NW; q++) {
-              var u = q / c.NW, P = c.cc.getPointAt(u), T = c.cc.getTangentAt(u), N = B.nrm(P.x, P.y, 0), sd = new V3().crossVectors(N, T).normalize(), w = c.c.w * Math.pow(Math.sin(Math.PI * u), 0.6) * op;
+              var u = q / c.NW, P = c.cc.getPointAt(u), T = c.cc.getTangentAt(u), N = B.nrm(P.x, P.y, 0), sd = new V3().crossVectors(N, T).normalize(), w = c.c.w * Math.pow(Math.abs(Math.sin(Math.PI * u * (c.c.humps || 1))), 0.6) * op;   // humps 2 — cięcie z wierzchołkiem (chevron): dwie rany, wierzchołek nierozchylony
               var a = P.clone().addScaledVector(sd, w).addScaledVector(N, 0.04), b = P.clone().addScaledVector(sd, -w).addScaledVector(N, 0.04);
               c.wp.set([a.x, a.y, a.z, b.x, b.y, b.z], q * 6);
             }
