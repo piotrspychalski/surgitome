@@ -18,6 +18,9 @@ const bad=new Map();
   if(LANG==='en'){ $('btnLang').click(); await sleep(50); }
   let n=0;
   for(const cat of [...$('cats').children]){ cat.click(); await sleep(250);
+   // podgrupy zabiegów (np. jelito grube): pasek pokazuje tylko jedną naraz — przejść przez wszystkie
+   const nSub=$('subs').hidden?1:Math.max(1,$('subs').children.length);
+   for(let si=0;si<nSub;si++){ if(!$('subs').hidden && $('subs').children[si]){ $('subs').children[si].click(); await sleep(250); }
     for(const tab of [...$('tabs').children]){ tab.click(); await sleep(350);
       const vbs=[...$('variants').querySelectorAll('.vbtn')]; const nv=Math.max(1,vbs.length);
       for(let v=0;v<nv;v++){ if(vbs.length){ $('variants').querySelectorAll('.vbtn')[v].click(); await sleep(300); }
@@ -25,7 +28,7 @@ const bad=new Map();
         for(let f=0;f<st.length;f++){ $('strip').querySelectorAll('.step')[f].click(); await sleep(f===5?500:220); n++;
           if(LANG==='en'){ const sel=['#capTitle','#capText','#hudTitle','#hudNote','#labels','#pBody','#tabs','#variants','#strip','#mFrameTxt','#mProcName','#choice','#ctPanel'];
             for(const s of sel){ const el=w.document.querySelector(s); if(!el) continue; const walker=w.document.createTreeWalker(el,4); let t; while((t=walker.nextNode())){ const x=t.textContent.trim(); if(x && PL.test(x)) bad.set(x.slice(0,90),(tab.textContent+'/'+f)); } } }
-        } } } }
+        } } } } }
   console.log((MOB?'telefon':'komputer'),LANG,'| kadrów:',n,'| błędy:',errs.length,[...new Set(errs)].slice(0,4),'| ostrzeżenia:',[...new Set(warns)].slice(0,5));
   if(LANG==='en') console.log('Polskie teksty w EN:',bad.size,[...bad.entries()].slice(0,25));
   process.exit(0); })();
