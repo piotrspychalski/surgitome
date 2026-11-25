@@ -48,7 +48,7 @@
     var toolOv = new THREE.Group(); toolScene.add(toolOv); M.toolOv = toolOv;
     M.tools = buildTools(an); M.tools.forEach(function (t) { (t.overlay ? toolOv : toolG).add(t.grp); if (t.ov) toolOv.add(t.ov); });
     if (!keep && an.tumour) tumourAttach();
-    if (!keep && an.access) accessAttach(an.access);
+    if (!keep && an.access) { if (A.ACCESS[an.access].torso) accessTorsoAttach(an.access); else accessAttach(an.access); }   // esofagektomia: model tułowia z etapami
     if (!keep) renderPanel(an);
   }
 
@@ -92,7 +92,7 @@
     if (Pr.variants[vi || 0].singleFrames) {
       var sv = Pr.variants[vi || 0], SF = sv.singleFrames.slice();
       // dostęp operacyjny także w zabiegach z własnymi kadrami (np. adrenalektomia): slajd „Dostęp” na osi m −1 → −0,02
-      if (sv.access) SF.unshift({ k: 'access', kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: A.ACCESS[sv.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny', cap: accPrompt(A.ACCESS[sv.access]) });
+      if (sv.access) SF.unshift({ k: 'access', kind: 'orbit', m0: -1, m1: -0.02, dur: A.ACCESS[sv.access].dur || 11, cam: 'custom', camP: A.ACCESS[sv.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny', cap: accPrompt(A.ACCESS[sv.access]) });
       return SF.map(function (f, i) { return Object.assign({ vi: vi || 0, num: String(i + 1) }, f); });
     }
     if (Pr.variants[0].single) return [{ k: 'normal', vi: 0, kind: 'orbit', m0: 0, m1: 0, cam: 'front', num: '1', short: 'Guz i zakres', title: 'Wybór zakresu resekcji', cap: '' }];
@@ -114,7 +114,7 @@
     } else F[F.length - 1].caps = [[2, fx.remove[1]], [3, fx.post]];
     F.push({ k: 'endo', vi: v, kind: 'endo', m0: an.mEnd, route: 'post', short: 'Endoskopia', title: (an.endoTitles || [])[1] || 'Endoskopia po operacji', cap: fx.endoPost });
     // dostęp operacyjny (okno wyboru, powłoki, cięcia i trokary): przed anatomią prawidłową, oś czasu m −1 → −0,02
-    if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: 11, cam: 'custom', camP: A.ACCESS[an.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
+    if (an.access) F.unshift({ k: 'access', vi: v, kind: 'orbit', m0: -1, m1: -0.02, dur: A.ACCESS[an.access].dur || 11, cam: 'custom', camP: A.ACCESS[an.access].cam || { t: [0, -4.4, 0.8], az: 0, el: 12, k: 1.08 }, short: 'Dostęp', title: 'Dostęp operacyjny',
       cap: accPrompt(A.ACCESS[an.access]) });
     F.push({ k: 'ct', vi: v, kind: 'ct', m0: an.mEnd, m1: an.mEnd, cam: 'front', short: 'TK', title: 'TK — przekroje poprzeczne (schemat)',
       cap: 'Przekroje od najwyższego. Suwak, kółko myszy nad obrazem lub strzałki ↑/↓ zmieniają poziom; „Przejazd” (spacja) prowadzi z góry na dół. Kontrast doustny wypełnia drogę pokarmową; odcinki wyłączone i drogi żółciowe zawierają płyn.' });
