@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>SURGITOME — panel autora</title>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+<!-- Panel autora SURGITOME. Dane w dane.enc.json są zaszyfrowane (AES-256-GCM, klucz z hasła przez PBKDF2); bez hasła nie da się ich odczytać. -->
+<main id="login" class="login" hidden>
+  <form id="loginForm" class="card loginbox" autocomplete="on">
+    <h1>SURGITOME <span>panel autora</span></h1>
+    <p class="muted">Dane są zaszyfrowane. Po wpisaniu hasła odszyfrowuje je wyłącznie ta przeglądarka.</p>
+    <input type="text" name="username" value="surgitome-admin" autocomplete="username" hidden>
+    <label for="haslo">Hasło</label>
+    <input id="haslo" name="password" type="password" autocomplete="current-password" required>
+    <label class="chk"><input type="checkbox" id="pamietaj"> Zapamiętaj na tym urządzeniu</label>
+    <button type="submit" id="otworz">Otwórz</button>
+    <p id="loginMsg" class="msg" role="alert" hidden></p>
+  </form>
+</main>
+
+<div id="app" class="wrap" hidden>
+  <header class="top">
+    <div class="brand">SURGITOME <span>panel autora</span></div>
+    <div class="meta" id="meta"></div>
+    <div class="actions">
+      <a id="odswiez" class="btn ghost" href="https://github.com/piotrspychalski/surgitome/actions/workflows/pages.yml" target="_blank" rel="noopener">Odśwież dane</a>
+      <button id="wyloguj" class="btn ghost" type="button">Wyloguj</button>
+    </div>
+  </header>
+  <div id="baner" class="baner" role="status" hidden></div>
+  <nav class="tabs" role="tablist" aria-label="Sekcje panelu">
+    <button type="button" role="tab" data-tab="role" aria-selected="true">Role</button>
+    <button type="button" role="tab" data-tab="ruch" aria-selected="false">Ruch na stronie</button>
+    <button type="button" role="tab" data-tab="study" aria-selected="false">SURGITOME-STUDY</button>
+  </nav>
+  <div class="filters" id="filters">
+    <div class="seg" id="zakres" role="group" aria-label="Zakres dat">
+      <button type="button" data-v="7">7 dni</button><button type="button" data-v="30">30 dni</button><button type="button" data-v="90">90 dni</button><button type="button" data-v="all">Całość</button>
+    </div>
+    <div class="seg" id="grupuj" role="group" aria-label="Grupowanie">
+      <button type="button" data-v="dzien">Dzień</button><button type="button" data-v="tydzien">Tydzień</button>
+    </div>
+  </div>
+
+  <section id="tab-role" class="tab" role="tabpanel">
+    <div class="tiles" id="roleTiles"></div>
+    <article class="card panel">
+      <header><h2>Wybory roli</h2><div class="legend" id="lgWybor"></div></header>
+      <p class="muted small">Zdarzenie <code>rola-wybor/…</code> — raz na urządzenie, przy wyborze roli w oknie „Kim jesteś?” albo przy jego zamknięciu bez wyboru („pominięto”).</p>
+      <div class="chart" id="chWybor"></div>
+      <details class="tabela"><summary>Pokaż tabelę</summary><div class="tablewrap" id="tbWybor"></div></details>
+    </article>
+    <article class="card panel">
+      <header><h2>Wizyty według roli</h2><div class="legend" id="lgWizyta"></div></header>
+      <p class="muted small">Zdarzenie <code>rola-wizyta/…</code> — przy każdym wejściu osoby, która wcześniej wybrała rolę (GoatCounter liczy tę samą osobę raz w ciągu kilku godzin).</p>
+      <div class="chart" id="chWizyta"></div>
+      <details class="tabela"><summary>Pokaż tabelę</summary><div class="tablewrap" id="tbWizyta"></div></details>
+    </article>
+  </section>
+
+  <section id="tab-ruch" class="tab" role="tabpanel" hidden>
+    <div class="tiles" id="ruchTiles"></div>
+    <article class="card panel">
+      <header><h2>Odwiedziny strony</h2></header>
+      <p class="muted small">Odwiedzający według GoatCountera (bez zdarzeń), cała strona SURGITOME.</p>
+      <div class="chart" id="chOdw"></div>
+      <details class="tabela"><summary>Pokaż tabelę</summary><div class="tablewrap" id="tbOdw"></div></details>
+    </article>
+    <p class="note" id="listyNote"></p>
+    <div class="grid2" id="listy"></div>
+  </section>
+
+  <section id="tab-study" class="tab" role="tabpanel" hidden>
+    <article class="card panel">
+      <header><h2>Odpowiedzi z ankiety</h2></header>
+      <p class="muted small">Wskaż eksport CSV z panelu Web3Forms (Submissions → Export) albo pliki JSON z „Pobierz odpowiedzi”. Pliki czyta tylko ta przeglądarka — nic nie jest wysyłane ani zapisywane na serwerze. Analiza: te same reguły co <code>tools/analiza_ankiety.py</code>.</p>
+      <div class="drop" id="drop">
+        <input type="file" id="pliki" accept=".csv,.json,.txt" multiple hidden>
+        <button type="button" class="btn" id="wybierz">Wybierz pliki</button>
+        <p class="note">albo przeciągnij je tutaj</p>
+      </div>
+      <div class="opts">
+        <div><label for="pomin">Pomiń kody (pilotaż)</label><input type="text" id="pomin" placeholder="np. ABC234, XYZ567" autocomplete="off" spellcheck="false"></div>
+        <div><label for="grupa">Grupa CVI</label>
+          <select id="grupa"><option value="chirurdzy">chirurdzy (specjaliści + rezydenci)</option><option value="specjalisci">tylko specjaliści</option><option value="wszyscy">wszyscy oceniający trafność</option></select></div>
+        <div><label for="dostep">Dostęp w CVI</label>
+          <select id="dostep"><option value="zaproszeni">tylko zaproszeni</option><option value="wszyscy">zaproszeni + otwarty</option></select></div>
+        <div><label class="chk"><input type="checkbox" id="weryf" checked> Sprawdzaj kody zaproszeń</label></div>
+      </div>
+      <p class="note" id="studyStan">Nie wczytano plików.</p>
+    </article>
+    <div id="studyWyniki"></div>
+  </section>
+</div>
+<div id="tip" class="tip" hidden></div>
+<script src="szyfr.js"></script>
+<script src="study.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

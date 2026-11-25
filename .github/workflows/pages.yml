@@ -1,7 +1,9 @@
-# Składanie, testy i publikacja SURGITOME na GitHub Pages przy każdej zmianie w gałęzi main
+# Składanie, testy i publikacja SURGITOME na GitHub Pages przy każdej zmianie w gałęzi main, a także codziennie
+# (odświeżenie danych panelu autora: piotrspychalski.pl/surgitome/admin/, kod w admin/)
 name: SURGITOME — build, testy, publikacja
 on:
   push: { branches: [main] }
+  schedule: [ { cron: '17 4 * * *' } ]   # codziennie ok. 5:17 czasu polskiego zimą (6:17 latem)
   workflow_dispatch:
 permissions: { contents: read, pages: write, id-token: write }
 concurrency: { group: pages, cancel-in-progress: true }
@@ -21,6 +23,18 @@ jobs:
           CORE=$(pwd)/tests/core_guz.js node tests/kolizje_animacji.js | tail -1 | grep -q ': 0'
           node tests/audyt_zoom.js | tail -3
           for t in tests/ui_18.js tests/ui_19.js tests/ui_26.js tests/ui_27.js tests/ui_28.js tests/ui_29.js tests/ui_30.js tests/ui_31.js tests/ui_32.js tests/ui_33.js tests/ui_34.js tests/ui_35.js tests/ui_36.js tests/ui_37.js tests/ui_38.js tests/ui_39.js tests/ui_40.js tests/ui_41.js tests/ui_43.js tests/ui_44.js tests/ui_42.js tests/ui_45.js tests/ui_46.js tests/ui_47.js tests/ui_48.js tests/ui_49.js tests/ui_50.js tests/ui_51.js tests/ui_52.js tests/ui_53.js tests/ui_54.js tests/ui_55.js tests/ui_56.js tests/ui_57.js; do node "$t" | tail -1 | grep -q 'errors \[\]' || { echo "BŁĄD: $t"; exit 1; }; done
+      - name: Panel autora — testy i dane z GoatCountera zaszyfrowane hasłem (dist/admin; bez sekretów strona publikuje się bez panelu)
+        env:
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+          PANEL_HASLO: ${{ secrets.PANEL_HASLO }}
+        run: |
+          node admin/tests/test_szyfr.mjs
+          node admin/tests/test_study.mjs
+          if [ -n "$GOATCOUNTER_TOKEN" ] && [ -n "$PANEL_HASLO" ]; then
+            node admin/zbierz.mjs --out dist/admin || { rm -rf dist/admin; echo "::warning::Panel autora: nie udało się pobrać danych — SURGITOME publikowany bez panelu"; }
+          else
+            echo "::notice::Panel autora: brak sekretów GOATCOUNTER_TOKEN / PANEL_HASLO — pomijam panel"
+          fi
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:

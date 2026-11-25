@@ -517,6 +517,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 .step[aria-current="step"] em{ background:var(--accent); color:var(--accent-ink); }
 .ctxrow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .ctxrow[hidden], #btnPlay[hidden], #ctxEndo[hidden], #ctxLiver[hidden], #ctxZakres[hidden], #ctxAcc[hidden]{ display:none; }
+/* przycisk animacji o stałej szerokości: najdłuższy z napisów (data-w, po jednym w wierszu) w niewidocznym wierszu o wysokości 0 */
+#btnPlay::after{ content:attr(data-w); display:block; height:0; overflow:hidden; visibility:hidden; white-space:pre; }
 /* okno wyboru dostępu (slajd „Dostęp”): nad modelem, pasek nawigacji dostępny */
 #acc{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; background:rgba(20,26,30,.38); padding:16px; }
 #acc[hidden]{ display:none; }
