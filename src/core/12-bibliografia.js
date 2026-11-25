@@ -270,9 +270,31 @@
       "arvanitakis2021": { c: "Arvanitakis M, Gkolfakis P, Despott EJ, Ballarin A, Beyna T, Boeykens K, et al. Endoscopic management of enteral tubes in adult patients - Part 1: Definitions and indications. European Society of Gastrointestinal Endoscopy (ESGE) Guideline. Endoscopy. 2021;53(1):81-92.", pmid: "33260229", doi: "10.1055/a-1303-7449", y: 2021 },
       "camachomauries2013": { c: "Camacho-Mauries D, Rodriguez-Díaz JL, Salgado-Nesme N, González QH, Vergara-Fernández O. Randomized clinical trial of intestinal ostomy takedown comparing pursestring wound closure vs conventional closure to eliminate the risk of wound infection. Dis Colon Rectum. 2013;56(2):205-11.", pmid: "23303149", doi: "10.1097/DCR.0b013e31827888f6", y: 2013 },
       "bischoff2020": { c: "Bischoff SC, Austin P, Boeykens K, Chourdakis M, Cuerda C, Jonkers-Schuitema C, et al. ESPEN guideline on home enteral nutrition. Clin Nutr. 2020;39(1):5-22.", pmid: "31255350", doi: "10.1016/j.clnu.2019.04.022", y: 2020 },
-      "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 }
+      "chavrier2022": { c: "Chavrier D, Alves A, Menahem B. Is laparoscopy a reliable alternative to laparotomy in Hartmann's reversal? An updated meta-analysis. Tech Coloproctol. 2022;26(4):239-52.", pmid: "35133538", doi: "10.1007/s10151-021-02560-2", y: 2022 },
+      "lichtenstein1989": { c: "Lichtenstein IL, Shulman AG, Amid PK, Montllor MM. The tension-free hernioplasty. Am J Surg. 1989;157(2):188-93.", pmid: "2916733", doi: "10.1016/0002-9610(89)90526-6", y: 1989 },
+      "herniasurgegroup2018": { c: "HerniaSurge Group. International guidelines for groin hernia management. Hernia. 2018;22(1):1-165.", pmid: "29330835", doi: "10.1007/s10029-017-1668-x", y: 2018 },
+      "bittner2011": { c: "Bittner R, Arregui ME, Bisgaard T, Dudai M, Ferzli GS, Fitzgibbons RJ, et al. Guidelines for laparoscopic (TAPP) and endoscopic (TEP) treatment of inguinal hernia [International Endohernia Society (IEHS)]. Surg Endosc. 2011;25(9):2773-843.", pmid: "21751060", doi: "10.1007/s00464-011-1799-6", y: 2011 },
+      "spaw1991": { c: "Spaw AT, Ennis BW, Spaw LP. Laparoscopic hernia repair: the anatomic basis. J Laparoendosc Surg. 1991;1(5):269-77.", pmid: "1834279", doi: "10.1089/lps.1991.1.269", y: 1991 },
+      "daes2017": { c: "Daes J, Felix E. Critical View of the Myopectineal Orifice. Ann Surg. 2017;266(1):e1-e2.", pmid: "27984213", doi: "10.1097/SLA.0000000000002104", y: 2017 },
+      "mckernan1993": { c: "McKernan JB, Laws HL. Laparoscopic repair of inguinal hernias using a totally extraperitoneal prosthetic approach. Surg Endosc. 1993;7(1):26-8.", pmid: "8424228", doi: "10.1007/BF00591232", y: 1993 },
+      "arregui1992": { c: "Arregui ME, Davis CJ, Yucel O, Nagan RF. Laparoscopic mesh repair of inguinal hernia using a preperitoneal approach: a preliminary report. Surg Laparosc Endosc. 1992;2(1):53-8.", pmid: "1341501", y: 1992 },
+      "kaufmann2018": { c: "Kaufmann R, Halm JA, Eker HH, Klitsie PJ, Nieuwenhuizen J, van Geldere D, et al. Mesh versus suture repair of umbilical hernia in adults: a randomised, double-blind, controlled, multicentre trial. Lancet. 2018;391(10123):860-9.", pmid: "29459021", doi: "10.1016/S0140-6736(18)30298-8", y: 2018 },
     },
     P: {
+      "lich": [
+        ["lichtenstein1989", "original", "Naprawa bez napięcia: siatka polipropylenowa wzmacnia całą tylną ścianę kanału pachwinowego"],
+        ["herniasurgegroup2018", "guideline", "HerniaSurge: naprawa z siatką u dorosłych z objawową przepukliną pachwinową; Lichtenstein — technika otwarta z wyboru"]],
+      "tapp": [
+        ["arregui1992", "original", "Wczesny opis laparoskopowej naprawy z siatką w przestrzeni przedotrzewnowej z dostępu przezbrzusznego (TAPP)"],
+        ["herniasurgegroup2018", "guideline", "Siatka co najmniej 10 × 15 cm na otworze mięśniowo-łonowym, parietalizacja; mocowanie zwykle zbędne"],
+        ["bittner2011", "guideline", "Wytyczne IEHS dla TAPP i TEP: technika, siatka, mocowanie, powikłania"],
+        ["spaw1991", "technique", "Anatomia pachwiny od strony jamy brzusznej; trójkąt zagłady"],
+        ["daes2017", "technique", "Krytyczny widok otworu mięśniowo-łonowego przed założeniem siatki"]],
+      "tep": [
+        ["mckernan1993", "original", "Pierwszy opis TEP: siatka w przestrzeni przedotrzewnowej bez otwierania otrzewnej"],
+        ["herniasurgegroup2018", "guideline", "Siatka co najmniej 10 × 15 cm na otworze mięśniowo-łonowym, parietalizacja; mocowanie zwykle zbędne"],
+        ["bittner2011", "guideline", "Wytyczne IEHS dla TAPP i TEP: technika, siatka, mocowanie, powikłania"],
+        ["daes2017", "technique", "Krytyczny widok otworu mięśniowo-łonowego przed założeniem siatki"]],
       "tar": [
         ["novitsky2012", "original", "TAR: pochewka tylna nacięta 0,5–1 cm przyśrodkowo od kresy półksiężycowatej, przecięcie mięśnia poprzecznego, siatka sublay, linia biała nad siatką"],
         ["love2021", "outcomes", "RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego"],
@@ -286,7 +308,8 @@
         ["sabbagh2011", "outcomes", "Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia"],
         ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
       "umb": [
-        ["henriksen2020", "guideline", "Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm"]],
+        ["henriksen2020", "guideline", "Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm"],
+        ["kaufmann2018", "outcomes", "Badanie randomizowane (ubytek 1–4 cm): siatka przedotrzewnowa — mniej nawrotów niż szew pierwotny"]],
       "tcei": [
         ["spinelli2022", "guideline", "ECCO 2022: kolektomia subtotalna z ileostomią końcową w ciężkim rzucie WZJG; proktokolektomia z ileostomią albo ze zbiornikiem J"],
         ["brooke1952", "original", "Ileostomia wywinięta (Brooke) — koniec jelita krętego ponad skórę"]

@@ -1,5 +1,5 @@
 // SURGITOME — (c) 2026 Piotr Spychalski, MD, PhD, Medical University of Gdańsk · piotr.spychalski@gumed.edu.pl · ORCID 0000-0001-7111-4660 · MIT License
-// Herniologia: kategoria „Herniologia” (przed badaniami), zabiegi: przepuklina pępkowa (siatka przedotrzewnowa / szew), TAR, Ramirez.
+// Herniologia: kategoria „Herniologia” (przed badaniami), zabiegi: Lichtenstein, TAPP, TEP (test ui_53), przepuklina pępkowa (siatka przedotrzewnowa / szew), TAR, Ramirez.
 // Warstwowy model powłok (TOOL_EXT.wall): wszystkie kadry bez błędów; ubytek — warstwy mięśniowo-powięziowe odsunięte bocznie, po odtworzeniu linii
 // białej przyśrodkowe brzegi w linii pośrodkowej; przestrzenie (zamięśniowa, TAR) otwierają się i zamykają; siatka widoczna tylko od kadru „Siatka”;
 // TK: własny rysunek (M.ctCustom), start na poziomie środka ubytku, RDR z modelu < 1 (wskazanie do uwolnienia); EN — teksty bez polskich znaków.
@@ -19,10 +19,10 @@ function boot(lang){ const dom=new JSDOM(html,{runScripts:'outside-only',pretend
 (async()=>{
   let w=boot(); await sleep(300); const $=id=>w.document.getElementById(id), A=w.ANAT;
   const cats=A.CATS.map(c=>c.id); ok(cats.indexOf('hernia')>=0 && cats.indexOf('hernia')===cats.indexOf('trials')-1,'kategoria hernia nie stoi przed badaniami: '+cats);
-  const H=A.PROCS.filter(p=>p.cat==='hernia').map(p=>p.id); ok(H.join(',')==='umb,tar,acs','zabiegi herniologii: '+H);
+  const H=A.PROCS.filter(p=>p.cat==='hernia').map(p=>p.id); ok(H.join(',')==='lich,tapp,tep,umb,tar,acs','zabiegi herniologii: '+H);
   ok(A.WALL.rdr().ratio<1 && A.WALL.rdr().ratio>0.8,'RDR modelu TAR/Ramirez: '+A.WALL.rdr().ratio);
   const S=w.__sgTest.state();
-  for(const id of H){ const an=A.PROCS.findIndex(p=>p.id===id);
+  for(const id of H.filter(i=>['umb','tar','acs'].includes(i))){ const an=A.PROCS.findIndex(p=>p.id===id);
     for(let vi=0;vi<A.PROCS[an].variants.length;vi++){ const fr=w.__sgTest.open(an,vi,0), F=w.__sgTest.frames(), M=w.__sgTest.model();
       ok(M.wall,'brak modelu powłok: '+id);
       for(let fi=0;fi<F.length;fi++){ w.__sgTest.open(an,vi,fi); S.playing=false; w.__sgTest.at(F[fi].m1==null?F[fi].m0:F[fi].m1); await sleep(5);
