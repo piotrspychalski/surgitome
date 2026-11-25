@@ -29,7 +29,7 @@
     endoCam.aspect = W / H; endoCam.updateProjectionMatrix();
   }
   if (window.ResizeObserver) new ResizeObserver(resize).observe(viewport); else window.addEventListener('resize', resize);
-  var onMQ = function () { MOBILE = mobMQ.matches; root.classList.toggle('mobile', MOBILE); if (!MOBILE) mMenu(false); };
+  var onMQ = function () { MOBILE = mobMQ.matches; root.classList.toggle('mobile', MOBILE); if (!MOBILE) mMenu(false); updateDock(); };
   var reflow = function () { resize(); setTimeout(resize, 120); setTimeout(resize, 450); if (ct.on) setTimeout(ctResize, 460); };
   window.addEventListener('orientationchange', reflow);
   window.addEventListener('resize', reflow);

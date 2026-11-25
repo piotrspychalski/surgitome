@@ -180,15 +180,13 @@
         vb.appendChild(b);
       });
     }
-    tabsFit(true); requestAnimationFrame(function () { tabsFit(true); });   // po ułożeniu wariantów (szerokość wiersza zabiegów)
+    updateDock();   // warianty są w dolnym pasku (obok „Zmień dostęp”) — pokaż/ukryj ten wiersz
+    tabsFit(true); requestAnimationFrame(function () { tabsFit(true); });
   }
   /* ---------- zabiegi w jednym wierszu: przewijanie, strzałki, panel „Wszystkie” ---------- */
   function tabsFit(center) {
     var nav = $('tabs'), wrap = nav.parentNode, line = wrap.parentNode;
     if (MOBILE) return;
-    // karty zabiegów: co najmniej ok. 40% wiersza (albo cała ich szerokość, jeśli mniejsza); resztę dostają warianty (przewijane)
-    var f0 = nav.firstElementChild, f1 = nav.lastElementChild, cw = f0 ? f1.offsetLeft + f1.offsetWidth - f0.offsetLeft + 2 : 0;   // szerokość samych kart (scrollWidth rośnie z kontenerem)
-    wrap.style.minWidth = Math.min(cw, Math.round(line.clientWidth * 0.42)) + 'px';
     if (center) { var sel = nav.querySelector('.tab[aria-selected="true"]'); if (sel) nav.scrollLeft = Math.max(0, sel.offsetLeft - (nav.clientWidth - sel.offsetWidth) / 2); }
     var over = nav.scrollWidth > nav.clientWidth + 2 || $('app').querySelector('.subbar').classList.contains('tabsopen');
     line.classList.toggle('over', over);
