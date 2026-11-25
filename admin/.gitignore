@@ -1,0 +1,10 @@
+# Panel autora: zbudowana strona z zaszyfrowanymi danymi powstaje tylko przy publikacji, nigdy w repozytorium
+dist/
+# prawdziwe dane ankiety STUDY, kody i klucze NIE mogą trafić do tego (publicznego) repozytorium — trzymaj je w prywatnym lab-tools
+/dane/
+*.csv
+*.mbox
+*.eml
+codes*
+!tests/dane/*.csv
+.env*
