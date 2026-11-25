@@ -28,8 +28,8 @@ const overlap=(a,b)=>a[0]<b[0]+b[2]&&b[0]<a[0]+a[2]&&a[1]<b[1]+b[3]&&b[1]<a[1]+a
   // 1. pierwsze wejście: najpierw informacja, samouczek dopiero po „Rozumiem”
   let w=boot({}); const $=id=>w.document.getElementById(id); await sleep(1000);
   ok(!$('intro').hidden,'brak informacji startowej'); ok($('tour').hidden,'samouczek otwarty razem z informacją');
-  $('introOk').click(); await sleep(500);
-  ok(!$('tour').hidden,'samouczek nie wystartował po „Rozumiem”');
+  w.document.querySelector('#intro .rolebtn').click(); await sleep(500);   // wybór roli zamyka informację
+  ok(!$('tour').hidden,'samouczek nie wystartował po wyborze roli');
   ok($('tourTitle').textContent==='Język'&&$('tourNum').textContent==='Samouczek · 1 / 6','krok 1: '+$('tourTitle').textContent+' | '+$('tourNum').textContent);
   ok($('tourPrev').disabled,'„Wstecz” aktywne w kroku 1'); ok(w.document.activeElement===$('tourNext'),'fokus nie na „Dalej”');
   // 2. klawisze: strzałki przechodzą między krokami i nie zmieniają kadru pod spodem

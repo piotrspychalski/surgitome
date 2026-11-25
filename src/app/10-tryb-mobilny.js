@@ -200,16 +200,30 @@
   function fsFail() { var t = $('toast'); t.textContent = tr('Pełny ekran jest tu zablokowany. Użyj F11 lub pełnego ekranu przeglądarki.'); t.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 3800); }
 
   /* ---------- informacja przy pierwszym wejściu (raz na urządzenie, localStorage) ---------- */
-  var INTRO_KEY = 'surgitome-intro';
-  function introClose() {
+  // wybór roli (student / pacjent / lekarz) w tym samym oknie: zapis na urządzeniu i anonimowe zdarzenia GoatCounter (tylko na stronie publicznej,
+  // gdzie wczytany jest licznik): rola-wybor/<rola> — raz, przy wyborze (pominięcie: rola-wybor/pominieto); rola-wizyta/<rola> — przy każdym wejściu
+  var INTRO_KEY = 'surgitome-intro', ROLE_KEY = 'surgitome-rola', USER_ROLES = { student: 1, pacjent: 1, lekarz: 1 };
+  function gcEvent(path, title) {
+    var n = 0;
+    (function f() { var g = window.goatcounter; if (g && typeof g.count === 'function') { try { g.count({ path: path, title: title, event: true }); } catch (e) {} } else if (n++ < 40) setTimeout(f, 500); })();
+  }
+  window.__sgTest.gcEvent = gcEvent;
+  function introClose(role) {
+    if ($('intro').hidden) return;
     $('intro').hidden = true;
-    try { localStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
+    role = USER_ROLES[role] ? role : null;
+    try { localStorage.setItem(INTRO_KEY, '1'); if (role) localStorage.setItem(ROLE_KEY, role); } catch (e) {}
+    gcEvent('rola-wybor/' + (role || 'pominieto'), 'Rola — wybór: ' + (role || 'pominięto'));
+    if (role) gcEvent('rola-wizyta/' + role, 'Rola — wizyta: ' + role);
     tourAuto(250); // samouczek zaraz po informacji (raz na urządzenie)
   }
-  $('introOk').onclick = introClose;
-  $('intro').onclick = function (e) { if (e.target === this) introClose(); };
+  [].forEach.call(document.querySelectorAll('#intro .rolebtn'), function (b) { b.onclick = function () { introClose(b.dataset.role); }; });
+  $('intro').onclick = function (e) { if (e.target === this) introClose(null); };
   $('introLang').onclick = function () { setLang(LANG === 'pl' ? 'en' : 'pl'); };
-  try { if (localStorage.getItem(INTRO_KEY) !== '1') { $('intro').hidden = false; setTimeout(function () { $('introOk').focus(); }, 0); } } catch (e) {}
+  try {
+    if (localStorage.getItem(INTRO_KEY) !== '1') { $('intro').hidden = false; setTimeout(function () { $('intro').querySelector('.introbox').focus(); }, 0); }
+    else { var r0 = localStorage.getItem(ROLE_KEY); if (USER_ROLES[r0]) gcEvent('rola-wizyta/' + r0, 'Rola — wizyta: ' + r0); }
+  } catch (e) {}
 
   function qrShow(on) {
     if (on) { var h = $('qrOverlay').querySelector('.qrhint'); h.dataset.pl = MOBILE ? 'Dotknij, aby zamknąć' : 'Kliknij, aby zamknąć'; h.textContent = tr(h.dataset.pl); }
@@ -223,7 +237,7 @@
     if (!$('fb').hidden) { if (e.key === 'Escape') { e.preventDefault(); fbShow(false); } return; } // formularz uwag: klawisze do pisania
     if (!$('cite').hidden) { if (e.key === 'Escape') { e.preventDefault(); citeShow(false); } return; } // okienko cytowania: Tab/Enter na przyciskach
     if (!$('bib').hidden) { if (e.key === 'Escape') { e.preventDefault(); bibShow(false); } return; } // okno „Źródła”: klawisze do przewijania
-    if (!$('intro').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); introClose(); } return; }
+    if (!$('intro').hidden) { if (e.key === 'Escape') { e.preventDefault(); introClose(null); } return; }   // Enter / spacja — na przycisku roli (domyślne działanie przycisku)
     if (!$('qrOverlay').hidden) { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); qrShow(false); } return; }
     if (!$('acc').hidden) { accKey(e); return; } // okno wyboru dostępu: 1 / 2 / 3, Esc (pod oknami „Źródła”, cytowania, uwag)
     var tg = e.target, tag = tg && tg.tagName;
