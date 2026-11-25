@@ -10,6 +10,12 @@
   function ctPrepare() {
     var an = M.an, m = S.m;
     ct.samples = [];
+    if (M.ctCustom) { // herniologia: własny rysunek przekroju (12-przepukliny.js), zakres poziomów z modelu powłok
+      ct.yMax = M.ctCustom.yMax; ct.yMin = M.ctCustom.yMin; ct.y = Math.max(ct.yMin, Math.min(ct.yMax, ct.y));
+      var sz0 = M.box.getSize(new V3()), cc0 = M.box.getCenter(new V3());
+      ctPlaneG.scale.set(1, 1, 1); ctPlane.scale.set(sz0.x + 2, sz0.z + 2, 1); ctEdge.scale.set(sz0.x + 2, sz0.z + 2, 1); ctPlaneG.position.set(cc0.x, ct.y, cc0.z);
+      $('ctLevel').min = String(-ct.yMax); $('ctLevel').max = String(-ct.yMin); return;
+    }
     M.objs.forEach(function (o) {
       if (o.def.solid || o.op < 0.5) return;
       var st = o.st, n = Math.max(40, Math.ceil(st.len / 0.07)), arr = [];
@@ -28,7 +34,7 @@
   var VERT_C = [[9, 'Th11'], [6, 'Th12'], [3, 'L1'], [0, 'L2'], [-3.5, 'L3'], [-6.5, 'L4'], [-9, 'L5'], [-11.5, 'S1'], [-14, 'S3'], [-17, 'kość guziczna'], [-19.5, 'krocze']];
   var VERT_S = [[16, 'Th6'], [10, 'Th10'], [7, 'Th11'], [4, 'Th12'], [1, 'L1'], [-3, 'L2'], [-6.5, 'L3'], [-11, 'L4'], [-15.5, 'L5'], [-20, 'S1'], [-24, 'S3'], [-28, 'kość guziczna']];
   var VERT_E = [[27, 'C5'], [24, 'C7'], [21, 'Th2'], [18, 'Th4']].concat(VERT_U);
-  function vertAt(y) { var cat = M.an.cat, V = cat === 'colon' ? VERT_C : cat === 'sb' ? VERT_S : cat === 'eso' ? VERT_E : VERT_U, best = V[0]; V.forEach(function (v) { if (Math.abs(v[0] - y) < Math.abs(best[0] - y)) best = v; }); return best[1]; }
+  function vertAt(y) { var cat = M.an.cat, V = cat === 'colon' || cat === 'hernia' ? VERT_C : cat === 'sb' ? VERT_S : cat === 'eso' ? VERT_E : VERT_U, best = V[0]; V.forEach(function (v) { if (Math.abs(v[0] - y) < Math.abs(best[0] - y)) best = v; }); return best[1]; }
   function ctBody() {
     var cat = M.an.cat, b = M.box;
     if (cat === 'colon') return { zc: 0.3, A: 12.5, B: 6.0 };
@@ -39,6 +45,11 @@
   function drawCT() {
     if (!ct.on || !ct.samples) return;
     var cw = ctCv.width, ch = ctCv.height, g = ctCtx, dpr = Math.min(window.devicePixelRatio || 1, 2), y = ct.y, cat = M.an.cat;
+    if (M.ctCustom) {
+      M.ctCustom.draw(g, cw, ch, dpr, y);
+      var N0 = Math.round((ct.yMax - ct.yMin) / 0.5) + 1, n0 = Math.round((ct.yMax - y) / 0.5) + 1;
+      $('ctLvlTxt').textContent = tr('Przekrój ') + n0 + ' / ' + N0 + tr(' — poziom ≈ ') + tr(vertAt(y)); $('ctLevel').value = String(-y); ctPlaneG.position.y = y; return;
+    }
     var BD = ctBody(), A = BD.A, B = BD.B, zc = BD.zc;
     var s = Math.min(cw / (2 * A + 2), ch / (2 * B + 2)), cx = cw / 2, cy = ch / 2;
     var zc0 = zc;
@@ -171,7 +182,7 @@
   function setCT(on) {
     ct.on = on; ct.sweep = false; ct.started = false; $('ctSweep').textContent = tr('Przejazd');
     $('ctPanel').hidden = !on; viewport.classList.toggle('ctmode', on); ctPlaneG.visible = on;
-    if (on) { ctPrepare(); ct.y = ct.yMax; requestAnimationFrame(ctResize); }
+    if (on) { ctPrepare(); ct.y = M.ctCustom && M.ctCustom.y0 != null ? M.ctCustom.y0 : ct.yMax; requestAnimationFrame(ctResize); }
   }
   $('ctLevel').addEventListener('input', function () { ct.sweep = false; $('ctSweep').textContent = tr('Przejazd'); ct.y = -parseFloat(this.value); drawCT(); });
   $('ctSweep').onclick = function () { toggleSweep(); };

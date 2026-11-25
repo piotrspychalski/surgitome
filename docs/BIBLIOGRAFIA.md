@@ -2,7 +2,7 @@
 
 Źródła pokazywane w aplikacji: panel „Opis” → „Piśmiennictwo” (bieżący zabieg i wariant) oraz „Źródła” w stopce panelu (całość). Plik powstaje z `src/core/12-bibliografia.js` poleceniem `node tools/bibliografia_md.js`.
 
-- **Pozycji:** 241, w tym 230 z PMID i 11 spoza PubMed. Styl Vancouver (NLM): do 6 autorów, potem „et al.”; skróty czasopism wg katalogu NLM; rok wydania drukowanego.
+- **Pozycji:** 248, w tym 237 z PMID i 11 spoza PubMed. Styl Vancouver (NLM): do 6 autorów, potem „et al.”; skróty czasopism wg katalogu NLM; rok wydania drukowanego.
 - **Dobór:** dla każdego zabiegu wyszukiwanie w PubMed (konektor PubMed): opis oryginalny, aktualne wytyczne lub konsensus, źródła liczb i szczegółów pokazanych w modelu, endoskopia po zabiegu, kluczowe RCT i metaanalizy. Włączono wszystkie źródła z audytu medycznego z 5.10.2026. Nowsze wersje wytycznych (EASL 2024, JGCA 2025, IFSO 2023 i 2026, ASCRS 2026) dopisano 6.10.2026 obok wcześniejszych, które zostają.
 - **Weryfikacja:** każdy opis złożono z rekordu PubMed (E-utilities efetch), więc PMID, tytuł i DOI pochodzą z jednego rekordu. Pierwszy autor i rok podane przy wyborze porównano z rekordem dla wszystkich PMID. Pozycje spoza PubMed (rejestry ClinicalTrials.gov, CORDIS, FDA 510(k), Brisbane 2000, Radiopaedia, mp.pl, poradniki) sprawdzono w źródle; data dostępu: 2026-10-05.
 - **Role:** *opis oryginalny*, *wytyczne / konsensus*, *anatomia*, *technika*, *endoskopia*, *wyniki badań*, *rejestr badania*, *materiały dla chorych*. W aplikacji pozycje idą w tej kolejności, a w obrębie roli chronologicznie. Pozycje wariantu dochodzą do pozycji wspólnych dla zabiegu.
@@ -895,44 +895,77 @@ Różnice między źródłami, a także między źródłami a modelem, wynikają
 328. Mikulewicz J. Stomia – i co dalej? Wskazówki praktyczne [Internet]. Olsztyn: Wojewódzki Szpital Specjalistyczny w Olsztynie; [2023] [cited 2026 Oct 5]. [online](https://wss.olsztyn.pl/wp-content/uploads/2023/08/postepowanie_po_stomii.pdf)  
    *materiały dla chorych* — Wskazówki praktyczne dla chorego po wyłonieniu stomii
 
+## Herniologia
+
+### Przepuklina pępkowa — naprawa otwarta (`umb`)
+
+329. Henriksen NA, Montgomery A, Kaufmann R, Berrevoet F, East B, Fischer J, et al.; European and Americas Hernia Societies (EHS and AHS). Guidelines for treatment of umbilical and epigastric hernias from the European Hernia Society and Americas Hernia Society. Br J Surg. 2020;107(3):171-90. [PubMed 31916607](https://pubmed.ncbi.nlm.nih.gov/31916607/) · [doi:10.1002/bjs.11489](https://doi.org/10.1002/bjs.11489)  
+   *wytyczne / konsensus* — Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm
+
+### Rekonstrukcja powłok z uwolnieniem mięśnia poprzecznego (TAR) (`tar`)
+
+330. Novitsky YW, Elliott HL, Orenstein SB, Rosen MJ. Transversus abdominis muscle release: a novel approach to posterior component separation during complex abdominal wall reconstruction. Am J Surg. 2012;204(5):709-16. [PubMed 22607741](https://pubmed.ncbi.nlm.nih.gov/22607741/) · [doi:10.1016/j.amjsurg.2012.02.008](https://doi.org/10.1016/j.amjsurg.2012.02.008)  
+   *opis oryginalny* — TAR: pochewka tylna nacięta 0,5–1 cm przyśrodkowo od kresy półksiężycowatej, przecięcie mięśnia poprzecznego, siatka sublay, linia biała nad siatką
+331. Parker SG, Halligan S, Liang MK, Muysoms FE, Adrales GL, Boutall A, et al. Definitions for Loss of Domain: An International Delphi Consensus of Expert Surgeons. World J Surg. 2020;44(4):1070-8. [PubMed 31848677](https://pubmed.ncbi.nlm.nih.gov/31848677/) · [doi:10.1007/s00268-019-05317-z](https://doi.org/10.1007/s00268-019-05317-z)  
+   *wytyczne / konsensus* — Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha
+332. Tanaka EY, Yoo JH, Rodrigues AJ Jr, Utiyama EM, Birolini D, Rasslan S. A computerized tomography scan method for calculating the hernia sac and abdominal cavity volume in complex large incisional hernia with loss of domain. Hernia. 2010;14(1):63-9. [PubMed 19756913](https://pubmed.ncbi.nlm.nih.gov/19756913/) · [doi:10.1007/s10029-009-0560-8](https://doi.org/10.1007/s10029-009-0560-8)  
+   *technika* — Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)
+333. Sabbagh C, Dumont F, Robert B, Badaoui R, Verhaeghe P, Regimbeau JM. Peritoneal volume is predictive of tension-free fascia closure of large incisional hernias with loss of domain: a prospective study. Hernia. 2011;15(5):559-65. [PubMed 21584816](https://pubmed.ncbi.nlm.nih.gov/21584816/) · [doi:10.1007/s10029-011-0832-y](https://doi.org/10.1007/s10029-011-0832-y)  
+   *wyniki badań* — Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia
+334. Love MW, Warren JA, Davis S, Ewing JA, Hall AM, Cobb WS, et al. Computed tomography imaging in ventral hernia repair: can we predict the need for myofascial release? Hernia. 2021;25(2):471-7. [PubMed 32277369](https://pubmed.ncbi.nlm.nih.gov/32277369/) · [doi:10.1007/s10029-020-02181-y](https://doi.org/10.1007/s10029-020-02181-y)  
+   *wyniki badań* — RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego
+
+### Przednie rozdzielenie komponentów (Ramirez) (`acs`)
+
+335. Ramirez OM, Ruas E, Dellon AL. "Components separation" method for closure of abdominal-wall defects: an anatomic and clinical study. Plast Reconstr Surg. 1990;86(3):519-26. [PubMed 2143588](https://pubmed.ncbi.nlm.nih.gov/2143588/) · [doi:10.1097/00006534-199009000-00023](https://doi.org/10.1097/00006534-199009000-00023)  
+   *opis oryginalny* — Rozdzielenie komponentów: oddzielenie mięśnia skośnego zewnętrznego od wewnętrznego, przesunięcie płata ok. 10 cm na wysokości talii
+336. Parker SG, Halligan S, Liang MK, Muysoms FE, Adrales GL, Boutall A, et al. Definitions for Loss of Domain: An International Delphi Consensus of Expert Surgeons. World J Surg. 2020;44(4):1070-8. [PubMed 31848677](https://pubmed.ncbi.nlm.nih.gov/31848677/) · [doi:10.1007/s00268-019-05317-z](https://doi.org/10.1007/s00268-019-05317-z)  
+   *wytyczne / konsensus* — Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha
+337. Tanaka EY, Yoo JH, Rodrigues AJ Jr, Utiyama EM, Birolini D, Rasslan S. A computerized tomography scan method for calculating the hernia sac and abdominal cavity volume in complex large incisional hernia with loss of domain. Hernia. 2010;14(1):63-9. [PubMed 19756913](https://pubmed.ncbi.nlm.nih.gov/19756913/) · [doi:10.1007/s10029-009-0560-8](https://doi.org/10.1007/s10029-009-0560-8)  
+   *technika* — Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)
+338. Sabbagh C, Dumont F, Robert B, Badaoui R, Verhaeghe P, Regimbeau JM. Peritoneal volume is predictive of tension-free fascia closure of large incisional hernias with loss of domain: a prospective study. Hernia. 2011;15(5):559-65. [PubMed 21584816](https://pubmed.ncbi.nlm.nih.gov/21584816/) · [doi:10.1007/s10029-011-0832-y](https://doi.org/10.1007/s10029-011-0832-y)  
+   *wyniki badań* — Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia
+339. Love MW, Warren JA, Davis S, Ewing JA, Hall AM, Cobb WS, et al. Computed tomography imaging in ventral hernia repair: can we predict the need for myofascial release? Hernia. 2021;25(2):471-7. [PubMed 32277369](https://pubmed.ncbi.nlm.nih.gov/32277369/) · [doi:10.1007/s10029-020-02181-y](https://doi.org/10.1007/s10029-020-02181-y)  
+   *wyniki badań* — RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego
+
 ## Badania
 
 ### ETHOS — leczenie endoskopowe czy operacja we wczesnym raku okrężnicy (`ethos`)
 
-329. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
+340. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
    *wytyczne / konsensus* — ESMO 2020: leczenie i schemat obserwacji w raku okrężnicy
-330. Ferlitsch M, Hassan C, Bisschops R, Bhandari P, Dinis-Ribeiro M, Risio M, et al. Colorectal polypectomy and endoscopic mucosal resection: European Society of Gastrointestinal Endoscopy (ESGE) Guideline - Update 2024. Endoscopy. 2024;56(7):516-45. [PubMed 38670139](https://pubmed.ncbi.nlm.nih.gov/38670139/) · [doi:10.1055/a-2304-3219](https://doi.org/10.1055/a-2304-3219)  
+341. Ferlitsch M, Hassan C, Bisschops R, Bhandari P, Dinis-Ribeiro M, Risio M, et al. Colorectal polypectomy and endoscopic mucosal resection: European Society of Gastrointestinal Endoscopy (ESGE) Guideline - Update 2024. Endoscopy. 2024;56(7):516-45. [PubMed 38670139](https://pubmed.ncbi.nlm.nih.gov/38670139/) · [doi:10.1055/a-2304-3219](https://doi.org/10.1055/a-2304-3219)  
    *wytyczne / konsensus* — ESGE 2024: przy podejrzeniu raka powierzchownego resekcja en bloc, m.in. EFTR
-331. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
+342. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
    *technika* — EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT
-332. Zwager LW, Bastiaansen BAJ, Montazeri NSM, Hompes R, Barresi V, Ichimasa K, et al. Deep Submucosal Invasion Is Not an Independent Risk Factor for Lymph Node Metastasis in T1 Colorectal Cancer: A Meta-Analysis. Gastroenterology. 2022;163(1):174-89. [PubMed 35436498](https://pubmed.ncbi.nlm.nih.gov/35436498/) · [doi:10.1053/j.gastro.2022.04.010](https://doi.org/10.1053/j.gastro.2022.04.010)  
+343. Zwager LW, Bastiaansen BAJ, Montazeri NSM, Hompes R, Barresi V, Ichimasa K, et al. Deep Submucosal Invasion Is Not an Independent Risk Factor for Lymph Node Metastasis in T1 Colorectal Cancer: A Meta-Analysis. Gastroenterology. 2022;163(1):174-89. [PubMed 35436498](https://pubmed.ncbi.nlm.nih.gov/35436498/) · [doi:10.1053/j.gastro.2022.04.010](https://doi.org/10.1053/j.gastro.2022.04.010)  
    *wyniki badań* — Głęboki naciek podśluzówki nie jest niezależnym czynnikiem ryzyka przerzutów węzłowych T1
-333. Endoscopic Therapy Or Surgery for Early Colon Cancer (ETHOS). ClinicalTrials.gov identifier: NCT06940947 [Internet]. Bethesda (MD): National Library of Medicine (US); 2025 Apr 15 [updated 2025 Nov 17; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06940947)  
+344. Endoscopic Therapy Or Surgery for Early Colon Cancer (ETHOS). ClinicalTrials.gov identifier: NCT06940947 [Internet]. Bethesda (MD): National Library of Medicine (US); 2025 Apr 15 [updated 2025 Nov 17; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06940947)  
    *rejestr badania* — Rejestracja ETHOS: kryteria włączenia, ramiona EFTR vs operacja, punkty końcowe
-334. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
+345. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
    *rejestr badania* — Projekt Horyzont Europa ECOPOP: leczenie oszczędzające narząd we wczesnym raku jelita grubego
 
 ### SCAR — operacja czy resekcja endoskopowa po niedoszczętnym usunięciu wczesnego raka okrężnicy (`scar`)
 
-335. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
+346. Argilés G, Tabernero J, Labianca R, Hochhauser D, Salazar R, Iveson T, et al.; ESMO Guidelines Committee. Localised colon cancer: ESMO Clinical Practice Guidelines for diagnosis, treatment and follow-up. Ann Oncol. 2020;31(10):1291-305. [PubMed 32702383](https://pubmed.ncbi.nlm.nih.gov/32702383/) · [doi:10.1016/j.annonc.2020.06.022](https://doi.org/10.1016/j.annonc.2020.06.022)  
    *wytyczne / konsensus* — ESMO 2020: postępowanie po endoskopowym usunięciu raka pT1 i obserwacja
-336. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
+347. Schmidt A, Beyna T, Schumacher B, Meining A, Richter-Schrag HJ, Messmann H, et al. Colonoscopic full-thickness resection using an over-the-scope device: a prospective multicentre study in various indications. Gut. 2018;67(7):1280-9. [PubMed 28798042](https://pubmed.ncbi.nlm.nih.gov/28798042/) · [doi:10.1136/gutjnl-2016-313677](https://doi.org/10.1136/gutjnl-2016-313677)  
    *technika* — EFTR nasadką FTRD (OTSC) w jelicie grubym — badanie WALL RESECT
-337. Zwager LW, Bastiaansen BAJ, van der Spek BW, Heine DN, Schreuder RM, Perk LE, et al.; Dutch eFTR Group. Endoscopic full-thickness resection of T1 colorectal cancers: a retrospective analysis from a multicenter Dutch eFTR registry. Endoscopy. 2022;54(5):475-85. [PubMed 34488228](https://pubmed.ncbi.nlm.nih.gov/34488228/) · [doi:10.1055/a-1637-9051](https://doi.org/10.1055/a-1637-9051)  
+348. Zwager LW, Bastiaansen BAJ, van der Spek BW, Heine DN, Schreuder RM, Perk LE, et al.; Dutch eFTR Group. Endoscopic full-thickness resection of T1 colorectal cancers: a retrospective analysis from a multicenter Dutch eFTR registry. Endoscopy. 2022;54(5):475-85. [PubMed 34488228](https://pubmed.ncbi.nlm.nih.gov/34488228/) · [doi:10.1055/a-1637-9051](https://doi.org/10.1055/a-1637-9051)  
    *wyniki badań* — Rejestr eFTR: 198 wycięć blizny po niedoszczętnej resekcji raka T1
-338. Zwager LW, Moons LMG, Farina Sarasqueta A, Laclé MM, Albers SC, Hompes R, et al.; the Dutch eFTR Working Group. Long-term oncological outcomes of endoscopic full-thickness resection after previous incomplete resection of low-risk T1 CRC (LOCAL-study): study protocol of a national prospective cohort study. BMC Gastroenterol. 2022;22(1):516. [PubMed 36513968](https://pubmed.ncbi.nlm.nih.gov/36513968/) · [doi:10.1186/s12876-022-02591-5](https://doi.org/10.1186/s12876-022-02591-5)  
+349. Zwager LW, Moons LMG, Farina Sarasqueta A, Laclé MM, Albers SC, Hompes R, et al.; the Dutch eFTR Working Group. Long-term oncological outcomes of endoscopic full-thickness resection after previous incomplete resection of low-risk T1 CRC (LOCAL-study): study protocol of a national prospective cohort study. BMC Gastroenterol. 2022;22(1):516. [PubMed 36513968](https://pubmed.ncbi.nlm.nih.gov/36513968/) · [doi:10.1186/s12876-022-02591-5](https://doi.org/10.1186/s12876-022-02591-5)  
    *rejestr badania* — Protokół LOCAL: wyniki odległe eFTR po niedoszczętnej resekcji raka T1 niskiego ryzyka
-339. Surgery Versus Endoscopic Resection for Incompletely Removed Early Colon CAnceR (SCAR). ClinicalTrials.gov identifier: NCT06057350 [Internet]. Bethesda (MD): National Library of Medicine (US); 2023 Aug 12 [updated 2024 Feb 15; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06057350)  
+350. Surgery Versus Endoscopic Resection for Incompletely Removed Early Colon CAnceR (SCAR). ClinicalTrials.gov identifier: NCT06057350 [Internet]. Bethesda (MD): National Library of Medicine (US); 2023 Aug 12 [updated 2024 Feb 15; cited 2026 Oct 5]. [online](https://clinicaltrials.gov/study/NCT06057350)  
    *rejestr badania* — Rejestracja SCAR: eFTR blizny vs resekcja segmentarna po niedoszczętnym usunięciu raka T1
-340. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
+351. European Commission. Early colorectal cancer: patient-targeted and organ preserving treatment (ECOPOP). Grant agreement ID 101156165, HORIZON-HLTH-2024-DISEASE-03-08 [Internet]. Luxembourg: CORDIS; 2025 [cited 2026 Oct 5]. [doi:10.3030/101156165](https://doi.org/10.3030/101156165)  
    *rejestr badania* — Projekt Horyzont Europa ECOPOP: leczenie oszczędzające narząd we wczesnym raku jelita grubego
 
 ## Narzędzia
 
 ### Narzędzia
 
-341. U.S. Food and Drug Administration. 510(k) premarket notification K103263: Endo GIA Single Use Duet TRS Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2010 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf10/K103263.pdf)  
+352. U.S. Food and Drug Administration. 510(k) premarket notification K103263: Endo GIA Single Use Duet TRS Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2010 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf10/K103263.pdf)  
    *technika* — Stapler liniowy Endo GIA: ładunek Tri-Staple — po 3 rzędy zszywek z każdej strony linii cięcia
-342. U.S. Food and Drug Administration. 510(k) premarket notification K133938: Endo GIA Reinforced Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2014 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf13/K133938.pdf)  
+353. U.S. Food and Drug Administration. 510(k) premarket notification K133938: Endo GIA Reinforced Reload with Tri-Staple Technology (Covidien) [Internet]. Silver Spring (MD): FDA; 2014 [cited 2026 Oct 5]. [online](https://www.accessdata.fda.gov/cdrh_docs/pdf13/K133938.pdf)  
    *technika* — Stapler liniowy Endo GIA: ładunek wzmocniony Tri-Staple — po 3 rzędy zszywek z każdej strony
 

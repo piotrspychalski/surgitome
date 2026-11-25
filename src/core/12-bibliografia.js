@@ -250,8 +250,29 @@
       "japanesegastricc2011": { c: "Japanese Gastric Cancer Association. Japanese classification of gastric carcinoma: 3rd English edition. Gastric Cancer. 2011;14(2):101-12.", pmid: "21573743", doi: "10.1007/s10120-011-0041-5", y: 2011 },
       "tol2014": { c: "Tol JA, Gouma DJ, Bassi C, Dervenis C, Montorsi M, Adham M, et al.; International Study Group on Pancreatic Surgery. Definition of a standard lymphadenectomy in surgery for pancreatic ductal adenocarcinoma: a consensus statement by the International Study Group on Pancreatic Surgery (ISGPS). Surgery. 2014;156(3):591-600.", pmid: "25061003", doi: "10.1016/j.surg.2014.06.016", y: 2014 },
       "rice2017": { c: "Rice TW, Ishwaran H, Ferguson MK, Blackstone EH, Goldstraw P. Cancer of the Esophagus and Esophagogastric Junction: An Eighth Edition Staging Primer. J Thorac Oncol. 2017;12(1):36-42.", pmid: "27810391", doi: "10.1016/j.jtho.2016.10.016", y: 2017 },
+      "novitsky2012": { c: "Novitsky YW, Elliott HL, Orenstein SB, Rosen MJ. Transversus abdominis muscle release: a novel approach to posterior component separation during complex abdominal wall reconstruction. Am J Surg. 2012;204(5):709-16.", pmid: "22607741", doi: "10.1016/j.amjsurg.2012.02.008", y: 2012 },
+      "ramirez1990": { c: "Ramirez OM, Ruas E, Dellon AL. \"Components separation\" method for closure of abdominal-wall defects: an anatomic and clinical study. Plast Reconstr Surg. 1990;86(3):519-26.", pmid: "2143588", doi: "10.1097/00006534-199009000-00023", y: 1990 },
+      "love2021": { c: "Love MW, Warren JA, Davis S, Ewing JA, Hall AM, Cobb WS, et al. Computed tomography imaging in ventral hernia repair: can we predict the need for myofascial release? Hernia. 2021;25(2):471-7.", pmid: "32277369", doi: "10.1007/s10029-020-02181-y", y: 2021 },
+      "parker2020": { c: "Parker SG, Halligan S, Liang MK, Muysoms FE, Adrales GL, Boutall A, et al. Definitions for Loss of Domain: An International Delphi Consensus of Expert Surgeons. World J Surg. 2020;44(4):1070-8.", pmid: "31848677", doi: "10.1007/s00268-019-05317-z", y: 2020 },
+      "sabbagh2011": { c: "Sabbagh C, Dumont F, Robert B, Badaoui R, Verhaeghe P, Regimbeau JM. Peritoneal volume is predictive of tension-free fascia closure of large incisional hernias with loss of domain: a prospective study. Hernia. 2011;15(5):559-65.", pmid: "21584816", doi: "10.1007/s10029-011-0832-y", y: 2011 },
+      "tanaka2010": { c: "Tanaka EY, Yoo JH, Rodrigues AJ Jr, Utiyama EM, Birolini D, Rasslan S. A computerized tomography scan method for calculating the hernia sac and abdominal cavity volume in complex large incisional hernia with loss of domain. Hernia. 2010;14(1):63-9.", pmid: "19756913", doi: "10.1007/s10029-009-0560-8", y: 2010 },
+      "henriksen2020": { c: "Henriksen NA, Montgomery A, Kaufmann R, Berrevoet F, East B, Fischer J, et al.; European and Americas Hernia Societies (EHS and AHS). Guidelines for treatment of umbilical and epigastric hernias from the European Hernia Society and Americas Hernia Society. Br J Surg. 2020;107(3):171-90.", pmid: "31916607", doi: "10.1002/bjs.11489", y: 2020 }
     },
     P: {
+      "tar": [
+        ["novitsky2012", "original", "TAR: pochewka tylna nacięta 0,5–1 cm przyśrodkowo od kresy półksiężycowatej, przecięcie mięśnia poprzecznego, siatka sublay, linia biała nad siatką"],
+        ["love2021", "outcomes", "RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego"],
+        ["parker2020", "guideline", "Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha"],
+        ["sabbagh2011", "outcomes", "Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia"],
+        ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
+      "acs": [
+        ["ramirez1990", "original", "Rozdzielenie komponentów: oddzielenie mięśnia skośnego zewnętrznego od wewnętrznego, przesunięcie płata ok. 10 cm na wysokości talii"],
+        ["love2021", "outcomes", "RDR w TK: < 1 — w 79% potrzebne dodatkowe uwolnienie mięśniowo-powięziowe; > 2 — w 90% zamknięcie bez niego"],
+        ["parker2020", "guideline", "Konsensus Delphi: definicja utraty domeny, metoda wolumetryczna Sabbagha"],
+        ["sabbagh2011", "outcomes", "Objętość worka / objętość otrzewnej < 20% przewiduje zamknięcie powięzi bez napięcia"],
+        ["tanaka2010", "technique", "Pomiar objętości worka i jamy brzusznej w TK; stosunek ≥ 25% — utrata domeny (odma przedoperacyjna)"]],
+      "umb": [
+        ["henriksen2020", "guideline", "Wytyczne EHS/AHS: siatka zalecana (mniej nawrotów), otwarta płaska siatka przedotrzewnowa; szew pierwotny przy ubytku < 1 cm"]],
       "sleeve": [
         ["regan2003", "original", "Pierwszy opis laparoskopowej SG jako pierwszego etapu leczenia otyłości olbrzymiej (zespół Gagnera)."],
         ["rosenthal2012", "guideline", "Konsensus SG: resekcja od 2–6 cm przed odźwiernikiem, sonda kalibracyjna 32–36 Fr."],
