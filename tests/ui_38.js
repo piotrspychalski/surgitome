@@ -2,6 +2,8 @@
 // Resekcje wątroby (bisegmentektomia II/III, prawa i lewa hemihepatektomia, ALPPS) i slajd „Guz w wątrobie”: kadry, kikuty, preparat, reguły zakresu, EN
 // ALPPS: szypuły segmentu IV przecięte już w etapie I; guz: odsetek pozostającego miąższu (Abdalla 2004: prawa hemihepatektomia ~35%, lewa ~67%),
 // lewa hemihepatektomia z podwiązaniem we wnęce, metastazektomia — naczynia w marginesie przecięte (pierścienie, etykiety kikutów, ostrzeżenie w podpisie)
+// dostęp (kadr 1, decyzja autora 2026-11-25): otwarty — cięcie J (Makuuchiego), laparoskopia z wydobyciem przez cięcie Pfannenstiela, bez robota; ALPPS tylko otwarty;
+// na slajdzie „Dostęp” bez etykiet preparatu i pozostałej wątroby
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -28,15 +30,28 @@ function boot(){ const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBe
     'ALPPS':['Prawa gałąź żyły wrotnej (podwiązana — etap I)','Żyła wątrobowa pośrodkowa (stapler)','Żyła wątrobowa prawa (stapler)','Szypuły segmentu IV (przecięte — etap I)','Przyszła pozostała wątroba (FLR): II, III (+ I)']};
   for(const name of Object.keys(WANT)){
     [...D.querySelectorAll('#tabs .tab')].find(b=>b.textContent.includes(name)).click(); await sleep(800);
-    const st=[...D.querySelectorAll('.srow1 .step')]; ok(st.length===5,name+': kadrów '+st.length);
-    st[0].click(); await sleep(300); let L=lbl(); ok(L.some(x=>/^Preparat/.test(x)||/FLR/.test(x)),name+': brak etykiety preparatu w planie: '+L.join('|'));
-    st[4].click(); await sleep(400); w.__sgTest.state(); L=lbl();
+    const st=[...D.querySelectorAll('.srow1 .step')]; ok(st.length===6,name+': kadrów '+st.length);
+    // kadr 1 „Dostęp”: okno wyboru (bez robota; ALPPS — tylko otwarty), cięcie J albo trokary z cięciem Pfannenstiela
+    ok(w.__sgTest.frames()[0].k==='access',name+': pierwszy kadr to nie „Dostęp”');
+    st[0].click(); await sleep(300); ok(!$('acc').hidden,name+': brak okna wyboru dostępu');
+    const vis=[...D.querySelectorAll('#acc .accopt')].filter(b=>!b.hidden).map(b=>b.dataset.acc).join(); ok(vis===(name==='ALPPS'?'open':'open,lap'),name+': przyciski dostępu '+vis);
+    for(const kind of vis.split(',')){
+      if($('acc').hidden) $('accChange').click(); await sleep(100);
+      D.querySelector('#acc .accopt[data-acc="'+kind+'"]').click(); await sleep(200); const S=w.__sgTest.state(); S.playing=false; w.__sgTest.at(-0.02); await sleep(100);
+      // etykiety narzędzia dostępu (alfa > 0) — w DOM część może być ukryta przy nakładaniu się etykiet
+      const L=lbl(), LA=w.__sgTest.model().access.labels.filter(q=>q.alpha>0).map(q=>q.el.querySelector('b').textContent), want=kind==='open'?['Cięcie J (Makuuchiego)']:['Cięcie Pfannenstiela','12 mm — optyka (kamera)','12 mm — narzędzie, stapler'];
+      want.forEach(x=>ok(LA.includes(x),name+' / '+kind+': brak „'+x+'”: '+LA.join('|')));
+      ok(!L.some(x=>/^(Preparat|Pozostała wątroba|Przyszła pozostała)/.test(x)),name+' / '+kind+': etykieta preparatu na slajdzie „Dostęp”: '+L.join('|'));
+      ok($('capTitle').textContent===(kind==='open'?'Dostęp otwarty: cięcie J (Makuuchiego)':'Dostęp laparoskopowy'),name+' / '+kind+': tytuł '+$('capTitle').textContent);
+    }
+    st[1].click(); await sleep(300); let L=lbl(); ok(L.some(x=>/^Preparat/.test(x)||/FLR/.test(x)),name+': brak etykiety preparatu w planie: '+L.join('|'));
+    st[5].click(); await sleep(400); w.__sgTest.state(); L=lbl();
     WANT[name].forEach(x=>ok(L.includes(x),name+': brak „'+x+'” w stanie po'));
     ok(!L.some(x=>/^Preparat/.test(x)),name+': preparat widoczny po resekcji');
     console.log(name,'| etykiety po:',L.length);
   }
   // ALPPS, koniec etapu I: podwiązana prawa gałąź PV i przecięte szypuły segmentu IV; struktury etapu II jeszcze nietknięte
-  { const st=[...D.querySelectorAll('.srow1 .step')]; st[1].click(); await sleep(4600); const L=lbl();
+  { const st=[...D.querySelectorAll('.srow1 .step')]; st[2].click(); await sleep(4600); const L=lbl();
     ['Prawa gałąź żyły wrotnej (podwiązana — etap I)','Szypuły segmentu IV (przecięte — etap I)'].forEach(x=>ok(L.includes(x),'ALPPS etap I: brak „'+x+'”: '+L.join('|')));
     ['Tętnica wątrobowa prawa','Żyła wątrobowa pośrodkowa (stapler)'].forEach(x=>ok(!L.includes(x),'ALPPS etap I: „'+x+'” już przecięta: '+L.join('|'))); }
   // guz: wariant „Metastazektomia” — kadr 1 położenie, kadr 2 wycięcie z marginesem (preparat odjeżdża, zostaje loża)

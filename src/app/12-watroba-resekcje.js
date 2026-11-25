@@ -64,11 +64,13 @@
         hyperG.scale.setScalar(sc); hyperG.position.copy(LR_HYPER_PIV).multiplyScalar(1 - sc);
         specG.visible = fade > 0.01;
         matSpec.color.copy(cPlan).lerp(cIsch, isch);
-        lvSetOp(matKeep, glass * (S.lvGlass ? 0.8 : 1)); lvSetOp(matSpec, (S.lvGlass ? 0.8 : 1) * fade);
-        Object.keys(MS).forEach(function (k) { lvSetOp(MS[k], fade); });
+        var acc = m < -1e-3 ? 0.4 : 1;   // slajd „Dostęp”: wątroba i naczynia przygaszone pod powłokami
+        lvSetOp(matKeep, glass * (S.lvGlass ? 0.8 : 1) * acc); lvSetOp(matSpec, (S.lvGlass ? 0.8 : 1) * fade * acc);
+        Object.keys(MS).forEach(function (k) { lvSetOp(MS[k], fade * acc); }); Object.keys(MK).forEach(function (k) { lvSetOp(MK[k], acc); });
         rings.forEach(function (r) { var a = sm((m - r.on) / 0.1); r.m.visible = a > 0.01; r.m.material.opacity = a; if (r.L) r.L.alpha = a > 0.5 ? 1 : 0; });
-        Ls.anchor = Ls.base.clone().add(specG.position); Ls.alpha = fade > 0.6 && m < 2.6 ? 1 : 0;
-        Lk.anchor = Lk.base; Lk.alpha = m < 1e-3 || m > 2.9 || (alpps && m > 1.1 && m < 2) ? 1 : 0;
+        // slajd „Dostęp” (m < 0): bez etykiet preparatu i pozostałej wątroby
+        Ls.anchor = Ls.base.clone().add(specG.position); Ls.alpha = fade > 0.6 && m > -1e-3 && m < 2.6 ? 1 : 0;
+        Lk.anchor = Lk.base; Lk.alpha = Math.abs(m) < 1e-3 || m > 2.9 || (alpps && m > 1.1 && m < 2) ? 1 : 0;
       } };
   }
   function makeLvRes(d) {
