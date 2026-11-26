@@ -90,14 +90,21 @@
   };
 
   /* ---------- widok ---------- */
-  function pokazApp() {
-    $('login').hidden = true; $('app').hidden = false;
+  function pokazMeta(blad) {
     var t = new Date(DANE.utworzono), godz = (Date.now() - t) / 3600e3;
-    $('meta').textContent = 'Dane z ' + t.toLocaleString('pl-PL', { dateStyle: 'medium', timeStyle: 'short' }) + ' · od ' + pelna(DANE.dni[0]).slice(3) + ' · GoatCounter: ' + DANE.site;
+    $('meta').textContent = 'Dane z ' + t.toLocaleString('pl-PL', { dateStyle: 'medium', timeStyle: 'short' }) + (DANE.naZywo ? ' (pobrane teraz)' : ' (publikacja)') +
+      ' · od ' + pelna(DANE.dni[0]).slice(3) + ' · GoatCounter: ' + DANE.site;
     var ban = [];
     if (DANE.przyklad) ban.push('DANE PRZYKŁADOWE — wymyślone, tylko do sprawdzenia wyglądu panelu.');
-    if (godz > 36) ban.push('Dane mają ' + fmtN(godz / 24) + ' dni. Automatyczne odświeżanie mogło się zatrzymać (GitHub wyłącza harmonogram po 60 dniach bez zmian w repozytorium) — kliknij „Odśwież dane”, potem „Run workflow”.');
+    if (blad) ban.push('Nie udało się pobrać danych z GoatCountera: ' + blad + ' Widać dane z ostatniej publikacji.');
+    if (godz > 36 && !DANE.naZywo) ban.push('Dane mają ' + fmtN(godz / 24) + ' dni. Automatyczne odświeżanie mogło się zatrzymać (GitHub wyłącza harmonogram po 60 dniach bez zmian w repozytorium) — kliknij „Odśwież dane”.');
     $('baner').hidden = !ban.length; $('baner').textContent = ban.join(' ');
+    var zyw = !!(DANE.odswiezanie && DANE.odswiezanie.klucz);
+    $('odswiez').title = zyw ? 'Pobiera aktualne dane z GoatCountera (kilkanaście sekund)' : 'Otwiera GitHuba: kliknij „Run workflow”, nowe dane będą po kilku minutach';
+  }
+  function pokazApp() {
+    $('login').hidden = true; $('app').hidden = false;
+    pokazMeta();
     $('weryf').disabled = !(DANE.study && DANE.study.kody);
     if ($('weryf').disabled) { $('weryf').checked = false; $('weryf').parentNode.title = 'Brak listy skrótów kodów STUDY w danych panelu.'; }
     ustawPrzyciski(); pokazTab(); rysujWszystko();
@@ -144,7 +151,30 @@
     if (!DANE) return;
     if (STAN.tab === 'role') rysujRole();
     else if (STAN.tab === 'ruch') rysujRuch();
+    else if (STAN.tab === 'zabiegi') rysujZabiegi();
   }
+
+  /* ---------- „Odśwież dane”: na żywo z GoatCountera (klucz tylko do odczytu w zaszyfrowanych danych) albo ręczna publikacja na GitHubie ---------- */
+  var odswiezam = false;
+  $('odswiez').addEventListener('click', async function (e) {
+    var o = DANE && DANE.odswiezanie;
+    if (!o || !o.klucz || typeof GC === 'undefined') return;  // bez klucza: link otwiera GitHuba
+    e.preventDefault();
+    if (odswiezam) return;
+    odswiezam = true;
+    var b = $('odswiez'), napis = b.textContent;
+    b.setAttribute('aria-disabled', 'true'); b.classList.add('busy');
+    b.textContent = 'Pobieram…';
+    try {
+      var w = await GC.pobierz({ site: o.site || DANE.site, start: o.start || DANE.dni[0], token: o.klucz, postep: function (n, r) { b.textContent = 'Pobieram… ' + Math.round(100 * n / r) + '%'; } });
+      Object.assign(DANE, w.dane, { utworzono: new Date().toISOString(), naZywo: true, przyklad: false });
+      pokazMeta(); rysujWszystko();
+    } catch (err) {
+      pokazMeta(err.status === 401 ? 'klucz nie działa (usunięty w GoatCounterze?).' : err.status === 403 ? 'klucz bez uprawnienia „Read statistics”.' : (err.message || 'błąd sieci') + '.');
+    }
+    b.textContent = napis; b.removeAttribute('aria-disabled'); b.classList.remove('busy');
+    odswiezam = false;
+  });
 
   /* ---------- zakładka: role ---------- */
   function kafelekRole(tytul, rolki, prefiks, idx, przypis) {
@@ -192,6 +222,68 @@
     }).join('') + '<article class="card panel"><h3>Najczęstsze adresy (cały okres)</h3><ul class="lista">' + (DANE.sciezki || []).slice(0, 10).map(function (x) {
       return '<li><span class="nm" title="' + esc(x.path) + '">' + esc(x.path) + '</span><span class="ct">' + fmtN(x.count) + '</span></li>';
     }).join('') + '</ul></article>';
+  }
+
+  /* ---------- zakładka: zabiegi (zdarzenia zabieg/<id>[/<wariant>]; tytuł = nazwa z SURGITOME, src/app/08-nawigacja-ui.js) ---------- */
+  function wspolneSlowa(ts) {
+    var s = ts[0].split(' ');
+    ts.forEach(function (t) { var w = t.split(' '), k = 0; while (k < s.length && k < w.length && s[k] === w[k]) k++; s = s.slice(0, k); });
+    return s.join(' ').replace(/[\s(—–,:-]+$/, '');
+  }
+  function nazwaZabiegu(tyt, tytW, id) {
+    if (tyt) return tyt;
+    if (!tytW.length) return id;
+    if (tytW[0].indexOf(' — ') > 0) return tytW[0].split(' — ')[0];  // tytuł „zabieg — wariant”
+    return (tytW.length > 1 && wspolneSlowa(tytW)) || tytW[0];
+  }
+  function nazwaWariantu(t, nazwa, id) {
+    if (!t) return id;
+    if (t.indexOf(nazwa + ' — ') === 0) return t.slice(nazwa.length + 3);
+    if (t !== nazwa && t.indexOf(nazwa) === 0) return t.slice(nazwa.length).replace(/^[\s(—–,:-]+/, '').replace(/\)$/, '') || t;
+    return t;
+  }
+  function zabiegi(prefiks, idx) {
+    var mapa = {}, Z = DANE.zdarzenia || {}, T = DANE.tytuly || {};
+    Object.keys(Z).forEach(function (p) {
+      if (p.indexOf(prefiks) !== 0) return;
+      var cz = p.slice(prefiks.length).split('/'), id = cz[0], wa = cz.slice(1).join('/'), v = zlicz(Z[p], idx);
+      var z = mapa[id] || (mapa[id] = { id: id, v: 0, war: [], tyt: '', tytW: [] });
+      z.v += v;
+      if (!wa) z.tyt = T[p] || z.tyt;
+      else { z.war.push({ id: wa, v: v, t: T[p] || '' }); if (T[p]) z.tytW.push(T[p]); }
+    });
+    return Object.keys(mapa).map(function (id) {
+      var z = mapa[id];
+      z.nazwa = nazwaZabiegu(z.tyt, z.tytW, id);
+      z.war.forEach(function (w) { w.nazwa = nazwaWariantu(w.t, z.nazwa, w.id); });
+      z.war = z.war.filter(function (w) { return w.v > 0; }).sort(function (a, b) { return b.v - a.v; });
+      return z;
+    }).filter(function (z) { return z.v > 0; }).sort(function (a, b) { return b.v - a.v || (a.nazwa < b.nazwa ? -1 : 1); });
+  }
+  function listaZabiegow(lista, od, suma, max) {
+    return lista.map(function (z, i) {
+      return '<li><span class="nm" title="' + esc(z.nazwa) + '"><span class="nr">' + (od + i + 1) + '.</span>' + esc(z.nazwa) + '</span><span class="ct">' + fmtN(z.v) + ' · ' + pct(z.v, suma) + '</span>' +
+        '<span class="bar" style="width:' + (max ? Math.max(1, 100 * z.v / max) : 0) + '%"></span>' +
+        (z.war.length > 1 || (z.war.length === 1 && z.war[0].nazwa !== z.nazwa) ? '<span class="wa">' + z.war.map(function (w) { return esc(w.nazwa) + ' <b class="num">' + fmtN(w.v) + '</b>'; }).join(' · ') + '</span>' : '') + '</li>';
+    }).join('');
+  }
+  function rysujZabiegi() {
+    var idx = okno(), ok = okresy(idx), lista = zabiegi('zabieg/', idx);
+    var zak = STAN.zakres === 'all' ? 'cały okres' : 'ostatnie ' + STAN.zakres + ' dni';
+    var suma = lista.reduce(function (a, z) { return a + z.v; }, 0), max = lista.length ? lista[0].v : 0;
+    var dzienne = DANE.dni.map(function () { return 0; });
+    Object.keys(DANE.zdarzenia || {}).forEach(function (p) { if (p.indexOf('zabieg/') === 0) DANE.zdarzenia[p].forEach(function (v, i) { dzienne[i] += v; }); });
+    $('zabTiles').innerHTML =
+      '<div class="card tile"><div class="lab">Otwarcia zabiegów — ' + zak + '</div><div class="big num">' + fmtN(suma) + '</div><div class="note">' + lista.length + ' różnych zabiegów</div></div>' +
+      '<div class="card tile"><div class="lab">Najczęściej oglądany</div><div class="big num">' + (lista.length ? fmtN(lista[0].v) : '—') + '</div><div class="note">' + (lista.length ? esc(lista[0].nazwa) : 'brak danych') + '</div></div>';
+    slupki($('chZab'), { okresy: ok, serie: [{ nazwa: 'otwarcia', kolor: 'var(--s-jeden)', w: ok.map(function (o) { return zlicz(dzienne, o.idx); }) }], opis: 'Otwarcia zabiegów w czasie' }, null, $('tbZab'));
+    var GL = 20;
+    $('zabLista').innerHTML = lista.length ? listaZabiegow(lista.slice(0, GL), 0, suma, max) : '<li class="empty">Brak otwarć zabiegów w wybranym okresie.</li>';
+    $('zabReszta').hidden = lista.length <= GL;
+    if (lista.length > GL) { $('zabReszta').querySelector('summary').textContent = 'Pokaż pozostałe (' + (lista.length - GL) + ')'; $('zabListaReszta').innerHTML = listaZabiegow(lista.slice(GL), GL, suma, max); }
+    var st = zabiegi('study/zabieg/', idx), sst = st.reduce(function (a, z) { return a + z.v; }, 0);
+    $('zabStudyCard').hidden = !st.length;
+    $('zabStudy').innerHTML = listaZabiegow(st.slice(0, 10), 0, sst, st.length ? st[0].v : 0);
   }
 
   /* ---------- wykres słupkowy (skumulowany), legenda, tabela, podpowiedź ---------- */

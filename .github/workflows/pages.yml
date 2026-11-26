@@ -30,6 +30,7 @@ jobs:
         run: |
           node admin/tests/test_szyfr.mjs
           node admin/tests/test_study.mjs
+          node admin/tests/test_gc.mjs
           if [ -n "$GOATCOUNTER_TOKEN" ] && [ -n "$PANEL_HASLO" ]; then
             node admin/zbierz.mjs --out dist/admin || { rm -rf dist/admin; echo "::warning::Panel autora: nie udało się pobrać danych — SURGITOME publikowany bez panelu"; }
           else

@@ -28,6 +28,7 @@
     <div class="brand">SURGITOME <span>panel autora</span></div>
     <div class="meta" id="meta"></div>
     <div class="actions">
+      <!-- z kluczem „tylko do odczytu” w zaszyfrowanych danych: pobiera dane z GoatCountera od razu; bez niego: ręczna publikacja na GitHubie -->
       <a id="odswiez" class="btn ghost" href="https://github.com/piotrspychalski/surgitome/actions/workflows/pages.yml" target="_blank" rel="noopener">Odśwież dane</a>
       <button id="wyloguj" class="btn ghost" type="button">Wyloguj</button>
     </div>
@@ -35,8 +36,9 @@
   <div id="baner" class="baner" role="status" hidden></div>
   <nav class="tabs" role="tablist" aria-label="Sekcje panelu">
     <button type="button" role="tab" data-tab="role" aria-selected="true">Role</button>
-    <button type="button" role="tab" data-tab="ruch" aria-selected="false">Ruch na stronie</button>
-    <button type="button" role="tab" data-tab="study" aria-selected="false">SURGITOME-STUDY</button>
+    <button type="button" role="tab" data-tab="ruch" aria-selected="false">Ruch<span class="dl"> na stronie</span></button>
+    <button type="button" role="tab" data-tab="zabiegi" aria-selected="false">Zabiegi</button>
+    <button type="button" role="tab" data-tab="study" aria-selected="false"><span class="dl">SURGITOME-</span>STUDY</button>
   </nav>
   <div class="filters" id="filters">
     <div class="seg" id="zakres" role="group" aria-label="Zakres dat">
@@ -75,6 +77,26 @@
     <div class="grid2" id="listy"></div>
   </section>
 
+  <section id="tab-zabiegi" class="tab" role="tabpanel" hidden>
+    <div class="tiles" id="zabTiles"></div>
+    <article class="card panel">
+      <header><h2>Otwarcia zabiegów</h2></header>
+      <p class="muted small">Zdarzenie <code>zabieg/…</code> — przy otwarciu zabiegu lub zmianie wariantu (GoatCounter liczy tę samą osobę raz w ciągu kilku godzin), wszystkie zabiegi razem.</p>
+      <div class="chart" id="chZab"></div>
+      <details class="tabela"><summary>Pokaż tabelę</summary><div class="tablewrap" id="tbZab"></div></details>
+    </article>
+    <article class="card panel">
+      <header><h2>Najczęściej oglądane</h2></header>
+      <p class="muted small">Zabiegi według liczby otwarć w wybranym okresie; pod nazwą — warianty.</p>
+      <ul class="lista zab" id="zabLista"></ul>
+      <details class="tabela" id="zabReszta" hidden><summary></summary><ul class="lista zab" id="zabListaReszta"></ul></details>
+    </article>
+    <article class="card panel" id="zabStudyCard" hidden>
+      <h3>W kopii badawczej SURGITOME-STUDY</h3>
+      <ul class="lista zab" id="zabStudy"></ul>
+    </article>
+  </section>
+
   <section id="tab-study" class="tab" role="tabpanel" hidden>
     <article class="card panel">
       <header><h2>Odpowiedzi z ankiety</h2></header>
@@ -99,6 +121,7 @@
 </div>
 <div id="tip" class="tip" hidden></div>
 <script src="szyfr.js"></script>
+<script src="gc.js"></script>
 <script src="study.js"></script>
 <script src="panel.js"></script>
 </body>
