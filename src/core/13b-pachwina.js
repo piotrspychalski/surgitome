@@ -20,7 +20,8 @@
     PT: PT, ASIS: ASIS, L: L, ES: ES, ET: ET, xy: xy, st: st,
     S: [-0.45, 1.12], TW: 5.2, TF: 2.2, TP: 3.4, SL: [-0.5, 1.3], TWL: 4.9,   // zakres s; t ściany (góra), uda (dół, przód) i dna (tył); widok od tyłu — szerzej
     // głębokości pod skórą: skóra, tkanka podskórna (do rozcięgna m. skośnego zewnętrznego), m. skośny wewnętrzny, powięź poprzeczna, otrzewna (od powięzi)
-    D: { skin: 0.1, fat: 1.0, eo: 0.05, tf: 1.95, per: 0.32, lig: 1.36 },
+    // skóra i tkanka podskórna ze wspólnego modelu ściany (BODY.T: nad kanałem pachwinowym cieńsza — fatGroin); fat — głębokość dna tkanki podskórnej
+    D: { skin: B.T.skin, fat: B.T.skin + B.T.fatGroin, eo: 0.05, tf: 1.95, per: 0.32, lig: 1.36 },
     RING: [0.5, 0.9], SRING: [0.11, 0.36],
     // dolny wolny brzeg m. skośnego wewnętrznego: przyczep do więzadła bocznie, łuk nad powrózkiem, ścięgno łączące do guzka łonowego
     archIO: function (s) { if (s >= 0.5) return 0.08 + 1.37 * (1 - sm((s - 0.5) / 0.17)); if (s >= 0.18) return 1.35 + 0.1 * sm((s - 0.18) / 0.32); return 0.18 + 1.17 * sm(s / 0.18); },
@@ -32,7 +33,8 @@
     TAPP_S: [0.27, 1.02],
     // przebiegi (s, t, głębokość pod skórą — ściana) / (s, t, odsunięcie od powierzchni wewnętrznej — widok od tyłu)
     CORD: [[0.5, 0.9, 2.02], [0.47, 0.84, 1.74], [0.4, 0.74, 1.5], [0.3, 0.6, 1.4], [0.2, 0.47, 1.3], [0.11, 0.36, 1.14], [0.06, 0.08, 1.08], [0.02, -0.5, 1.04], [-0.05, -1.2, 1.0], [-0.12, -2.1, 0.98]],
-    IEV: [[0.374, -0.02], [0.43, 1.0], [0.52, 2.25], [0.67, 3.9], [0.83, 5.44], [0.99, 6.93], [1.12, 8.1], [1.2, 8.9]],   // z BODY: (−4,75; −13,55) … (−4,35; −5,0)
+    IEV: B.VESSELS[0].pts.map(function (p) { return st(-p[0], p[1]); }),   // naczynia nabrzuszne dolne — ten sam przebieg co we wspólnym modelu ściany (BODY.VESSELS, strona prawa)
+    DCIA: B.VESSELS.filter(function (v) { return v.id === 'dcia'; })[0].pts.map(function (p) { return st(-p[0], p[1]); }),   // naczynia okalające biodra głębokie
     UMBM: [[-0.1, -3.9], [-0.04, -2.6], [0.04, -1.1], [0.09, 0.0], [0.17, 1.4], [0.26, 2.75], [0.36, 5.27], [0.48, 7.7], [0.58, 9.9]],   // fałd pępkowy przyśrodkowy (tętnica pępkowa zarośnięta)
     EIA: [[0.37, 0.2], [0.39, -0.6], [0.43, -1.6], [0.48, -2.8], [0.52, -3.5]], EIV: [[0.29, 0.2], [0.31, -0.6], [0.35, -1.6], [0.4, -2.8], [0.44, -3.5]],
     VAS: [[0.5, 0.9], [0.46, 0.5], [0.41, -0.15], [0.34, -0.95], [0.2, -1.75], [0.03, -2.5], [-0.1, -3.2], [-0.14, -3.45]],

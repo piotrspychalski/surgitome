@@ -42,7 +42,79 @@
     var EPI_INF = [[5.6, -14.0, 1.6], [5.0, -11.6, 1.2], [4.6, -9.0, 0.95], [4.4, -5.5, 0.85], [4.35, -1.5, 0.85], [4.3, 1.4, 0.85]];
     var EPI_SUP = [[4.2, 6.6, 0.85], [4.25, 4.0, 0.85], [4.3, 1.4, 0.85]];
     var MCL = 6.9;   // linia środkowo-obojczykowa (x); na łuku żebrowym ok. y 3,5
-    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP, MCL: MCL };
+    /* ---------- WARSTWY — jeden model ściany dla wszystkich widoków (slajd „Dostęp”, przekrój w herniologii, pachwina, przeszczepienie nerki).
+       Głębokość pod skórą wzdłuż normalnej (at); x — odległość od linii pośrodkowej (znak bez znaczenia), stan prawidłowy (bez przepukliny).
+       fat — grubość tkanki podskórnej (domyślnie T.fat; przepuklina pooperacyjna — grubsza, pachwina — T.fatGroin). Grubości schematyczne
+       (1 j. ≈ 1,45 cm). Przyśrodkowo od kresy półksiężycowatej rozcięgno mięśnia skośnego zewnętrznego tworzy pochewkę przednią; nad kresą łukowatą
+       (ARC) — pochewka tylna; w nadbrzuszu brzusiec mięśnia poprzecznego sięga za mięsień prosty (taMed). ---------- */
+    function sm(v) { v = Math.max(0, Math.min(1, v)); return v * v * (3 - 2 * v); }
+    var T = { skin: 0.12, fat: 1.05, fatGroin: 0.88, scarpa: 0.035, ant: 0.06, rect: 0.62, post: 0.05, ta: 0.2, eo: 0.22, io: 0.24, tf: 0.045, pre: 0.16, per: 0.035 };
+    var ARC = -8.8;   // kresa łukowata
+    function taMed(y) { return 2.0 * sm((y + 6) / 8); }
+    function eoApo(y) { return rectLat(y) + 1.4 + 0.12 * (y + 5); }   // m. skośny zewnętrzny: przyśrodkowo od tej linii rozcięgno, bocznie brzusiec
+    // grubości względem dna tkanki podskórnej (DF)
+    var WL = {
+      eoTh: function (x, y) { return 0.06 + 0.16 * sm((x - rectLat(y) - 0.2) / 1.0); },
+      rect: function (x, y) { var s0 = rectLat(y), q = Math.max(0.22, sm((x - RECT_MED) / 0.7) * sm((s0 - x) / 0.7)); return [0.37 - 0.31 * q, 0.37 + 0.31 * q]; },
+      io: function (x, y) { var u = sm((x - rectLat(y)) / 0.8); return [0.06 + 0.16 * u, 0.66 - 0.18 * u]; },
+      taTop: function (x, y) { return 0.48 + 0.27 * (1 - sm((x - (rectLat(y) - 0.3)) / 1.0)); },
+      // powięź poprzeczna — nie płycej niż tylna powierzchnia mięśnia poprzecznego (przy kresie półksiężycowatej, zwłaszcza pod kresą łukowatą)
+      tfD: function (x, y) { var s0 = rectLat(y), md = y > ARC ? (taMed(y) > 0.3 ? 0.95 : 0.78) : 0.7, d = md + (0.73 - md) * sm((x - s0 + 0.6) / 1.2);
+        return x >= s0 - taMed(y) ? Math.max(d, WL.taTop(x, y) + 0.21 + 0.04 * sm(x - s0)) : d; },
+      alba: [0.04, 0.7], post: [0.7, 0.75]
+    };
+    function DFo(fat) { return T.skin + (fat == null ? T.fat : fat); }
+    // [głębokość przednia, tylna] warstwy w punkcie (x, y) albo null, gdy jej tam nie ma
+    function layer(id, x, y, fat) {
+      x = Math.abs(x); var D0 = DFo(fat), s0 = rectLat(y), r, b;
+      switch (id) {
+        case 'skin': return [0, T.skin];
+        case 'fat': return [T.skin, D0];
+        case 'scarpa': b = T.skin + 0.55 * (D0 - T.skin); return [b, b + T.scarpa];   // warstwa błoniasta tkanki podskórnej (najwyraźniejsza w podbrzuszu)
+        case 'eo': return [D0, D0 + WL.eoTh(x, y)];
+        case 'alba': return x < RECT_MED ? [D0 + WL.alba[0], D0 + WL.alba[1]] : null;
+        case 'rect': if (x < RECT_MED || x > s0) return null; r = WL.rect(x, y); return [D0 + r[0], D0 + r[1]];
+        case 'io': if (x <= s0) return null; r = WL.io(x, y); return [D0 + r[0], D0 + r[1]];
+        case 'post': return y > ARC && x < s0 + 0.12 ? [D0 + WL.post[0], D0 + WL.post[1]] : null;
+        case 'ta': if (x < s0 - taMed(y)) return null; b = D0 + WL.taTop(x, y); return [b, b + 0.2 + 0.04 * sm(x - s0)];
+        case 'tf': b = D0 + WL.tfD(x, y); return [b, b + T.tf];
+        case 'pre': b = D0 + WL.tfD(x, y) + T.tf; return [b, b + T.pre];
+        case 'per': b = D0 + WL.tfD(x, y) + T.tf + T.pre; return [b, b + T.per];
+      }
+      return null;
+    }
+    // kotwica głębokości: liczba albo [warstwa, ułamek grubości, dodatkowo w głąb]; brak warstwy w punkcie — powięź poprzeczna
+    function depth(a, x, y, fat) {
+      if (typeof a === 'number') return a;
+      var L = layer(a[0], x, y, fat) || layer('tf', x, y, fat), f = a[1] == null ? 0.5 : a[1];
+      return L[0] + (L[1] - L[0]) * f + (a[2] || 0);
+    }
+    // opis warstw (kolejność od skóry); lod 0 — pokazywane także na slajdzie „Dostęp”, 1 — tylko w widokach herniologicznych
+    var LAYERS = [['skin', 'Skóra', 0], ['fat', 'Tkanka podskórna', 1], ['scarpa', 'Powięź Scarpy', 1], ['eo', 'Mięsień skośny zewnętrzny', 1], ['alba', 'Kresa biała', 1],
+      ['rect', 'Mięsień prosty brzucha', 0], ['io', 'Mięsień skośny wewnętrzny', 1], ['post', 'Pochewka tylna', 1], ['ta', 'Mięsień poprzeczny brzucha', 1],
+      ['tf', 'Powięź poprzeczna', 1], ['pre', 'Tłuszcz przedotrzewnowy', 1], ['per', 'Otrzewna ścienna', 1]].map(function (q) { return { id: q[0], name: q[1], lod: q[2] }; });
+    // wspólne kolory (przekrój, pachwina, slajd „Dostęp”); siatka — kolor niewystępujący w tkankach
+    var COL = { skin: '#e2b59c', fat: '#f1d58a', scarpa: '#f7ecd0', apo: '#ece4d4', rect: '#b6473f', eo: '#c75d4f', io: '#ae4d45', ta: '#9a4540', tf: '#d6cdbd', pre: '#efd27c',
+      per: '#8fb6d3', perLap: '#e8cdc4', art: '#c8342b', vein: '#3a64b6', nerve: '#ecc01f', mesh: '#1d5bff', meshCore: '#6fa8ff', meshEdge: '#0a2c80', suture: '#22305c', lm: '#7d6152' };
+    /* naczynia i nerwy powłok (strona lewa, x > 0; prawa — odbicie): punkty [x, y, kotwica głębokości]. Nabrzuszne dolne: od tętnicy biodrowej zewnętrznej
+       za powięzią poprzeczną, przy kresie łukowatej wchodzą do pochewki i biegną na tylnej powierzchni mięśnia prostego, w jego bocznej części;
+       górne — z tętnicy piersiowej wewnętrznej, za mięśniem prostym; okalające biodra głębokie — za powięzią poprzeczną, wzdłuż więzadła pachwinowego
+       ku kolcowi biodrowemu; nabrzuszne powierzchowne i okalające biodra powierzchowne — w tkance podskórnej (od naczyń udowych). Perforatory
+       okołopępkowe — z naczyń nabrzusznych dolnych przez mięsień prosty i pochewkę przednią do skóry (przecinane przy płatach skórno-tłuszczowych). */
+    var BH = ['post', 0, -0.03], PRE = ['pre', 0.5];   // BH — na tylnej powierzchni mięśnia prostego, przed pochewką tylną
+    var VESSELS = [
+      // dolne: początek na tętnicy biodrowej zewnętrznej tuż nad więzadłem pachwinowym, przyśrodkowo od pierścienia głębokiego (ten sam przebieg w pachwinie — GROIN.IEV)
+      { id: 'epiInf', name: 'Naczynia nabrzuszne dolne', lod: 0, r: 0.075, pts: [[4.77, -13.58, PRE], [4.48, -12.5, PRE], [4.27, -11.07, PRE], [4.18, -9.02, ['tf', 0, -0.05]], [4.23, -7.01, BH], [4.3, -5.04, BH], [4.35, -1.5, BH], [4.3, 1.4, BH]] },
+      { id: 'epiSup', name: 'Naczynia nabrzuszne górne', lod: 0, r: 0.055, pts: [[4.2, 6.6, BH], [4.25, 4.0, BH], [4.3, 1.4, BH]] },
+      { id: 'dcia', name: 'Naczynia okalające biodra głębokie', lod: 1, r: 0.05, pts: [[5.7, -14.3, PRE], [6.9, -13.0, ['tf', 0, -0.04]], [8.1, -11.4, ['tf', 0, -0.04]], [9.2, -10.0, ['tf', 0, -0.04]]] },
+      { id: 'sEpi', name: 'Naczynia nabrzuszne powierzchowne', lod: 1, r: 0.04, pts: [[3.3, -16.2, ['fat', 0.75]], [3.0, -14.0, ['fat', 0.7]], [2.6, -11.0, ['fat', 0.62]], [2.0, -8.0, ['fat', 0.55]], [1.4, -6.4, ['fat', 0.5]]] },
+      { id: 'sCirc', name: 'Naczynia okalające biodra powierzchowne', lod: 1, r: 0.035, pts: [[3.6, -16.0, ['fat', 0.75]], [5.4, -14.6, ['fat', 0.7]], [7.2, -12.8, ['fat', 0.62]], [8.6, -11.4, ['fat', 0.55]]] }
+    ];
+    var PERF = [[2.55, -1.9], [2.9, -3.7], [2.4, -7.2]];   // perforatory okołopępkowe (x, y) — przez mięsień prosty do skóry
+    // nerwy międzyżebrowe i podżebrowy: poziom y przy brzegu bocznym mięśnia prostego; biegną między m. skośnym wewnętrznym a poprzecznym, wnikają do pochewki
+    var NV = [[5.4, 'T7'], [2.6, 'T8'], [-1.4, 'T9'], [-5.5, 'T10'], [-8.4, 'T11'], [-11.0, 'T12']];
+    return { ZC: ZC, W: W, D: D, z: z, at: at, nrm: nrm, lift: lift, Y0: Y0, Y1: Y1, LM: LM, rectLat: rectLat, RECT_MED: RECT_MED, RY: [RY0, RY1], TEND: TEND, EPI_INF: EPI_INF, EPI_SUP: EPI_SUP, MCL: MCL,
+      T: T, ARC: ARC, taMed: taMed, eoApo: eoApo, WL: WL, DF: DFo, layer: layer, depth: depth, LAYERS: LAYERS, COL: COL, VESSELS: VESSELS, PERF: PERF, NV: NV };
   })();
 
   /* ---------- Dostęp operacyjny (slajd „Dostęp” przed anatomią prawidłową) dla zabiegów jelitowych. Oś czasu kadru m: −1 → −0,02 (poza nią model powłok niewidoczny).
