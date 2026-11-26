@@ -7298,21 +7298,22 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
   var KU = new V3(-0.3, 0.95, -0.06).normalize(), KV0 = new V3(0.92, 0.22, -0.32), KV = KV0.clone().addScaledVector(KU, -KV0.dot(KU)).normalize(), KW = new V3().crossVectors(KU, KV).normalize();
   var KANT = KW.z < 0 ? -1 : 1;
   var KTX = {
-    // naczynia biorcy: [x, y, z], promień [początek, koniec]
+    // naczynia biorcy: [x, y, z], promień [początek, koniec]; połączenie żył biodrowych głębiej i niżej niż rozwidlenie tętnicy,
+    // t. biodrowa wewnętrzna przyśrodkowo i przed nim; żyła biodrowa zewnętrzna przyśrodkowo i ku tyłowi od tętnicy
     AO: { pts: [[0.5, -2.6, -0.15], [0.45, -4.1, -0.28], [0.4, -5.5, -0.4]], r: [0.62, 0.6] },
     IVC: { pts: [[-1.05, -2.6, -1.15], [-1.0, -4.4, -1.4], [-0.95, -6.2, -1.9]], r: [0.72, 0.7] },
     CIA: { pts: [[0.4, -5.5, -0.4], [-0.6, -6.4, -0.6], [-1.6, -7.3, -0.8], [-2.5, -8.2, -1.0]], r: [0.4, 0.36] },
     CIAL: { pts: [[0.4, -5.5, -0.4], [1.4, -6.5, -0.6], [2.4, -7.6, -0.95]], r: [0.4, 0.36] },
     EIA: { pts: [[-2.5, -8.2, -1.0], [-2.85, -9.4, -0.4], [-3.35, -10.7, 0.45], [-3.85, -11.9, 1.35], [-4.3, -12.8, 2.2], [-4.6, -13.5, 2.95]], r: [0.32, 0.3] },
-    IIA: { pts: [[-2.5, -8.2, -1.0], [-2.45, -9.0, -1.75], [-2.3, -9.9, -2.5], [-2.15, -10.8, -3.1], [-1.95, -11.8, -3.4], [-1.7, -12.8, -3.4]], r: [0.28, 0.18] },
-    CIV: { pts: [[-0.95, -6.2, -1.9], [-1.5, -7.2, -1.85], [-2.15, -8.4, -1.85], [-2.55, -9.3, -1.65]], r: [0.5, 0.48] },
+    IIA: { pts: [[-2.5, -8.2, -1.0], [-2.2, -8.9, -1.35], [-1.9, -9.8, -1.85], [-1.7, -10.8, -2.4], [-1.6, -11.8, -2.85], [-1.5, -12.8, -3.05]], r: [0.28, 0.18] },
+    CIV: { pts: [[-0.95, -6.2, -1.9], [-1.6, -7.3, -2.1], [-2.35, -8.5, -2.25], [-2.9, -9.7, -2.3]], r: [0.5, 0.48] },
     CIVL: { pts: [[-0.95, -6.2, -1.9], [0.4, -6.9, -2.2], [1.8, -7.9, -2.0]], r: [0.48, 0.46] },
-    EIV: { pts: [[-2.55, -9.3, -1.65], [-2.75, -10.3, -0.85], [-3.05, -11.3, 0.0], [-3.4, -12.3, 0.95], [-3.75, -13.1, 1.85], [-4.0, -13.7, 2.6]], r: [0.46, 0.44] },
-    IIV: { pts: [[-2.55, -9.3, -1.65], [-2.95, -10.1, -2.7], [-3.0, -11.0, -3.7], [-2.8, -12.0, -4.3]], r: [0.4, 0.32] },
+    EIV: { pts: [[-2.9, -9.7, -2.3], [-2.95, -10.5, -1.2], [-3.0, -11.3, -0.05], [-3.3, -12.3, 0.9], [-3.6, -13.1, 1.8], [-3.85, -13.7, 2.5]], r: [0.46, 0.44] },
+    IIV: { pts: [[-2.9, -9.7, -2.3], [-3.15, -10.4, -3.1], [-3.15, -11.2, -3.95], [-2.9, -12.1, -4.45]], r: [0.4, 0.32] },
     // naczynia nabrzuszne dolne: od tętnicy biodrowej zewnętrznej tuż nad więzadłem pachwinowym ku górze, za mięśniem prostym
     IEA: [[-4.45, -13.1, 2.75], [-4.4, -12.3, 3.35], [-4.35, -11.2, 3.7], [-4.3, -9.5, 3.9], [-4.25, -7.5, 4.05]],
     // moczowód własny: przez rozwidlenie tętnicy biodrowej wspólnej do dna pęcherza
-    URN: [[-1.9, -3.6, -0.5], [-2.25, -6.2, -0.55], [-2.45, -8.2, -0.35], [-2.15, -10.3, -1.6], [-1.75, -12.2, -1.3], [-1.25, -13.4, -0.35]],
+    URN: [[-1.9, -3.6, -0.5], [-2.25, -6.2, -0.55], [-2.25, -8.2, -0.3], [-2.0, -10.3, -1.2], [-1.75, -12.2, -1.15], [-1.2, -13.4, -0.3]],
     // mięsień lędźwiowy większy (oś, promień) i mięsień biodrowy (powierzchnia dołu biodrowego z(x, y))
     PSOAS: { pts: [[-2.9, -3.6, -2.6], [-3.75, -7.3, -1.95], [-4.65, -10.4, -0.75], [-5.25, -12.5, 0.75], [-5.6, -13.8, 1.75]], r: [1.25, 0.85] },
     iliacZ: function (x, y) { var sm = function (u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }; return -1.0 + 3.6 * sm((-x - 3.8) / 5.0) + 1.7 * sm((-y - 11.6) / 2.2); },
@@ -7321,15 +7322,16 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     CREST: [[-11.4, -7.6, 2.4], [-10.7, -8.2, 2.7], [-9.8, -9.2, 2.95], [-8.75, -10.35, 3.3]],
     PUBIS: [[0.0, -15.15, 3.75], [-1.3, -15.0, 3.45], [-2.7, -14.65, 2.75], [-3.9, -14.3, 1.75], [-4.7, -14.05, 0.9]],
     // pęcherz moczowy (wypełniony): środek, półosie
-    BLAD: { c: [-0.25, -12.5, 1.15], r: [2.3, 2.0, 2.0] },
+    BLAD: { c: [-0.1, -12.5, 1.15], r: [2.2, 2.0, 2.0] },
     // nerka dawcy: środek w dole biodrowym, osie (u, v, w), półosie: długość 11 cm, szerokość 6 cm, grubość 3 cm
     KID: { c: [-6.1, -8.5, 2.05], u: KU.toArray(), v: KV.toArray(), w: KW.toArray(), ant: KANT, a: 3.8, b: 2.05, t: 1.05 },
     BENCH: [-3.2, 2.6, 6.0],                                  // przesunięcie nerki na stole (przygotowanie poza raną)
     // cięcie Gibsona na skórze (x, y): od okolicy 2 cm nad spojeniem, równolegle do więzadła pachwinowego (ok. 2,5 cm nad nim), łukiem ku górze
     // przyśrodkowo od kolca biodrowego przedniego górnego; ok. 14 cm
     GIBSON: [[-1.3, -13.9], [-2.6, -13.15], [-4.5, -11.75], [-6.0, -10.4], [-7.0, -8.9], [-7.5, -7.2]],
-    // miejsca zespoleń: t na krzywej naczynia biorcy
-    AT: { eia: 0.46, eiv: 0.56, iiaCut: 0.36 },
+    // miejsca zespoleń: t na krzywej naczynia biorcy; nerka lewa — żyła wyżej (przyśrodkowo od tętnicy biodrowej zewnętrznej), tętnica niżej;
+    // nerka prawa (żyła z przodu wnęki) — tętnica wyżej, żyła niżej; iia — żyła jak przy nerce lewej
+    AT: { eia: 0.62, eiv: 0.3, eiaR: 0.35, eivR: 0.55, iiaCut: 0.36 },
     COL: { art: root.ANAT.BODY.COL.art, vein: root.ANAT.BODY.COL.vein,   // naczynia w kolorach wspólnego modelu ściany
       kid0: '#c29487', kid1: '#8c3532', ure: '#e3c26a', blad: '#e6b2a6', mus: '#b07a6c', bone: '#ece2c8', per: '#efcfc6' }
   };
@@ -10629,7 +10631,11 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
      mięśnie lędźwiowy i biodrowy, kości (grzebień biodrowy, gałąź łonowa), pęcherz, moczowód własny, naczynia nabrzuszne dolne (podwiązane i przecięte).
      Nerka dawcy (grupa kid, układ u, v, w z ANAT.KTX.KID) z miedniczką; tętnica, żyła i moczowód przeszczepu — rury przebudowywane między położeniem
      „wolnym” (z nerką na stole) a zespoleniem (koniec na ścianie naczynia biorcy / pęcherza). Warianty: d.art (carrel / nopatch / iia), d.vein (std / ext),
-     d.ure (lg / pl), d.side (L — miedniczka z przodu, R — żyła z przodu). Stan z osi czasu m (stateAt). ---------- */
+     d.ure (lg / pl), d.side (L — miedniczka z przodu, R — żyła z przodu). Stan z osi czasu m (stateAt).
+     Przebiegi bez krzyżowania: żyła nerkowa łukiem przed tętnicą biodrową zewnętrzną (VX) do przednio-przyśrodkowej ściany żyły biodrowej zewnętrznej,
+     pod tętnicą nerkową (nerka lewa) albo nad nią (prawa); tętnica do bocznej ściany t. biodrowej zewnętrznej, drugim końcem wnęki niż żyła.
+     Rury mają w geometry.userData.tube oś i promień, a w name — identyfikator (test przenikania w tests/ui_57.js). Struktury półprzezroczyste
+     (mięśnie, kości, pęcherz, otrzewna, powłoki) z renderOrder > 0 — rysowane po nieprzezroczystych, więc to, co leży za nimi, nie wychodzi na wierzch. ---------- */
   function makeKtx(d) {
     var K = A.KTX, B = A.BODY, C = K.COL, WT = B.T;   // grubości warstw — wspólny model ściany (ANAT.BODY)
     var grp = new THREE.Group(), labels = [], dyn = [], LEFT = d.side === 'L';
@@ -10637,18 +10643,18 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     function mat(col, o) {
       o = o || {};
       var m = track(new THREE.MeshStandardMaterial({ color: o.vc ? '#ffffff' : col, vertexColors: !!o.vc, roughness: o.rough == null ? 0.6 : o.rough, metalness: o.metal || 0,
-        side: o.side || THREE.DoubleSide, transparent: true, opacity: o.op == null ? 1 : o.op, depthWrite: o.dw == null ? true : o.dw, emissive: new THREE.Color(o.em || '#000000') }));
+        side: o.side || THREE.DoubleSide, transparent: !!o.tr || (o.op != null && o.op < 0.97), opacity: o.op == null ? 1 : o.op, depthWrite: o.dw == null ? true : o.dw, emissive: new THREE.Color(o.em || '#000000') }));
       m.userData.op = o.op == null ? 1 : o.op; return m;
     }
-    function setOp(m, op) { m.opacity = op; var t = op < 0.97; if (t !== m._t) { m._t = t; m.depthWrite = !t; m.needsUpdate = true; } }
+    function setOp(m, op) { m.opacity = op; var t = op < 0.97; if (t !== m._t) { m._t = t; m.depthWrite = !t; m.transparent = t; m.needsUpdate = true; } }
     function cv(pts) { return new THREE.CatmullRomCurve3(pts.map(function (p) { return p.isVector3 ? p.clone() : v3(p); }), false, 'centripetal'); }
     function tubeGeo(pts, r0, r1, rad, caps) {
       var c = cv(pts), rf = typeof r0 === 'function' ? r0 : function (t) { return r0 + (r1 - r0) * t; };
-      return A.buildTube(c, rf, Math.max(10, Math.round(c.getLength() * 5)), rad || 10, caps === undefined ? true : caps);
+      var g = A.buildTube(c, rf, Math.max(10, Math.round(c.getLength() * 5)), rad || 10, caps === undefined ? true : caps); g.userData.tube = { c: c, r: rf }; return g;
     }
-    function tube(pts, r0, r1, m, rad, caps) { var g = track(tubeGeo(pts, r0, r1, rad, caps)), mesh = new THREE.Mesh(g, m); grp.add(mesh); return mesh; }
+    function tube(pts, r0, r1, m, rad, caps, name) { var g = track(tubeGeo(pts, r0, r1, rad, caps)), mesh = new THREE.Mesh(g, m); mesh.name = name || ''; grp.add(mesh); return mesh; }
     // rura przebudowywana (geometria wymieniana, stara usuwana)
-    function dtube(m) { var mesh = new THREE.Mesh(new THREE.BufferGeometry(), m); grp.add(mesh); dyn.push(mesh); return mesh; }
+    function dtube(m, name) { var mesh = new THREE.Mesh(new THREE.BufferGeometry(), m); mesh.name = name || ''; grp.add(mesh); dyn.push(mesh); return mesh; }
     function setTube(mesh, pts, r0, r1, rad, caps) { mesh.geometry.dispose(); mesh.geometry = tubeGeo(pts, r0, r1, rad, caps); }
     track({ dispose: function () { dyn.forEach(function (x) { x.geometry.dispose(); }); } });
     function sampleAt(c, t) { return c.getPointAt(Math.max(0, Math.min(1, t))); }
@@ -10753,7 +10759,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var ingL = new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(B.LM.ingR.concat([[-0.2, -15.5]]).map(function (p) { return B.at(p[0], p[1], -0.03, 0); })), 40, 0.045, 6, false)), mLm); grp.add(ingL);
     var umb = new THREE.Mesh(track(new THREE.TorusGeometry(0.32, 0.07, 6, 20)), mLm); umb.position.copy(B.at(0, -5.5, -0.02, 0)); umb.quaternion.setFromUnitVectors(new V3(0, 0, 1), B.nrm(0, -5.5, 0)); grp.add(umb);
 
-    var nWall = grp.children.length;   // dalej struktury głębokie (grupa deepG — niewidoczne, dopóki rana jest zamknięta)
+    var nWall = grp.children.length; grp.children.forEach(function (c) { c.renderOrder = 4; });   // powłoki rysowane na końcu (przygaszone nie zasłaniają głębszych struktur)   // dalej struktury głębokie (grupa deepG — niewidoczne, dopóki rana jest zamknięta)
     /* =================== otrzewna: odsuwana przyśrodkowo =================== */
     var PX = [-10.4, -0.6], PY = [-13.6, -4.4], PNX = 36, PNY = 30, mPer = mat(C.per, { op: 0.5, dw: false, rough: 0.5 });
     var perG = track(new THREE.BufferGeometry()); (function () {
@@ -10761,7 +10767,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       for (var j = 0; j < PNY; j++) for (var i = 0; i < PNX; i++) { var a0 = j * (PNX + 1) + i, b0 = a0 + PNX + 1; idx.push(a0, a0 + 1, b0, b0, a0 + 1, b0 + 1); }
       perG.setIndex(idx);
     })();
-    var perMesh = new THREE.Mesh(perG, mPer); grp.add(perMesh);
+    var perMesh = new THREE.Mesh(perG, mPer); perMesh.renderOrder = 3; grp.add(perMesh);
     function perUpdate(f) {
       if (perMesh.f === f) return; perMesh.f = f;
       var P = perG.attributes.position.array, k = 0;
@@ -10776,8 +10782,8 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     }
 
     /* =================== mięśnie, kości =================== */
-    var mMus = mat(C.mus, { rough: 0.8, op: 0.75, dw: false }), mIl = mat('#ffffff', { vc: true, rough: 0.8, dw: false }), mBone = mat(C.bone, { rough: 0.6, op: 0.55, dw: false });
-    tube(K.PSOAS.pts, function (t) { return K.PSOAS.r[0] + (K.PSOAS.r[1] - K.PSOAS.r[0]) * t; }, null, mMus, 14);
+    var mMus = mat(C.mus, { rough: 0.8, op: 0.75, dw: false }), mIl = mat('#ffffff', { vc: true, rough: 0.8, dw: false, tr: true }), mBone = mat(C.bone, { rough: 0.6, op: 0.55, dw: false });
+    tube(K.PSOAS.pts, function (t) { return K.PSOAS.r[0] + (K.PSOAS.r[1] - K.PSOAS.r[0]) * t; }, null, mMus, 14, undefined, 'psoas').renderOrder = 1;
     (function () {   // mięsień biodrowy w dole biodrowym (z(x, y)), zanikający przy brzegach
       var nx = 30, ny = 30, P = [], Cc = [], idx = [], g = track(new THREE.BufferGeometry()), c0 = new THREE.Color('#b9877a');
       for (var j = 0; j <= ny; j++) for (var i = 0; i <= nx; i++) {
@@ -10786,28 +10792,28 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       }
       for (var j2 = 0; j2 < ny; j2++) for (var i2 = 0; i2 < nx; i2++) { var a0 = j2 * (nx + 1) + i2, b0 = a0 + nx + 1; idx.push(a0, a0 + 1, b0, b0, a0 + 1, b0 + 1); }
       g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(Cc, 4)); g.setIndex(idx); g.computeVertexNormals();
-      grp.add(new THREE.Mesh(g, mIl));
+      var il = new THREE.Mesh(g, mIl); il.renderOrder = 1; grp.add(il);
     })();
-    tube(K.PUBIS, 0.32, 0.26, mBone, 10);
+    tube(K.PUBIS, 0.32, 0.26, mBone, 10, undefined, 'pubis').renderOrder = 1;
 
     /* =================== naczynia biorcy =================== */
-    var mArt = mat(C.art, { rough: 0.45 }), mVein = mat(C.vein, { rough: 0.45 }), mArtF = mat(C.art, { rough: 0.45, op: 0.55 }), mVeinF = mat(C.vein, { rough: 0.45, op: 0.55 });
-    function vessel(V, m) { return tube(V.pts, V.r[0], V.r[1], m, 12); }
-    vessel(K.AO, mArt); vessel(K.IVC, mVein); vessel(K.CIA, mArt); vessel(K.CIAL, mArtF); vessel(K.CIV, mVein); vessel(K.CIVL, mVeinF);
+    var mArt = mat(C.art, { rough: 0.45 }), mVein = mat(C.vein, { rough: 0.45 }), mArtF = mat(C.art, { rough: 0.45, op: 0.55, dw: false }), mVeinF = mat(C.vein, { rough: 0.45, op: 0.55, dw: false });
+    function vessel(V, m, name) { return tube(V.pts, V.r[0], V.r[1], m, 12, undefined, name); }
+    vessel(K.AO, mArt, 'AO'); vessel(K.IVC, mVein, 'IVC'); vessel(K.CIA, mArt, 'CIA'); vessel(K.CIAL, mArtF, 'CIAL').renderOrder = 1; vessel(K.CIV, mVein, 'CIV'); vessel(K.CIVL, mVeinF, 'CIVL').renderOrder = 1;
     var cEIA = cv(K.EIA.pts), cEIV = cv(K.EIV.pts), cIIA = cv(K.IIA.pts);
-    vessel(K.EIA, mArt); vessel(K.EIV, mVein); vessel(K.IIV, mVein);
+    vessel(K.EIA, mArt, 'EIA'); vessel(K.EIV, mVein, 'EIV'); vessel(K.IIV, mVein, 'IIV');
     function rAt(V, t) { return V.r[0] + (V.r[1] - V.r[0]) * t; }
     // tętnica biodrowa wewnętrzna: w wariancie iia dzielona (część bliższa odwracana ku nerce, obwodowa podwiązana)
     var iiaProx = null, iiaDist = null, tc = K.AT.iiaCut;
     if (d.art === 'iia') {
       var dP = []; for (var q0 = 0; q0 <= 12; q0++) dP.push(sampleAt(cIIA, tc + 0.05 + (1 - tc - 0.05) * q0 / 12));
-      iiaDist = tube(dP, rAt(K.IIA, tc), K.IIA.r[1], mArt, 12); iiaProx = dtube(mArt);
-    } else vessel(K.IIA, mArt);
+      iiaDist = tube(dP, rAt(K.IIA, tc), K.IIA.r[1], mArt, 12, undefined, 'IIAd'); iiaProx = dtube(mArt, 'IIA');
+    } else vessel(K.IIA, mArt, 'IIA');
     // moczowód własny
-    var mUre = mat(C.ure, { rough: 0.5 }); tube(K.URN, 0.15, 0.15, mUre, 8);
+    var mUre = mat(C.ure, { rough: 0.5 }); tube(K.URN, 0.15, 0.15, mUre, 8, undefined, 'URN');
     // naczynia nabrzuszne dolne: przecięte w miejscu skrzyżowania z cięciem (po podwiązaniu końce odsuwają się)
     var cIEA = cv(K.IEA), tIx = (function () { var best = 9, bt = 0.4; for (var i = 0; i <= 200; i++) { var p = cIEA.getPointAt(i / 200), ab = abOf(p.x, p.y); if (Math.abs(ab[1]) < best && ab[0] > 0 && ab[0] < 1) { best = Math.abs(ab[1]); bt = i / 200; } } return bt; })();
-    var mEA = mat(C.art, { rough: 0.45 }), mEV = mat(C.vein, { rough: 0.45 }), iep = [dtube(mEA), dtube(mEA), dtube(mEV), dtube(mEV)], mLig = mat('#22262b', { rough: 0.5 });
+    var mEA = mat(C.art, { rough: 0.45 }), mEV = mat(C.vein, { rough: 0.45 }), iep = [dtube(mEA, 'IEA1'), dtube(mEA, 'IEA2'), dtube(mEV, 'IEV1'), dtube(mEV, 'IEV2')], mLig = mat('#22262b', { rough: 0.5 });
     var ligs = [0, 1, 2, 3].map(function () { var r = new THREE.Mesh(track(new THREE.TorusGeometry(0.15, 0.05, 6, 16)), mLig); grp.add(r); return r; });
     function iepUpdate(f) {
       if (iep.f === f) return; iep.f = f;
@@ -10823,7 +10829,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
 
     /* =================== pęcherz =================== */
     var BC = v3(K.BLAD.c), BR = v3(K.BLAD.r), mBl = mat(C.blad, { rough: 0.55, op: 0.85 });
-    var blad = new THREE.Mesh(track(new THREE.SphereGeometry(1, 40, 28)), mBl); blad.position.copy(BC); blad.scale.copy(BR); grp.add(blad);
+    var blad = new THREE.Mesh(track(new THREE.SphereGeometry(1, 40, 28)), mBl); blad.renderOrder = 2; blad.position.copy(BC); blad.scale.copy(BR); grp.add(blad);
     function bladP(dir, off) { var dd = dir.clone().normalize(), t = 1 / Math.sqrt(Math.pow(dd.x / BR.x, 2) + Math.pow(dd.y / BR.y, 2) + Math.pow(dd.z / BR.z, 2)), p = BC.clone().addScaledVector(dd, t); if (off) p.addScaledVector(bladN(p), off); return p; }
     function bladN(p) { return new V3((p.x - BC.x) / (BR.x * BR.x), (p.y - BC.y) / (BR.y * BR.y), (p.z - BC.z) / (BR.z * BR.z)).normalize(); }
 
@@ -10844,11 +10850,13 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     // tłuszcz zatoki nerkowej (we wnęce)
     var sinus = new THREE.Mesh(track(new THREE.SphereGeometry(1, 20, 14)), mKidH); sinus.scale.set(0.95, 0.42, 0.5); sinus.position.set(0.05, KD.b * 0.3, 0); kid.add(sinus);
     function kl(u, v, w) { return new V3(u, v, w).applyQuaternion(kid.quaternion).add(kid.position); }   // punkt lokalny → model
-    var WS = KD.ant || 1, WP = (LEFT ? 0.5 : -0.5) * WS, WV = (LEFT ? -0.42 : 0.42) * WS;   // miedniczka i żyła: z przodu albo z tyłu wnęki
-    var HA = [0.42, KD.b * 0.5, 0.0], HV = [-0.05, KD.b * 0.48, WV], HP = [-0.45, KD.b * 0.5, WP];
+    var WS = KD.ant || 1, WP = (LEFT ? 0.58 : -0.58) * WS, WV = (LEFT ? -0.42 : 0.42) * WS, WA = 0.16 * Math.sign(WV);   // miedniczka i żyła: z przodu albo z tyłu wnęki, tętnica między nimi
+    // tętnica nerkowa niżej, żyła wyżej we wnęce (zespolenie żylne bliżej, przyśrodkowo od tętnicy biodrowej zewnętrznej); przy iia odwrotnie
+    // DA, DV — odejście tętnicy i żyły od wnęki rozsunięte w głąb zgodnie z kolejnością we wnęce (żyła z tyłu — schodzi pod tętnicą; z przodu — nad nią)
+    var UP = d.art === 'iia' || !LEFT ? -1 : 1, HA = [-0.1 * UP, KD.b * 0.5, WA], HV = [0.62 * UP, KD.b * 0.48, WV], DA = 0, DV = 1.1 * Math.sign(WV);
     // miedniczka nerkowa (część pozanerkowa), w grupie nerki
     var mPel = mat(C.ure, { rough: 0.5 });
-    var pelvis = new THREE.Mesh(track(tubeGeo([[0.1, KD.b * 0.3, WP * 0.8], [-0.2, KD.b * 0.52, WP], [-0.55, KD.b * 0.66, WP * 1.02], [-0.95, KD.b * 0.74, WP * 0.95]], function (t) { return 0.5 - 0.3 * t; }, null, 12, true)), mPel); kid.add(pelvis);
+    var pelvis = new THREE.Mesh(track(tubeGeo([[0.1, KD.b * 0.3, WP * 0.8], [-0.2, KD.b * 0.52, WP], [-0.55, KD.b * 0.66, WP * 1.02], [-0.95, KD.b * 0.74, WP * 0.95]], function (t) { return 0.5 - 0.3 * t; }, null, 12, true)), mPel); pelvis.name = 'pelvis'; kid.add(pelvis);
     var PEX = [-0.95, KD.b * 0.74, WP * 0.95];   // wyjście moczowodu z miedniczki (lokalnie)
 
     /* ---------- cele zespoleń (model) ---------- */
@@ -10859,9 +10867,17 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     var KFIN = { pos: KC.clone(), q: kid.quaternion.clone() }, QBEN = kid.quaternion.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new V3(1, 0, 0), WS * 1.05));
     kid.position.copy(KC);
     var hvW = kl(HV[0], HV[1], HV[2]), haW = kl(HA[0], HA[1], HA[2]);
-    var TV = onWall(cEIV, K.EIV, K.AT.eiv, hvW), TA = d.art === 'iia' ? null : onWall(cEIA, K.EIA, K.AT.eia, haW);
+    var tEIV = LEFT ? K.AT.eiv : K.AT.eivR, TV = onWall(cEIV, K.EIV, tEIV, sampleAt(cEIV, tEIV).add(new V3(0.45, 0, 1))), TA = d.art === 'iia' ? null : onWall(cEIA, K.EIA, LEFT ? K.AT.eia : K.AT.eiaR, haW);
+    // punkt nad tętnicą biodrową zewnętrzną, w którym żyła nerkowa ją krzyżuje (nieco dogłowowo od zespolenia żylnego)
+    var VX = (function () { var bt = 0, bd = 1e9; for (var i = 0; i <= 100; i++) { var q = sampleAt(cEIA, i / 100), dd = Math.abs(q.y - TV.c.y - 0.35); if (dd < bd) { bd = dd; bt = i / 100; } }
+      return sampleAt(cEIA, bt).add(new V3(0.1, 0.05, rAt(K.EIA, bt) + 0.38 + 0.16)); })();
     // tętnica biodrowa wewnętrzna odwrócona: od odejścia łukiem ku przodowi i bocznie; koniec (zespolenie) naprzeciw tętnicy nerkowej
-    var IIA_END = d.art === 'iia' ? haW.clone().lerp(sampleAt(cIIA, 0), 0.62).add(new V3(-0.2, -0.35, -0.25)) : null;
+    var IIA_END = d.art === 'iia' ? haW.clone().lerp(sampleAt(cIIA, 0), 0.62).add(new V3(-0.1, -0.35, 0.5)) : null;
+    function bez(P0, P1, P2, P3, n) {   // krzywa Béziera 3. stopnia → n + 1 punktów
+      var o = []; for (var i = 0; i <= n; i++) { var t = i / n, a = (1 - t) * (1 - t) * (1 - t), b = 3 * (1 - t) * (1 - t) * t, c = 3 * (1 - t) * t * t, e = t * t * t;
+        o.push(new V3().addScaledVector(P0, a).addScaledVector(P1, b).addScaledVector(P2, c).addScaledVector(P3, e)); } return o;
+    }
+    function outDir(H, du, dw) { return kl(H[0] + du, H[1] + 1, H[2] + dw).sub(kl(H[0], H[1], H[2])).normalize(); }   // kierunek wyjścia z wnęki (ku przyśrodkowi)
     function iiaPath(f) {
       var o = []; for (var i = 0; i <= 10; i++) {
         var u = i / 10, nat = sampleAt(cIIA, tc * u), sw = sampleAt(cIIA, 0).clone().lerp(IIA_END, u).add(new V3(-0.15, 0.25, 0.55).multiplyScalar(Math.sin(Math.PI * u)));
@@ -10870,51 +10886,77 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       return o;
     }
     // moczowód: od miedniczki przed naczyniami ku pęcherzowi; miejsce zespolenia (Lich–Gregoir: przednio-boczna ściana; Politano–Leadbetter: hiatus w ścianie tylno-bocznej)
-    var LG = d.ure === 'lg', SITE = LG ? bladP(new V3(-0.74, 0.42, 0.55)) : bladP(new V3(-0.95, 0.18, -0.25)), SN = bladN(SITE);
-    var ORIF = bladP(new V3(-0.42, -0.62, -0.62), -0.14);   // nowe ujście (PL): przy trójkącie pęcherza, od środka
-    var U1 = new V3(-4.55, -10.6, 3.0), U2 = new V3(-3.7, -11.5, 3.05);
+    var LG = d.ure === 'lg', SITE = LG ? bladP(new V3(-0.74, 0.42, 0.55)) : bladP(new V3(-0.88, 0.12, -0.42)), SN = bladN(SITE);
+    var ORIF = bladP(new V3(-0.1, -0.45, -0.9), -0.14);   // nowe ujście (PL): przy trójkącie pęcherza, od środka
+    // przebieg moczowodu do miejsca nad naczyniami (U2): miedniczka z przodu (nerka lewa) — przed dolnym biegunem; z tyłu (nerka prawa) — wzdłuż
+    // przyśrodkowego brzegu nerki, za tętnicą nerkową, potem pod dolnym biegunem ku przodowi, dogłowowo od niczego nie krzyżując
+    var U1 = new V3(-4.55, -10.6, 3.0), U2 = LEFT ? new V3(-3.7, -11.5, 3.05) : new V3(-3.4, -12.7, 3.1);
+    function ure0() { var pex = kl(PEX[0], PEX[1], PEX[2]); return LEFT ? [pex, U1, U2] : [pex, new V3(-4.25, -10.6, 1.15), new V3(-4.45, -11.85, 1.6), new V3(-4.6, -12.45, 2.45), new V3(-4.3, -12.95, 3.1), U2]; }
+    // Lich–Gregoir: moczowód wchodzi w nacięcie od góry (nad końcem nacięcia), leży w rowku na śluzówce, kończy się zespoleniem w dolnej części nacięcia
+    var USN = [[-1.5, 0.45], [-0.95, 0.33], [-0.4, 0.03], [0.1, -0.03], [0.5, -0.06], [0.95, -0.06]];
+    function uSN(x) { for (var i = 1; i < USN.length; i++) if (x <= USN[i][0]) { var a = USN[i - 1], b = USN[i]; return a[1] + (b[1] - a[1]) * Math.max(0, (x - a[0]) / (b[0] - a[0])); } return USN[USN.length - 1][1]; }
     var IDIR = (function () { var t = SITE.clone().sub(U2); t.addScaledVector(SN, -t.dot(SN)); return t.normalize(); })();   // kierunek nacięcia (Lich–Gregoir) — wzdłuż przebiegu moczowodu
-    function ureAttached() {
-      var pex = kl(PEX[0], PEX[1], PEX[2]);
-      if (LG) return [pex, U1, U2, SITE.clone().addScaledVector(IDIR, -1.25).addScaledVector(SN, 0.32), SITE.clone().addScaledVector(IDIR, -0.75).addScaledVector(SN, 0.08), SITE.clone().addScaledVector(IDIR, 0.1).addScaledVector(SN, -0.04), SITE.clone().addScaledVector(IDIR, 0.72).addScaledVector(SN, -0.06)];
-      var out = SITE.clone().addScaledVector(SN, 0.6), o = [pex, U1, U1.clone().lerp(out, 0.55).add(new V3(0, -0.35, 0.2)), out, SITE.clone().addScaledVector(SN, -0.05)];
-      // tunel podśluzówkowy: wzdłuż wewnętrznej powierzchni od hiatusu ku nowemu ujściu
+    function ureAttached() { return ure0().concat(ureTail().slice(1)); }
+    function ureTail() {   // od U2 do zespolenia z pęcherzem
+      var o = [U2.clone()];
+      if (LG) return o.concat(USN.slice(0, 5).map(function (q) { return bladP(SITE.clone().addScaledVector(IDIR, q[0]).sub(BC), q[1]); }));   // po krzywiźnie pęcherza
+      // Politano–Leadbetter: po powierzchni pęcherza (przyśrodkowo od żyły biodrowej zewnętrznej) do hiatusu w ścianie tylno-bocznej, przez ścianę i tunelem podśluzówkowym
+      var dA = U2.clone().sub(BC).normalize(), dS = SITE.clone().sub(BC).normalize();
+      [0.5, 0.85].forEach(function (k) { o.push(bladP(dA.clone().lerp(dS, k), 0.26)); });
+      o.push(SITE.clone().addScaledVector(SN, 0.16), SITE.clone().addScaledVector(SN, -0.05));
       var d0 = SITE.clone().sub(BC), d1 = ORIF.clone().sub(BC);
       for (var i = 1; i <= 5; i++) o.push(bladP(d0.clone().lerp(d1, i / 5), -0.12 - 0.04 * Math.sin(Math.PI * i / 5)));
       return o;
     }
-    function urePre() { var at = ureAttached(); var pex = kl(PEX[0], PEX[1], PEX[2]); return [pex, U1, U2, U2.clone().lerp(SITE, 0.55).add(new V3(-0.3, 0.2, 0.55)), U2.clone().lerp(SITE, 0.85).add(new V3(-0.35, 0.3, 0.75))]; }
+    var SH = bladP(new V3(-0.74, 0.42, 0.55));   // przed zespoleniem moczowód leży nad przednio-boczną ścianą pęcherza
+    function preTail() { return [U2.clone(), U2.clone().lerp(SH, 0.55).add(new V3(-0.3, 0.2, 0.55)), U2.clone().lerp(SH, 0.85).add(new V3(-0.35, 0.3, 0.75))]; }
+    function urePre() { return ure0().concat(preTail().slice(1)); }
     // położenia „wolne” (na stole): lokalnie względem nerki
-    function freeArt() { return [HA, [HA[0] + 0.05, HA[1] + 0.7, HA[2] - 0.05 * WS], [HA[0] - 0.05, HA[1] + 1.3, HA[2] - 0.1 * WS], [HA[0] - 0.12, HA[1] + 1.75, HA[2] - 0.12 * WS]]; }
+    function freeArt() { return [HA, [HA[0] - 0.05 * UP, HA[1] + 0.7, HA[2]], [HA[0] - 0.15 * UP, HA[1] + 1.3, HA[2]], [HA[0] - 0.28 * UP, HA[1] + 1.75, HA[2]]]; }
     var VLEN = LEFT ? 2.6 : 1.05;   // żyła nerkowa: lewa długa, prawa krótka (+ przedłużenie z IVC dawcy ok. 2,2 j.)
-    function freeVein(ext) { var L2 = VLEN + (ext ? 2.2 : 0), o = []; for (var i = 0; i <= 4; i++) { var u = i / 4; o.push([HV[0] - 0.4 * u * u, HV[1] + L2 * u, HV[2] - 0.08 * u * WS]); } return o; }
-    function freeUre() { return [PEX, [PEX[0] - 1.2, PEX[1] + 0.4, PEX[2] + 0.05], [PEX[0] - 2.8, PEX[1] + 0.15, PEX[2] + 0.1], [PEX[0] - 4.4, PEX[1] - 0.2, PEX[2] + 0.05], [PEX[0] - 5.6, PEX[1] + 0.2, PEX[2]]]; }
-    function toW(L) { return L.map(function (p) { return kl(p[0], p[1], p[2]); }); }
+    function freeVein(ext) { var L2 = VLEN + (ext ? 2.2 : 0), o = []; for (var i = 0; i <= 4; i++) { var u = i / 4; o.push([HV[0] + 0.3 * UP * u * u, HV[1] + L2 * u, HV[2] + 0.3 * u * Math.sign(WV)]); } return o; }
+    function freeUre() { var sw = Math.sign(WP); return [PEX, [PEX[0] - 1.2, PEX[1] + 0.4, PEX[2] + 0.12 * sw], [PEX[0] - 2.8, PEX[1] + 0.15, PEX[2] + 0.22 * sw], [PEX[0] - 4.4, PEX[1] - 0.2, PEX[2] + 0.2 * sw], [PEX[0] - 5.6, PEX[1] + 0.2, PEX[2] + 0.15 * sw]]; }   // od nerki (miedniczka z przodu albo z tyłu)
+    function toW(L) { return L.map(function (p) { return p.isVector3 ? kl(p.x, p.y, p.z) : kl(p[0], p[1], p[2]); }); }
+    var QI = KFIN.q.clone().invert();
+    function toL(W) { return W.map(function (p) { return p.clone().sub(KC).applyQuaternion(QI); }); }   // model → układ nerki (w położeniu końcowym)
     function lerpPath(a, b, f, n) {   // dwie łamane → n punktów (po długości łuku)
       var ca = cv(a), cb = cv(b), o = []; for (var i = 0; i <= n; i++) o.push(ca.getPointAt(i / n).lerp(cb.getPointAt(i / n), f)); return o;
     }
     // tętnica nerkowa: koniec przy ścianie tętnicy biodrowej zewnętrznej (end-to-side) albo naprzeciw końca tętnicy biodrowej wewnętrznej (end-to-end)
-    function artAttached() {
-      var h = kl(HA[0], HA[1], HA[2]), m1 = kl(HA[0] + 0.05, HA[1] + 0.8, HA[2] - 0.05);
-      if (d.art === 'iia') return [h, m1, m1.clone().lerp(IIA_END, 0.55), IIA_END.clone()];
-      return [h, m1, m1.clone().lerp(TA.p, 0.5).addScaledVector(TA.n, 0.35), TA.p.clone().addScaledVector(TA.n, 0.42), TA.p.clone().addScaledVector(TA.n, d.art === 'carrel' ? 0.08 : 0.02)];
+    var IIA_T = d.art === 'iia' ? (function () { var q = iiaPath(1); return q[10].clone().sub(q[9]).normalize(); })() : null;   // kierunek końca odwróconej t. biodrowej wewnętrznej
+    function artEnd() { return d.art === 'iia' ? { e: IIA_END.clone(), n: IIA_T.clone().negate() } : { e: TA.p.clone().addScaledVector(TA.n, d.art === 'carrel' ? 0.08 : 0.02), n: TA.n.clone() }; }
+    function artAttached() {   // od wnęki ku przyśrodkowi, łukiem do ściany tętnicy biorcy (albo naprzeciw końca t. biodrowej wewnętrznej)
+      var h = kl(HA[0], HA[1], HA[2]), E = artEnd(), En = d.art === 'iia' ? E.n.clone().negate() : E.n;
+      return bez(h, h.clone().addScaledVector(outDir(HA, -0.15 * UP, DA), 1.1), E.e.clone().addScaledVector(En, 1.2), E.e, 12);
     }
+    function artPre() {   // przed zespoleniem: skierowana ku miejscu zespolenia, nad nim
+      var h = kl(HA[0], HA[1], HA[2]), E = artEnd(), En = d.art === 'iia' ? new V3(0, 0.25, 1).normalize() : E.n, R = E.e.clone().addScaledVector(En, d.art === 'iia' ? 0.8 : 1.0).add(new V3(0, 0, 0.45));
+      return bez(h, h.clone().addScaledVector(outDir(HA, -0.15 * UP, DA), 1.0), R.clone().addScaledVector(En, 0.6), R, 10);
+    }
+    // żyła: od wnęki łukiem nad tętnicą biodrową zewnętrzną (VX), potem w dół do przednio-przyśrodkowej ściany żyły biodrowej zewnętrznej
+    function veinSeg(lift) {
+      var h = kl(HV[0], HV[1], HV[2]), X = VX.clone().add(new V3(0, 0, lift)), tX = new V3(TV.p.x - VX.x, TV.p.y - VX.y, 0).normalize();
+      return bez(h, h.clone().addScaledVector(outDir(HV, 0.1 * UP, DV), 1.0), X.clone().addScaledVector(tX, -0.9), X, 8);
+    }
+    function veinPre() { var a = veinSeg(0.3), X = a[a.length - 1], B = TV.p.clone().addScaledVector(TV.n, 1.1).add(new V3(0, 0, 0.3)); return a.concat(bez(X, X.clone().addScaledVector(B.clone().sub(X), 0.4), B.clone().add(new V3(0, 0, 0.15)), B, 5).slice(1)); }
     function veinAttached() {
-      var h = kl(HV[0], HV[1], HV[2]), m1 = kl(HV[0] - 0.1, HV[1] + 0.8, HV[2]);
-      return [h, m1, m1.clone().lerp(TV.p, 0.5).addScaledVector(TV.n, 0.5), TV.p.clone().addScaledVector(TV.n, 0.5), TV.p.clone().addScaledVector(TV.n, 0.02)];
+      var a = veinSeg(0), X = a[a.length - 1], tX = new V3(TV.p.x - VX.x, TV.p.y - VX.y, 0).normalize(), E = TV.p.clone().addScaledVector(TV.n, 0.02);
+      return a.concat(bez(X, X.clone().addScaledVector(tX, 0.55), E.clone().addScaledVector(TV.n, 0.75), E, 7).slice(1));
     }
+    // ułożenia przed zespoleniem w układzie nerki: przejście ze stołu do dołu biodrowego odkształca je razem z nerką (bez przecinania innych struktur w locie)
+    var PRE = { art: toL(artPre()), vein: toL(veinPre()), ure: toL(urePre()) };
     var mRA = mat(C.art, { rough: 0.42 }), mRV = mat(C.vein, { rough: 0.42 }), mExt = mat('#2b4a8a', { rough: 0.5 }), mUreG = mat(C.ure, { rough: 0.45 });
-    var rArt = dtube(mRA), rVein = dtube(mRV), rExt = d.vein === 'ext' ? dtube(mExt) : null, rUre = dtube(mUreG);
+    var rArt = dtube(mRA, 'gArt'), rVein = dtube(mRV, 'gVein'), rExt = d.vein === 'ext' ? dtube(mExt, 'gExt') : null, rUre = dtube(mUreG, 'gUre'); rUre.renderOrder = 2;
     var mPatch = mat('#d9a493', { rough: 0.5 }), patch = null;
     if (d.art === 'carrel') { patch = new THREE.Mesh(track(new THREE.CircleGeometry(1, 28)), mPatch); patch.scale.set(0.62, 0.42, 1); grp.add(patch); }
     // linia staplera na przedłużeniu z IVC
     var staple = null; if (rExt) { staple = new THREE.Group(); grp.add(staple); for (var si = 0; si < 9; si++) staple.add(new THREE.Mesh(track(new THREE.BoxGeometry(0.16, 0.05, 0.05)), mat('#c9ced4', { metal: 0.7, rough: 0.3 }))); }
     // JJ: cewnik w moczowodzie z zawinięciami w miedniczce i w pęcherzu
-    var mJJ = mat('#2f78c4', { rough: 0.4 }), jj = dtube(mJJ), jjC = [0, 1].map(function () { var r = new THREE.Mesh(track(new THREE.TorusGeometry(0.3, 0.05, 6, 24, Math.PI * 1.6)), mJJ); grp.add(r); return r; });
+    var mJJ = mat('#2f78c4', { rough: 0.4 }), jj = dtube(mJJ, 'JJ'), jjC = [0, 1].map(function () { var r = new THREE.Mesh(track(new THREE.TorusGeometry(0.3, 0.05, 6, 24, Math.PI * 1.6)), mJJ); grp.add(r); return r; });
 
     /* ---------- pierścienie zespoleń, nacięcia, zaciski ---------- */
     var rings = [];
-    function ring(r, col, sx) { var mm = mat(col, { rough: 0.4, em: col }); mm.emissiveIntensity = 0.15; var m = new THREE.Mesh(track(new THREE.TorusGeometry(r, Math.max(0.045, r * 0.16), 8, 36)), mm); if (sx) m.scale.set(sx, 1, 1); grp.add(m); rings.push(m); return m; }
+    function ring(r, col, sx) { var mm = mat(col, { rough: 0.4, em: col, tr: true }); mm.emissiveIntensity = 0.15; var m = new THREE.Mesh(track(new THREE.TorusGeometry(r, Math.max(0.045, r * 0.16), 8, 36)), mm); if (sx) m.scale.set(sx, 1, 1); grp.add(m); rings.push(m); return m; }
     function place(m, p, n, along) { m.position.copy(p); var q = new THREE.Quaternion().setFromUnitVectors(new V3(0, 0, 1), n.clone().normalize()); m.quaternion.copy(q); if (along) { var xa = new V3(1, 0, 0).applyQuaternion(q), a2 = along.clone().addScaledVector(n, -along.dot(n)).normalize(), ang = Math.atan2(new V3().crossVectors(xa, a2).dot(n), xa.dot(a2)); m.rotateZ(ang); } }
     var RINGC = '#f4f1e8';
     var rV = ring(0.4, RINGC, 1.5); place(rV, TV.p.clone().addScaledVector(TV.n, 0.03), TV.n, TV.T);
@@ -10935,12 +10977,12 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     // pęcherz: Lich–Gregoir — nacięcie mięśniówki, brzegi (wypieracz), uwypuklona śluzówka, szwy; Politano–Leadbetter — cystotomia, hiatus, nowe ujście
     var mDet = mat('#c97866', { rough: 0.6 }), mMuc = mat('#f3c7c2', { rough: 0.45 }), mSut = mat('#22305c', { rough: 0.5 });
     var IB = new V3().crossVectors(SN, IDIR).normalize();
-    var detL = [dtube(mDet), dtube(mDet)], muc = null, sut = new THREE.Group(), incB = null, cysto = null, hiat = null, orif = null, cysL = null;
+    var detL = [dtube(mDet, 'det1'), dtube(mDet, 'det2')], muc = null, sut = new THREE.Group(), incB = null, cysto = null, hiat = null, orif = null, cysL = null;
     grp.add(sut);
     if (LG) {
       muc = new THREE.Mesh(track(new THREE.SphereGeometry(1, 18, 12)), mMuc); muc.position.copy(SITE); place(muc, SITE, SN, IDIR); muc.scale.set(0.95, 0.2, 0.12); grp.add(muc);
       incB = new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([-0.95, -0.3, 0.3, 0.95].map(function (s) { return bladP(SITE.clone().addScaledVector(IDIR, s).sub(BC), 0.03); })), 24, 0.05, 6, false)), mCut); grp.add(incB);
-      for (var sti = 0; sti < 6; sti++) { var st = new THREE.Mesh(track(new THREE.TorusGeometry(0.2, 0.03, 5, 12, Math.PI)), mSut); place(st, SITE.clone().addScaledVector(IDIR, -0.75 + sti * 0.3).addScaledVector(SN, 0.12), IDIR, SN); st.rotateZ(Math.PI / 2); sut.add(st); }
+      for (var sti = 0; sti < 6; sti++) { var st = new THREE.Mesh(track(new THREE.TorusGeometry(0.2, 0.03, 5, 12, Math.PI)), mSut); place(st, bladP(SITE.clone().addScaledVector(IDIR, -0.75 + sti * 0.3).sub(BC), uSN(-0.75 + sti * 0.3) + 0.3), IDIR, SN); st.rotateZ(Math.PI / 2); sut.add(st); }
     } else {
       var cyC = bladP(new V3(-0.15, 0.05, 1)), cyPts = [-1.1, -0.4, 0.4, 1.1].map(function (s) { return bladP(cyC.clone().add(new V3(0, s, 0)).sub(BC), 0.03); });
       cysto = new THREE.Mesh(track(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cyPts), 24, 0.055, 6, false)), mCut); grp.add(cysto);
@@ -10949,7 +10991,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       hiat = ring(0.24, '#4a1d1a'); place(hiat, SITE.clone().addScaledVector(SN, 0.02), SN);
       orif = ring(0.2, RINGC); place(orif, ORIF, bladN(ORIF).negate());
     }
-    var rU = ring(0.22, RINGC); if (LG) place(rU, SITE.clone().addScaledVector(IDIR, 0.74).addScaledVector(SN, 0.02), SN, IDIR);
+    var rU = ring(0.22, RINGC); if (LG) place(rU, bladP(SITE.clone().addScaledVector(IDIR, 0.5).sub(BC), 0.0), SN, IDIR);
     else rings.splice(rings.indexOf(rU), 1), grp.remove(rU);
 
     var deepG = new THREE.Group(); grp.children.slice(nWall).forEach(function (c) { if (c !== kid) deepG.add(c); }); grp.add(deepG);
@@ -10992,7 +11034,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     lab('Tętnica biodrowa wspólna', '', C.art, 'seg', function () { return on(cv(K.CIA.pts), K.CIA, 0.62); }, FOS);
     lab('Tętnica biodrowa zewnętrzna', '', C.art, 'seg', function () { return on(cEIA, K.EIA, 0.72); }, function (st, m) { return FOS(st, m) || (d.art !== 'iia' && m > 3.05 && m < 3.6); });
     lab('Tętnica biodrowa wewnętrzna', d.art === 'iia' ? 'podwiązana obwodowo i przecięta' : '', C.art, 'seg', function () { return on(cIIA, K.IIA, d.art === 'iia' ? 0.62 : 0.5); }, function (st, m) { return FOS(st, m) || (d.art === 'iia' && m > 3.12 && m < 3.62); });
-    lab('Żyła biodrowa zewnętrzna', '', C.vein, 'seg', function () { return on(cEIV, K.EIV, 0.82); }, function (st, m) { return FOS(st, m) || (m > 2.05 && m < 2.6); });
+    lab('Żyła biodrowa zewnętrzna', '', C.vein, 'seg', function () { return on(cEIV, K.EIV, 0.66); }, function (st, m) { return FOS(st, m) || (m > 2.05 && m < 2.6); });
     lab('Żyła biodrowa wewnętrzna', '', C.vein, 'ghost', function () { return on(cv(K.IIV.pts), K.IIV, 0.7); }, FOS);
     lab('Aorta', '', C.art, 'ghost', function () { return on(cv(K.AO.pts), K.AO, 0.3); }, FOS);
     lab('Żyła główna dolna', '', C.vein, 'ghost', function () { return on(cv(K.IVC.pts), K.IVC, 0.3); }, FOS);
@@ -11005,7 +11047,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
     lab('Żyła nerkowa', LEFT ? 'lewa — długa' : 'prawa — krótka', C.vein, 'seg', function () { return grafts.vein ? grafts.vein.getPointAt(LEFT ? 0.6 : 0.3) : null; }, function (st, m) { return (m > 1.12 && m < 1.6) || (m > 2.3 && m < 2.6); });
     if (rExt) lab('Przedłużenie z żyły głównej dolnej dawcy', 'zamknięte wzdłuż staplerem', '#2b4a8a', 'seg', function () { return grafts.vein ? grafts.vein.getPointAt(0.78) : null; }, function (st, m) { return (m > 1.3 && m < 1.6) || (m > 2.3 && m < 2.62); });
     lab('Miedniczka nerkowa', LEFT ? 'z przodu wnęki' : 'z tyłu wnęki', '#b8952e', 'seg', function () { return kl(-0.6, KD.b * 0.7, WP * 1.4); }, win(1.12, 1.6));
-    lab('Moczowód przeszczepu', '', '#b8952e', 'seg', function () { return grafts.ure ? grafts.ure.getPointAt(0.5) : null; }, function (st, m) { return (m > 1.12 && m < 1.6) || (m > 4.4 && m < 4.62); });
+    lab('Moczowód przeszczepu', '', '#b8952e', 'seg', function (st, m) { return grafts.ure ? grafts.ure.getPointAt(m < 2 ? 0.28 : 0.5) : null; }, function (st, m) { return (m > 1.12 && m < 1.6) || (m > 4.4 && m < 4.62); });
     lab('Nerka przeszczepiona', 'pozaotrzewnowo, w dole biodrowym', '#8a5a4e', 'seg', function () { return kl(0.9, -KD.b * 0.7, KD.t * 0.6 * WS); }, function (st, m) { return (m > 1.92 && m < 2.05) || POST(st, m); });
     lab('Zaciski', 'na żyle biodrowej zewnętrznej', '#3a3f45', 'ghost', function () { return clV[1].position.clone().add(new V3(0, 0, 0.6)); }, win(2.05, 2.3));
     lab('Nacięcie żyły', 'wzdłuż', A.COL.cut, 'cut', function () { return venot.position.clone(); }, win(2.12, 2.3));
@@ -11030,7 +11072,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       lab('Tunel podśluzówkowy', 'ok. 2–3 cm', '#b8952e', 'seg', function () { return bladP(SITE.clone().sub(BC).lerp(ORIF.clone().sub(BC), 0.5), -0.1); }, win(4.5, 4.75));
       lab('Nowe ujście moczowodu', 'przy trójkącie pęcherza', '#7d8794', 'anast', function () { return orif.position.clone(); }, function (st, m) { return (m > 4.72 && m < 4.999) || POST(st, m); });
     }
-    lab('Cewnik JJ', 'w miedniczce i w pęcherzu', '#2f78c4', 'seg', function () { return grafts.ure ? grafts.ure.getPointAt(0.36) : null; }, function (st, m) { return (m > 4.55 && m < 4.7) || POST(st, m); });
+    lab('Cewnik JJ', 'w miedniczce i w pęcherzu', '#2f78c4', 'seg', function () { return grafts.ure ? grafts.ure.getPointAt(0.22) : null; }, function (st, m) { return (m > 4.55 && m < 4.7) || POST(st, m); });
 
     /* ---------- aktualizacja ---------- */
     var grafts = { art: null, vein: null, ure: null }, lastKey = '', kid0 = new THREE.Color(C.kid0), kid1 = new THREE.Color(C.kid1);
@@ -11058,8 +11100,9 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         setOp(mKid, st.kidOn); setOp(mKidH, st.kidOn); setOp(mPel, st.kidOn);
         mKid.color.copy(kid0).lerp(kid1, st.rep); kid.scale.setScalar(1 + 0.035 * st.rep); kid.updateMatrixWorld(true);
         // tętnica nerkowa
-        var fa = toW(freeArt()), pa = st.art > 0 ? lerpPath(fa, artAttached(), st.art, 12) : fa, ca = cv(pa); grafts.art = ca;
-        rArt.visible = kid.visible; setTube(rArt, pa, 0.26, d.art === 'carrel' ? 0.3 : 0.27, 10, [false, d.art !== 'carrel']); setOp(mRA, st.kidOn);
+        var fA = st.move, fV = st.move;
+        var pa = toW(fA > 0 ? lerpPath(freeArt(), PRE.art, fA, 12) : freeArt()); if (st.art > 0) pa = lerpPath(pa, artAttached(), st.art, 12); var ca = cv(pa); grafts.art = ca;
+        rArt.visible = kid.visible; setTube(rArt, pa, 0.22, d.art === 'carrel' ? 0.28 : 0.23, 10, [false, d.art !== 'carrel']); setOp(mRA, st.kidOn);
         if (patch) {
           var pe = pa[pa.length - 1], pt = ca.getTangentAt(1), nT = TA.n.clone(), along = TA.T.clone();
           var qF = new THREE.Quaternion().setFromUnitVectors(new V3(0, 0, 1), pt), qA = new THREE.Quaternion().setFromUnitVectors(new V3(0, 0, 1), nT);
@@ -11076,7 +11119,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
           if (iiaDist) iiaDist.visible = true;
         }
         // żyła nerkowa (+ przedłużenie)
-        var fv = toW(freeVein(st.ext > 0)), fvx = fv, pv = st.vein > 0 ? lerpPath(fvx, veinAttached(), st.vein, 12) : fvx, cvv = cv(pv); grafts.vein = cvv;
+        var pv = toW(fV > 0 ? lerpPath(freeVein(st.ext > 0), PRE.vein, fV, 12) : freeVein(st.ext > 0)); if (st.vein > 0) pv = lerpPath(pv, veinAttached(), st.vein, 12); var cvv = cv(pv); grafts.vein = cvv;
         if (rExt) {
           // podział: żyła nerkowa (krótka) + przedłużenie (rośnie na stole)
           var jt = VLEN / (VLEN + 2.2), a1 = [], a2 = [];
@@ -11088,7 +11131,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
         } else setTube(rVein, pv, 0.36, 0.38, 10, [false, false]);
         rVein.visible = kid.visible; setOp(mRV, st.kidOn);
         // moczowód przeszczepu
-        var fu = toW(freeUre()), pu = lerpPath(fu, urePre(), st.urePre, 16); if (st.ure > 0) pu = lerpPath(pu, ureAttached(), st.ure, 20);
+        var pu = st.ure > 0 ? ure0().concat(lerpPath(preTail(), ureTail(), st.ure, 16).slice(1)) : toW(lerpPath(freeUre(), PRE.ure, st.urePre, 16));
         var cu = cv(pu); grafts.ure = cu; rUre.visible = kid.visible; setTube(rUre, pu, 0.19, 0.17, 10, [false, st.ure < 0.98]);
         setOp(mUreG, st.kidOn * (st.jj > 0 ? 0.62 : 1));
         // JJ
@@ -11107,8 +11150,9 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
           incB.visible = st.det > 0 && st.detO < 0.3; incB.geometry.setDrawRange(0, Math.round(st.det * 24) * 6 * 6);
           muc.visible = st.detO > 0.05; muc.scale.set(0.95, 0.2 * (0.4 + 0.6 * st.detO), 0.12 + 0.12 * st.detO);
           [0, 1].forEach(function (k) {
-            var sg = k ? 1 : -1, w = 0.05 + 0.26 * st.detO, lift = st.sut ? 0.2 : 0, P = [];
-            for (var q = 0; q <= 8; q++) { var s = -0.95 + 1.9 * q / 8; P.push(bladP(SITE.clone().addScaledVector(IDIR, s).addScaledVector(IB, sg * w * Math.sin(Math.PI * q / 8)).sub(BC), 0.02 + lift * Math.sin(Math.PI * q / 8))); }
+            var sg = k ? 1 : -1, c = st.ure > 0 ? 1 - st.detO : 0, hg = sm(2 * c), nar = sm(2 * c - 1), wEnd = 0.27 * sm(3 * st.ure), P = [];
+            for (var q = 0; q <= 8; q++) { var s = -0.95 + 1.9 * q / 8, wo = Math.max((0.05 + 0.26 * st.detO) * Math.sin(Math.PI * q / 8), wEnd), w = wo + (0.13 - wo) * nar;
+              P.push(bladP(SITE.clone().addScaledVector(IDIR, s).addScaledVector(IB, sg * w).sub(BC), 0.02 + (uSN(s) + 0.25) * hg)); }
             detL[k].visible = st.det > 0.95 && (st.detO > 0.02 || st.sut); setTube(detL[k], P, 0.07, 0.07, 6, true);
           });
           sut.visible = !!st.sut;
@@ -11124,7 +11168,7 @@ html:not(.mobile) #viewport.split #hud{ right:auto; }
       grp.updateMatrixWorld(true);
       labels.forEach(function (Lb) { var p = Lb.fn(st, m); Lb.anchor = p ? grp.localToWorld(p.clone()) : null; Lb.alpha = Lb.when(st, m) && p ? 1 : 0; });
     };
-    tool.test = { state: stateAt, wall: wall, body: bodyMesh, kid: kid, KC: KC, grafts: grafts, TV: TV, TA: TA, SITE: SITE };
+    tool.test = { state: stateAt, wall: wall, body: bodyMesh, kid: kid, kidMesh: kidMesh, blad: blad, KC: KC, grafts: grafts, TV: TV, TA: TA, SITE: SITE };
     M.ktx = tool;
     return tool;
   }
