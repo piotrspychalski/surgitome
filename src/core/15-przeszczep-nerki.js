@@ -18,21 +18,22 @@
   var KU = new V3(-0.3, 0.95, -0.06).normalize(), KV0 = new V3(0.92, 0.22, -0.32), KV = KV0.clone().addScaledVector(KU, -KV0.dot(KU)).normalize(), KW = new V3().crossVectors(KU, KV).normalize();
   var KANT = KW.z < 0 ? -1 : 1;
   var KTX = {
-    // naczynia biorcy: [x, y, z], promień [początek, koniec]
+    // naczynia biorcy: [x, y, z], promień [początek, koniec]; połączenie żył biodrowych głębiej i niżej niż rozwidlenie tętnicy,
+    // t. biodrowa wewnętrzna przyśrodkowo i przed nim; żyła biodrowa zewnętrzna przyśrodkowo i ku tyłowi od tętnicy
     AO: { pts: [[0.5, -2.6, -0.15], [0.45, -4.1, -0.28], [0.4, -5.5, -0.4]], r: [0.62, 0.6] },
     IVC: { pts: [[-1.05, -2.6, -1.15], [-1.0, -4.4, -1.4], [-0.95, -6.2, -1.9]], r: [0.72, 0.7] },
     CIA: { pts: [[0.4, -5.5, -0.4], [-0.6, -6.4, -0.6], [-1.6, -7.3, -0.8], [-2.5, -8.2, -1.0]], r: [0.4, 0.36] },
     CIAL: { pts: [[0.4, -5.5, -0.4], [1.4, -6.5, -0.6], [2.4, -7.6, -0.95]], r: [0.4, 0.36] },
     EIA: { pts: [[-2.5, -8.2, -1.0], [-2.85, -9.4, -0.4], [-3.35, -10.7, 0.45], [-3.85, -11.9, 1.35], [-4.3, -12.8, 2.2], [-4.6, -13.5, 2.95]], r: [0.32, 0.3] },
-    IIA: { pts: [[-2.5, -8.2, -1.0], [-2.45, -9.0, -1.75], [-2.3, -9.9, -2.5], [-2.15, -10.8, -3.1], [-1.95, -11.8, -3.4], [-1.7, -12.8, -3.4]], r: [0.28, 0.18] },
-    CIV: { pts: [[-0.95, -6.2, -1.9], [-1.5, -7.2, -1.85], [-2.15, -8.4, -1.85], [-2.55, -9.3, -1.65]], r: [0.5, 0.48] },
+    IIA: { pts: [[-2.5, -8.2, -1.0], [-2.2, -8.9, -1.35], [-1.9, -9.8, -1.85], [-1.7, -10.8, -2.4], [-1.6, -11.8, -2.85], [-1.5, -12.8, -3.05]], r: [0.28, 0.18] },
+    CIV: { pts: [[-0.95, -6.2, -1.9], [-1.6, -7.3, -2.1], [-2.35, -8.5, -2.25], [-2.9, -9.7, -2.3]], r: [0.5, 0.48] },
     CIVL: { pts: [[-0.95, -6.2, -1.9], [0.4, -6.9, -2.2], [1.8, -7.9, -2.0]], r: [0.48, 0.46] },
-    EIV: { pts: [[-2.55, -9.3, -1.65], [-2.75, -10.3, -0.85], [-3.05, -11.3, 0.0], [-3.4, -12.3, 0.95], [-3.75, -13.1, 1.85], [-4.0, -13.7, 2.6]], r: [0.46, 0.44] },
-    IIV: { pts: [[-2.55, -9.3, -1.65], [-2.95, -10.1, -2.7], [-3.0, -11.0, -3.7], [-2.8, -12.0, -4.3]], r: [0.4, 0.32] },
+    EIV: { pts: [[-2.9, -9.7, -2.3], [-2.95, -10.5, -1.2], [-3.0, -11.3, -0.05], [-3.3, -12.3, 0.9], [-3.6, -13.1, 1.8], [-3.85, -13.7, 2.5]], r: [0.46, 0.44] },
+    IIV: { pts: [[-2.9, -9.7, -2.3], [-3.15, -10.4, -3.1], [-3.15, -11.2, -3.95], [-2.9, -12.1, -4.45]], r: [0.4, 0.32] },
     // naczynia nabrzuszne dolne: od tętnicy biodrowej zewnętrznej tuż nad więzadłem pachwinowym ku górze, za mięśniem prostym
     IEA: [[-4.45, -13.1, 2.75], [-4.4, -12.3, 3.35], [-4.35, -11.2, 3.7], [-4.3, -9.5, 3.9], [-4.25, -7.5, 4.05]],
     // moczowód własny: przez rozwidlenie tętnicy biodrowej wspólnej do dna pęcherza
-    URN: [[-1.9, -3.6, -0.5], [-2.25, -6.2, -0.55], [-2.45, -8.2, -0.35], [-2.15, -10.3, -1.6], [-1.75, -12.2, -1.3], [-1.25, -13.4, -0.35]],
+    URN: [[-1.9, -3.6, -0.5], [-2.25, -6.2, -0.55], [-2.25, -8.2, -0.3], [-2.0, -10.3, -1.2], [-1.75, -12.2, -1.15], [-1.2, -13.4, -0.3]],
     // mięsień lędźwiowy większy (oś, promień) i mięsień biodrowy (powierzchnia dołu biodrowego z(x, y))
     PSOAS: { pts: [[-2.9, -3.6, -2.6], [-3.75, -7.3, -1.95], [-4.65, -10.4, -0.75], [-5.25, -12.5, 0.75], [-5.6, -13.8, 1.75]], r: [1.25, 0.85] },
     iliacZ: function (x, y) { var sm = function (u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }; return -1.0 + 3.6 * sm((-x - 3.8) / 5.0) + 1.7 * sm((-y - 11.6) / 2.2); },
@@ -41,15 +42,16 @@
     CREST: [[-11.4, -7.6, 2.4], [-10.7, -8.2, 2.7], [-9.8, -9.2, 2.95], [-8.75, -10.35, 3.3]],
     PUBIS: [[0.0, -15.15, 3.75], [-1.3, -15.0, 3.45], [-2.7, -14.65, 2.75], [-3.9, -14.3, 1.75], [-4.7, -14.05, 0.9]],
     // pęcherz moczowy (wypełniony): środek, półosie
-    BLAD: { c: [-0.25, -12.5, 1.15], r: [2.3, 2.0, 2.0] },
+    BLAD: { c: [-0.1, -12.5, 1.15], r: [2.2, 2.0, 2.0] },
     // nerka dawcy: środek w dole biodrowym, osie (u, v, w), półosie: długość 11 cm, szerokość 6 cm, grubość 3 cm
     KID: { c: [-6.1, -8.5, 2.05], u: KU.toArray(), v: KV.toArray(), w: KW.toArray(), ant: KANT, a: 3.8, b: 2.05, t: 1.05 },
     BENCH: [-3.2, 2.6, 6.0],                                  // przesunięcie nerki na stole (przygotowanie poza raną)
     // cięcie Gibsona na skórze (x, y): od okolicy 2 cm nad spojeniem, równolegle do więzadła pachwinowego (ok. 2,5 cm nad nim), łukiem ku górze
     // przyśrodkowo od kolca biodrowego przedniego górnego; ok. 14 cm
     GIBSON: [[-1.3, -13.9], [-2.6, -13.15], [-4.5, -11.75], [-6.0, -10.4], [-7.0, -8.9], [-7.5, -7.2]],
-    // miejsca zespoleń: t na krzywej naczynia biorcy
-    AT: { eia: 0.46, eiv: 0.56, iiaCut: 0.36 },
+    // miejsca zespoleń: t na krzywej naczynia biorcy; nerka lewa — żyła wyżej (przyśrodkowo od tętnicy biodrowej zewnętrznej), tętnica niżej;
+    // nerka prawa (żyła z przodu wnęki) — tętnica wyżej, żyła niżej; iia — żyła jak przy nerce lewej
+    AT: { eia: 0.62, eiv: 0.3, eiaR: 0.35, eivR: 0.55, iiaCut: 0.36 },
     COL: { art: '#cf3b33', vein: '#3c63b4', kid0: '#c29487', kid1: '#8c3532', ure: '#e3c26a', blad: '#e6b2a6', mus: '#b07a6c', bone: '#ece2c8', per: '#efcfc6' }
   };
   A.KTX = KTX;

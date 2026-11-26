@@ -3,6 +3,9 @@
 // powłoki otwarte w kadrze „Cięcie” i przygaszone potem; nerka na stole, potem w dole biodrowym; zespolenia po kolei (żylne → tętnicze → moczowód),
 // zaciski zdjęte przy reperfuzji, cewnik JJ od kadru „Moczowód”; wariant iia — tętnica biodrowa wewnętrzna, bez zacisku na zewnętrznej;
 // rv — przedłużenie żyły; pl — cystotomia, nowe ujście; EN — bez polskich znaków.
+// Przenikanie (m 1–5 co 0,05, każdy wariant): rury naczyń biorcy i przeszczepu, moczowodów, cewnika JJ, mięśnia lędźwiowego, brzegów nacięcia pęcherza
+// nie przechodzą przez siebie (poza połączeniami: rozwidlenia, zespolenia, miedniczka–moczowód, JJ w moczowodzie), przez nerkę ani przez pęcherz;
+// półprzezroczyste struktury (pęcherz, mięśnie, kości, otrzewna, powłoki) rysowane po nieprzezroczystych (bez „prześwitywania” na wierzch).
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -16,6 +19,29 @@ function boot(lang,mobile){ const dom=new JSDOM(html,{runScripts:'outside-only',
   w.HTMLCanvasElement.prototype.getContext=function(){return new Proxy({},{get(_,k){ if(k==='createImageData') return (a,b)=>({data:new Uint8ClampedArray(a*b*4)}); if(k==='measureText') return ()=>({width:10}); return ()=>null; }, set(){return true}})};
   w.THREE=T; w.eval(orbit); w.addEventListener('error',e=>errs.push(e.message||String(e.error))); w.eval(sc[0]); w.eval(sc[1]); return w; }
 const KEYS=['carrel','nopatch','iia','rv','pl'];
+// --- przenikanie rur: oś (krzywa) i promień z geometry.userData.tube, nazwa siatki = struktura ---
+const JOIN=['AO CIA','AO CIAL','CIA CIAL','IVC CIV','IVC CIVL','CIV CIVL','CIA EIA','CIA IIA','EIA IIA','CIV EIV','CIV IIV','EIV IIV','IIA IIAd','EIA IEA1','IEA1 IEA2','IEV1 IEV2','EIA IEV1','EIV IEV1',
+  'gArt EIA','gArt IIA','gVein EIV','gVein gExt','gExt EIV','gUre pelvis','JJ pelvis'].map(x=>x.split(' '));
+const SKIP=[['JJ','gUre'],['det1','det2']];   // cewnik w moczowodzie; brzegi nacięcia pęcherza (na początku jedna linia)
+const PEN_TOL=-0.05;                           // 0,05 j. ≈ 0,7 mm
+function tubesOf(T,M){ const o=[]; M.grp.updateMatrixWorld(true);
+  M.grp.traverse(x=>{ if(!x.isMesh||!x.name||!x.geometry.userData.tube) return; for(let p=x;p;p=p.parent) if(p.visible===false) return; if(x.material.opacity<0.3) return;
+    const {c,r}=x.geometry.userData.tube, n=Math.max(12,Math.round(c.getLength()*8)), P=[]; for(let i=0;i<=n;i++) P.push([c.getPointAt(i/n).applyMatrix4(x.matrixWorld),r(i/n)]); o.push({id:x.name,P}); }); return o; }
+const has=(L,a,b)=>L.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a));
+function endsOn(a,b){ const o=[]; [a.P[0],a.P[a.P.length-1]].forEach(([p,r])=>{ let mn=1e9; for(const [q,r2] of b.P) mn=Math.min(mn,p.distanceTo(q)-r2); if(mn<r+0.15) o.push(p); }); return o; }
+function pen(a,b){ if(has(SKIP,a.id,b.id)) return 1e9; const J=has(JOIN,a.id,b.id)?endsOn(a,b).concat(endsOn(b,a)):[]; let mn=1e9;
+  for(const [p,r] of a.P){ if(J.some(j=>p.distanceTo(j)<r*2+0.6)) continue; for(const [q,r2] of b.P){ if(J.some(j=>q.distanceTo(j)<r2*2+0.6)) continue; mn=Math.min(mn,p.distanceTo(q)-r-r2); } } return mn; }
+function penetrations(T,M,m){ const L=tubesOf(T,M), bad=[];
+  for(let i=0;i<L.length;i++) for(let j=i+1;j<L.length;j++){ const d=pen(L[i],L[j]); if(d<PEN_TOL) bad.push(L[i].id+'×'+L[j].id+' '+d.toFixed(2)+' @m='+m); }
+  const t=M.test, km=t.kidMesh, pos=km.geometry.attributes.position; km.updateMatrixWorld(true);
+  if(t.kid.visible) for(const u of L){ if(/^(gArt|gVein|gExt|pelvis)$/.test(u.id)) continue; const st=u.P[0][0]; let mn=1e9;   // naczynia przeszczepu i miedniczka wychodzą z wnęki
+    for(let q=0;q<pos.count;q+=3){ const p=new T.Vector3().fromBufferAttribute(pos,q).applyMatrix4(km.matrixWorld); for(const [c,r] of u.P){ if(/gUre|JJ/.test(u.id)&&c.distanceTo(st)<1.2) continue; mn=Math.min(mn,p.distanceTo(c)-r); } }
+    if(mn<PEN_TOL) bad.push('nerka×'+u.id+' '+mn.toFixed(2)+' @m='+m); }
+  const B=t.blad; B.updateMatrixWorld(true); const inv=B.matrixWorld.clone().invert(), sc=Math.min(B.scale.x,B.scale.y,B.scale.z);
+  for(const u of L){ if(/^det/.test(u.id)) continue; let mn=1e9; const n=u.P.length;   // moczowody i JJ kończą się w pęcherzu
+    u.P.forEach(([c,r],i)=>{ if(/^(URN|gUre|JJ)$/.test(u.id)&&i>n*0.6) return; mn=Math.min(mn,(c.clone().applyMatrix4(inv).length()-1)*sc-r); });
+    if(mn<PEN_TOL) bad.push('pęcherz×'+u.id+' '+mn.toFixed(2)+' @m='+m); }
+  return bad; }
 (async()=>{
   let w=boot(); await sleep(300); const A=w.ANAT, S=w.__sgTest.state(), D=w.document;
   // kategoria: Transplantologia z nerką i OLTx; OLTx nie w „Wątrobie”
@@ -43,6 +69,13 @@ const KEYS=['carrel','nopatch','iia','rv','pl'];
     // nerka w dole biodrowym pod powłokami (przed skórą od środka), nie za mięśniem biodrowym
     w.__sgTest.open(an,vi,7); S.playing=false; w.__sgTest.at(5); const kc=t.kid.position, A2=w.ANAT;
     ok(kc.z < A2.BODY.z(kc.x,kc.y)-2 && kc.z-A2.KTX.KID.t > A2.KTX.iliacZ(kc.x,kc.y),key+': nerka poza dołem biodrowym '+kc.toArray().map(x=>x.toFixed(2)));
+    // przenikanie w całym przebiegu (od dołu biodrowego do stanu po)
+    const M2=w.__sgTest.model().ktx, P=[]; for(let k=0;k<=80;k++){ const m=+(1+k*0.05).toFixed(2); M2.update(m); P.push(...penetrations(T,M2,m)); }
+    const worst={}; P.forEach(x=>{ const k=x.split(' ')[0]; if(!worst[k]) worst[k]=x; }); ok(!P.length,key+': przenikanie ('+P.length+'): '+Object.values(worst).slice(0,6).join(' | '));
+    // kolejność rysowania: nieprzezroczyste rury bez przezroczystości; pęcherz i mięsień lędźwiowy rysowane po nich
+    M2.update(5); const G=n=>M2.grp.getObjectByName(n);
+    ok(!G('gArt').material.transparent && !G('EIA').material.transparent && !G('URN').material.transparent,key+': nieprzezroczyste rury w kolejce przezroczystych');
+    ok(M2.test.blad.renderOrder>0 && G('psoas').renderOrder>0 && M2.test.blad.material.transparent,key+': pęcherz / mięsień lędźwiowy rysowane przed strukturami za nimi');
   }
   // EN
   w=boot('en'); await sleep(300); const A3=w.ANAT, S3=w.__sgTest.state(), PL=/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/, bad=[];
