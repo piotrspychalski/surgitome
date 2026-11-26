@@ -5,9 +5,9 @@
      wewnętrzna IS(s, t, odsunięcie) — ściana (t ≥ 0) przechodzi zaokrąglonym zagięciem w dno pachwiny (t < 0); otrzewna z fałdami, wrota przepukliny,
      naczynia nabrzuszne dolne i biodrowe zewnętrzne, nasieniowód, naczynia jądrowe, więzadło Coopera, pasmo biodrowo-łonowe, nerwy trójkąta bólu, siatka.
      Stan z osi czasu m (stateAt). Etykiety w układzie modelu, przeliczane przez macierz grupy. ---------- */
-  var GR_COL = { skin: '#e2b59c', fat: '#f1d58a', eo: '#ebe2d0', io: '#b8524a', apo: '#ece4d4', tf: '#d8c9ad', per: '#e8cdc4', floor: '#dcb96a', psoas: '#a8554b',
-    bone: '#efe3c8', bladder: '#e8b4aa', lig: '#f6f2e8', cord: '#d98c7a', vas: '#f4f1ea', art: '#d63c3c', vein: '#3f63b8', nerve: '#e6bd2e', mesh: '#2f78c4',
-    suture: '#22305c', sac: '#c4d3df', doom: '#e53935', pain: '#fbc02d', hole: '#2a1616' };
+  // kolory warstw, naczyń, nerwów i siatki — ze wspólnego modelu ściany (ANAT.BODY.COL); w pachwinie m. skośny zewnętrzny to rozcięgno, otrzewna od strony jamy
+  var GR_COL = Object.assign({}, A.BODY.COL, { eo: A.BODY.COL.apo, per: A.BODY.COL.perLap, floor: '#dcb96a', psoas: '#a8554b', bone: '#efe3c8', bladder: '#e8b4aa', lig: '#f6f2e8',
+    cord: '#d98c7a', vas: '#f4f1ea', sac: '#c4d3df', doom: '#e53935', pain: '#fbc02d', hole: '#2a1616' });
   function makeGroin(d) {
     var G = A.GROIN, B = A.BODY, D = G.D, op = d.op, LAP = op !== 'lich', L = G.L, S0 = G.S[0], S1 = G.S[1];
     var grp = new THREE.Group(), labels = [], V = function () { return new V3(); };
@@ -55,7 +55,7 @@
       var dx = bx - ax, dy = by - ay, u = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy))), qx = ax + u * dx - px, qy = ay + u * dy - py, dd = qx * qx + qy * qy; if (dd < best) best = dd; } return Math.sqrt(best); }
     function distP(s, t, p) { return Math.hypot((s - p[0]) * L, t - p[1]); }
     // struktury na dnie / ścianie od tyłu: [łamana, odsunięcie środka, promień]
-    var COVER = [[G.EIA, 0.11, 0.2], [G.EIV, 0.14, 0.25], [G.COOPER, 0.2, 0.1], [G.VAS, 0.12, 0.08], [G.TEST, 0.12, 0.11], [G.IEV, 0.12, 0.12]];
+    var COVER = [[G.EIA, 0.11, 0.2], [G.EIV, 0.14, 0.25], [G.COOPER, 0.2, 0.1], [G.VAS, 0.12, 0.08], [G.TEST, 0.12, 0.11], [G.IEV, 0.12, 0.12], [G.DCIA, 0.08, 0.06]];
     function cover(s, t) { var c = 0; COVER.forEach(function (q) { var dd = distPL(s, t, q[0]), h = (q[1] + q[2]) * Math.exp(-Math.pow(dd / (q[2] + 0.28), 2)); if (h > c) c = h; }); return c; }
     /* ---------- siatki wierzchołków ---------- */
     function gridGeo(ns, nt, vc, uv) {
@@ -192,18 +192,21 @@
         ant.sac.visible = ant.sacTip.visible = st.sac > 0.03; setTube(ant.sac, pts, 0.22, 50); ant.sacTip.position.copy(pts[pts.length - 1]); ant.sacTip.scale.setScalar(0.22);
       };
       // siatka (Lichtenstein): dwie części — dolna (do szczeliny) i górna; ramiona boczne rozcięte na powrózek i skrzyżowane
-      var mMesh = mat(GR_COL.mesh, { op: 0, dw: false, rough: 0.6, map: hwMeshTex() }); var ML = G.MESH_L, RT = G.RING[1];
+      var mMesh = wallMeshMat(), mEdge = wallMeshEdgeMat(), edLo = tubeMesh(mEdge), edHi = tubeMesh(mEdge); var ML = G.MESH_L, RT = G.RING[1];   // siatka wyróżniona (12-powloki) z obramowaniem
       function slitLo(s) { return s < 0.46 ? RT : RT - 0.2 * sm((s - 0.46) / 0.05); }
       function slitHi(s, st) { return s < 0.46 ? RT : RT + 0.2 * sm((s - 0.46) / 0.05) - st.tails * 0.95 * sm((s - 0.56) / 0.1); }
       function meshTop(s, st) { var full = ML.t[1] - 0.6 * sm((s - 0.75) / 0.22); return full - st.tails * (full - 2.1) * sm((s - 0.55) / 0.12); }
       function meshDep(s, t, st, upper) { var a = G.archIO(s), d0 = t < 0.3 ? D.lig + 0.08 + (1.82 - D.lig - 0.08) * sm(t / 0.3) : 1.82; var dd = d0 + (ioTop(s) - 0.05 - d0) * sm((t - (a - 0.25)) / 0.35);
         return dd - 0.7 * (1 - st.meshIn) - (upper && s > 0.55 ? 0.05 * st.tails : 0); }
-      function mUV(s, t) { return [s * L / 0.5, t / 0.5]; }
+      function mUV(s, t) { return [s * L / 0.24, t / 0.24]; }   // oczka ok. 3,5 mm
       ant.meshLo = surf(46, 8, [ML.s[0], ML.s[1]], function (s) { return [ML.t[0], slitLo(s)]; }, mMesh, null, mUV);
       ant.meshHi = surf(46, 20, [ML.s[0], ML.s[1]], function (s) { return [slitHi(s, ant._st || stateAt(0)), meshTop(s, ant._st || stateAt(0))]; }, mMesh, null, mUV);
       ant.updMesh = function (st) {
-        ant._st = st; var vis = st.meshIn > 0.01; ant.meshLo.mesh.visible = ant.meshHi.mesh.visible = vis; mMesh.opacity = 0.85 * st.meshIn; if (!vis) return;
+        ant._st = st; var vis = st.meshIn > 0.01; ant.meshLo.mesh.visible = ant.meshHi.mesh.visible = edLo.visible = edHi.visible = vis; mMesh.opacity = mEdge.opacity = st.meshIn; if (!vis) return;
         ant.meshLo.update(function (s, t, u, v, q) { wallP(s, t, meshDep(s, t, st, false), q); }); ant.meshHi.update(function (s, t, u, v, q) { wallP(s, t, meshDep(s, t, st, true), q); });
+        // obramowanie bez brzegów stykających się przy szczelinie na powrózek (dolny płat: bez górnego brzegu, górny: bez dolnego)
+        var rLo = wallGridRim(ant.meshLo.P, 46, 8), rHi = wallGridRim(ant.meshHi.P, 46, 20);
+        wallMeshEdgeSet(edLo, rLo.slice(1 + 46 + 8 + 46).concat(rLo.slice(0, 1 + 46 + 8)), 0.05); wallMeshEdgeSet(edHi, rHi.slice(46).concat(rHi.slice(0, 1)), 0.05);
       };
       // szwy
       var mSut = mat(GR_COL.suture, { rough: 0.5 });
@@ -245,6 +248,7 @@
         [pts[0], pts[pts.length - 1]].forEach(function (p) { var c = new THREE.Mesh(track(new THREE.SphereGeometry(r, 12, 8)), m.material); c.position.copy(p); grp.add(c); });
         return m; }
       lap.eia = tubeOn(G.EIA, 0.11, 0.2, GR_COL.art); lap.eiv = tubeOn(G.EIV, 0.14, 0.25, GR_COL.vein);   // pod powięzią — częściowo w podłożu
+      lap.dcia = tubeOn(G.DCIA, 0.08, 0.06, GR_COL.art);   // okalające biodra głębokie (wspólny model ściany)
       lap.ieA = tubeOn(G.IEV, 0.12, 0.1, GR_COL.art); lap.ieV1 = tubeOn(G.IEV.map(function (p) { return [p[0] - 0.014, p[1]]; }), 0.1, 0.075, GR_COL.vein); lap.ieV2 = tubeOn(G.IEV.map(function (p) { return [p[0] + 0.014, p[1]]; }), 0.1, 0.075, GR_COL.vein);
       lap.ramus = tubeOn(G.COOPER, -0.05, 0.3, GR_COL.bone, { rough: 0.5 }); lap.cooper = tubeOn(G.COOPER, 0.2, 0.1, GR_COL.lig, { rough: 0.3 });
       lap.ipt = tubeOn([[0.03, 0.24], [0.5, 0.22], [1.0, 0.22]], 0.04, 0.08, GR_COL.lig, { rough: 0.35 });
@@ -312,13 +316,14 @@
       lap.incL = tubeMesh(mCut); setTube(lap.incL, smoothPL([[SA, tInc(SA)], [0.6, tInc(0.6)], [SB, tInc(SB)]], 40).map(function (p) { return IS(p.x, p.y, lap.base ? per0(p.x, p.y) + 0.03 : D.per); }), 0.05, 80);
       lap.sut = tubeMesh(mSut); (function () { var pts = []; for (var i = 0; i <= 26; i++) { var s = SA + (SB - SA) * i / 26, t = tInc(s) + (i % 2 ? 0.1 : -0.1); pts.push(IS(s, t, per0(s, t) + 0.04)); } setTube(lap.sut, pts, 0.03, 300); })();
       // siatka 15 × 10 cm na otworze mięśniowo-łonowym; pinezki (TAPP); strefy bez mocowania (trójkąt zagłady i bólu)
-      var MP = G.MESH_P, mMesh = mat(GR_COL.mesh, { op: 0, dw: false, rough: 0.6, map: hwMeshTex() });
-      lap.mesh = surf(60, 46, MP.s, function () { return MP.t; }, mMesh, null, function (s, t) { return [s * L / 0.55, t / 0.55]; }); lap.mesh.mesh.renderOrder = 3;
+      var MP = G.MESH_P, mMesh = wallMeshMat(), mEdge = wallMeshEdgeMat(), edP = tubeMesh(mEdge);   // siatka wyróżniona (12-powloki) z obramowaniem
+      lap.mesh = surf(60, 46, MP.s, function () { return MP.t; }, mMesh, null, function (s, t) { return [s * L / 0.32, t / 0.32]; }); lap.mesh.mesh.renderOrder = 3;
       (function () { var c = []; for (var j = 0; j <= 46; j++) for (var i = 0; i <= 60; i++) { var s = MP.s[0] + (MP.s[1] - MP.s[0]) * i / 60, t = MP.t[0] + (MP.t[1] - MP.t[0]) * j / 46, P = V(), N = V(); ISpair(s, t, P, N); c.push({ P: P, N: N, b: Math.max(0.19, cover(s, t) + 0.05) }); } lap.mesh.c = c; })();
       lap.mesh.update(function (s, t, u, v, q) { IS(s, t, 0.2, q); });   // UV
       lap.updMesh = function (st) {
-        var vis = st.mesh > 0.01; lap.mesh.mesh.visible = vis; mMesh.opacity = 0.82 * st.mesh; if (!vis) return;
+        var vis = st.mesh > 0.01; lap.mesh.mesh.visible = edP.visible = vis; mMesh.opacity = mEdge.opacity = st.mesh; if (!vis) return;
         var P = lap.mesh.P; lap.mesh.c.forEach(function (c, k) { var off = c.b + 1.0 * (1 - st.mesh); P[k * 3] = c.P.x + c.N.x * off; P[k * 3 + 1] = c.P.y + c.N.y * off; P[k * 3 + 2] = c.P.z + c.N.z * off; }); done(lap.mesh.g);
+        wallMeshEdgeSet(edP, wallGridRim(P, 60, 46), 0.05, true);
       };
       lap.tacks = new THREE.Group(); grp.add(lap.tacks);
       if (op === 'tapp') G.TACKS.forEach(function (p) { var m = new THREE.Mesh(track(new THREE.TorusGeometry(0.13, 0.04, 6, 16)), mat('#9aa5ae', { rough: 0.3 })), c = Math.max(0.19, cover(p[0], p[1]) + 0.05); m.position.copy(IS(p[0], p[1], c + 0.04)); m.lookAt(IS(p[0], p[1], c + 1)); lap.tacks.add(m); });

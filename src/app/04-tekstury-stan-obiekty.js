@@ -133,7 +133,7 @@
     } else if (d.kind === 'body') { // powłoki brzucha (wspólny model ANAT.BODY, 12-dostep): skóra i mięśnie proste z otworami stomii
       var bg = track(bodySkinGeo(0, d.holes)), bmat = track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.85, transparent: true, opacity: 0.4, depthWrite: false, side: THREE.DoubleSide }));
       mk.mesh = new THREE.Mesh(bg, bmat); mk.mat = bmat; mk.baseOp = 0.4;
-      var rmat = track(new THREE.MeshStandardMaterial({ color: '#b04a42', roughness: 0.7, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
+      var rmat = track(new THREE.MeshStandardMaterial({ color: wallCol('rect'), roughness: 0.7, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
       [1, -1].forEach(function (sd) { mk.mesh.add(new THREE.Mesh(track(bodyRectusGeo(sd, 0, d.holes)), rmat)); });
       mk.subMats = [[rmat, 0.22]];
       mk.endoMesh = new THREE.Mesh(bg, track(new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.75, side: THREE.DoubleSide })));
