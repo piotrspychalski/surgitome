@@ -3,7 +3,7 @@
    Układ jak w ANAT.BODY: x+ lewa strona chorego, y+ dogłowowo, z+ do przodu; 1 j. ≈ 1,45 cm. Naczynia biorcy (aorta, IVC, tętnice i żyły biodrowe
    wspólne, zewnętrzne i wewnętrzne), mięsień lędźwiowy większy i biodrowy, pęcherz moczowy, moczowód własny, naczynia nabrzuszne dolne; nerka dawcy
    z szypułą i moczowodem (układ lokalny: u — oś długa ku biegunowi górnemu, v — ku wnęce (przyśrodkowo), w — ku przodowi). Cięcie Gibsona na skórze
-   ANAT.BODY, warstwy powłok wg ANAT.WALL.T (13-przepukliny.js).
+   ANAT.BODY, warstwy powłok wg wspólnego modelu ściany ANAT.BODY.T (03z-powloki.js).
    Oś czasu m: 0 dostęp (planowane cięcie), 0–1 cięcie i warstwy, otrzewna odsunięta przyśrodkowo, 1 dół biodrowy, 1–2 nerka dawcy (stół, ułożenie),
    2–3 zespolenie żylne, 3–4 zespolenie tętnicze i reperfuzja, 4–5 moczowód, 5 stan po.
    Źródła: Merrill i wsp., JAMA 1956 (pierwszy udany przeszczep, bliźnięta); Rodríguez Faba i wsp., Eur Urol Focus 2025 (wytyczne EAU 2024);
@@ -52,7 +52,8 @@
     // miejsca zespoleń: t na krzywej naczynia biorcy; nerka lewa — żyła wyżej (przyśrodkowo od tętnicy biodrowej zewnętrznej), tętnica niżej;
     // nerka prawa (żyła z przodu wnęki) — tętnica wyżej, żyła niżej; iia — żyła jak przy nerce lewej
     AT: { eia: 0.62, eiv: 0.3, eiaR: 0.35, eivR: 0.55, iiaCut: 0.36 },
-    COL: { art: '#cf3b33', vein: '#3c63b4', kid0: '#c29487', kid1: '#8c3532', ure: '#e3c26a', blad: '#e6b2a6', mus: '#b07a6c', bone: '#ece2c8', per: '#efcfc6' }
+    COL: { art: root.ANAT.BODY.COL.art, vein: root.ANAT.BODY.COL.vein,   // naczynia w kolorach wspólnego modelu ściany
+      kid0: '#c29487', kid1: '#8c3532', ure: '#e3c26a', blad: '#e6b2a6', mus: '#b07a6c', bone: '#ece2c8', per: '#efcfc6' }
   };
   A.KTX = KTX;
 

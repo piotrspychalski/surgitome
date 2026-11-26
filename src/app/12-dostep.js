@@ -1,4 +1,4 @@
-  /* ---------- slajd „Dostęp” (an.access → ANAT.ACCESS[key], model powłok ANAT.BODY): okno wyboru „Dostęp?” (otwarty / laparoskopowy / robotyczny),
+  /* ---------- slajd „Dostęp” (an.access → ANAT.ACCESS[key], model powłok ANAT.BODY): okno wyboru „Dostęp?” (otwarty / drugi otwarty open2, np. cięcie podżebrowe w gastrektomii / laparoskopowy / robotyczny),
      potem animacja na osi m −1 → −0,02: powłoki z punktami orientacyjnymi, mięśniami prostymi i naczyniami nabrzusznymi; cięcia rysowane na skórze
      i rana otwierana; trokary wprowadzane po kolei wzdłuż osi skierowanej na pole operacyjne, odma unosi powłoki; planowane cięcie do wydobycia
      preparatu (linia przerywana), miejsce stomii (okrąg przerywany), trepanacja (okrągłe wycięcie skóry). Poza osią m < 0 model powłok jest niewidoczny.
@@ -6,11 +6,16 @@
      dostęp wybiera wariant zespolenia: otwarty → FEEA, laparoskopia i robot → izoperystaltyczne (wewnątrzbrzuszne). Jelito cienkie: powłoki przeniesione
      do układu modelu (X.xf: skala, przesunięcie grupy; kotwice etykiet przeliczane). ---------- */
   var ACC_KEY = 'surgitome-dostep', ACC = { kind: null, skip: false };
-  try { var acc0 = localStorage.getItem(ACC_KEY); if (acc0 === 'open' || acc0 === 'lap' || acc0 === 'rob') ACC.kind = acc0; } catch (e) {}
+  // kolejność przycisków w oknie wyboru; open2 — drugi wariant dostępu otwartego (gastrektomia całkowita: cięcie podżebrowe obustronne);
+  // hyb — dostęp hybrydowy (esofagektomia: laparoskopia + torakotomia)
+  var ACC_KINDS = ['open', 'open2', 'hyb', 'lap', 'rob'];
+  try { var acc0 = localStorage.getItem(ACC_KEY); if (ACC_KINDS.indexOf(acc0) >= 0) ACC.kind = acc0; } catch (e) {}
   var ACC_VAR = { 'rh-iso': { open: 'rh-anti' }, 'rh-anti': { lap: 'rh-iso', rob: 'rh-iso' } };
   var ACC_SKIN = '#e2b59c';
   // podpis okna wyboru — tylko dostępy oferowane w zabiegu (np. bez robota w jelicie cienkim i ileostomii)
   function accPrompt(X) {
+    if (X && X.prompt) return X.prompt;   // esofagektomia: własny podpis (także dostęp hybrydowy)
+    if (X && X.open2) return X.rob ? 'Wybierz dostęp: otwarty (dwa rodzaje cięcia), laparoskopowy albo robotyczny.' : 'Wybierz dostęp: otwarty (dwa rodzaje cięcia) albo laparoskopowy.';
     if (X && !X.lap && !X.rob) return 'Jeden dostęp — kliknij „Otwarty”, aby zobaczyć cięcie.';
     if (X && !X.open && !X.rob) return 'Jeden dostęp — kliknij „Laparoskopowy”, aby zobaczyć trokary.';
     return X && !X.rob ? 'Wybierz dostęp: otwarty albo laparoskopowy.' : 'Wybierz dostęp: otwarty, laparoskopowy albo robotyczny.';
@@ -24,7 +29,7 @@
   function gridGeo(NY, NX, fXY, off, k, holes, alphaFn) {
     var B = A.BODY, pos = [], col = [], idx = [], ins = [], base = new THREE.Color(ACC_SKIN);
     for (var i = 0; i <= NY; i++) for (var j = 0; j <= NX; j++) {
-      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, off, k);
+      var q = fXY(i / NY, j / NX), h = holeSnap(q[0], q[1], holes), p = B.at(h.x, h.y, typeof off === 'function' ? off(h.x, h.y) : off, k);
       pos.push(p.x, p.y, p.z); ins.push(h.inside); if (alphaFn) col.push(base.r, base.g, base.b, alphaFn(i / NY, j / NX));
     }
     for (var i2 = 0; i2 < NY; i2++) for (var j2 = 0; j2 < NX; j2++) {
@@ -41,9 +46,10 @@
     return gridGeo(72, 52, function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v; return [(-1 + 2 * u) * B.W(y) * 0.985, y]; }, 0, k, holes,
       function (v, u) { var y = B.Y0 + (B.Y1 - B.Y0) * v, uu = -1 + 2 * u; return sm((1 - Math.abs(uu)) / 0.14) * sm((y - B.Y0) / 1.6) * sm((B.Y1 - y) / 1.6); });
   }
+  // mięsień prosty: środek jego grubości ze wspólnego modelu warstw (BODY.depth)
   function bodyRectusGeo(sd, k, holes) {
     var B = A.BODY;
-    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, 0.5, k, holes, null);
+    return gridGeo(48, 8, function (v, u) { var y = B.RY[0] + (B.RY[1] - B.RY[0]) * v; return [sd * (B.RECT_MED + (B.rectLat(y) - B.RECT_MED) * u), y]; }, function (x, y) { return B.depth(['rect', 0.5], x, y); }, k, holes, null);
   }
   function accessAttach(key) {
     var B = A.BODY, X = A.ACCESS[key], TGT = new V3().fromArray(X.target), grp = new THREE.Group(), morphs = [], labels = [], XF = X.xf || { s: 1, d: [0, 0, 0] };
@@ -59,23 +65,22 @@
     grp.add(new THREE.Mesh(skinG, skinM));
     // mięśnie proste: pasma pod skórą od spojenia do łuku żebrowego; smugi ścięgniste
     // mięśnie proste: wyróżniony ten, przez który się wchodzi — laparoskopia i robot: lewy (kontralateralny, trokary), dostęp otwarty: prawy (przecinany)
-    var musBy = { '1': mat('#b04a42', 0.24), '-1': mat('#b04a42', 0.24) }, tendM = mat('#e7c9b8', 0.6);
+    // wspólny model ściany (ANAT.BODY) na poziomie szczegółu 0: pozostałe warstwy, nerwy i drobne naczynia ukryte (12-powloki: wallVesselsLod)
+    var musBy = { '1': mat(wallCol('rect'), 0.24), '-1': mat(wallCol('rect'), 0.24) }, tendM = mat('#e7c9b8', 0.6), dTend = B.depth(['rect', 0, 0.03], 2, 0);
     function sideOf() { var D = ACC.kind && X[ACC.kind]; return D ? (D.side || 0) : 0; }
     [1, -1].forEach(function (sd) {
       var musM = musBy[String(sd)];
       grp.add(new THREE.Mesh(morphGeo(function (k) { return bodyRectusGeo(sd, k, null); }, true), musM));
-      B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], 0.46, 0.05, k); }), tendM)); });
-      // naczynia nabrzuszne (tętnica i żyła obok)
-      [['a', '#b83227', 0], ['v', '#3867b5', 0.16]].forEach(function (vv) {
-        [B.EPI_INF, B.EPI_SUP].forEach(function (path, pi) {
-          grp.add(new THREE.Mesh(morphGeo(function (k) {
-            return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(path.map(function (q) { return skinP(sd * (q[0] + vv[2]), q[1], q[2], k); }), false, 'centripetal'), 40, pi ? 0.055 : 0.075, 6, false);
-          }), mat(vv[1], pi ? 0.6 : 0.85)));
+      B.TEND.forEach(function (ty) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn([[sd * (B.RECT_MED + 0.1), ty], [sd * (B.rectLat(ty) - 0.1), ty + 0.15]], dTend, 0.05, k); }), tendM)); });
+      // naczynia nabrzuszne dolne i górne (tętnica i żyła obok) — za mięśniem prostym, głębokość ze wspólnego modelu
+      ['a', 'v'].forEach(function (kind) {
+        wallVesselsLod(0).forEach(function (v) {
+          grp.add(new THREE.Mesh(morphGeo(function (k) { return wallTubeGeo(wallVesselPts(v, sd, kind, function (x, y, d) { return skinP(x, y, d, k); }), v.r, 40); }), mat(wallCol(kind === 'a' ? 'art' : 'vein'), v.id === 'epiSup' ? 0.6 : 0.85)));
         });
       });
     });
     // punkty orientacyjne na skórze
-    var lmM = mat('#7d6152', 0.85), LM = B.LM;
+    var lmM = mat(wallCol('lm'), 0.85), LM = B.LM;
     ['costalL', 'costalR', 'crestL', 'crestR', 'ingL', 'ingR'].forEach(function (id) { grp.add(new THREE.Mesh(morphGeo(function (k) { return tubeOn(LM[id], -0.03, 0.05, k); }), lmM)); });
     var dot = track(new THREE.SphereGeometry(0.16, 12, 9)), dots = [];
     ['xiph', 'asisL', 'asisR', 'pubis'].forEach(function (id) { var s = new THREE.Mesh(dot, lmM); grp.add(s); dots.push({ s: s, p: LM[id] }); });
@@ -91,7 +96,7 @@
       lab('Naczynia nabrzuszne dolne', '', '#b83227', 'ghost', function (k) { return sideOf() >= 0 ? skinP(4.7, -11.8, 1.0, k) : skinP(-4.7, -11.8, 1.0, k); })];
     // dostęp: cięcia, rany, trokary, linia wydobycia (osobny zestaw dla każdego rodzaju)
     var SETS = {};
-    ['open', 'lap', 'rob'].forEach(function (kind) {
+    ACC_KINDS.forEach(function (kind) {
       var D = X[kind]; if (!D) return;
       var g = new THREE.Group(), set = { d: D, g: g, cuts: [], ports: [], ext: null, stoma: null }; g.visible = false; grp.add(g); SETS[kind] = set;
       (D.cuts || []).forEach(function (c) {
@@ -127,7 +132,7 @@
         g.add(tg);
         var ent = new THREE.Mesh(track(new THREE.TorusGeometry(r + 0.14, 0.055, 6, 22)), mat('#3b2a24', 0.9, { depthWrite: true })); g.add(ent); // miejsce wkłucia na skórze
         var w = i === D.first ? [-0.9, -0.8] : (function () { var j = order.indexOf(i), a = -0.6, b = -0.22, s = (b - a) / Math.max(1, order.length); return [a + j * s, a + (j + 0.85) * s]; })();
-        var Lp = lab(p.name, p.sub, robot ? '#2f78c4' : '#56636f', 'seg', function () { return tg.position.clone().add(new V3(0, 0, 0)).addScaledVector(tg.userData.out || new V3(0, 0, 1), 2.8); });
+        var Lp = lab(p.name, p.sub, robot ? '#2f78c4' : '#56636f', 'seg', function () { return tg.position.clone().add(p.lab ? new V3().fromArray(p.lab) : new V3(0, 0, 0)).addScaledVector(tg.userData.out || new V3(0, 0, 1), 2.8); });   // lab — przesunięcie podpisu (porty w jednej linii poziomej: podpisy naprzemiennie wyżej i niżej)
         set.ports.push({ p: p, g: tg, ent: ent, mats: [cm, hm], w: w, L: Lp });
       });
       if (D.line) { // robot: linia portów (od linii środkowo-obojczykowej na łuku żebrowym do spojenia łonowego), przerywana
@@ -175,7 +180,7 @@
             if (c.disc) { c.wm.visible = op > 0.01; c.wm.scale.setScalar(Math.max(op, 0.01)); c.L.anchor = W(c.L.fn()); c.L.alpha = tt > 0.3 ? 1 : 0; return; }
             c.wm.visible = op > 0.01;
             if (c.wm.visible) for (var q = 0; q <= c.NW; q++) {
-              var u = q / c.NW, P = c.cc.getPointAt(u), T = c.cc.getTangentAt(u), N = B.nrm(P.x, P.y, 0), sd = new V3().crossVectors(N, T).normalize(), w = c.c.w * Math.pow(Math.sin(Math.PI * u), 0.6) * op;
+              var u = q / c.NW, P = c.cc.getPointAt(u), T = c.cc.getTangentAt(u), N = B.nrm(P.x, P.y, 0), sd = new V3().crossVectors(N, T).normalize(), w = c.c.w * Math.pow(Math.abs(Math.sin(Math.PI * u * (c.c.humps || 1))), 0.6) * op;   // humps 2 — cięcie z wierzchołkiem (chevron): dwie rany, wierzchołek nierozchylony
               var a = P.clone().addScaledVector(sd, w).addScaledVector(N, 0.04), b = P.clone().addScaledVector(sd, -w).addScaledVector(N, 0.04);
               c.wp.set([a.x, a.y, a.z, b.x, b.y, b.z], q * 6);
             }
@@ -208,10 +213,17 @@
     $('acc').hidden = !on;
     var X = accX();
     document.querySelectorAll('#acc .accopt').forEach(function (b) {
-      var D = X && X[b.dataset.acc], sm0 = b.querySelector('small');
+      var D = X && X[b.dataset.acc], sm0 = b.querySelector('small'), b0 = b.querySelector('b');
       b.hidden = !D; b.setAttribute('aria-pressed', b.dataset.acc === ACC.kind && D ? 'true' : 'false');
       if (D && D.short && sm0.dataset.pl !== D.short) { sm0.dataset.pl = D.short; sm0.textContent = tr(D.short); }
+      // nazwa przycisku: własna w zabiegu (esofagektomia: „Małoinwazyjny (MIE)”), inaczej domyślna
+      if (!b0.dataset.def) b0.dataset.def = b0.dataset.pl;
+      var nm = (X && X.labels && X.labels[b.dataset.acc]) || b0.dataset.def;
+      if (b0.dataset.pl !== nm) { b0.dataset.pl = nm; b0.textContent = tr(nm); }
     });
+    // klawisze 1…4 wg kolejności widocznych przycisków
+    var vis = accVisible(); vis.forEach(function (b, i) { b.querySelector('kbd').textContent = String(i + 1); });
+    $('acc').classList.toggle('acc4', vis.length > 3);
     if (on) { S.playing = false; var b0 = document.querySelector('#acc .accopt[aria-pressed="true"]') || document.querySelector('#acc .accopt:not([hidden])'); try { b0.focus({ preventScroll: true }); } catch (e) {} }
     poseUpdate();
   }
@@ -223,8 +235,8 @@
   /* schemat ułożenia chorego (ACCESS[…].pose — adrenalektomia: na boku) — nakładka 2D w lewym górnym rogu modelu, tylko w kadrze „Dostęp”
      po zamknięciu okna wyboru; widok od przodu chorego, głowa po lewej, gdy leży na lewym boku (lustrzanie dla prawego) */
   function poseUpdate() {
-    var fr = FR[S.frame], X = accX(), P = X && X.pose, el = $('pose'), on = !!(P && fr && fr.k === 'access' && $('acc').hidden);
-    if (on && el._key !== P.key) { el.innerHTML = poseSVG(P); el._key = P.key; }
+    var fr = FR[S.frame], X = accX(), P = M && M.access && M.access.torso ? M.access.pose : X && X.pose, el = $('pose'), on = !!(P && fr && fr.k === 'access' && $('acc').hidden);   // esofagektomia: schemat tylko w etapie piersiowym
+    if (on && el._key !== P.key) { el.innerHTML = P.thx ? poseSVGThx(P) : poseSVG(P); el._key = P.key; }
     el.hidden = !on;
   }
   function poseSVG(P) {
@@ -254,6 +266,28 @@
       '<svg viewBox="0 0 ' + W + ' 160" aria-hidden="true">' + g +
       txt(180, 38, P.margin) + txt(216, 64, P.ports) + txt(152, 146, P.rest, 'end') + txt(188, 146, P.table) + '</svg>';
   }
+  /* schemat ułożenia do etapu piersiowego esofagektomii (P.thx): chory na lewym boku, prawa ręka uniesiona do przodu na podpórce, wałek pod lewą pachą,
+     stół zgięty pod klatką piersiową; na prawej ścianie klatki zaznaczone kąt dolny łopatki i miejsce dostępu (torakotomia albo trokary) */
+  function poseSVGThx(P) {
+    var W = 340;
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+    function txt(x, y, s, a) { return '<text class="pz-t" x="' + x + '" y="' + y + '" text-anchor="' + (a || 'start') + '" data-pl="' + esc(s) + '">' + esc(tr(s)) + '</text>'; }
+    function limb(d) { return '<path class="pz-limb-o" d="' + d + '"/><path class="pz-limb" d="' + d + '"/>'; }
+    var g = '<path class="pz-table" d="M14 128 L150 120 L326 132"/>' +
+      '<path class="pz-base" d="M138 152 L162 152 L156 120 L144 120 Z"/>' +
+      '<ellipse class="pz-rest" cx="96" cy="117" rx="17" ry="6"/>' +
+      '<ellipse class="pz-rest" cx="38" cy="122" rx="19" ry="5"/>' +
+      limb('M248 116 L288 124 L314 117') + limb('M248 107 L326 115') +
+      '<path class="pz-board" d="M64 47 L132 47 M98 47 L98 60"/>' +
+      limb('M80 92 L88 62 L122 52') +
+      '<path class="pz-skin" d="M60 119 Q115 113 170 106 Q208 109 247 120 Q259 106 249 90 Q208 85 170 74 Q122 80 76 88 Q58 92 60 119 Z"/>' +
+      '<rect class="pz-skin" x="49" y="99" width="14" height="13" rx="3"/><circle class="pz-skin" cx="38" cy="106" r="13"/>' +
+      '<path class="pz-scap" d="M98 86 Q112 96 128 100"/>' +
+      '<path class="pz-cut" d="M100 96 Q128 104 150 88"/>' +
+      '<path class="pz-lead" d="M126 99 L176 40 M150 90 L212 62 M92 121 L72 141 M152 124 L176 140"/>';
+    return '<div class="pz-h"><strong data-pl="' + esc(P.title) + '">' + esc(tr(P.title)) + '</strong><span data-pl="' + esc(P.sub) + '">' + esc(tr(P.sub)) + '</span></div>' +
+      '<svg viewBox="0 0 ' + W + ' 160" aria-hidden="true">' + g + txt(180, 38, P.margin) + txt(216, 64, P.ports) + txt(16, 153, P.rest) + txt(180, 152, P.table) + '</svg>';
+  }
   function accChoose(kind) {
     var X = accX(); if (X && !X[kind]) return;
     ACC.kind = kind; try { localStorage.setItem(ACC_KEY, kind); } catch (e) {}
@@ -263,10 +297,12 @@
     if (to) { var k = P.variants.map(function (x) { return x.id; }).indexOf(to); if (k >= 0) { ACC.skip = true; switchVariant(k, 'first'); return; } }
     var fr = FR[S.frame]; S.m = fr.m0; S.playing = true; applyM(); updateDock();
   }
+  function accVisible() { return ACC_KINDS.map(function (k) { return document.querySelector('#acc .accopt[data-acc="' + k + '"]'); }).filter(function (b) { return b && !b.hidden; }); }
+  // klawisze 1–4: kolejne widoczne przyciski (w jelicie grubym: 1 otwarty, 2 laparoskopowy, 3 robotyczny); Esc — poprzedni wybór albo pierwszy dostępny
   function accKey(e) {
-    var map = { '1': 'open', '2': 'lap', '3': 'rob' };
-    if (map[e.key]) { e.preventDefault(); accChoose(map[e.key]); }
-    else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : 'lap'); }
+    var n = /^[1-4]$/.test(e.key) ? +e.key : 0, vis = accVisible(), b = n && vis[n - 1];
+    if (n) { e.preventDefault(); if (b) accChoose(b.dataset.acc); }
+    else if (e.key === 'Escape') { e.preventDefault(); var X = accX(); accChoose(ACC.kind && (!X || X[ACC.kind]) ? ACC.kind : X && !X.lap && vis[0] ? vis[0].dataset.acc : 'lap'); }
   }
   document.querySelectorAll('#acc .accopt').forEach(function (b) { b.onclick = function () { accChoose(b.dataset.acc); }; });
   $('accChange').onclick = function () { accShow(true); };

@@ -5,15 +5,8 @@
      szerokości ubytku przyśrodkowo, malejąco ku linii pachowej). Stan zabiegu (szczeliny między warstwami, przesunięcie przyśrodkowe, cięcia, siatka,
      szwy) liczony z osi czasu m dla zabiegu d.op: 'tar', 'acs', 'umb' (siatka przedotrzewnowa), 'umbs' (szew). TK: własny rysunek przekroju
      (M.ctCustom) z pomiarem RDR i objętościami do oceny utraty domeny. ---------- */
-  var HW_COL = { skin: '#e2b59c', fat: '#f1d58a', apo: '#ece4d4', rect: '#b6473f', eo: '#c75d4f', io: '#ae4d45', ta: '#9a4540', tf: '#d6cdbd', pre: '#efd27c',
-    per: '#8fb6d3', space: '#29b6f6', mesh: '#2f78c4', nerve: '#f2c418', bowel: '#e59aa0', suture: '#22305c', drain: '#cfd6dc' };
-  var HW_TEX = null;
-  function hwMeshTex() {
-    if (HW_TEX) return HW_TEX;
-    var c = document.createElement('canvas'); c.width = c.height = 64; var g = c.getContext('2d');
-    g.clearRect(0, 0, 64, 64); g.strokeStyle = 'rgba(255,255,255,0.95)'; g.lineWidth = 7; g.strokeRect(0, 0, 64, 64);
-    HW_TEX = new THREE.CanvasTexture(c); HW_TEX.wrapS = HW_TEX.wrapT = THREE.RepeatWrapping; return HW_TEX;
-  }
+  // kolory warstw, naczyń, nerwów i siatki — ze wspólnego modelu ściany (ANAT.BODY.COL); tu tylko kolory własne przekroju
+  var HW_COL = Object.assign({}, A.BODY.COL, { space: '#29b6f6', bowel: '#e59aa0', drain: '#cfd6dc' });
   function makeWall(d) {
     var W = A.WALL, B = A.BODY, H = W.HER[d.her], T = W.T, op = d.op, UMB = op === 'umb' || op === 'umbs', NOMESH = !!d.noMesh;   // noMesh — Ramirez w wersji oryginalnej (bez siatki)
     var DF = T.skin + H.fat, RM = B.RECT_MED, KM = 1.6;
@@ -41,13 +34,12 @@
     function domeE(x, y, ox, oy) { var e = 1 - Math.pow(x / (H.hw + ox), 2) - Math.pow((y - H.yc) / (H.hl + oy), 2); return e > 0 ? Math.pow(e, 0.55) : 0; }
     function bulge(x, y, st) { return H.bulge * st.k * domeE(x, y, UMB ? 1.5 : 2.2, UMB ? 1.5 : 2.2); }
     function fatBot(x, y, st) { var top = -bulge(x, y, st) + T.skin + (UMB ? 0.3 : 0.45); return DF + (Math.min(DF, top) - DF) * domeE(x, y, UMB ? 0.35 : 0.9, UMB ? 0.35 : 0.9) * st.k; }
-    var ARC = W.ARC;
-    function taMed(y) { return W.taMed(y); }
+    // warstwy w stanie prawidłowym — wspólny model ściany (BODY.WL, BODY.layer); tu przemieszczenia, szczeliny i cięcia zabiegu
+    var ARC = W.ARC, WL = B.WL;
+    function taMed(y) { return B.taMed(y); }
     function tarX(y) { return semi(y) - Math.min(0.6, Math.max(0.15, taMed(y))); }
     function eoCutX(y) { return semi(y) + 0.95; }
-    function tfD(x0, y) { var md = y > ARC ? (taMed(y) > 0.3 ? 0.95 : 0.78) : 0.7; return md + (0.73 - md) * sm((x0 - semi(y) + 0.6) / 1.2); }
-    function taTop(x0, y) { return 0.48 + 0.27 * (1 - sm((x0 - (semi(y) - 0.3)) / 1.0)); }
-    function eoTh(x0, y) { return 0.06 + 0.16 * sm((x0 - semi(y) - 0.2) / 1.0); }
+    var tfD = WL.tfD, taTop = WL.taTop, eoTh = WL.eoTh;
     // stan zabiegu z osi czasu m
     function stateAt(m) {
       var st = { k: 1, inc: 0, open: 0, sac: 1, rr: 0, tarCut: 0, tar: 0, cP: 0, mesh: 0, cA: 0, close: 0, drain: 0, flap: 0, eoCut: 0, eo: 0, pre: 0, fade: 0, full: false };
@@ -89,12 +81,14 @@
     var LAY = {
       skin: { xa: function (y, st) { return skinGap(y, st); }, xb: Wd, dep: function (x0, y, st) { var b = bulge(x0, y, st), f = gF(x0, y, st); return [-b - f, -b - f + T.skin]; }, col: HW_COL.skin, nx: 34 },
       fat: { xa: function (y, st) { return skinGap(y, st); }, xb: Wd, dep: function (x0, y, st) { var b = bulge(x0, y, st), f = gF(x0, y, st); return [-b - f + T.skin, fatBot(x0, y, st) - f]; }, col: HW_COL.fat, nx: 34 },
+      // powięź Scarpy (warstwa błoniasta tkanki podskórnej) — w podbrzuszu; płat skórno-tłuszczowy unosi się razem z nią
+      scarpa: { xa: function (y, st) { return skinGap(y, st); }, xb: Wd, dep: function (x0, y, st) { var t0 = -bulge(x0, y, st) + T.skin, a = t0 + 0.55 * (fatBot(x0, y, st) - t0) - gF(x0, y, st); return [a, a + T.scarpa]; }, col: HW_COL.scarpa, nx: 34 },
       eoM: { xa: function () { return 0; }, xb: eoCutX, dep: function (x0, y) { return [DF, DF + eoTh(x0, y)]; }, disp: hwA, col: HW_COL.apo, vcol: function (x0, y) { return x0 > W.eoApo(y) ? HW_COL.eo : HW_COL.apo; }, nx: 16 },
       eoL: { xa: eoCutX, xb: function (y) { return Wd(y) * 0.995; }, dep: function (x0, y, st) { var g = gE(x0, y, st); return [DF - g, DF + eoTh(x0, y) - g]; },
         disp: function (y, st) { return op === 'acs' && st.eoCut > 0 ? hwAt(y) : hwA(y, st); }, col: HW_COL.eo, vcol: function (x0, y) { return x0 > W.eoApo(y) ? HW_COL.eo : HW_COL.apo; }, nx: 22 },
       alba: { xa: function () { return 0; }, xb: function () { return RM; }, dep: function () { return [DF + 0.04, DF + 0.7]; }, disp: hwA, col: HW_COL.apo, nx: 3 },
-      rect: { xa: function () { return RM; }, xb: semi, dep: function (x0, y) { var s0 = semi(y), q = Math.max(0.22, sm((x0 - RM) / 0.7) * sm((s0 - x0) / 0.7)); return [DF + 0.37 - 0.31 * q, DF + 0.37 + 0.31 * q]; }, disp: hwA, col: HW_COL.rect, nx: 16 },
-      io: { xa: function (y) { return semi(y) + 0.04; }, xb: function (y) { return Wd(y) * 0.99; }, dep: function (x0, y) { var u = sm((x0 - semi(y)) / 0.8); return [DF + 0.06 + 0.16 * u, DF + 0.66 - 0.18 * u]; }, disp: hwA, col: HW_COL.io, nx: 22 },
+      rect: { xa: function () { return RM; }, xb: semi, dep: function (x0, y) { var r = WL.rect(x0, y); return [DF + r[0], DF + r[1]]; }, disp: hwA, col: HW_COL.rect, nx: 16 },
+      io: { xa: function (y) { return semi(y) + 0.04; }, xb: function (y) { return Wd(y) * 0.99; }, dep: function (x0, y) { var r = WL.io(x0, y); return [DF + r[0], DF + r[1]]; }, disp: hwA, col: HW_COL.io, nx: 22 },
       postM: { y0: ARC, xa: function () { return 0; }, xb: tarX, dep: function (x0, y, st) { var g = gR(x0, y, st); return [DF + 0.7 + g, DF + 0.75 + g]; }, disp: hwP, col: HW_COL.apo, nx: 14 },
       postL: { y0: ARC, xa: tarX, xb: function (y) { return semi(y) + 0.12; }, dep: function (x0, y, st) { var g = gR(x0, y, st); return [DF + 0.7 + g, DF + 0.75 + g]; }, disp: function (y, st) { return st.tarCut > 0.5 ? hwA(y, st) : hwP(y, st); }, col: HW_COL.apo, nx: 4 },
       taM: { xa: function (y) { return Math.min(tarX(y), semi(y) - taMed(y)); }, xb: tarX, dep: function (x0, y, st) { var g = gR(x0, y, st), t0 = taTop(x0, y); return [DF + t0 + g, DF + t0 + 0.2 + g]; }, disp: hwP, col: HW_COL.ta, nx: 6 },
@@ -155,7 +149,7 @@
       o.G.front.setDrawRange(rCut * nx * 6, nRows * nx * 6); o.G.back.setDrawRange(rCut * nx * 6, nRows * nx * 6); o.G.ea.setDrawRange(rCut * 6, nRows * 6); o.G.eb.setDrawRange(rCut * 6, nRows * 6);
       o.g.visible = nRows > 0 && (!L.space || (L.space && SPV[o.key](st) > 0.01));
     }
-    var KEYS = ['skin', 'fat', 'eoM', 'eoL', 'alba', 'rect', 'io', 'postM', 'postL', 'taM', 'taL', 'tf', 'pre', 'per'].concat(op === 'tar' ? ['spR', 'spT'] : op === 'acs' ? ['spF', 'spE'] : ['spP']);
+    var KEYS = ['skin', 'fat', 'scarpa', 'eoM', 'eoL', 'alba', 'rect', 'io', 'postM', 'postL', 'taM', 'taL', 'tf', 'pre', 'per'].concat(op === 'tar' ? ['spR', 'spT'] : op === 'acs' ? ['spF', 'spE'] : ['spP']);
     [-1, 1].forEach(function (s) { KEYS.forEach(function (k) { band(k, s); }); });
     // worek przepuklinowy: kopuła między przyśrodkowymi brzegami otrzewnej (x = ±hwP) a tkanką podskórną; zawartość: pętle jelita (przepuklina w bliźnie) albo tłuszcz (pępkowa)
     var SNX = 16, sacNV = (NY + 1) * (SNX + 1), sacG = track(new THREE.BufferGeometry());
@@ -209,8 +203,8 @@
       });
     }
     // siatka: pasmo cienkie z teksturą oczek
-    var meshMat = track(new THREE.MeshStandardMaterial({ color: HW_COL.mesh, map: hwMeshTex(), roughness: 0.6, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
-    hwMeshTex().repeat.set(1, 1);
+    // siatka: wspólny wyróżniony materiał (12-powloki: dzianina, świeci, obramowanie)
+    var meshMat = wallMeshMat();
     var meshKind = op === 'tar' ? 'sub' : op === 'acs' ? (NOMESH ? null : 'on') : op === 'umb' ? 'pre' : null, meshG = [];
     function meshDomain(y, st) {
       if (meshKind === 'sub') return Wd(y) * 0.8;
@@ -228,14 +222,16 @@
       for (var r = 0; r < NY; r++) for (var j = 0; j < nx; j++) { var a = r * (nx + 1) + j, b = a + nx + 1; idx.push(a, b, a + 1, b, b + 1, a + 1); }
       g.setIndex(idx); var mesh = new THREE.Mesh(g, meshMat); mesh.renderOrder = 3; grp.add(mesh); meshG.push({ g: g, s: s, nx: nx, m: mesh });
     });
-    var meshEdge = meshKind ? [-1, 1].map(function (s) { var m = new THREE.Mesh(track(new THREE.BufferGeometry()), track(new THREE.MeshBasicMaterial({ color: HW_COL.mesh, transparent: true, opacity: 0 }))); grp.add(m); return { m: m, s: s }; }) : [];
+    var meshEdgeM = wallMeshEdgeMat(), meshEdge = meshKind ? [-1, 1].map(function (s) { var m = new THREE.Mesh(track(new THREE.BufferGeometry()), meshEdgeM), m2 = new THREE.Mesh(track(new THREE.BufferGeometry()), meshEdgeM); grp.add(m, m2); return { m: m, lat: m2, s: s }; }) : [];
     function meshUpdate(st, iCut, iTop) {
-      meshEdge.forEach(function (E) {
-        var y = ROWS[iCut], xb = meshDomain(y, st), dsp = meshKind === 'on' ? 0 : hwA(y, st), pts = [];
-        E.m.visible = st.mesh > 0.01 && xb > 0.05; E.m.material.opacity = st.mesh;
+      meshEdgeM.opacity = st.mesh;
+      meshEdge.forEach(function (E) {   // brzeg w płaszczyźnie przekroju i brzeg boczny siatki
+        var y = ROWS[iCut], xb = meshDomain(y, st), dsp = meshKind === 'on' ? 0 : hwA(y, st), pts = [], lat = [];
+        E.m.visible = E.lat.visible = st.mesh > 0.01 && xb > 0.05;
         if (!E.m.visible) return;
         for (var j = 0; j <= 20; j++) { var x0 = xb * j / 20; pts.push(ptAt(x0 + dsp * gLat(x0, y) * sm(x0 / 1.6), y + 0.02, meshDep(x0, y, st), E.s)); }
-        if (E.m.geometry) E.m.geometry.dispose(); E.m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.07, 6, false);
+        for (var i = iCut; i <= iTop; i++) { var yi = ROWS[i], xl = meshDomain(yi, st), dl = meshKind === 'on' ? 0 : hwA(yi, st); if (xl > 0.05) lat.push(ptAt(xl + dl * gLat(xl, yi) * sm(xl / 1.6), yi, meshDep(xl, yi, st), E.s)); }
+        wallMeshEdgeSet(E.m, pts, 0.07); wallMeshEdgeSet(E.lat, lat, 0.06);
       });
       meshG.forEach(function (o) {
         var Pp = o.g.attributes.position.array, U = o.g.attributes.uv.array;
@@ -248,6 +244,36 @@
         }
         o.g.attributes.position.needsUpdate = true; o.g.attributes.uv.needsUpdate = true; o.g.computeVertexNormals(); o.g.computeBoundingSphere();
         o.g.setDrawRange(iCut * o.nx * 6, (iTop - iCut) * o.nx * 6);
+      });
+    }
+    /* naczynia ze wspólnego modelu ściany: nabrzuszne dolne i górne (tętnica i żyła) na tylnej powierzchni mięśnia prostego — przesuwają się z nim
+       (w rozwarstwieniu zamięśniowym zostają na mięśniu); perforatory okołopępkowe — z mięśnia prostego przez pochewkę przednią do skóry;
+       płat skórno-tłuszczowy (Ramirez) je przecina — zostają kikuty na powięzi i w płacie */
+    var vesM = { a: wallVesselMat('a'), v: wallVesselMat('v') }, vesT = [], perfT = [];
+    wallVesselsLod(0).forEach(function (v) { [-1, 1].forEach(function (s) { ['a', 'v'].forEach(function (kd) { var m = new THREE.Mesh(track(new THREE.BufferGeometry()), vesM[kd]); grp.add(m); vesT.push({ v: v, s: s, kd: kd, m: m }); }); }); });
+    B.PERF.forEach(function (pf) { [-1, 1].forEach(function (s) { var a = new THREE.Mesh(track(new THREE.BufferGeometry()), vesM.a), b = new THREE.Mesh(track(new THREE.BufferGeometry()), vesM.a); grp.add(a, b); perfT.push({ p: pf, s: s, a: a, b: b }); }); });
+    function vesPath(v, ya, yb) {   // odcinek naczynia w zakresie y: x i głębokość interpolowane między punktami ścieżki
+      var P = v.pts.map(function (q) { return [q[0], q[1], B.depth(q[2], q[0], q[1], H.fat)]; }).sort(function (a, b) { return a[1] - b[1]; }), out = [];
+      var y0 = Math.max(ya, P[0][1]), y1 = Math.min(yb, P[P.length - 1][1]); if (y1 - y0 < 0.05) return out;
+      for (var n = 0, N = Math.max(2, Math.ceil((y1 - y0) / 0.25)); n <= N; n++) { var y = y0 + (y1 - y0) * n / N, i = 0; while (i < P.length - 2 && P[i + 1][1] < y) i++; var u = (y - P[i][1]) / Math.max(1e-6, P[i + 1][1] - P[i][1]); out.push([P[i][0] + (P[i + 1][0] - P[i][0]) * u, y, P[i][2] + (P[i + 1][2] - P[i][2]) * u]); }
+      return out;
+    }
+    var perfCut = false;
+    function vesUpdate(st, isCT, full, m) {
+      var ya = ROWS[full || isCT ? 0 : iCutCut], yb = ROWS[full || isCT ? NY : iTopCut];
+      vesT.forEach(function (T0) {
+        var pts = isCT ? [] : vesPath(T0.v, ya, yb).map(function (q) { var x0 = q[0] + (T0.kd === 'v' ? 0.16 : 0); return at(x0, q[1], q[2], T0.s, st, 'A'); });
+        T0.m.visible = pts.length > 1; if (T0.m.geometry) T0.m.geometry.dispose(); T0.m.geometry = pts.length > 1 ? wallTubeGeo(pts, T0.v.r * 1.6) : new THREE.BufferGeometry();
+      });
+      perfCut = false;
+      perfT.forEach(function (P) {
+        var x = P.p[0], y = P.p[1], on = !isCT && y >= ya && y <= yb; P.a.visible = P.b.visible = on; if (!on) return;
+        var r = WL.rect(x, y), t0 = -bulge(x, y, st) + T.skin, fb = fatBot(x, y, st), f = gF(x, y, st), cut = f > 0.05;
+        var p0 = at(x - 0.12, y, DF + r[0] + 0.85 * (r[1] - r[0]), P.s, st, 'A'), p1 = at(x - 0.04, y, DF + 0.03, P.s, st, 'A'), p2 = at(x + 0.06, y, t0 + 0.55 * (fb - t0) - f, P.s, st), p3 = at(x + 0.2, y, t0 + 0.12 * (fb - t0) - f, P.s, st);
+        if (P.a.geometry) P.a.geometry.dispose(); if (P.b.geometry) P.b.geometry.dispose();
+        if (!cut) { P.a.geometry = wallTubeGeo([p0, p1, p2, p3], 0.06, 24); P.b.geometry = new THREE.BufferGeometry(); return; }
+        perfCut = true;   // płat uniesiony: kikut na powięzi i kikut w płacie
+        P.a.geometry = wallTubeGeo([p0, p1, at(x - 0.02, y, DF - 0.12, P.s, st, 'A')], 0.06, 12); P.b.geometry = wallTubeGeo([at(x + 0.04, y, fb - f + 0.12, P.s, st), p2, p3], 0.06, 12);
       });
     }
     // linie: cięcie skóry, nacięcia (pochewka tylna w Rives–Stoppa i TAR, rozcięgno skośnego zewnętrznego), szwy (warstwa tylna, linia biała, skóra), dreny
@@ -301,6 +327,8 @@
       lab('Pochewka tylna', '', '#9b8f78', 'ghost', function (st) { var y = yL(); return at(2.2, y, DF + 0.73 + gR(2.2, y, st), -1, st, 'P'); }, function (st, m) { return m <= 0.001 || (m > 0.95 && m < 2.05); });
       lab('Otrzewna', '', HW_COL.per, 'ghost', function (st) { var y = yL(); return at(4.5, y, DF + tfD(4.5, y) + 0.25 + gR(4.5, y, st) + gT(4.5, y, st), -1, st, 'P'); }, NORM);
       lab('Worek przepuklinowy', 'z pętlami jelita', HW_COL.per, 'seg', function (st) { var y = yL(); return at(0, y, fatBot(0, y, st) + 0.1, 1, st); }, function (st, m) { return m < 0.6; });
+      lab('Naczynia nabrzuszne dolne', 'zostają na mięśniu prostym', HW_COL.art, 'seg', function (st) { var y = yL() + 0.15, x = 4.35; return at(x, y, B.depth(['post', 0, -0.03], x, y, H.fat), 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 1.3 && m < 2.05; });
+      lab('Perforatory okołopępkowe', 'przecięte przy uniesieniu płatów', HW_COL.art, 'seg', function (st) { var x = B.PERF[0][0], y = B.PERF[0][1]; return at(x, y, DF - 0.05, 1, st, 'A'); }, function (st, m) { return op === 'acs' && m > 1.5 && m < 2.05 && perfCut; });
       lab('Przestrzeń zamięśniowa', 'Rives–Stoppa', HW_COL.cut, 'seg', function (st) { var y = yL(); return at(2.4, y, DF + 0.7, 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 1.45 && m < 2.05; });
       lab('Nerwy międzyżebrowe', 'wnikają do mięśnia prostego przy jego brzegu bocznym', HW_COL.nerve, 'seg', function (st) { var y = -5.5; return at(semi(y) - 0.2, y, DF + 0.62 + gR(semi(y) - 0.2, y, st), 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 1.5 && m < 3.05; });
       lab('Mięsień poprzeczny przecięty', '', HW_COL.ta, 'seg', function (st) { var y = yL(); return at(tarX(y) + 0.3, y, DF + taTop(tarX(y), y) + 0.1, 1, st, 'A'); }, function (st, m) { return op === 'tar' && m > 2.5 && m < 3.05; });
@@ -333,12 +361,12 @@
         if (key !== lastKey) {
           lastKey = key;
           bands.forEach(function (o) { bandUpdate(o, st, iCut, iTop); });
-          sacUpdate(st, iCut, iTop); meshUpdate(st, iCut, iTop); nerveUpdate(st, cutY, ROWS[iTop]);
+          sacUpdate(st, iCut, iTop); meshUpdate(st, iCut, iTop); nerveUpdate(st, cutY, ROWS[iTop]); vesUpdate(st, isCT, fr.wall === 'full', m);
         }
         var fa = st.fade;
-        bands.forEach(function (o) { if (o.L.space) return; var f = o.L.fade != null ? 1 - (1 - o.L.fade) * fa : 1; o.mat.opacity = o.cmat.opacity = o.emat.opacity = f; o.mat.depthWrite = o.cmat.depthWrite = o.emat.depthWrite = f > 0.99; });
+        bands.forEach(function (o) { if (o.L.space) { var fm = 1 - 0.85 * st.mesh; o.mat.opacity = 0.35 * fm; o.cmat.opacity = 0.55 * fm; return; } var f = o.L.fade != null ? 1 - (1 - o.L.fade) * fa : 1; o.mat.opacity = o.cmat.opacity = o.emat.opacity = f; o.mat.depthWrite = o.cmat.depthWrite = o.emat.depthWrite = f > 0.99; });
         sacM.opacity = 0.9 * st.sac; sac.visible = st.sac > 0.01;
-        meshMat.opacity = 0.85 * st.mesh; meshG.forEach(function (o) { o.m.visible = st.mesh > 0.01; });
+        meshMat.opacity = st.mesh; meshG.forEach(function (o) { o.m.visible = st.mesh > 0.01; });
         bowels.forEach(function (b) {
           if (b.sac) { b.m.visible = st.k > 0.03; b.m.position.set(0, 0, -2.4 * (1 - st.k)); }
           else b.m.visible = !isCT && m < 1.0 && b.y >= cutY - 0.3 && b.y <= ROWS[iTop];
