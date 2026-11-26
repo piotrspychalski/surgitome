@@ -4,7 +4,7 @@
 // wyrostka mieczykowatego na lewo od linii pośrodkowej (wprowadzana pierwsza), retraktor wątroby pod wyrostkiem, 12 mm w obu liniach środkowo-obojczykowych,
 // przełączenie dwunastnicze i BPD — 6 trokarów; robot: 4 porty w jednej linii ok. 18–20 cm poniżej wyrostka, co 6–10 cm, kamera nieco na lewo od linii
 // pośrodkowej, stapler 12 mm po lewej, asystent ≥ 8 cm od kamery i ramion; cięcie pośrodkowe od wyrostka mieczykowatego; okno bez przycisków
-// nieoferowanych dostępów; trokary widoczne po wyborze; EN
+// nieoferowanych dostępów, klawisze 1–4 wg widocznych przycisków; trokary widoczne po wyborze; EN
 const {JSDOM}=require('jsdom'); const fs=require('fs'), path=require('path');
 const html=fs.readFileSync(path.join(__dirname,'../dist/surgitome.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'');
 const T=Object.assign({},require('three'));
@@ -54,20 +54,21 @@ const key=(w,k)=>w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,b
   ok(w.__sgTest.frames()[0].k==='access'&&!$('acc').hidden,'rękaw: brak slajdu „Dostęp” albo okna wyboru');
   const btn=k=>w.document.querySelector('#acc .accopt[data-acc="'+k+'"]');
   ok(btn('open').hidden&&!btn('lap').hidden&&!btn('rob').hidden,'rękaw: zły zestaw przycisków');
-  key(w,'2'); await sleep(200); w.__sgTest.at(-0.02);
+  key(w,'1'); await sleep(200); w.__sgTest.at(-0.02);   // klawisze 1–4 — kolejne widoczne przyciski (w rękawie: 1 laparoskopia, 2 robot)
   const vis=st=>st.ports.filter(p=>p.g.visible).length, s1=w.__sgTest.model().access.sets;
   console.log('rękaw — laparoskopia, widoczne trokary:',vis(s1.lap),'| podpis:',$('capTitle').textContent);
   ok(s1.lap.g.visible&&vis(s1.lap)===5&&!s1.open,'rękaw: zły zestaw trokarów');
-  key(w,'1'); await sleep(200); ok(w.localStorage.getItem('surgitome-dostep')==='lap','rękaw: klawisz 1 wybiera nieoferowany dostęp otwarty');
+  $('accChange').click(); await sleep(100); key(w,'2'); await sleep(200); ok(w.localStorage.getItem('surgitome-dostep')==='rob','rękaw: klawisz 2 nie wybiera robota (drugiego widocznego przycisku)');
+  key(w,'3'); await sleep(100); ok(w.localStorage.getItem('surgitome-dostep')==='rob','rękaw: klawisz 3 wybiera nieoferowany dostęp');
   // BPD: bez robota; otwarty — cięcie
-  await search(w,'Scopinaro'); ok(btn('rob').hidden&&!btn('open').hidden,'BPD: zły zestaw przycisków');
+  await search(w,'Scopinaro'); await sleep(600); ok(btn('rob').hidden&&!btn('open').hidden,'BPD: zły zestaw przycisków');
   key(w,'1'); await sleep(300); w.__sgTest.at(-0.02); const s2=w.__sgTest.model().access.sets.open;
   ok(s2.g.visible&&s2.cuts.length===1&&s2.cuts[0].wm.visible,'BPD: brak cięcia pośrodkowego');
   // przełączenie dwunastnicze — oba warianty, robot: 6 portów (4 ramiona, asystent, retraktor)
-  await search(w,'BPD-DS'); key(w,'3'); await sleep(300); w.__sgTest.at(-0.02); const s3=w.__sgTest.model().access.sets.rob;
+  await search(w,'BPD-DS'); await sleep(600); key(w,'3'); await sleep(300); w.__sgTest.at(-0.02); const s3=w.__sgTest.model().access.sets.rob;
   console.log('BPD-DS — robot, widoczne porty:',vis(s3)); ok(s3.g.visible&&vis(s3)===6,'BPD-DS: zły zestaw portów robota');
   // EN
-  w=boot('en'); await sleep(300); await search(w,'sleeve gastrectomy'); key(w,'2'); await sleep(200);
+  w=boot('en'); await sleep(300); await search(w,'sleeve gastrectomy'); key(w,'1'); await sleep(200);
   const te=w.document.getElementById('capTitle').textContent, tx=w.document.getElementById('capText').textContent;
   console.log('EN:',te,'|',tx.slice(0,60)); ok(te==='Laparoscopic approach'&&!/[ąćęłńóśźż]/i.test(tx),'EN: opis dostępu nieprzetłumaczony');
   console.log('errors',JSON.stringify(errs.concat(fails))); process.exit(0);

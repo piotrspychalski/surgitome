@@ -16,16 +16,10 @@
   'use strict';
   var A = root.ANAT, B = A.BODY;
   function sm(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+  // warstwy, grubości, kresa łukowata, mięśnie i nerwy — ze wspólnego modelu ściany (ANAT.BODY, 03z-powloki.js); tu tylko przepukliny
   var WALL = {
     CM: 1.45,
-    ARC: -8.8,   // kresa łukowata: poniżej niej rozcięgna wszystkich trzech mięśni bocznych przechodzą przed mięśniem prostym (pochewka tylna — tylko powięź poprzeczna)
-    T: { skin: 0.12, fat: 1.05, ant: 0.06, rect: 0.62, post: 0.05, ta: 0.2, eo: 0.22, io: 0.24, tf: 0.045, pre: 0.16, per: 0.035 },
-    // brzusiec mięśnia poprzecznego przyśrodkowo od kresy półksiężycowatej (w nadbrzuszu, za mięśniem prostym) — szerokość [j.]
-    taMed: function (y) { return 2.0 * sm((y + 6) / 8); },
-    // mięsień skośny zewnętrzny: przyśrodkowo od tej linii rozcięgno (od chrząstki IX żebra do kolca biodrowego przedniego górnego), bocznie brzusiec
-    eoApo: function (y) { return B.rectLat(y) + 1.4 + 0.12 * (y + 5); },
-    // nerwy międzyżebrowe i podżebrowy: [poziom y przy brzegu bocznym mięśnia prostego, nazwa]
-    NV: [[5.4, 'T7'], [2.6, 'T8'], [-1.4, 'T9'], [-5.5, 'T10'], [-8.4, 'T11'], [-11.0, 'T12']],
+    ARC: B.ARC, T: B.T, taMed: B.taMed, eoApo: B.eoApo, NV: B.NV,
     // przepukliny: yc — środek ubytku, hl/hw — połowa długości/szerokości ubytku, bulge — uwypuklenie skóry, fat — grubość tkanki podskórnej;
     // bryła powłok od y0 do y1, w kadrach zabiegu widoczna część nad poziomem przekroju cut (widok od strony stóp jak w TK: przód u góry, prawa strona chorego po lewej)
     HER: {
